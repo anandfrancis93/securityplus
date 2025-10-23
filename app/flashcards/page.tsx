@@ -31,7 +31,6 @@ export default function FlashcardsPage() {
   const [editingCard, setEditingCard] = useState<Flashcard | null>(null);
   const [editTerm, setEditTerm] = useState('');
   const [editDefinition, setEditDefinition] = useState('');
-  const [editContext, setEditContext] = useState('');
 
   useEffect(() => {
     if (userId) {
@@ -142,14 +141,12 @@ export default function FlashcardsPage() {
     setEditingCard(card);
     setEditTerm(card.term);
     setEditDefinition(card.definition);
-    setEditContext(card.context || '');
   };
 
   const handleCancelEdit = () => {
     setEditingCard(null);
     setEditTerm('');
     setEditDefinition('');
-    setEditContext('');
   };
 
   const handleSaveEdit = async () => {
@@ -166,7 +163,6 @@ export default function FlashcardsPage() {
       await updateFlashcard(editingCard.id, {
         term: editTerm.trim(),
         definition: editDefinition.trim(),
-        context: editContext.trim() || undefined,
       });
 
       alert('Flashcard updated successfully!');
@@ -551,21 +547,7 @@ export default function FlashcardsPage() {
                     value={editDefinition}
                     onChange={(e) => setEditDefinition(e.target.value)}
                     placeholder="Enter the definition or answer here..."
-                    className="w-full h-32 bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none resize-vertical"
-                    disabled={generating}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Context (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={editContext}
-                    onChange={(e) => setEditContext(e.target.value)}
-                    placeholder="Additional context or notes..."
-                    className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                    className="w-full h-40 bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none resize-vertical"
                     disabled={generating}
                   />
                 </div>
