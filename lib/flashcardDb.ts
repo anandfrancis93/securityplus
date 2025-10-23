@@ -23,7 +23,7 @@ const DECKS_COLLECTION = 'flashcardDecks';
  */
 export async function saveFlashcards(
   userId: string,
-  flashcards: Array<{ term: string; definition: string; context?: string; domain?: string }>,
+  flashcards: Array<{ term: string; definition: string; context?: string; domain?: string; imageUrl?: string }>,
   sourceFile: string
 ): Promise<Flashcard[]> {
   const batch = writeBatch(db);
@@ -46,6 +46,9 @@ export async function saveFlashcards(
     }
     if (flashcards[i].domain) {
       flashcard.domain = flashcards[i].domain;
+    }
+    if (flashcards[i].imageUrl) {
+      flashcard.imageUrl = flashcards[i].imageUrl;
     }
 
     const docRef = doc(db, FLASHCARDS_COLLECTION, flashcard.id);
@@ -109,7 +112,7 @@ export async function getFlashcard(flashcardId: string): Promise<Flashcard | nul
  */
 export async function updateFlashcard(
   flashcardId: string,
-  updates: { term: string; definition: string; context?: string; domain?: string }
+  updates: { term: string; definition: string; context?: string; domain?: string; imageUrl?: string }
 ): Promise<void> {
   const docRef = doc(db, FLASHCARDS_COLLECTION, flashcardId);
   const snapshot = await getDoc(docRef);
@@ -136,6 +139,12 @@ export async function updateFlashcard(
     updatedCard.domain = updates.domain;
   } else {
     delete updatedCard.domain;
+  }
+
+  if (updates.imageUrl) {
+    updatedCard.imageUrl = updates.imageUrl;
+  } else {
+    delete updatedCard.imageUrl;
   }
 
   await setDoc(docRef, updatedCard);

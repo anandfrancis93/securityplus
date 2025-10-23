@@ -179,6 +179,15 @@ export default function StudyPage() {
               ) : (
                 <div className="text-center">
                   <p className="text-xl leading-relaxed mb-6 whitespace-pre-wrap">{currentCard.definition}</p>
+                  {currentCard.imageUrl && (
+                    <div className="mt-6">
+                      <img
+                        src={currentCard.imageUrl}
+                        alt="Flashcard visual"
+                        className="max-w-full max-h-64 mx-auto rounded-lg border border-gray-600"
+                      />
+                    </div>
+                  )}
                   {currentCard.context && (
                     <div className="mt-6 pt-6 border-t border-gray-700">
                       <p className="text-sm text-gray-400 italic whitespace-pre-wrap">{currentCard.context}</p>

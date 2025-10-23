@@ -61,6 +61,7 @@ export interface Flashcard {
   definition: string;
   context?: string; // Additional context from the document
   domain?: string; // Security+ domain (1.0-5.0)
+  imageUrl?: string; // URL to uploaded image
   sourceFile: string; // Name of the uploaded file
   orderInFile: number; // Order in which it appeared in the file
   createdAt: number;

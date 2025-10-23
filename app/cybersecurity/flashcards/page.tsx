@@ -7,6 +7,7 @@ import { useApp } from '@/components/AppProvider';
 import { useRouter } from 'next/navigation';
 import { getUserFlashcards, saveFlashcards, getUserReviews } from '@/lib/flashcardDb';
 import { getDueFlashcards, getDeckStats } from '@/lib/spacedRepetition';
+import { uploadFlashcardImage, validateImageFile } from '@/lib/imageUpload';
 import { Flashcard, FlashcardReview } from '@/lib/types';
 
 export default function FlashcardsPage() {
@@ -21,12 +22,16 @@ export default function FlashcardsPage() {
   const [manualTerm, setManualTerm] = useState('');
   const [manualDefinition, setManualDefinition] = useState('');
   const [manualDomain, setManualDomain] = useState('General Security Concepts');
+  const [manualImage, setManualImage] = useState<File | null>(null);
+  const [manualImagePreview, setManualImagePreview] = useState<string | null>(null);
 
   // Edit mode states
   const [editingCard, setEditingCard] = useState<Flashcard | null>(null);
   const [editTerm, setEditTerm] = useState('');
   const [editDefinition, setEditDefinition] = useState('');
   const [editDomain, setEditDomain] = useState('General Security Concepts');
+  const [editImage, setEditImage] = useState<File | null>(null);
+  const [editImagePreview, setEditImagePreview] = useState<string | null>(null);
 
   useEffect(() => {
     if (userId) {
@@ -60,12 +65,30 @@ export default function FlashcardsPage() {
       return;
     }
 
+    // Validate image if provided
+    if (manualImage) {
+      const validation = validateImageFile(manualImage);
+      if (!validation.valid) {
+        alert(validation.error);
+        return;
+      }
+    }
+
     setGenerating(true);
     try {
+      let imageUrl: string | undefined = undefined;
+
+      // Upload image if provided
+      if (manualImage) {
+        const tempId = `fc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        imageUrl = await uploadFlashcardImage(userId, tempId, manualImage);
+      }
+
       const flashcard = {
         term: manualTerm.trim(),
         definition: manualDefinition.trim(),
         domain: manualDomain,
+        imageUrl,
       };
 
       await saveFlashcards(userId, [flashcard], 'Manual Entry');
@@ -74,6 +97,8 @@ export default function FlashcardsPage() {
       setManualTerm('');
       setManualDefinition('');
       setManualDomain('General Security Concepts');
+      setManualImage(null);
+      setManualImagePreview(null);
       await loadFlashcards();
     } catch (error) {
       console.error('Error creating manual flashcard:', error);
@@ -93,6 +118,7 @@ export default function FlashcardsPage() {
     setEditTerm(card.term);
     setEditDefinition(card.definition);
     setEditDomain(card.domain || 'General Security Concepts');
+    setEditImagePreview(card.imageUrl || null);
   };
 
   const handleCancelEdit = () => {
@@ -100,23 +126,83 @@ export default function FlashcardsPage() {
     setEditTerm('');
     setEditDefinition('');
     setEditDomain('General Security Concepts');
+    setEditImage(null);
+    setEditImagePreview(null);
+  };
+
+  const handleManualImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const validation = validateImageFile(file);
+      if (!validation.valid) {
+        alert(validation.error);
+        e.target.value = '';
+        return;
+      }
+      setManualImage(file);
+      setManualImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleEditImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const validation = validateImageFile(file);
+      if (!validation.valid) {
+        alert(validation.error);
+        e.target.value = '';
+        return;
+      }
+      setEditImage(file);
+      setEditImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleRemoveManualImage = () => {
+    setManualImage(null);
+    setManualImagePreview(null);
+  };
+
+  const handleRemoveEditImage = () => {
+    setEditImage(null);
+    setEditImagePreview(null);
   };
 
   const handleSaveEdit = async () => {
-    if (!editingCard || !editTerm.trim() || !editDefinition.trim()) return;
+    if (!editingCard || !editTerm.trim() || !editDefinition.trim() || !userId) return;
 
     if (editTerm.trim().length < 2 || editDefinition.trim().length < 10) {
       alert('Please enter a valid term (min 2 characters) and definition (min 10 characters).');
       return;
     }
 
+    // Validate new image if provided
+    if (editImage) {
+      const validation = validateImageFile(editImage);
+      if (!validation.valid) {
+        alert(validation.error);
+        return;
+      }
+    }
+
     setGenerating(true);
     try {
+      let imageUrl: string | undefined = editingCard.imageUrl;
+
+      // Upload new image if provided
+      if (editImage) {
+        imageUrl = await uploadFlashcardImage(userId, editingCard.id, editImage);
+      } else if (!editImagePreview) {
+        // Image was removed
+        imageUrl = undefined;
+      }
+
       const { updateFlashcard } = await import('@/lib/flashcardDb');
       await updateFlashcard(editingCard.id, {
         term: editTerm.trim(),
         definition: editDefinition.trim(),
         domain: editDomain,
+        imageUrl,
       });
 
       alert('Flashcard updated successfully!');
@@ -250,6 +336,39 @@ export default function FlashcardsPage() {
                   <option value="Security Operations">Security Operations</option>
                   <option value="Security Program Management and Oversight">Security Program Management and Oversight</option>
                 </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Image (Optional)
+                </label>
+                {manualImagePreview ? (
+                  <div className="relative">
+                    <img
+                      src={manualImagePreview}
+                      alt="Preview"
+                      className="w-full max-h-48 object-contain rounded-lg border border-gray-600 bg-gray-900"
+                    />
+                    <button
+                      onClick={handleRemoveManualImage}
+                      className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-all"
+                      disabled={generating}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                ) : (
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleManualImageChange}
+                    className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:cursor-pointer"
+                    disabled={generating}
+                  />
+                )}
+                <p className="text-xs text-gray-500 mt-1">Max 5MB, JPG/PNG/GIF/WebP</p>
               </div>
 
               <div className="flex items-center justify-between">
@@ -466,6 +585,39 @@ export default function FlashcardsPage() {
                     <option value="Security Operations">Security Operations</option>
                     <option value="Security Program Management and Oversight">Security Program Management and Oversight</option>
                   </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Image (Optional)
+                  </label>
+                  {editImagePreview ? (
+                    <div className="relative">
+                      <img
+                        src={editImagePreview}
+                        alt="Preview"
+                        className="w-full max-h-48 object-contain rounded-lg border border-gray-600 bg-gray-900"
+                      />
+                      <button
+                        onClick={handleRemoveEditImage}
+                        className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-all"
+                        disabled={generating}
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  ) : (
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleEditImageChange}
+                      className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:cursor-pointer"
+                      disabled={generating}
+                    />
+                  )}
+                  <p className="text-xs text-gray-500 mt-1">Max 5MB, JPG/PNG/GIF/WebP</p>
                 </div>
 
                 <div className="flex items-center justify-between pt-4 border-t border-gray-700">
