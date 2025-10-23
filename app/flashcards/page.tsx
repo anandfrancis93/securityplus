@@ -23,6 +23,7 @@ export default function FlashcardsPage() {
   // Manual mode states
   const [manualTerm, setManualTerm] = useState('');
   const [manualDefinition, setManualDefinition] = useState('');
+  const [manualDomain, setManualDomain] = useState('1.0 General Security Concepts');
 
   // AI mode states
   const [aiInputText, setAiInputText] = useState('');
@@ -69,6 +70,7 @@ export default function FlashcardsPage() {
       const flashcard = {
         term: manualTerm.trim(),
         definition: manualDefinition.trim(),
+        domain: manualDomain,
       };
 
       await saveFlashcards(userId, [flashcard], 'Manual Entry');
@@ -76,6 +78,7 @@ export default function FlashcardsPage() {
       alert('Flashcard created successfully!');
       setManualTerm('');
       setManualDefinition('');
+      setManualDomain('1.0 General Security Concepts');
       await loadFlashcards();
     } catch (error) {
       console.error('Error creating manual flashcard:', error);
@@ -305,6 +308,24 @@ export default function FlashcardsPage() {
                 />
               </div>
 
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Security+ Domain
+                </label>
+                <select
+                  value={manualDomain}
+                  onChange={(e) => setManualDomain(e.target.value)}
+                  className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                  disabled={generating}
+                >
+                  <option value="1.0 General Security Concepts">1.0 General Security Concepts</option>
+                  <option value="2.0 Threats, Vulnerabilities, and Mitigations">2.0 Threats, Vulnerabilities, and Mitigations</option>
+                  <option value="3.0 Security Architecture">3.0 Security Architecture</option>
+                  <option value="4.0 Security Operations">4.0 Security Operations</option>
+                  <option value="5.0 Security Program Management and Oversight">5.0 Security Program Management and Oversight</option>
+                </select>
+              </div>
+
               <div className="flex items-center justify-between">
                 <div className="text-sm text-gray-400">
                   Term: {manualTerm.length} chars | Definition: {manualDefinition.length} chars
@@ -441,8 +462,11 @@ export default function FlashcardsPage() {
                         <div className="text-xs text-gray-400 mt-1 line-clamp-2">
                           {card.definition}
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">
-                          From: {card.sourceFile}
+                        <div className="text-xs text-gray-500 mt-1 flex items-center gap-2">
+                          <span>From: {card.sourceFile}</span>
+                          {card.domain && (
+                            <span className="text-blue-400">• {card.domain}</span>
+                          )}
                         </div>
                       </div>
                       <div className="flex items-center gap-1">

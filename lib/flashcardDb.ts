@@ -23,7 +23,7 @@ const DECKS_COLLECTION = 'flashcardDecks';
  */
 export async function saveFlashcards(
   userId: string,
-  flashcards: Array<{ term: string; definition: string; context?: string }>,
+  flashcards: Array<{ term: string; definition: string; context?: string; domain?: string }>,
   sourceFile: string
 ): Promise<Flashcard[]> {
   const batch = writeBatch(db);
@@ -40,9 +40,12 @@ export async function saveFlashcards(
       userId,
     };
 
-    // Only add context if it exists (Firestore doesn't allow undefined values)
+    // Only add optional fields if they exist (Firestore doesn't allow undefined values)
     if (flashcards[i].context) {
       flashcard.context = flashcards[i].context;
+    }
+    if (flashcards[i].domain) {
+      flashcard.domain = flashcards[i].domain;
     }
 
     const docRef = doc(db, FLASHCARDS_COLLECTION, flashcard.id);
@@ -106,7 +109,7 @@ export async function getFlashcard(flashcardId: string): Promise<Flashcard | nul
  */
 export async function updateFlashcard(
   flashcardId: string,
-  updates: { term: string; definition: string; context?: string }
+  updates: { term: string; definition: string; context?: string; domain?: string }
 ): Promise<void> {
   const docRef = doc(db, FLASHCARDS_COLLECTION, flashcardId);
   const snapshot = await getDoc(docRef);
@@ -122,12 +125,17 @@ export async function updateFlashcard(
     definition: updates.definition,
   };
 
-  // Only include context if provided
+  // Only include optional fields if provided
   if (updates.context) {
     updatedCard.context = updates.context;
   } else {
-    // Remove context field if it exists but not provided in updates
     delete updatedCard.context;
+  }
+
+  if (updates.domain) {
+    updatedCard.domain = updates.domain;
+  } else {
+    delete updatedCard.domain;
   }
 
   await setDoc(docRef, updatedCard);
