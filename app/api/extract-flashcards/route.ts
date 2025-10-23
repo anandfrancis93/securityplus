@@ -12,6 +12,63 @@ export const dynamic = 'force-dynamic';
 // Vercel configuration for larger body size
 export const runtime = 'nodejs';
 
+// Helper function to process a batch of terms
+async function processTermsBatch(
+  batchText: string,
+  termCount: number
+): Promise<Array<{ term: string; definition: string; context?: string }>> {
+  const message = await anthropic.messages.create({
+    model: 'claude-3-5-sonnet-20241022',
+    max_tokens: 8000,
+    temperature: 0.3,
+    messages: [
+      {
+        role: 'user',
+        content: `You are a CompTIA Security+ SY0-701 expert. I will provide you with ${termCount} Security+ terms (one per line). Create EXACTLY ${termCount} flashcards.
+
+CRITICAL: Create ONE flashcard for EACH LINE. Input has ${termCount} lines → Output MUST have ${termCount} flashcards.
+
+For each line:
+- Extract term name (before " - " or ":" or entire line)
+- Use provided definition as context if available
+- Add comprehensive Security+ definition
+
+Return ONLY valid JSON:
+{
+  "flashcards": [
+    {"term": "term1", "definition": "Security+ definition", "context": "optional"},
+    ...${termCount} items total...
+  ]
+}
+
+Terms:
+${batchText}`,
+      },
+    ],
+  });
+
+  const content = message.content[0];
+  if (content.type !== 'text') {
+    throw new Error('Unexpected response type from Claude');
+  }
+
+  // Parse JSON response
+  let jsonContent = content.text.trim();
+  jsonContent = jsonContent.replace(/```json\s*/gi, '').replace(/```\s*/g, '');
+  const jsonMatch = jsonContent.match(/\{[\s\S]*\}/);
+  if (jsonMatch) {
+    jsonContent = jsonMatch[0];
+  }
+
+  const result = JSON.parse(jsonContent);
+
+  if (!result.flashcards || !Array.isArray(result.flashcards)) {
+    throw new Error('Invalid response format from AI');
+  }
+
+  return result.flashcards;
+}
+
 export async function POST(request: NextRequest) {
   try {
     console.log('Starting flashcard extraction...');
@@ -38,103 +95,48 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('Sending to Claude for analysis...');
-    // Use Claude to create flashcards from the provided terms
-    const message = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
-      max_tokens: 8192,
-      temperature: 0.3,
-      messages: [
-        {
-          role: 'user',
-          content: `You are a CompTIA Security+ SY0-701 expert. I will provide you with Security+ terms/keywords. For EACH term, create exactly ONE flashcard.
 
-CRITICAL REQUIREMENTS:
-1. Create EXACTLY ONE flashcard for EVERY term/keyword provided
-2. If 10 terms are provided, create EXACTLY 10 flashcards
-3. If 100 terms are provided, create EXACTLY 100 flashcards
-4. Preserve the EXACT order of terms as they appear
-5. Each term should have its own flashcard entry
+    // Count the number of terms/lines
+    const lines = textContent.split('\n').filter(line => line.trim().length > 0);
+    const termCount = lines.length;
+    console.log(`Processing ${termCount} terms...`);
 
-For each term:
-- Use the term EXACTLY as provided (don't modify it)
-- Provide a clear, comprehensive Security+ definition (2-3 sentences)
-- Add relevant context if the term appears with additional information
+    // If more than 50 terms, process in batches
+    const BATCH_SIZE = 50;
+    const allFlashcards: Array<{ term: string; definition: string; context?: string }> = [];
 
-Format: Terms may be provided in these formats:
-- "Term" (just the term)
-- "Term - definition" (term with definition)
-- "Term: definition" (term with definition)
-- "Term. Description." (term with description)
+    if (termCount > BATCH_SIZE) {
+      console.log(`Large input detected. Processing in batches of ${BATCH_SIZE}...`);
 
-Return ONLY valid JSON in this exact format (no markdown, no extra text):
-{
-  "flashcards": [
-    {
-      "term": "exact term",
-      "definition": "comprehensive Security+ definition",
-      "context": "additional context if provided"
-    }
-  ]
-}
+      for (let i = 0; i < lines.length; i += BATCH_SIZE) {
+        const batch = lines.slice(i, i + BATCH_SIZE);
+        const batchNumber = Math.floor(i / BATCH_SIZE) + 1;
+        const totalBatches = Math.ceil(lines.length / BATCH_SIZE);
 
-IMPORTANT: The number of flashcards in your response MUST EXACTLY MATCH the number of terms/keywords in the input.
+        console.log(`Processing batch ${batchNumber}/${totalBatches} (${batch.length} terms)...`);
 
-Terms/Keywords:
-${textContent.slice(0, 100000)}`,
-        },
-      ],
-    });
+        const batchText = batch.join('\n');
+        const batchFlashcards = await processTermsBatch(batchText, batch.length);
+        allFlashcards.push(...batchFlashcards);
 
-    const content = message.content[0];
-    if (content.type !== 'text') {
-      throw new Error('Unexpected response type from Claude');
+        console.log(`Batch ${batchNumber} complete. Total flashcards so far: ${allFlashcards.length}`);
+      }
+
+      console.log(`All batches complete. Total: ${allFlashcards.length} flashcards`);
+
+      return NextResponse.json({
+        flashcards: allFlashcards,
+        fileName,
+      });
     }
 
-    // Parse the response
-    const textResponse = content.text.trim();
-    console.log('Claude response received, parsing JSON...');
-    console.log('Response preview:', textResponse.substring(0, 200));
+    // Process small batches (50 or fewer terms)
+    const flashcards = await processTermsBatch(textContent, termCount);
 
-    // Remove markdown code blocks more aggressively
-    let jsonContent = textResponse;
-
-    // Remove markdown code blocks
-    jsonContent = jsonContent.replace(/```json\s*/gi, '');
-    jsonContent = jsonContent.replace(/```\s*/g, '');
-
-    // Find JSON object - look for { ... } pattern
-    const jsonMatch = jsonContent.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      jsonContent = jsonMatch[0];
-    }
-
-    jsonContent = jsonContent.trim();
-
-    let result;
-    try {
-      result = JSON.parse(jsonContent);
-    } catch (parseError) {
-      console.error('JSON parse error:', parseError);
-      console.error('Cleaned JSON:', jsonContent.substring(0, 1000));
-      console.error('Full response:', textResponse);
-      return NextResponse.json(
-        { error: `Failed to parse AI response. Please try again or try with fewer terms.` },
-        { status: 500 }
-      );
-    }
-
-    if (!result.flashcards || !Array.isArray(result.flashcards)) {
-      console.error('Invalid response format:', result);
-      return NextResponse.json(
-        { error: 'AI returned invalid format. Please try again.' },
-        { status: 500 }
-      );
-    }
-
-    console.log(`Successfully extracted ${result.flashcards.length} flashcards from ${fileName}`);
+    console.log(`Successfully generated ${flashcards.length} flashcards`);
 
     return NextResponse.json({
-      flashcards: result.flashcards,
+      flashcards,
       fileName,
     });
   } catch (error) {
