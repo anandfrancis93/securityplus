@@ -94,6 +94,40 @@ export default function FlashcardsPage() {
     router.push('/flashcards/study');
   };
 
+  const handleDeleteFlashcard = async (flashcardId: string) => {
+    if (!confirm('Delete this flashcard?')) return;
+
+    try {
+      const { deleteFlashcard } = await import('@/lib/flashcardDb');
+      await deleteFlashcard(flashcardId);
+      await loadFlashcards();
+    } catch (error) {
+      console.error('Error deleting flashcard:', error);
+      alert('Failed to delete flashcard. Please try again.');
+    }
+  };
+
+  const handleDeleteAllFlashcards = async () => {
+    if (!userId) return;
+
+    if (!confirm(`Delete ALL ${flashcards.length} flashcards? This cannot be undone!`)) return;
+
+    try {
+      const { deleteFlashcard } = await import('@/lib/flashcardDb');
+
+      // Delete all flashcards
+      for (const card of flashcards) {
+        await deleteFlashcard(card.id);
+      }
+
+      alert('All flashcards deleted successfully!');
+      await loadFlashcards();
+    } catch (error) {
+      console.error('Error deleting flashcards:', error);
+      alert('Failed to delete all flashcards. Please try again.');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-900">
@@ -202,15 +236,23 @@ export default function FlashcardsPage() {
 
             {/* Study Button */}
             <div className="text-center mb-8">
-              <button
-                onClick={handleStartStudy}
-                disabled={dueCards.length === 0}
-                className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-4 px-12 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg"
-              >
-                {dueCards.length > 0
-                  ? `Study Now (${dueCards.length} due)`
-                  : 'No cards due'}
-              </button>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button
+                  onClick={handleStartStudy}
+                  disabled={dueCards.length === 0}
+                  className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-4 px-12 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg"
+                >
+                  {dueCards.length > 0
+                    ? `Study Now (${dueCards.length} due)`
+                    : 'No cards due'}
+                </button>
+                <button
+                  onClick={handleDeleteAllFlashcards}
+                  className="bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-600/50 font-medium py-2 px-6 rounded-lg transition-all"
+                >
+                  Delete All Flashcards
+                </button>
+              </div>
               {dueCards.length === 0 && flashcards.length > 0 && (
                 <p className="mt-4 text-gray-500 text-sm">
                   All caught up! Come back later for reviews.
@@ -225,14 +267,37 @@ export default function FlashcardsPage() {
                 {flashcards.slice(0, 20).map((card) => (
                   <div
                     key={card.id}
-                    className="bg-gray-700/50 rounded-lg p-3 hover:bg-gray-700 transition-all"
+                    className="bg-gray-700/50 rounded-lg p-3 hover:bg-gray-700 transition-all group"
                   >
-                    <div className="font-medium text-sm">{card.term}</div>
-                    <div className="text-xs text-gray-400 mt-1 line-clamp-2">
-                      {card.definition}
-                    </div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      From: {card.sourceFile}
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm">{card.term}</div>
+                        <div className="text-xs text-gray-400 mt-1 line-clamp-2">
+                          {card.definition}
+                        </div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          From: {card.sourceFile}
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleDeleteFlashcard(card.id)}
+                        className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-red-400 hover:text-red-300 p-1"
+                        title="Delete flashcard"
+                      >
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          />
+                        </svg>
+                      </button>
                     </div>
                   </div>
                 ))}
