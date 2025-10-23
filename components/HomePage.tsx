@@ -1,15 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useApp } from './AppProvider';
 import { useRouter } from 'next/navigation';
-import SyncDevicesModal from './SyncDevicesModal';
 
 export default function HomePage() {
-  const { user, userProgress, predictedScore, loading, resetProgress, generatePairingCode, enterPairingCode, isPaired, handleSignOut } = useApp();
+  const { user, userProgress, predictedScore, loading, resetProgress, handleSignOut } = useApp();
   const router = useRouter();
-  const [showSyncModal, setShowSyncModal] = useState(false);
-  const [currentPairingCode, setCurrentPairingCode] = useState<string | null>(null);
 
   const handleStartQuiz = () => {
     router.push('/quiz');
@@ -25,16 +22,6 @@ export default function HomePage() {
         alert('Failed to reset progress. Please try again.');
       }
     }
-  };
-
-  const handleGeneratePairingCode = async (): Promise<string> => {
-    const code = await generatePairingCode();
-    setCurrentPairingCode(code);
-    return code;
-  };
-
-  const handleEnterPairingCode = async (code: string): Promise<boolean> => {
-    return await enterPairingCode(code);
   };
 
   if (loading) {
@@ -74,33 +61,22 @@ export default function HomePage() {
                 </div>
               )}
             </div>
-            <div className="flex items-center gap-2">
+            {user && !user.isAnonymous && (
               <button
-                onClick={() => setShowSyncModal(true)}
-                className="bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-300 px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2"
+                onClick={async () => {
+                  if (confirm('Are you sure you want to sign out?')) {
+                    await handleSignOut();
+                  }
+                }}
+                className="bg-red-600/20 hover:bg-red-600/30 border border-red-600/50 text-red-400 px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2"
+                title="Sign Out"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
-                {isPaired ? 'Synced' : 'Sync Devices'}
+                Sign Out
               </button>
-              {user && !user.isAnonymous && (
-                <button
-                  onClick={async () => {
-                    if (confirm('Are you sure you want to sign out?')) {
-                      await handleSignOut();
-                    }
-                  }}
-                  className="bg-red-600/20 hover:bg-red-600/30 border border-red-600/50 text-red-400 px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2"
-                  title="Sign Out"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
-                  Sign Out
-                </button>
-              )}
-            </div>
+            )}
           </div>
           <div className="text-center">
             <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
@@ -320,14 +296,6 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Sync Devices Modal */}
-        <SyncDevicesModal
-          isOpen={showSyncModal}
-          onClose={() => setShowSyncModal(false)}
-          onGenerateCode={handleGeneratePairingCode}
-          onEnterCode={handleEnterPairingCode}
-          currentCode={currentPairingCode}
-        />
       </div>
     </div>
   );
