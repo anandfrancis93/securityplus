@@ -17,6 +17,7 @@ export default function FlashcardsPage() {
   const [reviews, setReviews] = useState<FlashcardReview[]>([]);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Manual mode states
   const [manualTerm, setManualTerm] = useState('');
@@ -280,6 +281,19 @@ export default function FlashcardsPage() {
   const dueCards = getDueFlashcards(reviews, flashcards.map(f => f.id));
   const stats = getDeckStats(reviews, flashcards.map(f => f.id));
 
+  // Filter flashcards based on search query
+  const filteredFlashcards = flashcards.filter((card) => {
+    if (!searchQuery.trim()) return true;
+
+    const query = searchQuery.toLowerCase();
+    return (
+      card.term.toLowerCase().includes(query) ||
+      card.definition.toLowerCase().includes(query) ||
+      card.domain?.toLowerCase().includes(query) ||
+      card.sourceFile.toLowerCase().includes(query)
+    );
+  });
+
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -464,9 +478,56 @@ export default function FlashcardsPage() {
 
             {/* Flashcard List */}
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <h3 className="text-lg font-bold mb-4">Your Flashcards ({flashcards.length})</h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold">
+                  Your Flashcards ({filteredFlashcards.length}{filteredFlashcards.length !== flashcards.length && ` of ${flashcards.length}`})
+                </h3>
+              </div>
+
+              {/* Search Input */}
+              <div className="mb-4">
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search by term, definition, domain, or source..."
+                    className="w-full bg-gray-700 text-white rounded-lg pl-10 pr-10 py-3 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                  />
+                  <svg
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                      title="Clear search"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+              </div>
+
               <div className="space-y-2 max-h-96 overflow-y-auto">
-                {flashcards.slice(0, 20).map((card) => (
+                {filteredFlashcards.length === 0 ? (
+                  <div className="text-center py-8 text-gray-400">
+                    {searchQuery ? 'No flashcards match your search.' : 'No flashcards yet.'}
+                  </div>
+                ) : (
+                  filteredFlashcards.slice(0, 20).map((card) => (
                   <div
                     key={card.id}
                     className="bg-gray-700/50 rounded-lg p-3 hover:bg-gray-700 transition-all group"
@@ -526,10 +587,11 @@ export default function FlashcardsPage() {
                       </div>
                     </div>
                   </div>
-                ))}
-                {flashcards.length > 20 && (
+                  ))
+                )}
+                {filteredFlashcards.length > 20 && (
                   <p className="text-center text-gray-500 text-sm pt-2">
-                    Showing 20 of {flashcards.length} flashcards
+                    Showing 20 of {filteredFlashcards.length} flashcards
                   </p>
                 )}
               </div>
