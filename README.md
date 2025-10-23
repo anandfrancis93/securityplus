@@ -65,7 +65,13 @@ npm install
 4. Enable Anonymous Authentication:
    - Go to Authentication → Sign-in method
    - Enable Anonymous provider
-5. Get your Firebase configuration from Project Settings
+5. **Deploy Firestore Security Rules**:
+   - Install Firebase CLI: `npm install -g firebase-tools`
+   - Login: `firebase login`
+   - Initialize: `firebase init firestore` (select your project)
+   - Deploy rules: `firebase deploy --only firestore:rules`
+   - The rules are in `firestore.rules` file
+6. Get your Firebase configuration from Project Settings
 
 ### 4. Set Up Anthropic API
 

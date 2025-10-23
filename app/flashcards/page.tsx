@@ -45,6 +45,13 @@ export default function FlashcardsPage() {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Check file size (10MB limit)
+      const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+      if (file.size > maxSize) {
+        alert(`File is too large (${(file.size / 1024 / 1024).toFixed(2)}MB). Maximum size is 10MB.\n\nTry uploading a smaller PDF or convert it to text first.`);
+        e.target.value = ''; // Clear the input
+        return;
+      }
       setSelectedFile(file);
     }
   };
