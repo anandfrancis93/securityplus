@@ -16,7 +16,16 @@ export default function FlashcardsPage() {
   const [reviews, setReviews] = useState<FlashcardReview[]>([]);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
-  const [inputText, setInputText] = useState('');
+
+  // Mode selection
+  const [creationMode, setCreationMode] = useState<'manual' | 'ai'>('manual');
+
+  // Manual mode states
+  const [manualTerm, setManualTerm] = useState('');
+  const [manualDefinition, setManualDefinition] = useState('');
+
+  // AI mode states
+  const [aiInputText, setAiInputText] = useState('');
 
   useEffect(() => {
     if (userId) {
@@ -42,10 +51,39 @@ export default function FlashcardsPage() {
     }
   };
 
-  const handleGenerateFlashcards = async () => {
-    if (!inputText.trim() || !userId) return;
+  const handleManualCreate = async () => {
+    if (!manualTerm.trim() || !manualDefinition.trim() || !userId) return;
 
-    if (inputText.trim().length < 50) {
+    if (manualTerm.trim().length < 2 || manualDefinition.trim().length < 10) {
+      alert('Please enter a valid term (min 2 characters) and definition (min 10 characters).');
+      return;
+    }
+
+    setGenerating(true);
+    try {
+      const flashcard = {
+        term: manualTerm.trim(),
+        definition: manualDefinition.trim(),
+      };
+
+      await saveFlashcards(userId, [flashcard], 'Manual Entry');
+
+      alert('Flashcard created successfully!');
+      setManualTerm('');
+      setManualDefinition('');
+      await loadFlashcards();
+    } catch (error) {
+      console.error('Error creating manual flashcard:', error);
+      alert('Failed to create flashcard. Please try again.');
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const handleAIGenerate = async () => {
+    if (!aiInputText.trim() || !userId) return;
+
+    if (aiInputText.trim().length < 50) {
       alert('Please enter at least 50 characters of text.');
       return;
     }
@@ -60,8 +98,8 @@ export default function FlashcardsPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          text: inputText,
-          fileName: 'Manual Entry',
+          text: aiInputText,
+          fileName: 'AI Generated',
         }),
       });
 
@@ -78,7 +116,7 @@ export default function FlashcardsPage() {
       await saveFlashcards(userId, data.flashcards, data.fileName);
 
       alert(`Successfully created ${data.flashcards.length} flashcards!`);
-      setInputText('');
+      setAiInputText('');
 
       await loadFlashcards();
     } catch (error) {
@@ -159,54 +197,138 @@ export default function FlashcardsPage() {
             </button>
           </div>
           <p className="text-gray-400">
-            Create flashcards from your study materials using AI
+            Create flashcards manually or use AI to generate them from keywords
           </p>
         </div>
 
-        {/* Text Input Section */}
-        <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
-          <h2 className="text-xl font-bold mb-4">✍️ Enter Security+ Terms</h2>
-          <p className="text-gray-400 text-sm mb-4">
-            Enter Security+ terms below (one per line or separated). AI will create one flashcard per term with definitions.
-          </p>
+        {/* Mode Selection */}
+        <div className="flex gap-4 mb-6">
+          <button
+            onClick={() => setCreationMode('manual')}
+            className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
+              creationMode === 'manual'
+                ? 'bg-blue-600 text-white shadow-lg'
+                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+            }`}
+          >
+            ✍️ Manual Creation
+          </button>
+          <button
+            onClick={() => setCreationMode('ai')}
+            className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
+              creationMode === 'ai'
+                ? 'bg-green-600 text-white shadow-lg'
+                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+            }`}
+          >
+            🤖 AI Generation
+          </button>
+        </div>
 
-          <div className="space-y-4">
-            <textarea
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Enter Security+ terms (one per line)...&#10;&#10;Example:&#10;Zero Trust&#10;CIA Triad&#10;MFA&#10;Least Privilege&#10;Defense in Depth&#10;AAA Framework&#10;PKI&#10;SIEM&#10;&#10;Or with definitions:&#10;Zero Trust - No implicit trust&#10;CIA Triad - Confidentiality, Integrity, Availability&#10;&#10;10 terms = 10 flashcards&#10;100 terms = 100 flashcards"
-              className="w-full h-64 bg-gray-700 text-white rounded-lg p-4 border border-gray-600 focus:border-blue-500 focus:outline-none resize-vertical"
-              disabled={generating}
-            />
+        {/* Manual Creation Mode */}
+        {creationMode === 'manual' && (
+          <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
+            <h2 className="text-xl font-bold mb-4">✍️ Create Flashcard Manually</h2>
+            <p className="text-gray-400 text-sm mb-4">
+              Enter a term/question and its definition to create a single flashcard.
+            </p>
 
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-gray-400">
-                {inputText.length} characters
-                {inputText.length < 50 && inputText.length > 0 && (
-                  <span className="text-yellow-500 ml-2">
-                    (Need at least 50 characters)
-                  </span>
-                )}
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Term / Question
+                </label>
+                <input
+                  type="text"
+                  value={manualTerm}
+                  onChange={(e) => setManualTerm(e.target.value)}
+                  placeholder="e.g., What is Zero Trust?"
+                  className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                  disabled={generating}
+                />
               </div>
-              <button
-                onClick={handleGenerateFlashcards}
-                disabled={generating || inputText.trim().length < 50}
-                className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-all"
-              >
-                {generating ? 'Generating...' : 'Generate Flashcards'}
-              </button>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Definition / Answer
+                </label>
+                <textarea
+                  value={manualDefinition}
+                  onChange={(e) => setManualDefinition(e.target.value)}
+                  placeholder="Enter the definition or answer here..."
+                  className="w-full h-32 bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none resize-vertical"
+                  disabled={generating}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-gray-400">
+                  Term: {manualTerm.length} chars | Definition: {manualDefinition.length} chars
+                  {(manualTerm.length > 0 && manualTerm.length < 2) && (
+                    <span className="text-yellow-500 ml-2">(Term needs at least 2 characters)</span>
+                  )}
+                  {(manualDefinition.length > 0 && manualDefinition.length < 10) && (
+                    <span className="text-yellow-500 ml-2">(Definition needs at least 10 characters)</span>
+                  )}
+                </div>
+                <button
+                  onClick={handleManualCreate}
+                  disabled={generating || manualTerm.trim().length < 2 || manualDefinition.trim().length < 10}
+                  className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-all"
+                >
+                  {generating ? 'Creating...' : 'Create Flashcard'}
+                </button>
+              </div>
             </div>
-
-            {generating && (
-              <div className="text-center py-4">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mx-auto"></div>
-                <p className="mt-2 text-sm text-gray-400">
-                  Analyzing text and extracting key terms...
-                </p>
-              </div>
-            )}
           </div>
-        </div>
+        )}
+
+        {/* AI Generation Mode */}
+        {creationMode === 'ai' && (
+          <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
+            <h2 className="text-xl font-bold mb-4">🤖 AI Flashcard Generation</h2>
+            <p className="text-gray-400 text-sm mb-4">
+              Enter Security+ keywords (one per line). AI will create one flashcard per keyword with comprehensive definitions.
+            </p>
+
+            <div className="space-y-4">
+              <textarea
+                value={aiInputText}
+                onChange={(e) => setAiInputText(e.target.value)}
+                placeholder="Enter Security+ keywords (one per line)...&#10;&#10;Example:&#10;Zero Trust&#10;CIA Triad&#10;MFA&#10;Least Privilege&#10;Defense in Depth&#10;AAA Framework&#10;PKI&#10;SIEM&#10;&#10;Or with hints:&#10;Zero Trust - No implicit trust&#10;CIA Triad - Confidentiality, Integrity, Availability&#10;&#10;10 keywords = 10 flashcards&#10;100 keywords = 100 flashcards"
+                className="w-full h-64 bg-gray-700 text-white rounded-lg p-4 border border-gray-600 focus:border-green-500 focus:outline-none resize-vertical"
+                disabled={generating}
+              />
+
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-gray-400">
+                  {aiInputText.length} characters
+                  {aiInputText.length < 50 && aiInputText.length > 0 && (
+                    <span className="text-yellow-500 ml-2">
+                      (Need at least 50 characters)
+                    </span>
+                  )}
+                </div>
+                <button
+                  onClick={handleAIGenerate}
+                  disabled={generating || aiInputText.trim().length < 50}
+                  className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-all"
+                >
+                  {generating ? 'Generating...' : 'Generate Flashcards'}
+                </button>
+              </div>
+
+              {generating && (
+                <div className="text-center py-4">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mx-auto"></div>
+                  <p className="mt-2 text-sm text-gray-400">
+                    Analyzing keywords and creating flashcards...
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Stats */}
         {flashcards.length > 0 && (
@@ -262,7 +384,7 @@ export default function FlashcardsPage() {
 
             {/* Flashcard List */}
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <h3 className="text-lg font-bold mb-4">Your Flashcards</h3>
+              <h3 className="text-lg font-bold mb-4">Your Flashcards ({flashcards.length})</h3>
               <div className="space-y-2 max-h-96 overflow-y-auto">
                 {flashcards.slice(0, 20).map((card) => (
                   <div
@@ -301,6 +423,11 @@ export default function FlashcardsPage() {
                     </div>
                   </div>
                 ))}
+                {flashcards.length > 20 && (
+                  <p className="text-center text-gray-500 text-sm pt-2">
+                    Showing 20 of {flashcards.length} flashcards
+                  </p>
+                )}
               </div>
             </div>
           </>
@@ -311,7 +438,7 @@ export default function FlashcardsPage() {
             <div className="text-6xl mb-4">📚</div>
             <p className="text-gray-400 text-lg">No flashcards yet</p>
             <p className="text-gray-500 text-sm mt-2">
-              Upload a document to get started
+              Create your first flashcard using manual creation or AI generation
             </p>
           </div>
         )}
