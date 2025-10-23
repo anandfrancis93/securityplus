@@ -252,3 +252,23 @@ export async function updateDeckLastStudied(deckId: string): Promise<void> {
 export async function deleteDeck(deckId: string): Promise<void> {
   await deleteDoc(doc(db, DECKS_COLLECTION, deckId));
 }
+
+/**
+ * Reset all flashcard progress for a user (delete all reviews)
+ */
+export async function resetFlashcardProgress(userId: string): Promise<void> {
+  const q = query(
+    collection(db, REVIEWS_COLLECTION),
+    where('userId', '==', userId)
+  );
+
+  const snapshot = await getDocs(q);
+  const batch = writeBatch(db);
+
+  snapshot.docs.forEach((doc) => {
+    batch.delete(doc.ref);
+  });
+
+  await batch.commit();
+  console.log(`Reset flashcard progress for user ${userId}`);
+}

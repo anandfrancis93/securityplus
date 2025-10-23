@@ -250,6 +250,22 @@ export default function FlashcardsPage() {
     }
   };
 
+  const handleResetProgress = async () => {
+    if (!userId) return;
+
+    if (!confirm('Reset ALL flashcard progress? This will clear all review history and spaced repetition data. Your flashcards will not be deleted.')) return;
+
+    try {
+      const { resetFlashcardProgress } = await import('@/lib/flashcardDb');
+      await resetFlashcardProgress(userId);
+      alert('Flashcard progress reset successfully!');
+      await loadFlashcards();
+    } catch (error) {
+      console.error('Error resetting flashcard progress:', error);
+      alert('Failed to reset progress. Please try again.');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-900">
@@ -425,6 +441,12 @@ export default function FlashcardsPage() {
                   {dueCards.length > 0
                     ? `Study Now (${dueCards.length} due)`
                     : 'No cards due'}
+                </button>
+                <button
+                  onClick={handleResetProgress}
+                  className="bg-yellow-600/20 hover:bg-yellow-600/30 text-yellow-400 border border-yellow-600/50 font-medium py-2 px-6 rounded-lg transition-all"
+                >
+                  Reset Progress
                 </button>
                 <button
                   onClick={handleDeleteAllFlashcards}
