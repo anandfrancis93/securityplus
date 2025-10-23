@@ -1,8 +1,8 @@
-import OpenAI from 'openai';
+import Anthropic from '@anthropic-ai/sdk';
 import { Question } from './types';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
 const SECURITY_PLUS_TOPICS = `
@@ -55,7 +55,7 @@ IMPORTANT REQUIREMENTS:
 3. Include 4 answer options (A, B, C, D)
 4. Provide the correct answer index (0-3)
 5. Explain why the correct answer is right
-6. Explain why each incorrect answer is wrong
+6. Explain why each incorrect answer is wrong (provide 4 explanations, one for each option)
 7. Tag the question with relevant topic areas
 
 Example of a synthesis question:
@@ -72,31 +72,33 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
   "options": ["option A", "option B", "option C", "option D"],
   "correctAnswer": 0,
   "explanation": "why the correct answer is right",
-  "incorrectExplanations": ["why A is wrong", "why B is wrong", "why C is wrong", "why D is wrong"],
+  "incorrectExplanations": ["why option 0 is wrong/right", "why option 1 is wrong/right", "why option 2 is wrong/right", "why option 3 is wrong/right"],
   "topics": ["topic1", "topic2", "topic3"],
   "difficulty": "medium"
 }`;
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+    const message = await anthropic.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 2048,
+      temperature: 0.8,
       messages: [
         {
-          role: "system",
-          content: "You are a CompTIA Security+ SY0-701 exam expert. Generate high-quality synthesis questions that test understanding across multiple security domains. Return only valid JSON, no markdown formatting."
-        },
-        {
           role: "user",
-          content: prompt
+          content: `You are a CompTIA Security+ SY0-701 exam expert. Generate high-quality synthesis questions that test understanding across multiple security domains. Return only valid JSON, no markdown formatting.\n\n${prompt}`
         }
-      ],
-      temperature: 0.8,
+      ]
     });
 
-    const content = completion.choices[0]?.message?.content?.trim() || '';
+    const content = message.content[0];
+    if (content.type !== 'text') {
+      throw new Error('Unexpected response type from Claude');
+    }
+
+    const textContent = content.text.trim();
 
     // Remove markdown code blocks if present
-    const jsonContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    const jsonContent = textContent.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
 
     const questionData = JSON.parse(jsonContent);
 

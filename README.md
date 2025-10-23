@@ -15,7 +15,7 @@ An AI-powered web application that generates synthesis questions for CompTIA Sec
 ## Tech Stack
 
 - **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS
-- **AI**: OpenAI GPT-4o-mini for question generation
+- **AI**: Claude 3.5 Sonnet for question generation
 - **Backend**: Firebase (Firestore + Anonymous Auth)
 - **Deployment**: Vercel
 
@@ -44,9 +44,9 @@ npm install
    - Enable Anonymous provider
 5. Get your Firebase configuration from Project Settings
 
-### 4. Set Up OpenAI API
+### 4. Set Up Anthropic API
 
-1. Get an API key from [OpenAI](https://platform.openai.com/)
+1. Get an API key from [Anthropic Console](https://console.anthropic.com/)
 2. Ensure you have credits available
 
 ### 5. Configure Environment Variables
@@ -60,7 +60,7 @@ cp .env.example .env
 Fill in your credentials:
 
 ```env
-OPENAI_API_KEY=your_openai_api_key_here
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
 
 NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
@@ -105,7 +105,7 @@ vercel
 
 Add these in your Vercel project settings:
 
-- `OPENAI_API_KEY`
+- `ANTHROPIC_API_KEY`
 - `NEXT_PUBLIC_FIREBASE_API_KEY`
 - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
 - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
