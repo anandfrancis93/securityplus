@@ -224,16 +224,24 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Start Quiz Button */}
+        {/* Action Buttons */}
         <div className="text-center">
-          <button
-            onClick={handleStartQuiz}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-12 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg"
-          >
-            Start New Quiz (10 Questions)
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-4">
+            <button
+              onClick={handleStartQuiz}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-12 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg"
+            >
+              Start New Quiz (10 Questions)
+            </button>
+            <button
+              onClick={() => router.push('/flashcards')}
+              className="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-12 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg"
+            >
+              📚 Study Flashcards
+            </button>
+          </div>
           <p className="mt-4 text-gray-500 text-sm">
-            Questions are generated using AI and combine multiple security concepts
+            Practice with AI-generated quizzes or create flashcards from your study materials
           </p>
 
           {/* Reset Progress Button */}

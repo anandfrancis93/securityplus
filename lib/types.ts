@@ -53,3 +53,35 @@ export interface AppState {
   loading: boolean;
   error: string | null;
 }
+
+// Flashcard Types
+export interface Flashcard {
+  id: string;
+  term: string;
+  definition: string;
+  context?: string; // Additional context from the document
+  sourceFile: string; // Name of the uploaded file
+  orderInFile: number; // Order in which it appeared in the file
+  createdAt: number;
+  userId: string;
+}
+
+export interface FlashcardReview {
+  flashcardId: string;
+  userId: string;
+  reviewedAt: number;
+  difficulty: 'again' | 'hard' | 'good' | 'easy'; // User rating
+  nextReviewDate: number; // Timestamp for next review
+  interval: number; // Days until next review
+  easeFactor: number; // SM-2 algorithm ease factor (default 2.5)
+  repetitions: number; // Number of successful reviews
+}
+
+export interface FlashcardDeck {
+  id: string;
+  name: string;
+  userId: string;
+  flashcardIds: string[];
+  createdAt: number;
+  lastStudied?: number;
+}
