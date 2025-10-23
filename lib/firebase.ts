@@ -1,6 +1,6 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, signInAnonymously, onAuthStateChanged, User } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -17,8 +17,8 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 
 // Initialize anonymous auth
-export const initializeAnonymousAuth = async () => {
-  return new Promise((resolve, reject) => {
+export const initializeAnonymousAuth = async (): Promise<User> => {
+  return new Promise<User>((resolve, reject) => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         resolve(user);
