@@ -1,7 +1,8 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { auth, initializeAnonymousAuth } from '@/lib/firebase';
+import { auth, signOut } from '@/lib/firebase';
+import { User, onAuthStateChanged } from 'firebase/auth';
 import { getUserProgress, saveQuizSession, calculatePredictedScore, resetUserProgress } from '@/lib/db';
 import { UserProgress, QuizSession, Question, QuestionAttempt } from '@/lib/types';
 import {
@@ -12,9 +13,11 @@ import {
   getPairedUserId
 } from '@/lib/pairing';
 import { calculatePartialCredit } from '@/lib/irt';
+import AuthModal from './AuthModal';
 
 interface AppContextType {
   userId: string | null;
+  user: User | null;
   userProgress: UserProgress | null;
   currentQuiz: QuizSession | null;
   loading: boolean;
@@ -27,11 +30,14 @@ interface AppContextType {
   generatePairingCode: () => Promise<string>;
   enterPairingCode: (code: string) => Promise<boolean>;
   isPaired: boolean;
+  showAuthModal: () => void;
+  handleSignOut: () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
   const [authUserId, setAuthUserId] = useState<string | null>(null); // Firebase auth user ID
   const [userId, setUserId] = useState<string | null>(null); // Effective user ID (paired or auth)
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
@@ -39,6 +45,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [predictedScore, setPredictedScore] = useState(0);
   const [isPaired, setIsPaired] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   useEffect(() => {
     initAuth();
@@ -52,24 +59,40 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const initAuth = async () => {
     try {
-      const user = await initializeAnonymousAuth();
-      setAuthUserId(user.uid);
+      // Listen for auth state changes
+      const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+        if (firebaseUser) {
+          setUser(firebaseUser);
+          setAuthUserId(firebaseUser.uid);
 
-      // Check if there's a paired user ID
-      const effectiveId = getEffectiveUserId(user.uid);
-      setUserId(effectiveId);
-      setIsPaired(effectiveId !== user.uid);
+          // Check if there's a paired user ID
+          const effectiveId = getEffectiveUserId(firebaseUser.uid);
+          setUserId(effectiveId);
+          setIsPaired(effectiveId !== firebaseUser.uid);
 
-      console.log('Auth initialized:', {
-        authUserId: user.uid,
-        effectiveUserId: effectiveId,
-        isPaired: effectiveId !== user.uid
+          console.log('Auth initialized:', {
+            authUserId: firebaseUser.uid,
+            effectiveUserId: effectiveId,
+            isPaired: effectiveId !== firebaseUser.uid,
+            isAnonymous: firebaseUser.isAnonymous,
+            email: firebaseUser.email
+          });
+
+          await loadUserProgress(effectiveId);
+          setLoading(false);
+        } else {
+          // No user signed in - show auth modal
+          setUser(null);
+          setAuthUserId(null);
+          setUserId(null);
+          setLoading(false);
+          setIsAuthModalOpen(true);
+        }
       });
 
-      await loadUserProgress(effectiveId);
+      return () => unsubscribe();
     } catch (error) {
       console.error('Error initializing auth:', error);
-    } finally {
       setLoading(false);
     }
   };
@@ -247,8 +270,33 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const showAuthModal = () => {
+    setIsAuthModalOpen(true);
+  };
+
+  const handleAuthSuccess = () => {
+    setIsAuthModalOpen(false);
+    // Auth state will be handled by onAuthStateChanged
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      setUser(null);
+      setUserId(null);
+      setAuthUserId(null);
+      setUserProgress(null);
+      setCurrentQuiz(null);
+      setIsAuthModalOpen(true);
+    } catch (error) {
+      console.error('Error signing out:', error);
+      throw error;
+    }
+  };
+
   const value: AppContextType = {
     userId,
+    user,
     userProgress,
     currentQuiz,
     loading,
@@ -261,9 +309,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
     generatePairingCode,
     enterPairingCode,
     isPaired,
+    showAuthModal,
+    handleSignOut,
   };
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={value}>
+      {children}
+      {isAuthModalOpen && (
+        <AuthModal
+          onClose={() => setIsAuthModalOpen(false)}
+          onSuccess={handleAuthSuccess}
+        />
+      )}
+    </AppContext.Provider>
+  );
 }
 
 export function useApp() {
