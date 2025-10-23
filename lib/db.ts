@@ -10,7 +10,8 @@ import {
   getDocs,
   serverTimestamp,
 } from 'firebase/firestore';
-import { UserProgress, QuizSession, Question } from './types';
+import { UserProgress, QuizSession, Question, QuestionAttempt } from './types';
+import { estimateAbility, calculateIRTScore } from './irt';
 
 const USERS_COLLECTION = 'users';
 const QUESTIONS_COLLECTION = 'questions';
@@ -30,6 +31,9 @@ export async function getUserProgress(userId: string): Promise<UserProgress | nu
       answeredQuestions: [],
       correctAnswers: 0,
       totalQuestions: 0,
+      totalPoints: 0,
+      maxPossiblePoints: 0,
+      estimatedAbility: 0,
       lastUpdated: Date.now(),
       quizHistory: [],
     };
@@ -75,6 +79,9 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
         answeredQuestions: [],
         correctAnswers: 0,
         totalQuestions: 0,
+        totalPoints: 0,
+        maxPossiblePoints: 0,
+        estimatedAbility: 0,
         lastUpdated: Date.now(),
         quizHistory: [],
       };
@@ -96,8 +103,16 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
       answeredQuestions.add(q.questionId);
     });
 
-    // Calculate correct answers from this session
+    // Calculate correct answers and points from this session
     const sessionCorrectAnswers = session.questions.filter(q => q.isCorrect).length;
+    const sessionPoints = session.questions.reduce((sum, q) => sum + (q.pointsEarned || 0), 0);
+    const sessionMaxPoints = session.questions.reduce((sum, q) => sum + (q.maxPoints || 100), 0);
+
+    // Get all attempts across all quizzes for ability estimation
+    const allAttempts: QuestionAttempt[] = quizHistory.flatMap(quiz => quiz.questions);
+
+    // Estimate ability using IRT
+    const estimatedAbility = allAttempts.length > 0 ? estimateAbility(allAttempts) : 0;
 
     const updatedProgress: UserProgress = {
       userId,
@@ -105,12 +120,18 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
       answeredQuestions: Array.from(answeredQuestions),
       correctAnswers: (userData.correctAnswers || 0) + sessionCorrectAnswers,
       totalQuestions: (userData.totalQuestions || 0) + session.questions.length,
+      totalPoints: (userData.totalPoints || 0) + sessionPoints,
+      maxPossiblePoints: (userData.maxPossiblePoints || 0) + sessionMaxPoints,
+      estimatedAbility,
       lastUpdated: Date.now(),
     };
 
     console.log('Saving updated progress:', {
       totalQuestions: updatedProgress.totalQuestions,
       correctAnswers: updatedProgress.correctAnswers,
+      totalPoints: updatedProgress.totalPoints,
+      maxPossiblePoints: updatedProgress.maxPossiblePoints,
+      estimatedAbility: updatedProgress.estimatedAbility,
       quizHistoryCount: updatedProgress.quizHistory.length
     });
 
@@ -153,13 +174,18 @@ export async function saveQuestion(question: Question): Promise<void> {
 export async function calculatePredictedScore(progress: UserProgress): Promise<number> {
   if (progress.totalQuestions === 0) return 0;
 
-  const accuracy = progress.correctAnswers / progress.totalQuestions;
+  // Use IRT-based scoring if we have ability estimate
+  const irtScore = calculateIRTScore(progress);
 
-  // Security+ passing score is 750/900 (83.3%)
-  // Map user's accuracy to the 100-900 scale
-  const predictedScore = Math.round(accuracy * 900);
+  console.log('Predicted score calculated:', {
+    totalQuestions: progress.totalQuestions,
+    totalPoints: progress.totalPoints,
+    maxPossiblePoints: progress.maxPossiblePoints,
+    estimatedAbility: progress.estimatedAbility,
+    irtScore
+  });
 
-  return Math.max(100, Math.min(900, predictedScore));
+  return irtScore;
 }
 
 export async function resetUserProgress(userId: string): Promise<void> {
@@ -172,6 +198,9 @@ export async function resetUserProgress(userId: string): Promise<void> {
       answeredQuestions: [],
       correctAnswers: 0,
       totalQuestions: 0,
+      totalPoints: 0,
+      maxPossiblePoints: 0,
+      estimatedAbility: 0,
       lastUpdated: Date.now(),
       quizHistory: [],
     };

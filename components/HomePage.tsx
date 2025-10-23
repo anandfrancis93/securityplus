@@ -50,7 +50,11 @@ export default function HomePage() {
 
   const totalAnswered = userProgress?.totalQuestions || 0;
   const correctAnswers = userProgress?.correctAnswers || 0;
+  const totalPoints = userProgress?.totalPoints || 0;
+  const maxPossiblePoints = userProgress?.maxPossiblePoints || 0;
+  const estimatedAbility = userProgress?.estimatedAbility || 0;
   const accuracy = totalAnswered > 0 ? ((correctAnswers / totalAnswered) * 100).toFixed(1) : 0;
+  const pointsPercentage = maxPossiblePoints > 0 ? ((totalPoints / maxPossiblePoints) * 100).toFixed(1) : 0;
   const isPassing = predictedScore >= 750;
 
   return (
@@ -115,7 +119,7 @@ export default function HomePage() {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
             <div className="text-gray-400 text-sm mb-1">Questions Answered</div>
             <div className="text-3xl font-bold text-blue-400">{totalAnswered}</div>
@@ -128,7 +132,40 @@ export default function HomePage() {
             <div className="text-gray-400 text-sm mb-1">Accuracy</div>
             <div className="text-3xl font-bold text-purple-400">{accuracy}%</div>
           </div>
+          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+            <div className="text-gray-400 text-sm mb-1">Points Earned</div>
+            <div className="text-3xl font-bold text-yellow-400">{totalPoints}</div>
+            <div className="text-xs text-gray-500 mt-1">of {maxPossiblePoints} ({pointsPercentage}%)</div>
+          </div>
         </div>
+
+        {/* IRT Ability Indicator */}
+        {totalAnswered > 0 && (
+          <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4 mb-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-sm font-medium text-blue-300 mb-1">Estimated Ability Level (IRT θ)</h4>
+                <p className="text-xs text-blue-400">
+                  This advanced metric considers question difficulty and your performance pattern
+                </p>
+              </div>
+              <div className="text-3xl font-bold text-blue-400">
+                {estimatedAbility.toFixed(2)}
+              </div>
+            </div>
+            <div className="mt-3 flex items-center">
+              <div className="flex-1 bg-gray-700 rounded-full h-2">
+                <div
+                  className="bg-blue-500 h-2 rounded-full transition-all duration-500"
+                  style={{ width: `${((estimatedAbility + 3) / 6) * 100}%` }}
+                ></div>
+              </div>
+              <div className="ml-3 text-xs text-gray-400">
+                Range: -3 to +3
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Start Quiz Button */}
         <div className="text-center">
@@ -160,26 +197,38 @@ export default function HomePage() {
           <div className="mt-12">
             <h3 className="text-xl font-bold mb-4">Recent Quizzes</h3>
             <div className="space-y-3">
-              {userProgress.quizHistory.slice(-5).reverse().map((quiz) => (
-                <div key={quiz.id} className="bg-gray-800 rounded-lg p-4 border border-gray-700 flex justify-between items-center">
-                  <div>
-                    <div className="text-sm text-gray-400">
-                      {new Date(quiz.startedAt).toLocaleDateString()} at {new Date(quiz.startedAt).toLocaleTimeString()}
+              {userProgress.quizHistory.slice(-5).reverse().map((quiz) => {
+                const quizPoints = quiz.questions.reduce((sum, q) => sum + (q.pointsEarned || 0), 0);
+                const quizMaxPoints = quiz.questions.reduce((sum, q) => sum + (q.maxPoints || 100), 0);
+                return (
+                  <div key={quiz.id} className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <div className="text-sm text-gray-400">
+                          {new Date(quiz.startedAt).toLocaleDateString()} at {new Date(quiz.startedAt).toLocaleTimeString()}
+                        </div>
+                        <div className="text-sm mt-1">
+                          <span className="text-gray-300">{quiz.questions.length} questions</span>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-blue-400">
+                          {quiz.score}/{quiz.questions.length}
+                        </div>
+                        <div className="text-sm text-gray-400">
+                          {((quiz.score / quiz.questions.length) * 100).toFixed(0)}%
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-sm mt-1">
-                      <span className="text-gray-300">{quiz.questions.length} questions</span>
+                    <div className="mt-3 pt-3 border-t border-gray-700 flex justify-between items-center text-sm">
+                      <span className="text-gray-400">Points Earned:</span>
+                      <span className="font-medium text-yellow-400">
+                        {quizPoints} / {quizMaxPoints} ({((quizPoints / quizMaxPoints) * 100).toFixed(0)}%)
+                      </span>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-blue-400">
-                      {quiz.score}/{quiz.questions.length}
-                    </div>
-                    <div className="text-sm text-gray-400">
-                      {((quiz.score / quiz.questions.length) * 100).toFixed(0)}%
-                    </div>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}

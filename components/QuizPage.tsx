@@ -11,6 +11,7 @@ export default function QuizPage() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
   const [showExplanation, setShowExplanation] = useState(false);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
@@ -52,14 +53,33 @@ export default function QuizPage() {
 
   const handleAnswerSelect = (answerIndex: number) => {
     if (showExplanation) return;
-    setSelectedAnswer(answerIndex);
+
+    const currentQuestion = questions[currentQuestionIndex];
+
+    if (currentQuestion.questionType === 'multiple') {
+      // Toggle selection for multiple-response questions
+      setSelectedAnswers(prev =>
+        prev.includes(answerIndex)
+          ? prev.filter(i => i !== answerIndex)
+          : [...prev, answerIndex].sort()
+      );
+    } else {
+      // Single selection for single-choice questions
+      setSelectedAnswer(answerIndex);
+    }
   };
 
   const handleSubmitAnswer = () => {
-    if (selectedAnswer === null) return;
-
     const currentQuestion = questions[currentQuestionIndex];
-    answerQuestion(currentQuestion, selectedAnswer);
+
+    if (currentQuestion.questionType === 'multiple') {
+      if (selectedAnswers.length === 0) return;
+      answerQuestion(currentQuestion, selectedAnswers);
+    } else {
+      if (selectedAnswer === null) return;
+      answerQuestion(currentQuestion, selectedAnswer);
+    }
+
     setShowExplanation(true);
   };
 
@@ -67,6 +87,7 @@ export default function QuizPage() {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedAnswer(null);
+      setSelectedAnswers([]);
       setShowExplanation(false);
     } else {
       handleEndQuiz();
@@ -117,7 +138,13 @@ export default function QuizPage() {
 
   const currentQuestion = questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
-  const isCorrect = selectedAnswer === currentQuestion.correctAnswer;
+
+  // Check if answer is correct
+  const isCorrect = currentQuestion.questionType === 'multiple'
+    ? Array.isArray(currentQuestion.correctAnswer) &&
+      selectedAnswers.length === currentQuestion.correctAnswer.length &&
+      selectedAnswers.every(ans => (currentQuestion.correctAnswer as number[]).includes(ans))
+    : selectedAnswer === currentQuestion.correctAnswer;
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -152,13 +179,27 @@ export default function QuizPage() {
 
         {/* Question Card */}
         <div className="bg-gray-800 rounded-lg p-8 border border-gray-700 shadow-xl mb-6">
-          <h2 className="text-xl font-medium mb-6 leading-relaxed">{currentQuestion.question}</h2>
+          <h2 className="text-xl font-medium mb-4 leading-relaxed">{currentQuestion.question}</h2>
+
+          {/* Multiple-response instruction */}
+          {currentQuestion.questionType === 'multiple' && !showExplanation && (
+            <div className="mb-4 text-sm text-blue-400 bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
+              <strong>Select all that apply</strong> - This question has multiple correct answers
+            </div>
+          )}
 
           {/* Answer Options */}
           <div className="space-y-3">
             {currentQuestion.options.map((option, index) => {
-              const isSelected = selectedAnswer === index;
-              const isCorrectAnswer = index === currentQuestion.correctAnswer;
+              const isSelected = currentQuestion.questionType === 'multiple'
+                ? selectedAnswers.includes(index)
+                : selectedAnswer === index;
+
+              const correctAnswers = Array.isArray(currentQuestion.correctAnswer)
+                ? currentQuestion.correctAnswer
+                : [currentQuestion.correctAnswer];
+
+              const isCorrectAnswer = correctAnswers.includes(index);
               const showCorrect = showExplanation && isCorrectAnswer;
               const showIncorrect = showExplanation && isSelected && !isCorrectAnswer;
 
@@ -178,6 +219,22 @@ export default function QuizPage() {
                   } ${showExplanation ? 'cursor-default' : 'cursor-pointer'}`}
                 >
                   <div className="flex items-start">
+                    {/* Checkbox or Radio indicator */}
+                    <div className="flex items-center mr-3">
+                      {currentQuestion.questionType === 'multiple' ? (
+                        <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                          isSelected ? 'bg-blue-500 border-blue-500' : 'border-gray-400'
+                        }`}>
+                          {isSelected && <span className="text-white text-xs">✓</span>}
+                        </div>
+                      ) : (
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                          isSelected ? 'border-blue-500' : 'border-gray-400'
+                        }`}>
+                          {isSelected && <div className="w-3 h-3 rounded-full bg-blue-500"></div>}
+                        </div>
+                      )}
+                    </div>
                     <span className="font-bold mr-3 text-gray-400">
                       {String.fromCharCode(65 + index)}.
                     </span>
@@ -194,9 +251,13 @@ export default function QuizPage() {
           {!showExplanation && (
             <button
               onClick={handleSubmitAnswer}
-              disabled={selectedAnswer === null}
+              disabled={
+                currentQuestion.questionType === 'multiple'
+                  ? selectedAnswers.length === 0
+                  : selectedAnswer === null
+              }
               className={`w-full mt-6 py-3 rounded-lg font-bold text-lg transition-all ${
-                selectedAnswer === null
+                (currentQuestion.questionType === 'multiple' ? selectedAnswers.length === 0 : selectedAnswer === null)
                   ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
                   : 'bg-blue-600 hover:bg-blue-700 text-white'
               }`}
@@ -220,10 +281,22 @@ export default function QuizPage() {
                 {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
               </h3>
               <div className="mb-4">
-                <p className="font-medium text-gray-300 mb-2">Correct Answer:</p>
-                <p className="text-white">
-                  {String.fromCharCode(65 + currentQuestion.correctAnswer)}. {currentQuestion.options[currentQuestion.correctAnswer]}
+                <p className="font-medium text-gray-300 mb-2">
+                  {currentQuestion.questionType === 'multiple' ? 'Correct Answers:' : 'Correct Answer:'}
                 </p>
+                {currentQuestion.questionType === 'multiple' && Array.isArray(currentQuestion.correctAnswer) ? (
+                  <div className="space-y-2">
+                    {currentQuestion.correctAnswer.map((answerIndex) => (
+                      <p key={answerIndex} className="text-white">
+                        {String.fromCharCode(65 + answerIndex)}. {currentQuestion.options[answerIndex]}
+                      </p>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-white">
+                    {String.fromCharCode(65 + (currentQuestion.correctAnswer as number))}. {currentQuestion.options[currentQuestion.correctAnswer as number]}
+                  </p>
+                )}
               </div>
               <div>
                 <p className="font-medium text-gray-300 mb-2">Explanation:</p>
@@ -236,7 +309,12 @@ export default function QuizPage() {
               <h4 className="font-bold text-gray-300 mb-3">Why Other Answers Are Incorrect:</h4>
               <div className="space-y-3">
                 {currentQuestion.incorrectExplanations.map((explanation, index) => {
-                  if (index === currentQuestion.correctAnswer) return null;
+                  const correctAnswers = Array.isArray(currentQuestion.correctAnswer)
+                    ? currentQuestion.correctAnswer
+                    : [currentQuestion.correctAnswer];
+
+                  if (correctAnswers.includes(index)) return null;
+
                   return (
                     <div key={index} className="text-sm">
                       <span className="font-bold text-gray-400">

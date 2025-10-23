@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { Question } from './types';
+import { calculateIRTParameters } from './irt';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -81,29 +82,46 @@ const SECURITY_PLUS_TOPICS = `
 - Security awareness practices
 `;
 
-export async function generateSynthesisQuestion(excludeTopics: string[] = []): Promise<Question> {
+export async function generateSynthesisQuestion(
+  excludeTopics: string[] = [],
+  difficulty: 'easy' | 'medium' | 'hard' = 'medium',
+  questionType: 'single' | 'multiple' = 'single'
+): Promise<Question> {
+
+  const difficultyGuidance = {
+    easy: 'The question should be straightforward, testing basic understanding of 1-2 concepts with clear, distinguishable answer options.',
+    medium: 'The question should require applying 2-3 concepts together with moderate complexity. Options should be plausible but distinguishable.',
+    hard: 'The question should be complex, combining 3+ concepts in a nuanced scenario. Incorrect options should be subtly wrong and require deep understanding to eliminate.'
+  };
+
+  const typeGuidance = questionType === 'single'
+    ? 'This is a SINGLE-CHOICE question. Provide exactly ONE correct answer (index 0-3).'
+    : 'This is a MULTIPLE-RESPONSE question (select all that apply). Provide 2-3 correct answers as an array of indices (e.g., [0, 2] or [1, 2, 3]). The question should ask "Which of the following are..." or "Select all that apply".';
+
   const prompt = `Generate a single CompTIA Security+ SY0-701 synthesis question that combines multiple security concepts.
 
+DIFFICULTY LEVEL: ${difficulty.toUpperCase()}
+${difficultyGuidance[difficulty]}
+
+QUESTION TYPE: ${questionType.toUpperCase()}
+${typeGuidance}
+
 IMPORTANT REQUIREMENTS:
-1. The question must be a SYNTHESIS question that combines 2-3 different security topics
-2. It should present a realistic scenario requiring application of multiple concepts
+1. The question must be a SYNTHESIS question combining security topics
+2. Present a realistic scenario requiring application of multiple concepts
 3. Include 4 answer options (A, B, C, D)
-4. Provide the correct answer index (0-3)
-5. Explain why the correct answer is right
-6. Explain why each incorrect answer is wrong (provide 4 explanations, one for each option)
-7. Tag the question with relevant topic areas
+4. Explain why the correct answer(s) are right
+5. Explain why each option is correct or wrong (provide 4 explanations)
+6. Tag with relevant topic areas
 
 CRITICAL - ANSWER LENGTH RANDOMIZATION:
 - VARY the length of ALL answer options
-- Make some INCORRECT answers LONGER than the correct answer
-- Make some INCORRECT answers MORE DETAILED than the correct answer
+- Make some INCORRECT answers LONGER than correct answers
+- Make some INCORRECT answers MORE DETAILED than correct answers
 - The correct answer should NOT always be the longest option
 - Some correct answers should be SHORT and concise
 - Some incorrect answers should be LONG and detailed but subtly wrong
-- This prevents test-takers from guessing based on answer length
-
-Example of a synthesis question:
-"A financial institution is migrating its core banking application to a public cloud provider using an IaaS model. They need to ensure data confidentiality and integrity, meet regulatory compliance (PCI DSS, GDPR), and maintain control over cryptographic keys. Which of the following actions should be prioritized?"
+- This prevents guessing based on answer length
 
 Topics to cover:
 ${SECURITY_PLUS_TOPICS}
@@ -114,11 +132,11 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
 {
   "question": "the question text",
   "options": ["option A", "option B", "option C", "option D"],
-  "correctAnswer": 0,
-  "explanation": "why the correct answer is right",
+  "correctAnswer": ${questionType === 'single' ? '0' : '[0, 2]'},
+  "explanation": "why the correct answer(s) are right",
   "incorrectExplanations": ["why option 0 is wrong/right", "why option 1 is wrong/right", "why option 2 is wrong/right", "why option 3 is wrong/right"],
   "topics": ["topic1", "topic2", "topic3"],
-  "difficulty": "medium"
+  "difficulty": "${difficulty}"
 }`;
 
   try {
@@ -147,9 +165,17 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
     const questionData = JSON.parse(jsonContent);
 
     // Shuffle the answer options to randomize correct answer position
-    const shuffledData = shuffleQuestionOptions(questionData);
+    // Only shuffle for single-choice questions
+    const shuffledData = questionType === 'single' ? shuffleQuestionOptions(questionData) : questionData;
 
-    console.log(`Question generated: Correct answer at position ${shuffledData.correctAnswer} (A/B/C/D: ${String.fromCharCode(65 + shuffledData.correctAnswer)})`);
+    // Calculate IRT parameters based on difficulty
+    const irtParams = calculateIRTParameters(difficulty);
+
+    const correctAnswerDisplay = Array.isArray(shuffledData.correctAnswer)
+      ? `[${shuffledData.correctAnswer.join(', ')}]`
+      : shuffledData.correctAnswer;
+
+    console.log(`Question generated: Type=${questionType}, Difficulty=${difficulty}, Correct=${correctAnswerDisplay}, Points=${irtParams.maxPoints}`);
 
     return {
       id: `q_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -160,6 +186,10 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
       incorrectExplanations: shuffledData.incorrectExplanations,
       topics: shuffledData.topics,
       difficulty: shuffledData.difficulty,
+      questionType: questionType,
+      irtDifficulty: irtParams.irtDifficulty,
+      irtDiscrimination: irtParams.irtDiscrimination,
+      maxPoints: irtParams.maxPoints,
       createdAt: Date.now(),
     };
   } catch (error) {
@@ -168,15 +198,45 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
   }
 }
 
+/**
+ * Generate a batch of questions with varied difficulty and types
+ *
+ * Distribution for 10 questions:
+ * - 3 easy (1 single, 2 single)
+ * - 4 medium (2 single, 2 multiple-response)
+ * - 3 hard (2 single, 1 multiple-response)
+ *
+ * This creates a balanced mix similar to the real Security+ exam
+ */
 export async function generateQuestionBatch(count: number, excludeTopics: string[] = []): Promise<Question[]> {
   const questions: Question[] = [];
   const usedTopics = [...excludeTopics];
 
-  for (let i = 0; i < count; i++) {
+  // Define question configuration for adaptive difficulty
+  const questionConfigs = [
+    { difficulty: 'easy' as const, type: 'single' as const },
+    { difficulty: 'easy' as const, type: 'single' as const },
+    { difficulty: 'easy' as const, type: 'single' as const },
+    { difficulty: 'medium' as const, type: 'single' as const },
+    { difficulty: 'medium' as const, type: 'single' as const },
+    { difficulty: 'medium' as const, type: 'multiple' as const },
+    { difficulty: 'medium' as const, type: 'multiple' as const },
+    { difficulty: 'hard' as const, type: 'single' as const },
+    { difficulty: 'hard' as const, type: 'single' as const },
+    { difficulty: 'hard' as const, type: 'multiple' as const },
+  ];
+
+  // Shuffle configs to randomize question order
+  const shuffledConfigs = shuffleArray(questionConfigs).slice(0, count);
+
+  for (let i = 0; i < shuffledConfigs.length; i++) {
     try {
-      const question = await generateSynthesisQuestion(usedTopics);
+      const config = shuffledConfigs[i];
+      const question = await generateSynthesisQuestion(usedTopics, config.difficulty, config.type);
       questions.push(question);
       usedTopics.push(...question.topics);
+
+      console.log(`Generated ${i + 1}/${count}: ${config.difficulty} ${config.type}-choice (${question.maxPoints} pts)`);
 
       // Add a small delay to avoid rate limiting
       await new Promise(resolve => setTimeout(resolve, 1000));

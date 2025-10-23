@@ -11,6 +11,7 @@ import {
   setPairedUserId,
   getPairedUserId
 } from '@/lib/pairing';
+import { calculatePartialCredit } from '@/lib/irt';
 
 interface AppContextType {
   userId: string | null;
@@ -19,7 +20,7 @@ interface AppContextType {
   loading: boolean;
   predictedScore: number;
   startNewQuiz: () => void;
-  answerQuestion: (question: Question, answerIndex: number) => void;
+  answerQuestion: (question: Question, answer: number | number[]) => void;
   endQuiz: () => Promise<void>;
   refreshProgress: () => Promise<void>;
   resetProgress: () => Promise<void>;
@@ -90,20 +91,45 @@ export function AppProvider({ children }: { children: ReactNode }) {
       startedAt: Date.now(),
       questions: [],
       score: 0,
+      totalPoints: 0,
+      maxPoints: 0,
       completed: false,
     };
     setCurrentQuiz(newQuiz);
   };
 
-  const answerQuestion = (question: Question, answerIndex: number) => {
+  const answerQuestion = (question: Question, answer: number | number[]) => {
     if (!currentQuiz) return;
 
-    const isCorrect = answerIndex === question.correctAnswer;
+    const maxPoints = question.maxPoints || 100;
+    let pointsEarned = 0;
+    let isCorrect = false;
+
+    if (question.questionType === 'multiple' && Array.isArray(answer) && Array.isArray(question.correctAnswer)) {
+      // Multiple-response question with partial credit
+      pointsEarned = calculatePartialCredit(
+        answer,
+        question.correctAnswer,
+        question.options.length,
+        maxPoints
+      );
+
+      // Full credit only if all correct answers selected and no incorrect ones
+      isCorrect = pointsEarned === maxPoints;
+    } else {
+      // Single-choice question
+      const userAnswerIndex = Array.isArray(answer) ? answer[0] : answer;
+      isCorrect = userAnswerIndex === question.correctAnswer;
+      pointsEarned = isCorrect ? maxPoints : 0;
+    }
+
     const attempt: QuestionAttempt = {
       questionId: question.id,
       question,
-      userAnswer: answerIndex,
+      userAnswer: answer,
       isCorrect,
+      pointsEarned,
+      maxPoints,
       answeredAt: Date.now(),
     };
 
@@ -111,9 +137,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
       ...currentQuiz,
       questions: [...currentQuiz.questions, attempt],
       score: currentQuiz.questions.filter(q => q.isCorrect).length + (isCorrect ? 1 : 0),
+      totalPoints: currentQuiz.totalPoints + pointsEarned,
+      maxPoints: currentQuiz.maxPoints + maxPoints,
     };
 
     setCurrentQuiz(updatedQuiz);
+
+    console.log('Question answered:', {
+      questionType: question.questionType,
+      difficulty: question.difficulty,
+      pointsEarned,
+      maxPoints,
+      isCorrect,
+      partialCredit: pointsEarned < maxPoints && pointsEarned > 0
+    });
   };
 
   const endQuiz = async () => {
