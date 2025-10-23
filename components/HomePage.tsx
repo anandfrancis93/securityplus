@@ -9,7 +9,7 @@ export default function HomePage() {
   const router = useRouter();
 
   const handleStartQuiz = () => {
-    router.push('/quiz');
+    router.push('/cybersecurity/quiz');
   };
 
   const handleResetProgress = async () => {
@@ -50,7 +50,17 @@ export default function HomePage() {
         {/* Header */}
         <div className="mb-12">
           <div className="flex justify-between items-start mb-4">
-            <div className="flex-1">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => router.push('/')}
+                className="bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-300 px-3 py-2 rounded-lg text-sm transition-all flex items-center gap-2"
+                title="Back to subjects"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                Back
+              </button>
               {user && !user.isAnonymous && (
                 <div className="text-sm text-gray-400">
                   {user.email ? (
@@ -238,7 +248,7 @@ export default function HomePage() {
               Start New Quiz (10 Questions)
             </button>
             <button
-              onClick={() => router.push('/flashcards')}
+              onClick={() => router.push('/cybersecurity/flashcards')}
               className="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-12 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg"
             >
               📚 Study Flashcards

@@ -98,8 +98,8 @@ export default function QuizPage() {
     try {
       console.log('Ending quiz...');
       await endQuiz();
-      console.log('Quiz ended successfully, navigating to home...');
-      router.push('/');
+      console.log('Quiz ended successfully, navigating to cybersecurity home...');
+      router.push('/cybersecurity');
     } catch (error) {
       console.error('Error ending quiz:', error);
       alert('Failed to save quiz results. Please try again.');
@@ -126,10 +126,10 @@ export default function QuizPage() {
         <div className="text-center">
           <p className="text-red-400">Failed to generate questions. Please try again.</p>
           <button
-            onClick={() => router.push('/')}
+            onClick={() => router.push('/cybersecurity')}
             className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
           >
-            Back to Home
+            Back to Cybersecurity
           </button>
         </div>
       </div>
