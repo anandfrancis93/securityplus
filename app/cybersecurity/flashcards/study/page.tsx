@@ -284,12 +284,14 @@ export default function StudyPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            <img
-              src={currentCard.imageUrl}
-              alt="Enlarged flashcard visual"
-              className="max-w-full max-h-[90vh] object-contain rounded-lg"
-              onClick={(e) => e.stopPropagation()}
-            />
+            <div className="bg-white p-4 rounded-lg">
+              <img
+                src={currentCard.imageUrl}
+                alt="Enlarged flashcard visual"
+                className="max-w-full max-h-[85vh] object-contain"
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
           </div>
         </div>
       )}
