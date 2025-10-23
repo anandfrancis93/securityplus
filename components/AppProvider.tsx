@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { auth, initializeAnonymousAuth } from '@/lib/firebase';
-import { getUserProgress, saveQuizSession, calculatePredictedScore } from '@/lib/db';
+import { getUserProgress, saveQuizSession, calculatePredictedScore, resetUserProgress } from '@/lib/db';
 import { UserProgress, QuizSession, Question, QuestionAttempt } from '@/lib/types';
 
 interface AppContextType {
@@ -15,6 +15,7 @@ interface AppContextType {
   answerQuestion: (question: Question, answerIndex: number) => void;
   endQuiz: () => Promise<void>;
   refreshProgress: () => Promise<void>;
+  resetProgress: () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -92,7 +93,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const endQuiz = async () => {
-    if (!currentQuiz || !userId) return;
+    if (!currentQuiz || !userId) {
+      console.error('Cannot end quiz: missing currentQuiz or userId', { currentQuiz, userId });
+      return;
+    }
+
+    console.log('Ending quiz with data:', {
+      userId,
+      quizId: currentQuiz.id,
+      questionsAnswered: currentQuiz.questions.length,
+      score: currentQuiz.score
+    });
 
     const finalQuiz = {
       ...currentQuiz,
@@ -100,9 +111,31 @@ export function AppProvider({ children }: { children: ReactNode }) {
       completed: true,
     };
 
-    await saveQuizSession(userId, finalQuiz);
-    setCurrentQuiz(null);
-    await refreshProgress();
+    try {
+      await saveQuizSession(userId, finalQuiz);
+      console.log('Quiz session saved successfully');
+      setCurrentQuiz(null);
+      await refreshProgress();
+      console.log('Progress refreshed successfully');
+    } catch (error) {
+      console.error('Error in endQuiz:', error);
+      throw error;
+    }
+  };
+
+  const resetProgress = async () => {
+    if (!userId) {
+      console.error('Cannot reset progress: missing userId');
+      return;
+    }
+
+    try {
+      await resetUserProgress(userId);
+      await refreshProgress();
+    } catch (error) {
+      console.error('Error resetting progress:', error);
+      throw error;
+    }
   };
 
   const value: AppContextType = {
@@ -115,6 +148,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     answerQuestion,
     endQuiz,
     refreshProgress,
+    resetProgress,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

@@ -5,11 +5,23 @@ import { useApp } from './AppProvider';
 import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
-  const { userProgress, predictedScore, loading } = useApp();
+  const { userProgress, predictedScore, loading, resetProgress } = useApp();
   const router = useRouter();
 
   const handleStartQuiz = () => {
     router.push('/quiz');
+  };
+
+  const handleResetProgress = async () => {
+    if (confirm('Are you sure you want to reset all your progress? This cannot be undone.')) {
+      try {
+        await resetProgress();
+        alert('Progress reset successfully!');
+      } catch (error) {
+        console.error('Error resetting progress:', error);
+        alert('Failed to reset progress. Please try again.');
+      }
+    }
   };
 
   if (loading) {
@@ -102,6 +114,18 @@ export default function HomePage() {
           <p className="mt-4 text-gray-500 text-sm">
             Questions are generated using AI and combine multiple security concepts
           </p>
+
+          {/* Reset Progress Button */}
+          {totalAnswered > 0 && (
+            <div className="mt-6">
+              <button
+                onClick={handleResetProgress}
+                className="bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-600/50 font-medium py-2 px-6 rounded-lg text-sm transition-all"
+              >
+                Reset All Progress
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Recent Activity */}

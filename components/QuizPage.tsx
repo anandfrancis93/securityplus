@@ -74,8 +74,15 @@ export default function QuizPage() {
   };
 
   const handleEndQuiz = async () => {
-    await endQuiz();
-    router.push('/');
+    try {
+      console.log('Ending quiz...');
+      await endQuiz();
+      console.log('Quiz ended successfully, navigating to home...');
+      router.push('/');
+    } catch (error) {
+      console.error('Error ending quiz:', error);
+      alert('Failed to save quiz results. Please try again.');
+    }
   };
 
   if (loading || generating) {
@@ -119,9 +126,11 @@ export default function QuizPage() {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-2xl font-bold">Question {currentQuestionIndex + 1} of {questions.length}</h1>
-            <div className="text-sm text-gray-400 mt-1">
-              Topics: {currentQuestion.topics.join(', ')}
-            </div>
+            {showExplanation && (
+              <div className="text-sm text-gray-400 mt-1">
+                Topics: {currentQuestion.topics.join(', ')}
+              </div>
+            )}
           </div>
           <button
             onClick={handleEndQuiz}

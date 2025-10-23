@@ -57,14 +57,18 @@ export async function updateUserProgress(userId: string, progress: Partial<UserP
 
 export async function saveQuizSession(userId: string, session: QuizSession): Promise<void> {
   try {
+    console.log('saveQuizSession called with:', { userId, sessionId: session.id, questionsCount: session.questions.length });
+
     const userRef = doc(db, USERS_COLLECTION, userId);
     const userDoc = await getDoc(userRef);
 
     let userData: UserProgress;
 
     if (userDoc.exists()) {
+      console.log('User document exists, loading existing data');
       userData = userDoc.data() as UserProgress;
     } else {
+      console.log('User document does not exist, creating new one');
       // Create new user progress if it doesn't exist
       userData = {
         userId,
@@ -104,8 +108,15 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
       lastUpdated: Date.now(),
     };
 
+    console.log('Saving updated progress:', {
+      totalQuestions: updatedProgress.totalQuestions,
+      correctAnswers: updatedProgress.correctAnswers,
+      quizHistoryCount: updatedProgress.quizHistory.length
+    });
+
     // Use setDoc to create or update the document
     await setDoc(userRef, updatedProgress);
+    console.log('Progress saved successfully to Firestore');
   } catch (error) {
     console.error('Error saving quiz session:', error);
     throw error;
@@ -149,4 +160,26 @@ export async function calculatePredictedScore(progress: UserProgress): Promise<n
   const predictedScore = Math.round(accuracy * 900);
 
   return Math.max(100, Math.min(900, predictedScore));
+}
+
+export async function resetUserProgress(userId: string): Promise<void> {
+  try {
+    console.log('Resetting progress for user:', userId);
+    const userRef = doc(db, USERS_COLLECTION, userId);
+
+    const resetProgress: UserProgress = {
+      userId,
+      answeredQuestions: [],
+      correctAnswers: 0,
+      totalQuestions: 0,
+      lastUpdated: Date.now(),
+      quizHistory: [],
+    };
+
+    await setDoc(userRef, resetProgress);
+    console.log('User progress reset successfully');
+  } catch (error) {
+    console.error('Error resetting user progress:', error);
+    throw error;
+  }
 }
