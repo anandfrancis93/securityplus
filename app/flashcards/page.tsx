@@ -17,16 +17,10 @@ export default function FlashcardsPage() {
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
 
-  // Mode selection
-  const [creationMode, setCreationMode] = useState<'manual' | 'ai'>('manual');
-
   // Manual mode states
   const [manualTerm, setManualTerm] = useState('');
   const [manualDefinition, setManualDefinition] = useState('');
   const [manualDomain, setManualDomain] = useState('General Security Concepts');
-
-  // AI mode states
-  const [aiInputText, setAiInputText] = useState('');
 
   // Edit mode states
   const [editingCard, setEditingCard] = useState<Flashcard | null>(null);
@@ -89,53 +83,6 @@ export default function FlashcardsPage() {
     }
   };
 
-  const handleAIGenerate = async () => {
-    if (!aiInputText.trim() || !userId) return;
-
-    if (aiInputText.trim().length < 50) {
-      alert('Please enter at least 50 characters of text.');
-      return;
-    }
-
-    setGenerating(true);
-    try {
-      console.log('Generating flashcards from text...');
-
-      const response = await fetch('/api/extract-flashcards', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: aiInputText,
-          fileName: 'AI Generated',
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        console.error('API error:', data);
-        throw new Error(data.error || 'Failed to extract flashcards');
-      }
-
-      console.log('Received flashcards:', data.flashcards.length);
-
-      // Save flashcards to database
-      await saveFlashcards(userId, data.flashcards, data.fileName);
-
-      alert(`Successfully created ${data.flashcards.length} flashcards!`);
-      setAiInputText('');
-
-      await loadFlashcards();
-    } catch (error) {
-      console.error('Error generating flashcards:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      alert(`Failed to generate flashcards: ${errorMessage}\n\nPlease check the browser console for more details.`);
-    } finally {
-      setGenerating(false);
-    }
-  };
 
   const handleStartStudy = () => {
     router.push('/flashcards/study');
@@ -248,38 +195,13 @@ export default function FlashcardsPage() {
             </button>
           </div>
           <p className="text-gray-400">
-            Create flashcards manually or use AI to generate them from keywords
+            Create flashcards for your Security+ study
           </p>
         </div>
 
-        {/* Mode Selection */}
-        <div className="flex gap-4 mb-6">
-          <button
-            onClick={() => setCreationMode('manual')}
-            className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
-              creationMode === 'manual'
-                ? 'bg-blue-600 text-white shadow-lg'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-            }`}
-          >
-            ✍️ Manual Creation
-          </button>
-          <button
-            onClick={() => setCreationMode('ai')}
-            className={`flex-1 py-3 px-6 rounded-lg font-medium transition-all ${
-              creationMode === 'ai'
-                ? 'bg-green-600 text-white shadow-lg'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-            }`}
-          >
-            🤖 AI Generation
-          </button>
-        </div>
-
-        {/* Manual Creation Mode */}
-        {creationMode === 'manual' && (
-          <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
-            <h2 className="text-xl font-bold mb-4">✍️ Create Flashcard Manually</h2>
+        {/* Flashcard Creation Form */}
+        <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
+          <h2 className="text-xl font-bold mb-4">✍️ Create Flashcard</h2>
             <p className="text-gray-400 text-sm mb-4">
               Enter a term/question and its definition to create a single flashcard.
             </p>
@@ -350,54 +272,7 @@ export default function FlashcardsPage() {
               </div>
             </div>
           </div>
-        )}
-
-        {/* AI Generation Mode */}
-        {creationMode === 'ai' && (
-          <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
-            <h2 className="text-xl font-bold mb-4">🤖 AI Flashcard Generation</h2>
-            <p className="text-gray-400 text-sm mb-4">
-              Enter Security+ keywords (one per line). AI will create one flashcard per keyword with comprehensive definitions.
-            </p>
-
-            <div className="space-y-4">
-              <textarea
-                value={aiInputText}
-                onChange={(e) => setAiInputText(e.target.value)}
-                placeholder="Enter Security+ keywords (one per line)...&#10;&#10;Example:&#10;Zero Trust&#10;CIA Triad&#10;MFA&#10;Least Privilege&#10;Defense in Depth&#10;AAA Framework&#10;PKI&#10;SIEM&#10;&#10;Or with hints:&#10;Zero Trust - No implicit trust&#10;CIA Triad - Confidentiality, Integrity, Availability&#10;&#10;10 keywords = 10 flashcards&#10;100 keywords = 100 flashcards"
-                className="w-full h-64 bg-gray-700 text-white rounded-lg p-4 border border-gray-600 focus:border-green-500 focus:outline-none resize-vertical"
-                disabled={generating}
-              />
-
-              <div className="flex items-center justify-between">
-                <div className="text-sm text-gray-400">
-                  {aiInputText.length} characters
-                  {aiInputText.length < 50 && aiInputText.length > 0 && (
-                    <span className="text-yellow-500 ml-2">
-                      (Need at least 50 characters)
-                    </span>
-                  )}
-                </div>
-                <button
-                  onClick={handleAIGenerate}
-                  disabled={generating || aiInputText.trim().length < 50}
-                  className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-all"
-                >
-                  {generating ? 'Generating...' : 'Generate Flashcards'}
-                </button>
-              </div>
-
-              {generating && (
-                <div className="text-center py-4">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mx-auto"></div>
-                  <p className="mt-2 text-sm text-gray-400">
-                    Analyzing keywords and creating flashcards...
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+        </div>
 
         {/* Stats */}
         {flashcards.length > 0 && (
