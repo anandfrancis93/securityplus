@@ -276,14 +276,10 @@ export default function FlashcardsPage() {
         {/* Stats */}
         {flashcards.length > 0 && (
           <>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
               <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
                 <div className="text-gray-400 text-xs mb-1">Total</div>
                 <div className="text-2xl font-bold text-blue-400">{stats.total}</div>
-              </div>
-              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                <div className="text-gray-400 text-xs mb-1">New</div>
-                <div className="text-2xl font-bold text-green-400">{stats.new}</div>
               </div>
               <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
                 <div className="text-gray-400 text-xs mb-1">Learning</div>
