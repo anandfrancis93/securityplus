@@ -189,12 +189,12 @@ export default function HomePage() {
                 {estimatedAbility >= 1.5 ? (
                   <>
                     <p className="text-green-400 font-medium">✓ Excellent Performance!</p>
-                    <p>Your ability level of <span className="font-bold text-blue-400">{estimatedAbility.toFixed(2)}</span> indicates strong mastery. You're performing well on harder questions, demonstrating deep understanding across multiple security concepts.</p>
+                    <p>Your ability level of <span className="font-bold text-blue-400">{estimatedAbility.toFixed(2)}</span> indicates strong mastery. You&apos;re performing well on harder questions, demonstrating deep understanding across multiple security concepts.</p>
                   </>
                 ) : estimatedAbility >= 1.0 ? (
                   <>
                     <p className="text-green-400 font-medium">✓ Good Performance</p>
-                    <p>Your ability level of <span className="font-bold text-blue-400">{estimatedAbility.toFixed(2)}</span> suggests you're on track to pass. You're handling medium to hard questions effectively. Keep practicing synthesis questions to solidify your knowledge.</p>
+                    <p>Your ability level of <span className="font-bold text-blue-400">{estimatedAbility.toFixed(2)}</span> suggests you&apos;re on track to pass. You&apos;re handling medium to hard questions effectively. Keep practicing synthesis questions to solidify your knowledge.</p>
                   </>
                 ) : estimatedAbility >= 0 ? (
                   <>
@@ -204,7 +204,7 @@ export default function HomePage() {
                 ) : estimatedAbility >= -1 ? (
                   <>
                     <p className="text-orange-400 font-medium">⚠ Below Average</p>
-                    <p>Your ability level of <span className="font-bold text-blue-400">{estimatedAbility.toFixed(2)}</span> suggests you're struggling with harder questions. Review fundamental concepts and focus on understanding why correct answers are right, not just memorizing them.</p>
+                    <p>Your ability level of <span className="font-bold text-blue-400">{estimatedAbility.toFixed(2)}</span> suggests you&apos;re struggling with harder questions. Review fundamental concepts and focus on understanding why correct answers are right, not just memorizing them.</p>
                   </>
                 ) : (
                   <>
