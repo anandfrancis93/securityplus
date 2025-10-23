@@ -271,7 +271,6 @@ export default function FlashcardsPage() {
                 </button>
               </div>
             </div>
-          </div>
         </div>
 
         {/* Stats */}
@@ -406,7 +405,7 @@ export default function FlashcardsPage() {
             <div className="text-6xl mb-4">📚</div>
             <p className="text-gray-400 text-lg">No flashcards yet</p>
             <p className="text-gray-500 text-sm mt-2">
-              Create your first flashcard using manual creation or AI generation
+              Create your first flashcard using the form above
             </p>
           </div>
         )}
