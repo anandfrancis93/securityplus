@@ -5,17 +5,12 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-// Configure route to handle larger files (10MB limit)
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '10mb',
-    },
-  },
-};
+// Next.js 15 App Router configuration
+export const maxDuration = 60; // 60 seconds timeout
+export const dynamic = 'force-dynamic';
 
-// Add maxDuration for Vercel
-export const maxDuration = 60; // 60 seconds
+// Vercel configuration for larger body size
+export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,6 +28,15 @@ export async function POST(request: NextRequest) {
     // Get file content
     let textContent = '';
     const fileName = file.name;
+
+    // Check file size BEFORE processing (Vercel has 4.5MB request limit)
+    const maxFileSize = 4 * 1024 * 1024; // 4MB to be safe
+    if (file.size > maxFileSize) {
+      return NextResponse.json(
+        { error: `File too large (${(file.size / 1024 / 1024).toFixed(2)}MB). Maximum is 4MB due to server limits.\n\nPlease:\n1. Use a smaller PDF or extract specific pages\n2. Convert to text file (.txt) which compresses better\n3. Split large documents into multiple uploads` },
+        { status: 413 }
+      );
+    }
 
     if (file.type === 'application/pdf') {
       try {

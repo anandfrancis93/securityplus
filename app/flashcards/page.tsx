@@ -45,10 +45,10 @@ export default function FlashcardsPage() {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Check file size (10MB limit)
-      const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+      // Check file size (4MB limit due to Vercel)
+      const maxSize = 4 * 1024 * 1024; // 4MB in bytes
       if (file.size > maxSize) {
-        alert(`File is too large (${(file.size / 1024 / 1024).toFixed(2)}MB). Maximum size is 10MB.\n\nTry uploading a smaller PDF or convert it to text first.`);
+        alert(`File is too large (${(file.size / 1024 / 1024).toFixed(2)}MB). Maximum size is 4MB due to server limits.\n\nPlease:\n1. Use a smaller PDF or extract specific pages\n2. Convert to text file (.txt) which compresses better\n3. Split large documents into multiple uploads`);
         e.target.value = ''; // Clear the input
         return;
       }
