@@ -131,16 +131,16 @@ export default function FlashcardsPage() {
 
         {/* Text Input Section */}
         <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
-          <h2 className="text-xl font-bold mb-4">✍️ Enter Security+ Keywords</h2>
+          <h2 className="text-xl font-bold mb-4">✍️ Enter Security+ Terms</h2>
           <p className="text-gray-400 text-sm mb-4">
-            Paste your Security+ study material or keywords below. AI will extract key terms and create flashcards automatically.
+            Enter Security+ terms below (one per line or separated). AI will create one flashcard per term with definitions.
           </p>
 
           <div className="space-y-4">
             <textarea
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              placeholder="Enter your Security+ keywords, definitions, or study notes here...&#10;&#10;Example:&#10;Zero Trust - A security framework requiring strict identity verification for every person and device trying to access resources on a private network.&#10;&#10;CIA Triad - Confidentiality, Integrity, and Availability - the three main principles of information security.&#10;&#10;MFA - Multi-Factor Authentication uses two or more verification methods..."
+              placeholder="Enter Security+ terms (one per line)...&#10;&#10;Example:&#10;Zero Trust&#10;CIA Triad&#10;MFA&#10;Least Privilege&#10;Defense in Depth&#10;AAA Framework&#10;PKI&#10;SIEM&#10;&#10;Or with definitions:&#10;Zero Trust - No implicit trust&#10;CIA Triad - Confidentiality, Integrity, Availability&#10;&#10;10 terms = 10 flashcards&#10;100 terms = 100 flashcards"
               className="w-full h-64 bg-gray-700 text-white rounded-lg p-4 border border-gray-600 focus:border-blue-500 focus:outline-none resize-vertical"
               disabled={generating}
             />

@@ -38,44 +38,49 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('Sending to Claude for analysis...');
-    // Use Claude to extract Security+ key terms
+    // Use Claude to create flashcards from the provided terms
     const message = await anthropic.messages.create({
       model: 'claude-3-5-sonnet-20241022',
-      max_tokens: 4096,
+      max_tokens: 8192,
       temperature: 0.3,
       messages: [
         {
           role: 'user',
-          content: `You are a CompTIA Security+ SY0-701 expert. Analyze the following document and extract key Security+ terms and concepts.
+          content: `You are a CompTIA Security+ SY0-701 expert. I will provide you with Security+ terms/keywords. For EACH term, create exactly ONE flashcard.
+
+CRITICAL REQUIREMENTS:
+1. Create EXACTLY ONE flashcard for EVERY term/keyword provided
+2. If 10 terms are provided, create EXACTLY 10 flashcards
+3. If 100 terms are provided, create EXACTLY 100 flashcards
+4. Preserve the EXACT order of terms as they appear
+5. Each term should have its own flashcard entry
 
 For each term:
-1. Extract it EXACTLY as it appears in the document (preserve order from start to end)
-2. Provide a clear, concise definition (2-3 sentences max)
-3. Include relevant context from the document if available
+- Use the term EXACTLY as provided (don't modify it)
+- Provide a clear, comprehensive Security+ definition (2-3 sentences)
+- Add relevant context if the term appears with additional information
 
-Focus on:
-- Security concepts, protocols, and technologies
-- Threat types and attack vectors
-- Security controls and mitigation techniques
-- Cryptographic concepts
-- Network security
-- Access control and identity management
-- Compliance and governance terms
-- Any CompTIA Security+ SY0-701 exam objectives
+Format: Terms may be provided in these formats:
+- "Term" (just the term)
+- "Term - definition" (term with definition)
+- "Term: definition" (term with definition)
+- "Term. Description." (term with description)
 
 Return ONLY valid JSON in this exact format (no markdown, no extra text):
 {
   "flashcards": [
     {
-      "term": "exact term from document",
-      "definition": "clear definition",
-      "context": "optional context from document"
+      "term": "exact term",
+      "definition": "comprehensive Security+ definition",
+      "context": "additional context if provided"
     }
   ]
 }
 
-Document content:
-${textContent.slice(0, 50000)}`,
+IMPORTANT: The number of flashcards in your response MUST EXACTLY MATCH the number of terms/keywords in the input.
+
+Terms/Keywords:
+${textContent.slice(0, 100000)}`,
         },
       ],
     });
