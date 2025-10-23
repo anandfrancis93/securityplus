@@ -249,6 +249,24 @@ export default function QuizPage() {
               </div>
             </div>
 
+            {/* Topics Covered */}
+            <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+              <h4 className="font-bold text-blue-300 mb-2">📚 Topics Covered in This Question:</h4>
+              <div className="flex flex-wrap gap-2">
+                {currentQuestion.topics.map((topic, index) => (
+                  <span
+                    key={index}
+                    className="bg-blue-700/30 text-blue-200 px-3 py-1 rounded-full text-sm"
+                  >
+                    {topic}
+                  </span>
+                ))}
+              </div>
+              <p className="text-xs text-blue-400 mt-2">
+                This synthesis question combined {currentQuestion.topics.length} security concept{currentQuestion.topics.length > 1 ? 's' : ''} to test your understanding.
+              </p>
+            </div>
+
             {/* Next Button */}
             <button
               onClick={handleNextQuestion}
