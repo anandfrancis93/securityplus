@@ -93,17 +93,32 @@ ${textContent.slice(0, 100000)}`,
     // Parse the response
     const textResponse = content.text.trim();
     console.log('Claude response received, parsing JSON...');
+    console.log('Response preview:', textResponse.substring(0, 200));
 
-    const jsonContent = textResponse.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    // Remove markdown code blocks more aggressively
+    let jsonContent = textResponse;
+
+    // Remove markdown code blocks
+    jsonContent = jsonContent.replace(/```json\s*/gi, '');
+    jsonContent = jsonContent.replace(/```\s*/g, '');
+
+    // Find JSON object - look for { ... } pattern
+    const jsonMatch = jsonContent.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      jsonContent = jsonMatch[0];
+    }
+
+    jsonContent = jsonContent.trim();
 
     let result;
     try {
       result = JSON.parse(jsonContent);
     } catch (parseError) {
       console.error('JSON parse error:', parseError);
-      console.error('Response text:', textResponse.substring(0, 500));
+      console.error('Cleaned JSON:', jsonContent.substring(0, 1000));
+      console.error('Full response:', textResponse);
       return NextResponse.json(
-        { error: 'Failed to parse AI response. Please try again.' },
+        { error: `Failed to parse AI response. Please try again or try with fewer terms.` },
         { status: 500 }
       );
     }
