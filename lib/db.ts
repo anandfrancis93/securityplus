@@ -60,35 +60,52 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
     const userRef = doc(db, USERS_COLLECTION, userId);
     const userDoc = await getDoc(userRef);
 
+    let userData: UserProgress;
+
     if (userDoc.exists()) {
-      const userData = userDoc.data() as UserProgress;
-      const quizHistory = userData.quizHistory || [];
-
-      // Update or add quiz session
-      const existingIndex = quizHistory.findIndex(q => q.id === session.id);
-      if (existingIndex >= 0) {
-        quizHistory[existingIndex] = session;
-      } else {
-        quizHistory.push(session);
-      }
-
-      // Update answered questions
-      const answeredQuestions = new Set(userData.answeredQuestions || []);
-      session.questions.forEach(q => {
-        answeredQuestions.add(q.questionId);
-      });
-
-      // Calculate total correct answers
-      const correctAnswers = session.questions.filter(q => q.isCorrect).length;
-
-      await updateDoc(userRef, {
-        quizHistory,
-        answeredQuestions: Array.from(answeredQuestions),
-        correctAnswers: (userData.correctAnswers || 0) + correctAnswers,
-        totalQuestions: (userData.totalQuestions || 0) + session.questions.length,
+      userData = userDoc.data() as UserProgress;
+    } else {
+      // Create new user progress if it doesn't exist
+      userData = {
+        userId,
+        answeredQuestions: [],
+        correctAnswers: 0,
+        totalQuestions: 0,
         lastUpdated: Date.now(),
-      });
+        quizHistory: [],
+      };
     }
+
+    const quizHistory = userData.quizHistory || [];
+
+    // Update or add quiz session
+    const existingIndex = quizHistory.findIndex(q => q.id === session.id);
+    if (existingIndex >= 0) {
+      quizHistory[existingIndex] = session;
+    } else {
+      quizHistory.push(session);
+    }
+
+    // Update answered questions
+    const answeredQuestions = new Set(userData.answeredQuestions || []);
+    session.questions.forEach(q => {
+      answeredQuestions.add(q.questionId);
+    });
+
+    // Calculate correct answers from this session
+    const sessionCorrectAnswers = session.questions.filter(q => q.isCorrect).length;
+
+    const updatedProgress: UserProgress = {
+      userId,
+      quizHistory,
+      answeredQuestions: Array.from(answeredQuestions),
+      correctAnswers: (userData.correctAnswers || 0) + sessionCorrectAnswers,
+      totalQuestions: (userData.totalQuestions || 0) + session.questions.length,
+      lastUpdated: Date.now(),
+    };
+
+    // Use setDoc to create or update the document
+    await setDoc(userRef, updatedProgress);
   } catch (error) {
     console.error('Error saving quiz session:', error);
     throw error;
