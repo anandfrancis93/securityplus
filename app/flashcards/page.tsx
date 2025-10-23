@@ -32,6 +32,7 @@ export default function FlashcardsPage() {
   const [editingCard, setEditingCard] = useState<Flashcard | null>(null);
   const [editTerm, setEditTerm] = useState('');
   const [editDefinition, setEditDefinition] = useState('');
+  const [editDomain, setEditDomain] = useState('General Security Concepts');
 
   useEffect(() => {
     if (userId) {
@@ -144,12 +145,14 @@ export default function FlashcardsPage() {
     setEditingCard(card);
     setEditTerm(card.term);
     setEditDefinition(card.definition);
+    setEditDomain(card.domain || 'General Security Concepts');
   };
 
   const handleCancelEdit = () => {
     setEditingCard(null);
     setEditTerm('');
     setEditDefinition('');
+    setEditDomain('General Security Concepts');
   };
 
   const handleSaveEdit = async () => {
@@ -166,6 +169,7 @@ export default function FlashcardsPage() {
       await updateFlashcard(editingCard.id, {
         term: editTerm.trim(),
         definition: editDefinition.trim(),
+        domain: editDomain,
       });
 
       alert('Flashcard updated successfully!');
@@ -574,6 +578,24 @@ export default function FlashcardsPage() {
                     className="w-full h-40 bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none resize-vertical"
                     disabled={generating}
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Security+ Domain
+                  </label>
+                  <select
+                    value={editDomain}
+                    onChange={(e) => setEditDomain(e.target.value)}
+                    className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                    disabled={generating}
+                  >
+                    <option value="General Security Concepts">General Security Concepts</option>
+                    <option value="Threats, Vulnerabilities, and Mitigations">Threats, Vulnerabilities, and Mitigations</option>
+                    <option value="Security Architecture">Security Architecture</option>
+                    <option value="Security Operations">Security Operations</option>
+                    <option value="Security Program Management and Oversight">Security Program Management and Oversight</option>
+                  </select>
                 </div>
 
                 <div className="flex items-center justify-between pt-4 border-t border-gray-700">
