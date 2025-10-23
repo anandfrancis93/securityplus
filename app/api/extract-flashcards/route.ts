@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
     console.log('Sending to Claude for analysis...');
 
     // Count the number of terms/lines
-    const lines = textContent.split('\n').filter(line => line.trim().length > 0);
+    const lines = textContent.split('\n').filter((line: string) => line.trim().length > 0);
     const termCount = lines.length;
     console.log(`Processing ${termCount} terms...`);
 
