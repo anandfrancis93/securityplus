@@ -34,12 +34,16 @@ export async function saveFlashcards(
       id: `fc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       term: flashcards[i].term,
       definition: flashcards[i].definition,
-      context: flashcards[i].context,
       sourceFile,
       orderInFile: i,
       createdAt: Date.now(),
       userId,
     };
+
+    // Only add context if it exists (Firestore doesn't allow undefined values)
+    if (flashcards[i].context) {
+      flashcard.context = flashcards[i].context;
+    }
 
     const docRef = doc(db, FLASHCARDS_COLLECTION, flashcard.id);
     batch.set(docRef, flashcard);
