@@ -145,7 +145,7 @@ export default function SyncDevicesModal({
                 <br />
                 1. Open this app on your other device
                 <br />
-                2. Click "Sync Devices" → "Enter Pairing Code"
+                2. Click &quot;Sync Devices&quot; → &quot;Enter Pairing Code&quot;
                 <br />
                 3. Enter this code: <strong>{generatedCode}</strong>
               </p>
