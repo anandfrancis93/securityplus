@@ -4,10 +4,18 @@ An AI-powered web application that generates synthesis questions for CompTIA Sec
 
 ## Features
 
-- **AI-Generated Synthesis Questions**: Creates complex questions combining multiple security concepts
+### Core Features
+- **AI-Generated Synthesis Questions**: Creates complex questions combining multiple security concepts using Claude 3.5 Sonnet
+- **Adaptive Difficulty**: Questions vary across easy, medium, and hard levels with weighted scoring
+- **Multiple-Response Questions**: Includes "select all that apply" questions with partial credit support
+- **Item Response Theory (IRT) Scoring**: Advanced psychometric scoring system that weighs questions by difficulty
+- **Partial Credit System**: Earn points for partially correct answers on multiple-response questions
+- **Intelligent Score Prediction**: IRT-based ability estimation predicts your exam score (100-900 scale)
+
+### User Experience
 - **Device Pairing**: Sync progress across devices with a simple 6-digit code (no account needed)
 - **Cloud Sync**: All progress automatically saved to Firebase
-- **Progress Tracking**: Track answered questions, accuracy, and predicted exam score
+- **Progress Tracking**: Track answered questions, points earned, ability estimate, and predicted exam score
 - **Dark Mode UI**: Eye-friendly dark interface
 - **Smart Question Management**: Never repeats previously answered questions
 - **Detailed Explanations**: Learn why correct answers are right and incorrect answers are wrong
@@ -118,10 +126,16 @@ Add these in your Vercel project settings:
 ## How It Works
 
 1. **Anonymous Authentication**: Users are automatically authenticated anonymously via Firebase
-2. **Question Generation**: AI generates unique synthesis questions combining multiple Security+ topics
-3. **Cloud Sync**: All progress is stored in Firestore and synced across devices
-4. **Score Prediction**: Algorithm predicts exam score (out of 900) based on performance
-5. **Smart Tracking**: Keeps track of answered questions to avoid repetition
+2. **Question Generation**: Claude AI generates unique synthesis questions with varied difficulty (easy/medium/hard) and types (single-choice/multiple-response)
+3. **Adaptive Scoring**: Each question is worth different points based on difficulty:
+   - Easy: 100 points
+   - Medium: 150 points
+   - Hard: 250 points
+4. **Partial Credit**: Multiple-response questions award proportional credit (e.g., 3/4 correct = 75% of points)
+5. **IRT Analysis**: System estimates your ability level (theta) using Item Response Theory
+6. **Score Prediction**: Maps your ability estimate to the 100-900 exam score scale
+7. **Cloud Sync**: All progress is stored in Firestore and synced across devices
+8. **Smart Tracking**: Keeps track of answered questions to avoid repetition
 
 ## Features in Detail
 
@@ -134,20 +148,38 @@ Questions combine multiple topics from the Security+ syllabus:
 - Security Operations
 - Security Program Management and Oversight
 
+### Question Types & Distribution
+
+Each 10-question quiz includes a balanced mix:
+- **3 Easy questions** (100 points each) - single-choice
+- **4 Medium questions** (150 points each) - mix of single and multiple-response
+- **3 Hard questions** (250 points each) - includes synthesis multiple-response questions
+
+Total possible points per quiz: 1,550 points
+
 ### Progress Tracking
 
 - Total questions answered
-- Correct answers count
+- Points earned vs. maximum possible points
 - Overall accuracy percentage
+- IRT ability estimate (theta: -3 to +3 scale)
 - Predicted exam score (100-900 scale)
-- Quiz history with scores
+- Quiz history with detailed scoring
 
-### Score Prediction
+### Score Prediction with IRT
 
-The app predicts your Security+ exam score based on:
-- Your accuracy rate
-- Number of questions answered
-- Passing score: 750/900 (83.3%)
+The app uses **Item Response Theory (IRT)**, the same psychometric model used in actual certification exams:
+
+1. **Ability Estimation**: Calculates your ability level (theta) using Maximum Likelihood Estimation
+2. **Question Parameters**: Each question has difficulty and discrimination parameters
+3. **Adaptive Weighting**: Harder questions contribute more to your ability estimate
+4. **Score Mapping**: Converts theta to the 100-900 scale
+   - theta = -3: ~100 (very low)
+   - theta = 0: ~550 (average)
+   - theta = 1: ~750 (passing)
+   - theta = 3: ~900 (very high)
+
+**Passing Score**: 750/900 (requires theta ≈ 1.0)
 
 ## License
 
