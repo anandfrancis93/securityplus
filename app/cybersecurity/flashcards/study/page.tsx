@@ -23,6 +23,7 @@ export default function StudyPage() {
   const [isFlipped, setIsFlipped] = useState(false);
   const [loading, setLoading] = useState(true);
   const [answering, setAnswering] = useState(false);
+  const [imageEnlarged, setImageEnlarged] = useState(false);
 
   useEffect(() => {
     if (userId) {
@@ -184,8 +185,11 @@ export default function StudyPage() {
                       <img
                         src={currentCard.imageUrl}
                         alt="Flashcard visual"
-                        className="max-w-full max-h-64 mx-auto rounded-lg border border-gray-600"
+                        onClick={() => setImageEnlarged(true)}
+                        className="max-w-full max-h-64 mx-auto rounded-lg border border-gray-600 cursor-pointer hover:border-blue-500 transition-all"
+                        title="Click to enlarge"
                       />
+                      <p className="text-xs text-gray-500 mt-2">Click image to enlarge</p>
                     </div>
                   )}
                   {currentCard.context && (
@@ -263,6 +267,32 @@ export default function StudyPage() {
           From: {currentCard.sourceFile}
         </div>
       </div>
+
+      {/* Image Lightbox */}
+      {imageEnlarged && currentCard?.imageUrl && (
+        <div
+          className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
+          onClick={() => setImageEnlarged(false)}
+        >
+          <div className="relative max-w-7xl max-h-full">
+            <button
+              onClick={() => setImageEnlarged(false)}
+              className="absolute top-4 right-4 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full transition-all z-10"
+              title="Close"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <img
+              src={currentCard.imageUrl}
+              alt="Enlarged flashcard visual"
+              className="max-w-full max-h-[90vh] object-contain rounded-lg"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
