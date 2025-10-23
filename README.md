@@ -4,7 +4,7 @@ An AI-powered web application that generates synthesis questions for CompTIA Sec
 
 ## Features
 
-### Core Features
+### Quiz Mode
 - **AI-Generated Synthesis Questions**: Creates complex questions combining multiple security concepts using Claude 3.5 Sonnet
 - **Adaptive Difficulty**: Questions vary across easy, medium, and hard levels with weighted scoring
 - **Multiple-Response Questions**: Includes "select all that apply" questions with partial credit support
@@ -12,9 +12,21 @@ An AI-powered web application that generates synthesis questions for CompTIA Sec
 - **Partial Credit System**: Earn points for partially correct answers on multiple-response questions
 - **Intelligent Score Prediction**: IRT-based ability estimation predicts your exam score (100-900 scale)
 
+### Flashcard Mode (NEW!)
+- **PDF/Text Upload**: Upload study materials (PDF or TXT files) for automatic processing
+- **AI Key Term Extraction**: Claude AI analyzes documents and extracts Security+ relevant terms and definitions
+- **Spaced Repetition (SM-2 Algorithm)**: Intelligent review scheduling based on your performance
+  - **Again** (<1 min): Reset card, review immediately
+  - **Hard** (~6 hours): Difficult recall, reduced interval
+  - **Good** (~10 hours): Normal progression
+  - **Easy** (4 days): Perfect recall, increased interval
+- **Interactive Flip Cards**: Click to flip between term and definition
+- **Progress Tracking**: Monitor New, Learning, Review, and Mastered cards
+- **Order Preservation**: Flashcards maintain the order they appear in your document
+
 ### User Experience
 - **Device Pairing**: Sync progress across devices with a simple 6-digit code (no account needed)
-- **Cloud Sync**: All progress automatically saved to Firebase
+- **Cloud Sync**: All progress and flashcards automatically saved to Firebase
 - **Progress Tracking**: Track answered questions, points earned, ability estimate, and predicted exam score
 - **Dark Mode UI**: Eye-friendly dark interface
 - **Smart Question Management**: Never repeats previously answered questions
@@ -25,8 +37,9 @@ An AI-powered web application that generates synthesis questions for CompTIA Sec
 ## Tech Stack
 
 - **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS
-- **AI**: Claude 3.5 Sonnet for question generation
+- **AI**: Claude 3.5 Sonnet for question generation and flashcard extraction
 - **Backend**: Firebase (Firestore + Anonymous Auth)
+- **Document Processing**: pdf-parse for PDF text extraction
 - **Deployment**: Vercel
 
 ## Setup Instructions
@@ -125,6 +138,7 @@ Add these in your Vercel project settings:
 
 ## How It Works
 
+### Quiz Mode
 1. **Anonymous Authentication**: Users are automatically authenticated anonymously via Firebase
 2. **Question Generation**: Claude AI generates unique synthesis questions with varied difficulty (easy/medium/hard) and types (single-choice/multiple-response)
 3. **Adaptive Scoring**: Each question is worth different points based on difficulty:
@@ -136,6 +150,18 @@ Add these in your Vercel project settings:
 6. **Score Prediction**: Maps your ability estimate to the 100-900 exam score scale
 7. **Cloud Sync**: All progress is stored in Firestore and synced across devices
 8. **Smart Tracking**: Keeps track of answered questions to avoid repetition
+
+### Flashcard Mode
+1. **Upload**: User uploads PDF or TXT file containing Security+ study material
+2. **Text Extraction**: System extracts text from PDF using pdf-parse or reads TXT directly
+3. **AI Analysis**: Claude AI analyzes content and extracts key Security+ terms with definitions
+4. **Flashcard Creation**: Terms are saved to Firestore in order of appearance
+5. **Spaced Repetition**: SM-2 algorithm calculates optimal review intervals
+   - Ease Factor: Starts at 2.5, adjusts based on performance
+   - Intervals: Dynamically calculated based on user ratings
+   - Quality Score: Maps user difficulty ratings to 0-5 scale
+6. **Review Tracking**: System monitors each card&apos;s review history and next due date
+7. **Automatic Scheduling**: Cards appear when due based on spaced repetition algorithm
 
 ## Features in Detail
 
@@ -180,6 +206,46 @@ The app uses **Item Response Theory (IRT)**, the same psychometric model used in
    - theta = 3: ~900 (very high)
 
 **Passing Score**: 750/900 (requires theta ≈ 1.0)
+
+### Flashcard System
+
+#### Spaced Repetition Algorithm (SM-2)
+
+The app uses the SuperMemo 2 (SM-2) algorithm, a proven method for optimizing long-term retention:
+
+**How It Works:**
+- **Ease Factor**: Measures how easy a card is (default 2.5)
+- **Repetitions**: Count of successful reviews
+- **Interval**: Days until next review
+
+**Rating System:**
+- **Again (0)**: Forgot completely → Review in <1 minute
+- **Hard (3)**: Recalled with difficulty → 80% of normal interval
+- **Good (4)**: Recalled with some effort → Normal progression
+- **Easy (5)**: Perfect recall → 130% of normal interval
+
+**Progression Example:**
+1. First review: Immediate
+2. Second review: 1 day later
+3. Third review: 6 days later
+4. Fourth review: ~15 days later (varies by performance)
+
+#### Card Statistics
+
+- **New**: Never studied before
+- **Learning**: Currently being learned (0 successful reviews)
+- **Review**: In review phase (1-2 successful reviews)
+- **Mastered**: Well-learned (3+ successful reviews)
+
+#### Supported File Formats
+
+- **PDF**: Automatically extracts text from PDF documents
+- **TXT**: Plain text files with Security+ content
+
+**Best Practices:**
+- Upload study guides, textbooks, or notes
+- Ensure content is Security+ SY0-701 related for best results
+- AI extracts terms in document order for logical learning flow
 
 ## License
 
