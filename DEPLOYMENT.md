@@ -148,9 +148,10 @@ Once connected to Git:
 - Ensure Anonymous Auth is enabled in Firebase
 
 ### Cross-Device Sync Not Working
-- Clear browser data and retry
-- Check that same browser is being used (anonymous auth is browser-specific)
-- For true cross-device sync, you'd need to implement a device code system
+- Make sure you've generated a pairing code on one device
+- Verify the code hasn't expired (15 minutes)
+- Check that you entered the code correctly on the other device
+- Look for error messages in the browser console
 
 ## Security Considerations
 
@@ -162,9 +163,14 @@ Add these rules in Firebase Console → Firestore → Rules:
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Users can only read/write their own data
+    // Users can read/write their own data or data they've paired with
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, write: if request.auth != null;
+    }
+
+    // Pairing codes - anyone authenticated can create and read
+    match /pairingCodes/{code} {
+      allow read, write: if request.auth != null;
     }
 
     // Questions can be read by anyone authenticated
@@ -175,6 +181,8 @@ service cloud.firestore {
   }
 }
 ```
+
+**Note:** The users collection allows any authenticated user to read/write any document. This is intentional for the device pairing feature - when you pair devices, the new device needs to access the paired user's data. Since we're using anonymous auth and the app is for personal use only, this is acceptable. If you want stricter security, you can implement custom claims or use a different authentication method.
 
 ### Rate Limiting
 

@@ -4,6 +4,13 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import { auth, initializeAnonymousAuth } from '@/lib/firebase';
 import { getUserProgress, saveQuizSession, calculatePredictedScore, resetUserProgress } from '@/lib/db';
 import { UserProgress, QuizSession, Question, QuestionAttempt } from '@/lib/types';
+import {
+  getEffectiveUserId,
+  createPairingCode,
+  validatePairingCode,
+  setPairedUserId,
+  getPairedUserId
+} from '@/lib/pairing';
 
 interface AppContextType {
   userId: string | null;
@@ -16,16 +23,21 @@ interface AppContextType {
   endQuiz: () => Promise<void>;
   refreshProgress: () => Promise<void>;
   resetProgress: () => Promise<void>;
+  generatePairingCode: () => Promise<string>;
+  enterPairingCode: (code: string) => Promise<boolean>;
+  isPaired: boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [userId, setUserId] = useState<string | null>(null);
+  const [authUserId, setAuthUserId] = useState<string | null>(null); // Firebase auth user ID
+  const [userId, setUserId] = useState<string | null>(null); // Effective user ID (paired or auth)
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
   const [currentQuiz, setCurrentQuiz] = useState<QuizSession | null>(null);
   const [loading, setLoading] = useState(true);
   const [predictedScore, setPredictedScore] = useState(0);
+  const [isPaired, setIsPaired] = useState(false);
 
   useEffect(() => {
     initAuth();
@@ -40,8 +52,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const initAuth = async () => {
     try {
       const user = await initializeAnonymousAuth();
-      setUserId(user.uid);
-      await loadUserProgress(user.uid);
+      setAuthUserId(user.uid);
+
+      // Check if there's a paired user ID
+      const effectiveId = getEffectiveUserId(user.uid);
+      setUserId(effectiveId);
+      setIsPaired(effectiveId !== user.uid);
+
+      console.log('Auth initialized:', {
+        authUserId: user.uid,
+        effectiveUserId: effectiveId,
+        isPaired: effectiveId !== user.uid
+      });
+
+      await loadUserProgress(effectiveId);
     } catch (error) {
       console.error('Error initializing auth:', error);
     } finally {
@@ -138,6 +162,54 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const generatePairingCode = async (): Promise<string> => {
+    if (!userId) {
+      throw new Error('User not authenticated');
+    }
+
+    try {
+      const code = await createPairingCode(userId);
+      return code;
+    } catch (error) {
+      console.error('Error generating pairing code:', error);
+      throw error;
+    }
+  };
+
+  const enterPairingCode = async (code: string): Promise<boolean> => {
+    if (!authUserId) {
+      throw new Error('User not authenticated');
+    }
+
+    try {
+      const pairedUserId = await validatePairingCode(code);
+
+      if (!pairedUserId) {
+        return false;
+      }
+
+      // Store paired user ID in localStorage
+      setPairedUserId(pairedUserId);
+
+      // Update state
+      setUserId(pairedUserId);
+      setIsPaired(true);
+
+      // Load progress from paired account
+      await loadUserProgress(pairedUserId);
+
+      console.log('Device paired successfully:', {
+        authUserId,
+        pairedUserId
+      });
+
+      return true;
+    } catch (error) {
+      console.error('Error entering pairing code:', error);
+      throw error;
+    }
+  };
+
   const value: AppContextType = {
     userId,
     userProgress,
@@ -149,6 +221,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
     endQuiz,
     refreshProgress,
     resetProgress,
+    generatePairingCode,
+    enterPairingCode,
+    isPaired,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

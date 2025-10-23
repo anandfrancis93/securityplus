@@ -5,12 +5,14 @@ An AI-powered web application that generates synthesis questions for CompTIA Sec
 ## Features
 
 - **AI-Generated Synthesis Questions**: Creates complex questions combining multiple security concepts
-- **Cloud Sync**: Progress synced across devices using Firebase (no account creation needed)
+- **Device Pairing**: Sync progress across devices with a simple 6-digit code (no account needed)
+- **Cloud Sync**: All progress automatically saved to Firebase
 - **Progress Tracking**: Track answered questions, accuracy, and predicted exam score
 - **Dark Mode UI**: Eye-friendly dark interface
 - **Smart Question Management**: Never repeats previously answered questions
 - **Detailed Explanations**: Learn why correct answers are right and incorrect answers are wrong
 - **Flexible Quiz Flow**: End quiz anytime and return to home page
+- **Reset Progress**: Clear all data and start fresh anytime
 
 ## Tech Stack
 
