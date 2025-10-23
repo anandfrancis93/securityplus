@@ -134,29 +134,91 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* IRT Ability Indicator */}
+        {/* IRT Score Analysis */}
         {totalAnswered > 0 && (
-          <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4 mb-8">
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="text-sm font-medium text-blue-300 mb-1">Estimated Ability Level (IRT θ)</h4>
-                <p className="text-xs text-blue-400">
-                  This advanced metric considers question difficulty and your performance pattern
-                </p>
+          <div className="bg-gradient-to-br from-blue-900/30 to-purple-900/30 border border-blue-500/30 rounded-lg p-6 mb-8">
+            <h3 className="text-lg font-bold text-blue-300 mb-4">📊 IRT Performance Analysis</h3>
+
+            {/* IRT Score */}
+            <div className="bg-gray-800/50 rounded-lg p-4 mb-4">
+              <div className="flex items-center justify-between mb-2">
+                <div>
+                  <h4 className="text-sm font-medium text-blue-200">Your IRT Score</h4>
+                  <p className="text-xs text-gray-400 mt-1">Based on Item Response Theory psychometric model</p>
+                </div>
+                <div className="text-4xl font-bold text-blue-400">
+                  {predictedScore}
+                </div>
               </div>
-              <div className="text-3xl font-bold text-blue-400">
-                {estimatedAbility.toFixed(2)}
-              </div>
-            </div>
-            <div className="mt-3 flex items-center">
-              <div className="flex-1 bg-gray-700 rounded-full h-2">
+              <div className="w-full bg-gray-700 rounded-full h-3 mt-3">
                 <div
-                  className="bg-blue-500 h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${((estimatedAbility + 3) / 6) * 100}%` }}
+                  className={`h-3 rounded-full transition-all duration-500 ${isPassing ? 'bg-gradient-to-r from-green-500 to-green-400' : 'bg-gradient-to-r from-yellow-500 to-orange-400'}`}
+                  style={{ width: `${Math.min((predictedScore / 900) * 100, 100)}%` }}
                 ></div>
               </div>
-              <div className="ml-3 text-xs text-gray-400">
-                Range: -3 to +3
+            </div>
+
+            {/* Ability Level (Theta) */}
+            <div className="bg-gray-800/50 rounded-lg p-4 mb-4">
+              <div className="flex items-center justify-between mb-2">
+                <div>
+                  <h4 className="text-sm font-medium text-purple-200">Ability Level (θ theta)</h4>
+                  <p className="text-xs text-gray-400 mt-1">Accounts for question difficulty in your performance</p>
+                </div>
+                <div className="text-3xl font-bold text-purple-400">
+                  {estimatedAbility.toFixed(2)}
+                </div>
+              </div>
+              <div className="flex items-center mt-3">
+                <div className="flex-1 bg-gray-700 rounded-full h-2">
+                  <div
+                    className="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full transition-all duration-500"
+                    style={{ width: `${((estimatedAbility + 3) / 6) * 100}%` }}
+                  ></div>
+                </div>
+                <div className="ml-3 text-xs text-gray-400 whitespace-nowrap">
+                  -3 to +3
+                </div>
+              </div>
+            </div>
+
+            {/* Performance Interpretation */}
+            <div className="bg-gray-800/50 rounded-lg p-4">
+              <h4 className="text-sm font-medium text-green-300 mb-2">📈 What This Means</h4>
+              <div className="text-sm text-gray-300 space-y-2">
+                {estimatedAbility >= 1.5 ? (
+                  <>
+                    <p className="text-green-400 font-medium">✓ Excellent Performance!</p>
+                    <p>Your ability level of <span className="font-bold text-blue-400">{estimatedAbility.toFixed(2)}</span> indicates strong mastery. You're performing well on harder questions, demonstrating deep understanding across multiple security concepts.</p>
+                  </>
+                ) : estimatedAbility >= 1.0 ? (
+                  <>
+                    <p className="text-green-400 font-medium">✓ Good Performance</p>
+                    <p>Your ability level of <span className="font-bold text-blue-400">{estimatedAbility.toFixed(2)}</span> suggests you're on track to pass. You're handling medium to hard questions effectively. Keep practicing synthesis questions to solidify your knowledge.</p>
+                  </>
+                ) : estimatedAbility >= 0 ? (
+                  <>
+                    <p className="text-yellow-400 font-medium">⚠ Average Performance</p>
+                    <p>Your ability level of <span className="font-bold text-blue-400">{estimatedAbility.toFixed(2)}</span> indicates moderate understanding. Focus on harder questions that combine multiple concepts. Review explanations carefully to improve your score.</p>
+                  </>
+                ) : estimatedAbility >= -1 ? (
+                  <>
+                    <p className="text-orange-400 font-medium">⚠ Below Average</p>
+                    <p>Your ability level of <span className="font-bold text-blue-400">{estimatedAbility.toFixed(2)}</span> suggests you're struggling with harder questions. Review fundamental concepts and focus on understanding why correct answers are right, not just memorizing them.</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-red-400 font-medium">⚠ Needs Improvement</p>
+                    <p>Your ability level of <span className="font-bold text-blue-400">{estimatedAbility.toFixed(2)}</span> indicates you need more practice. Start with easier questions, carefully read explanations, and build foundational knowledge before tackling harder synthesis questions.</p>
+                  </>
+                )}
+                <p className="text-xs text-gray-400 mt-3 pt-3 border-t border-gray-700">
+                  <strong>IRT Score {predictedScore}/900:</strong> {' '}
+                  {isPassing
+                    ? 'This score suggests you would likely pass the Security+ exam if you maintain this performance level.'
+                    : `You need ${750 - predictedScore} more points to reach the passing threshold. Keep practicing!`
+                  }
+                </p>
               </div>
             </div>
           </div>
