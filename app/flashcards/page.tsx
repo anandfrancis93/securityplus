@@ -15,8 +15,8 @@ export default function FlashcardsPage() {
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [reviews, setReviews] = useState<FlashcardReview[]>([]);
   const [loading, setLoading] = useState(true);
-  const [uploading, setUploading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [generating, setGenerating] = useState(false);
+  const [inputText, setInputText] = useState('');
 
   useEffect(() => {
     if (userId) {
@@ -42,33 +42,27 @@ export default function FlashcardsPage() {
     }
   };
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Check file size (4MB limit due to Vercel)
-      const maxSize = 4 * 1024 * 1024; // 4MB in bytes
-      if (file.size > maxSize) {
-        alert(`File is too large (${(file.size / 1024 / 1024).toFixed(2)}MB). Maximum size is 4MB due to server limits.\n\nPlease:\n1. Use a smaller PDF or extract specific pages\n2. Convert to text file (.txt) which compresses better\n3. Split large documents into multiple uploads`);
-        e.target.value = ''; // Clear the input
-        return;
-      }
-      setSelectedFile(file);
+  const handleGenerateFlashcards = async () => {
+    if (!inputText.trim() || !userId) return;
+
+    if (inputText.trim().length < 50) {
+      alert('Please enter at least 50 characters of text.');
+      return;
     }
-  };
 
-  const handleUpload = async () => {
-    if (!selectedFile || !userId) return;
-
-    setUploading(true);
+    setGenerating(true);
     try {
-      const formData = new FormData();
-      formData.append('file', selectedFile);
-
-      console.log('Uploading file:', selectedFile.name);
+      console.log('Generating flashcards from text...');
 
       const response = await fetch('/api/extract-flashcards', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: inputText,
+          fileName: 'Manual Entry',
+        }),
       });
 
       const data = await response.json();
@@ -84,19 +78,15 @@ export default function FlashcardsPage() {
       await saveFlashcards(userId, data.flashcards, data.fileName);
 
       alert(`Successfully created ${data.flashcards.length} flashcards!`);
-      setSelectedFile(null);
-
-      // Reset file input
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-      if (fileInput) fileInput.value = '';
+      setInputText('');
 
       await loadFlashcards();
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error('Error generating flashcards:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      alert(`Failed to process file: ${errorMessage}\n\nPlease check the browser console for more details.`);
+      alert(`Failed to generate flashcards: ${errorMessage}\n\nPlease check the browser console for more details.`);
     } finally {
-      setUploading(false);
+      setGenerating(false);
     }
   };
 
@@ -139,55 +129,45 @@ export default function FlashcardsPage() {
           </p>
         </div>
 
-        {/* Upload Section */}
+        {/* Text Input Section */}
         <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
-          <h2 className="text-xl font-bold mb-4">📄 Upload Study Material</h2>
+          <h2 className="text-xl font-bold mb-4">✍️ Enter Security+ Keywords</h2>
           <p className="text-gray-400 text-sm mb-4">
-            Upload a PDF or text file. AI will extract Security+ key terms and create flashcards automatically.
+            Paste your Security+ study material or keywords below. AI will extract key terms and create flashcards automatically.
           </p>
 
           <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <label className="flex-1">
-                <input
-                  type="file"
-                  accept=".pdf,.txt"
-                  onChange={handleFileSelect}
-                  className="block w-full text-sm text-gray-400
-                    file:mr-4 file:py-2 file:px-4
-                    file:rounded-lg file:border-0
-                    file:text-sm file:font-semibold
-                    file:bg-blue-600 file:text-white
-                    hover:file:bg-blue-700 file:cursor-pointer
-                    cursor-pointer"
-                  disabled={uploading}
-                />
-              </label>
+            <textarea
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              placeholder="Enter your Security+ keywords, definitions, or study notes here...&#10;&#10;Example:&#10;Zero Trust - A security framework requiring strict identity verification for every person and device trying to access resources on a private network.&#10;&#10;CIA Triad - Confidentiality, Integrity, and Availability - the three main principles of information security.&#10;&#10;MFA - Multi-Factor Authentication uses two or more verification methods..."
+              className="w-full h-64 bg-gray-700 text-white rounded-lg p-4 border border-gray-600 focus:border-blue-500 focus:outline-none resize-vertical"
+              disabled={generating}
+            />
+
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-gray-400">
+                {inputText.length} characters
+                {inputText.length < 50 && inputText.length > 0 && (
+                  <span className="text-yellow-500 ml-2">
+                    (Need at least 50 characters)
+                  </span>
+                )}
+              </div>
+              <button
+                onClick={handleGenerateFlashcards}
+                disabled={generating || inputText.trim().length < 50}
+                className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-all"
+              >
+                {generating ? 'Generating...' : 'Generate Flashcards'}
+              </button>
             </div>
 
-            {selectedFile && (
-              <div className="flex items-center justify-between bg-gray-700/50 rounded-lg p-4">
-                <div>
-                  <p className="text-sm font-medium">{selectedFile.name}</p>
-                  <p className="text-xs text-gray-400">
-                    {(selectedFile.size / 1024).toFixed(2)} KB
-                  </p>
-                </div>
-                <button
-                  onClick={handleUpload}
-                  disabled={uploading}
-                  className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-all"
-                >
-                  {uploading ? 'Processing...' : 'Generate Flashcards'}
-                </button>
-              </div>
-            )}
-
-            {uploading && (
-              <div className="text-center">
+            {generating && (
+              <div className="text-center py-4">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mx-auto"></div>
                 <p className="mt-2 text-sm text-gray-400">
-                  Analyzing document and extracting key terms...
+                  Analyzing text and extracting key terms...
                 </p>
               </div>
             )}

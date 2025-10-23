@@ -15,60 +15,19 @@ export const runtime = 'nodejs';
 export async function POST(request: NextRequest) {
   try {
     console.log('Starting flashcard extraction...');
-    const formData = await request.formData();
-    const file = formData.get('file') as File;
 
-    if (!file) {
-      console.error('No file provided');
-      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+    // Parse JSON body
+    const body = await request.json();
+    const { text, fileName = 'Manual Entry' } = body;
+
+    if (!text) {
+      console.error('No text provided');
+      return NextResponse.json({ error: 'No text provided' }, { status: 400 });
     }
 
-    console.log(`Processing file: ${file.name}, type: ${file.type}, size: ${file.size}`);
+    console.log(`Processing text input, length: ${text.length} characters`);
 
-    // Get file content
-    let textContent = '';
-    const fileName = file.name;
-
-    // Check file size BEFORE processing (Vercel has 4.5MB request limit)
-    const maxFileSize = 4 * 1024 * 1024; // 4MB to be safe
-    if (file.size > maxFileSize) {
-      return NextResponse.json(
-        { error: `File too large (${(file.size / 1024 / 1024).toFixed(2)}MB). Maximum is 4MB due to server limits.\n\nPlease:\n1. Use a smaller PDF or extract specific pages\n2. Convert to text file (.txt) which compresses better\n3. Split large documents into multiple uploads` },
-        { status: 413 }
-      );
-    }
-
-    if (file.type === 'application/pdf') {
-      try {
-        console.log('Parsing PDF...');
-        // Parse PDF - dynamically import pdf-parse
-        const { PDFParse } = await import('pdf-parse');
-        const buffer = Buffer.from(await file.arrayBuffer());
-        console.log(`Buffer size: ${buffer.length} bytes`);
-
-        const pdfParser = new PDFParse({ data: buffer });
-        const textResult = await pdfParser.getText();
-        textContent = textResult.text;
-        console.log(`Extracted ${textContent.length} characters from PDF`);
-      } catch (pdfError) {
-        console.error('PDF parsing error:', pdfError);
-        return NextResponse.json(
-          { error: `Failed to parse PDF: ${pdfError instanceof Error ? pdfError.message : 'Unknown error'}` },
-          { status: 500 }
-        );
-      }
-    } else if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
-      // Parse text file (also check file extension for .txt)
-      console.log('Reading text file...');
-      textContent = await file.text();
-      console.log(`Extracted ${textContent.length} characters from text file`);
-    } else {
-      console.error(`Unsupported file type: ${file.type}`);
-      return NextResponse.json(
-        { error: `Unsupported file type: ${file.type}. Please upload PDF or TXT files.` },
-        { status: 400 }
-      );
-    }
+    const textContent = text.trim();
 
     if (!textContent.trim()) {
       console.error('Extracted text is empty');
