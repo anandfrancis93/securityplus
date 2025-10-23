@@ -5,6 +5,41 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
+// Shuffle array using Fisher-Yates algorithm
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+// Shuffle question options to randomize correct answer position
+function shuffleQuestionOptions(questionData: any): any {
+  // Create array of indices [0, 1, 2, 3]
+  const indices = [0, 1, 2, 3];
+
+  // Shuffle indices
+  const shuffledIndices = shuffleArray(indices);
+
+  // Reorder options based on shuffled indices
+  const shuffledOptions = shuffledIndices.map(i => questionData.options[i]);
+
+  // Find new position of correct answer
+  const newCorrectAnswerIndex = shuffledIndices.indexOf(questionData.correctAnswer);
+
+  // Reorder explanations to match new option order
+  const shuffledExplanations = shuffledIndices.map(i => questionData.incorrectExplanations[i]);
+
+  return {
+    ...questionData,
+    options: shuffledOptions,
+    correctAnswer: newCorrectAnswerIndex,
+    incorrectExplanations: shuffledExplanations
+  };
+}
+
 const SECURITY_PLUS_TOPICS = `
 1.0 General Security Concepts
 - Security controls (Technical, Managerial, Operational, Physical)
@@ -58,6 +93,15 @@ IMPORTANT REQUIREMENTS:
 6. Explain why each incorrect answer is wrong (provide 4 explanations, one for each option)
 7. Tag the question with relevant topic areas
 
+CRITICAL - ANSWER LENGTH RANDOMIZATION:
+- VARY the length of ALL answer options
+- Make some INCORRECT answers LONGER than the correct answer
+- Make some INCORRECT answers MORE DETAILED than the correct answer
+- The correct answer should NOT always be the longest option
+- Some correct answers should be SHORT and concise
+- Some incorrect answers should be LONG and detailed but subtly wrong
+- This prevents test-takers from guessing based on answer length
+
 Example of a synthesis question:
 "A financial institution is migrating its core banking application to a public cloud provider using an IaaS model. They need to ensure data confidentiality and integrity, meet regulatory compliance (PCI DSS, GDPR), and maintain control over cryptographic keys. Which of the following actions should be prioritized?"
 
@@ -102,15 +146,20 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
 
     const questionData = JSON.parse(jsonContent);
 
+    // Shuffle the answer options to randomize correct answer position
+    const shuffledData = shuffleQuestionOptions(questionData);
+
+    console.log(`Question generated: Correct answer at position ${shuffledData.correctAnswer} (A/B/C/D: ${String.fromCharCode(65 + shuffledData.correctAnswer)})`);
+
     return {
       id: `q_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      question: questionData.question,
-      options: questionData.options,
-      correctAnswer: questionData.correctAnswer,
-      explanation: questionData.explanation,
-      incorrectExplanations: questionData.incorrectExplanations,
-      topics: questionData.topics,
-      difficulty: questionData.difficulty,
+      question: shuffledData.question,
+      options: shuffledData.options,
+      correctAnswer: shuffledData.correctAnswer,
+      explanation: shuffledData.explanation,
+      incorrectExplanations: shuffledData.incorrectExplanations,
+      topics: shuffledData.topics,
+      difficulty: shuffledData.difficulty,
       createdAt: Date.now(),
     };
   } catch (error) {
