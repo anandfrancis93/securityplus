@@ -7,41 +7,62 @@ const anthropic = new Anthropic({
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('Starting flashcard extraction...');
     const formData = await request.formData();
     const file = formData.get('file') as File;
 
     if (!file) {
+      console.error('No file provided');
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
+
+    console.log(`Processing file: ${file.name}, type: ${file.type}, size: ${file.size}`);
 
     // Get file content
     let textContent = '';
     const fileName = file.name;
 
     if (file.type === 'application/pdf') {
-      // Parse PDF - dynamically import pdf-parse
-      const { PDFParse } = await import('pdf-parse');
-      const buffer = Buffer.from(await file.arrayBuffer());
-      const pdfParser = new PDFParse({ data: buffer });
-      const textResult = await pdfParser.getText();
-      textContent = textResult.text;
-    } else if (file.type === 'text/plain') {
-      // Parse text file
+      try {
+        console.log('Parsing PDF...');
+        // Parse PDF - dynamically import pdf-parse
+        const { PDFParse } = await import('pdf-parse');
+        const buffer = Buffer.from(await file.arrayBuffer());
+        console.log(`Buffer size: ${buffer.length} bytes`);
+
+        const pdfParser = new PDFParse({ data: buffer });
+        const textResult = await pdfParser.getText();
+        textContent = textResult.text;
+        console.log(`Extracted ${textContent.length} characters from PDF`);
+      } catch (pdfError) {
+        console.error('PDF parsing error:', pdfError);
+        return NextResponse.json(
+          { error: `Failed to parse PDF: ${pdfError instanceof Error ? pdfError.message : 'Unknown error'}` },
+          { status: 500 }
+        );
+      }
+    } else if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
+      // Parse text file (also check file extension for .txt)
+      console.log('Reading text file...');
       textContent = await file.text();
+      console.log(`Extracted ${textContent.length} characters from text file`);
     } else {
+      console.error(`Unsupported file type: ${file.type}`);
       return NextResponse.json(
-        { error: 'Unsupported file type. Please upload PDF or TXT files.' },
+        { error: `Unsupported file type: ${file.type}. Please upload PDF or TXT files.` },
         { status: 400 }
       );
     }
 
     if (!textContent.trim()) {
+      console.error('Extracted text is empty');
       return NextResponse.json(
-        { error: 'File appears to be empty' },
+        { error: 'File appears to be empty or contains no readable text' },
         { status: 400 }
       );
     }
 
+    console.log('Sending to Claude for analysis...');
     // Use Claude to extract Security+ key terms
     const message = await anthropic.messages.create({
       model: 'claude-3-5-sonnet-20241022',
@@ -91,10 +112,31 @@ ${textContent.slice(0, 50000)}`,
 
     // Parse the response
     const textResponse = content.text.trim();
-    const jsonContent = textResponse.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-    const result = JSON.parse(jsonContent);
+    console.log('Claude response received, parsing JSON...');
 
-    console.log(`Extracted ${result.flashcards.length} flashcards from ${fileName}`);
+    const jsonContent = textResponse.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+    let result;
+    try {
+      result = JSON.parse(jsonContent);
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
+      console.error('Response text:', textResponse.substring(0, 500));
+      return NextResponse.json(
+        { error: 'Failed to parse AI response. Please try again.' },
+        { status: 500 }
+      );
+    }
+
+    if (!result.flashcards || !Array.isArray(result.flashcards)) {
+      console.error('Invalid response format:', result);
+      return NextResponse.json(
+        { error: 'AI returned invalid format. Please try again.' },
+        { status: 500 }
+      );
+    }
+
+    console.log(`Successfully extracted ${result.flashcards.length} flashcards from ${fileName}`);
 
     return NextResponse.json({
       flashcards: result.flashcards,
@@ -102,8 +144,9 @@ ${textContent.slice(0, 50000)}`,
     });
   } catch (error) {
     console.error('Error extracting flashcards:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { error: 'Failed to extract flashcards from file' },
+      { error: `Failed to extract flashcards: ${errorMessage}` },
       { status: 500 }
     );
   }

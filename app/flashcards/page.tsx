@@ -57,26 +57,37 @@ export default function FlashcardsPage() {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
+      console.log('Uploading file:', selectedFile.name);
+
       const response = await fetch('/api/extract-flashcards', {
         method: 'POST',
         body: formData,
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error('Failed to extract flashcards');
+        console.error('API error:', data);
+        throw new Error(data.error || 'Failed to extract flashcards');
       }
 
-      const data = await response.json();
+      console.log('Received flashcards:', data.flashcards.length);
 
       // Save flashcards to database
       await saveFlashcards(userId, data.flashcards, data.fileName);
 
       alert(`Successfully created ${data.flashcards.length} flashcards!`);
       setSelectedFile(null);
+
+      // Reset file input
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      if (fileInput) fileInput.value = '';
+
       await loadFlashcards();
     } catch (error) {
       console.error('Error uploading file:', error);
-      alert('Failed to process file. Please try again.');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Failed to process file: ${errorMessage}\n\nPlease check the browser console for more details.`);
     } finally {
       setUploading(false);
     }
