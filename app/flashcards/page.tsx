@@ -27,6 +27,12 @@ export default function FlashcardsPage() {
   // AI mode states
   const [aiInputText, setAiInputText] = useState('');
 
+  // Edit mode states
+  const [editingCard, setEditingCard] = useState<Flashcard | null>(null);
+  const [editTerm, setEditTerm] = useState('');
+  const [editDefinition, setEditDefinition] = useState('');
+  const [editContext, setEditContext] = useState('');
+
   useEffect(() => {
     if (userId) {
       loadFlashcards();
@@ -130,6 +136,48 @@ export default function FlashcardsPage() {
 
   const handleStartStudy = () => {
     router.push('/flashcards/study');
+  };
+
+  const handleEditFlashcard = (card: Flashcard) => {
+    setEditingCard(card);
+    setEditTerm(card.term);
+    setEditDefinition(card.definition);
+    setEditContext(card.context || '');
+  };
+
+  const handleCancelEdit = () => {
+    setEditingCard(null);
+    setEditTerm('');
+    setEditDefinition('');
+    setEditContext('');
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingCard || !editTerm.trim() || !editDefinition.trim()) return;
+
+    if (editTerm.trim().length < 2 || editDefinition.trim().length < 10) {
+      alert('Please enter a valid term (min 2 characters) and definition (min 10 characters).');
+      return;
+    }
+
+    setGenerating(true);
+    try {
+      const { updateFlashcard } = await import('@/lib/flashcardDb');
+      await updateFlashcard(editingCard.id, {
+        term: editTerm.trim(),
+        definition: editDefinition.trim(),
+        context: editContext.trim() || undefined,
+      });
+
+      alert('Flashcard updated successfully!');
+      handleCancelEdit();
+      await loadFlashcards();
+    } catch (error) {
+      console.error('Error updating flashcard:', error);
+      alert('Failed to update flashcard. Please try again.');
+    } finally {
+      setGenerating(false);
+    }
   };
 
   const handleDeleteFlashcard = async (flashcardId: string) => {
@@ -401,25 +449,46 @@ export default function FlashcardsPage() {
                           From: {card.sourceFile}
                         </div>
                       </div>
-                      <button
-                        onClick={() => handleDeleteFlashcard(card.id)}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-red-400 hover:text-red-300 p-1"
-                        title="Delete flashcard"
-                      >
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => handleEditFlashcard(card)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-blue-400 hover:text-blue-300 p-1"
+                          title="Edit flashcard"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                          />
-                        </svg>
-                      </button>
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleDeleteFlashcard(card.id)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-red-400 hover:text-red-300 p-1"
+                          title="Delete flashcard"
+                        >
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -440,6 +509,96 @@ export default function FlashcardsPage() {
             <p className="text-gray-500 text-sm mt-2">
               Create your first flashcard using manual creation or AI generation
             </p>
+          </div>
+        )}
+
+        {/* Edit Modal */}
+        {editingCard && (
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full border border-gray-700 shadow-2xl">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold">Edit Flashcard</h2>
+                <button
+                  onClick={handleCancelEdit}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Term / Question *
+                  </label>
+                  <input
+                    type="text"
+                    value={editTerm}
+                    onChange={(e) => setEditTerm(e.target.value)}
+                    placeholder="e.g., What is Zero Trust?"
+                    className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                    disabled={generating}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Definition / Answer *
+                  </label>
+                  <textarea
+                    value={editDefinition}
+                    onChange={(e) => setEditDefinition(e.target.value)}
+                    placeholder="Enter the definition or answer here..."
+                    className="w-full h-32 bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none resize-vertical"
+                    disabled={generating}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Context (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={editContext}
+                    onChange={(e) => setEditContext(e.target.value)}
+                    placeholder="Additional context or notes..."
+                    className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                    disabled={generating}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between pt-4 border-t border-gray-700">
+                  <div className="text-sm text-gray-400">
+                    Term: {editTerm.length} chars | Definition: {editDefinition.length} chars
+                    {(editTerm.length > 0 && editTerm.length < 2) && (
+                      <span className="text-yellow-500 ml-2">(Term needs at least 2 characters)</span>
+                    )}
+                    {(editDefinition.length > 0 && editDefinition.length < 10) && (
+                      <span className="text-yellow-500 ml-2">(Definition needs at least 10 characters)</span>
+                    )}
+                  </div>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={handleCancelEdit}
+                      disabled={generating}
+                      className="bg-gray-700 hover:bg-gray-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-all"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleSaveEdit}
+                      disabled={generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10}
+                      className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-all"
+                    >
+                      {generating ? 'Saving...' : 'Save Changes'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

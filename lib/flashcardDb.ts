@@ -102,6 +102,38 @@ export async function getFlashcard(flashcardId: string): Promise<Flashcard | nul
 }
 
 /**
+ * Update a flashcard
+ */
+export async function updateFlashcard(
+  flashcardId: string,
+  updates: { term: string; definition: string; context?: string }
+): Promise<void> {
+  const docRef = doc(db, FLASHCARDS_COLLECTION, flashcardId);
+  const snapshot = await getDoc(docRef);
+
+  if (!snapshot.exists()) {
+    throw new Error('Flashcard not found');
+  }
+
+  const existingCard = snapshot.data() as Flashcard;
+  const updatedCard: Flashcard = {
+    ...existingCard,
+    term: updates.term,
+    definition: updates.definition,
+  };
+
+  // Only include context if provided
+  if (updates.context) {
+    updatedCard.context = updates.context;
+  } else {
+    // Remove context field if it exists but not provided in updates
+    delete updatedCard.context;
+  }
+
+  await setDoc(docRef, updatedCard);
+}
+
+/**
  * Delete a flashcard
  */
 export async function deleteFlashcard(flashcardId: string): Promise<void> {
