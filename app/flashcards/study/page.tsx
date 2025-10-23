@@ -178,10 +178,10 @@ export default function StudyPage() {
                 </div>
               ) : (
                 <div className="text-center">
-                  <p className="text-xl leading-relaxed mb-6">{currentCard.definition}</p>
+                  <p className="text-xl leading-relaxed mb-6 whitespace-pre-wrap">{currentCard.definition}</p>
                   {currentCard.context && (
                     <div className="mt-6 pt-6 border-t border-gray-700">
-                      <p className="text-sm text-gray-400 italic">{currentCard.context}</p>
+                      <p className="text-sm text-gray-400 italic whitespace-pre-wrap">{currentCard.context}</p>
                     </div>
                   )}
                 </div>
