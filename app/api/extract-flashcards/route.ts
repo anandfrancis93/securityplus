@@ -18,7 +18,7 @@ async function processTermsBatch(
   termCount: number
 ): Promise<Array<{ term: string; definition: string; context?: string }>> {
   const message = await anthropic.messages.create({
-    model: 'claude-3-5-sonnet-20241022',
+    model: 'claude-sonnet-4-20250514',
     max_tokens: 8000,
     temperature: 0.3,
     messages: [
