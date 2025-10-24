@@ -91,16 +91,13 @@ export default function HomePage() {
             <p className="text-gray-400">AI-generated synthesis questions</p>
           </div>
 
-          {/* Primary Action - Most Important (Serial Position Effect & Visual Anchors) */}
-          <div className="text-center mb-8 relative">
-            <div className="absolute left-1/2 -translate-x-1/2 -top-6 text-yellow-400 animate-bounce text-xl">
-              ↓
-            </div>
+          {/* Primary Action - Most Important (Serial Position Effect) */}
+          <div className="text-center mb-8">
             <button
               onClick={handleStartQuiz}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-5 px-12 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg shadow-blue-500/50 min-h-[56px] touch-manipulation ring-2 ring-blue-400/50 ring-offset-2 ring-offset-gray-900"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-5 px-12 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg shadow-blue-500/50 min-h-[56px] touch-manipulation"
             >
-              ⭐ Start New Quiz (10 Questions)
+              Start New Quiz (10 Questions)
             </button>
             <p className="text-xs text-gray-400 mt-3">Recommended: Take a quiz daily</p>
           </div>
