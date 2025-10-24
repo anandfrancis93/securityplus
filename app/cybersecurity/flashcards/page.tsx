@@ -384,7 +384,29 @@ export default function FlashcardsPage() {
               <div className="text-center">
                 <div className="text-6xl mb-4">📖</div>
                 <h2 className="text-2xl font-bold mb-2 text-white">Study</h2>
-                <p className="text-gray-400 text-sm">Review with spaced repetition and interleaving</p>
+                <p className="text-gray-400 text-sm mb-4">Review with spaced repetition and interleaving</p>
+
+                {/* Stats */}
+                {flashcards.length > 0 && (
+                  <div className="grid grid-cols-2 gap-2 mt-4">
+                    <div className="bg-gray-700/50 rounded p-2">
+                      <div className="text-xs text-gray-400">Total</div>
+                      <div className="text-lg font-bold text-blue-400">{stats.total}</div>
+                    </div>
+                    <div className="bg-gray-700/50 rounded p-2">
+                      <div className="text-xs text-gray-400">Learning</div>
+                      <div className="text-lg font-bold text-yellow-400">{stats.learning}</div>
+                    </div>
+                    <div className="bg-gray-700/50 rounded p-2">
+                      <div className="text-xs text-gray-400">Review</div>
+                      <div className="text-lg font-bold text-yellow-400">{stats.review}</div>
+                    </div>
+                    <div className="bg-gray-700/50 rounded p-2">
+                      <div className="text-xs text-gray-400">Mastered</div>
+                      <div className="text-lg font-bold text-blue-400">{stats.mastered}</div>
+                    </div>
+                  </div>
+                )}
               </div>
             </button>
 
@@ -818,53 +840,9 @@ export default function FlashcardsPage() {
           <p className="text-gray-400">Find and manage your flashcards</p>
         </div>
 
-        {/* Stats */}
+        {/* Flashcard List */}
         {flashcards.length > 0 && (
-          <>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-lg">📚</span>
-                  <div className="text-gray-400 text-xs">Total</div>
-                </div>
-                <div className="text-2xl font-bold text-blue-400">{stats.total}</div>
-              </div>
-              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-lg">🌱</span>
-                  <div className="text-gray-400 text-xs">Learning</div>
-                </div>
-                <div className="text-2xl font-bold text-yellow-400">{stats.learning}</div>
-                {stats.learning > 0 && (
-                  <div className="text-xs text-gray-500 mt-1">New cards</div>
-                )}
-              </div>
-              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-lg">🔄</span>
-                  <div className="text-gray-400 text-xs">Review</div>
-                </div>
-                <div className="text-2xl font-bold text-yellow-400">{stats.review}</div>
-                {stats.review > 0 && (
-                  <div className="text-xs text-gray-500 mt-1">In progress</div>
-                )}
-              </div>
-              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-lg">⭐</span>
-                  <div className="text-gray-400 text-xs">Mastered</div>
-                </div>
-                <div className="text-2xl font-bold text-blue-400">{stats.mastered}</div>
-                {stats.mastered > 0 && (
-                  <div className="text-xs text-gray-500 mt-1">
-                    {Math.round((stats.mastered / stats.total) * 100)}% complete
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Flashcard List */}
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold">
                   Your Flashcards ({filteredFlashcards.length}{filteredFlashcards.length !== flashcards.length && ` of ${flashcards.length}`})
@@ -1057,53 +1035,9 @@ export default function FlashcardsPage() {
           <p className="text-gray-400">Find and manage your flashcards</p>
         </div>
 
-        {/* Stats */}
+        {/* Flashcard List */}
         {flashcards.length > 0 && (
-          <>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-lg">📚</span>
-                  <div className="text-gray-400 text-xs">Total</div>
-                </div>
-                <div className="text-2xl font-bold text-blue-400">{stats.total}</div>
-              </div>
-              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-lg">🌱</span>
-                  <div className="text-gray-400 text-xs">Learning</div>
-                </div>
-                <div className="text-2xl font-bold text-yellow-400">{stats.learning}</div>
-                {stats.learning > 0 && (
-                  <div className="text-xs text-gray-500 mt-1">New cards</div>
-                )}
-              </div>
-              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-lg">🔄</span>
-                  <div className="text-gray-400 text-xs">Review</div>
-                </div>
-                <div className="text-2xl font-bold text-yellow-400">{stats.review}</div>
-                {stats.review > 0 && (
-                  <div className="text-xs text-gray-500 mt-1">In progress</div>
-                )}
-              </div>
-              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-lg">⭐</span>
-                  <div className="text-gray-400 text-xs">Mastered</div>
-                </div>
-                <div className="text-2xl font-bold text-blue-400">{stats.mastered}</div>
-                {stats.mastered > 0 && (
-                  <div className="text-xs text-gray-500 mt-1">
-                    {Math.round((stats.mastered / stats.total) * 100)}% complete
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Flashcard List */}
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold">
                   Your Flashcards ({filteredFlashcards.length}{filteredFlashcards.length !== flashcards.length && ` of ${flashcards.length}`})
