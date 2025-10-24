@@ -186,11 +186,6 @@ export default function QuizPage() {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-2xl font-bold">Question {currentQuestionIndex + 1} of {totalQuestions}</h1>
-            {showExplanation && (
-              <div className="text-sm text-gray-400 mt-1">
-                Topics: {currentQuestion.topics.join(', ')}
-              </div>
-            )}
             {generatingNext && (
               <div className="text-xs text-blue-400 mt-1 flex items-center gap-2">
                 <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-400"></div>
