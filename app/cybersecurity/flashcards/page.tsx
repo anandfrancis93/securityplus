@@ -982,6 +982,24 @@ export default function FlashcardsPage() {
   // Search view (default when selectedOption === 'search')
   return (
     <>
+      {/* Debug: Visual indicator that should appear when editingCard is set */}
+      {editingCard && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: 'red',
+          color: 'white',
+          padding: '10px',
+          textAlign: 'center',
+          zIndex: 10000,
+          fontWeight: 'bold'
+        }}>
+          DEBUG BAR: editingCard is {editingCard.term}
+        </div>
+      )}
+
       <div className="fixed inset-0 bg-gray-900 text-white overflow-hidden flex flex-col">
       <div className="container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0" style={{ overscrollBehavior: 'none' }}>
         {/* Header */}
@@ -1178,8 +1196,15 @@ export default function FlashcardsPage() {
 
       {/* Edit Modal - Now completely outside overflow-hidden div */}
       {editingCard && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 overflow-y-auto">
-            <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full border border-gray-700 shadow-2xl my-8">
+        <div
+          className="fixed inset-0 flex items-center justify-center p-4 overflow-y-auto"
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            zIndex: 9999,
+            border: '5px solid red' // Debug: Make modal backdrop visible
+          }}
+        >
+            <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full border border-gray-700 shadow-2xl my-8" style={{ border: '5px solid yellow' }}>
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold">Edit Flashcard</h2>
                 <button
