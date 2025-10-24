@@ -672,7 +672,7 @@ export default function FlashcardsPage() {
                     setManualTerm(e.target.value);
                     if (manualTermError) setManualTermError('');
                   }}
-                  placeholder="Enter term or question (min. 2 characters)"
+                  placeholder="e.g., What is Zero Trust?"
                   className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none"
                   disabled={generating}
                 />
@@ -691,7 +691,7 @@ export default function FlashcardsPage() {
                     setManualDefinition(e.target.value);
                     if (manualDefinitionError) setManualDefinitionError('');
                   }}
-                  placeholder="Enter definition or answer (min. 10 characters)"
+                  placeholder="Enter the definition or answer here..."
                   className="w-full h-32 bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none resize-vertical"
                   disabled={generating}
                 />
