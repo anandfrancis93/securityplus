@@ -416,20 +416,17 @@ export default function FlashcardsPage() {
             </button>
 
             {/* Performance Option */}
-            <div
-              className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 opacity-60 cursor-not-allowed shadow-lg relative min-h-[250px]"
+            <button
+              onClick={() => setSelectedOption('performance')}
+              className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-white cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
+              style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
             >
-              <div className="absolute top-4 right-4">
-                <span className="bg-gray-700 text-gray-400 text-xs px-3 py-1 rounded-full">
-                  Coming Soon
-                </span>
-              </div>
               <div className="text-center">
                 <div className="text-6xl mb-4">📊</div>
-                <h2 className="text-2xl font-bold mb-2 text-gray-400">Performance</h2>
-                <p className="text-gray-500 text-sm">View your progress and statistics</p>
+                <h2 className="text-2xl font-bold mb-2 text-white">Performance</h2>
+                <p className="text-gray-400 text-sm">View your progress and statistics</p>
               </div>
-            </div>
+            </button>
           </div>
 
           {/* Notification Settings at bottom */}
@@ -502,52 +499,9 @@ export default function FlashcardsPage() {
             <p className="text-gray-400">Review using spaced repetition</p>
           </div>
 
-          {/* Stats */}
+          {/* Study Button */}
           {flashcards.length > 0 && (
             <>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-lg">📚</span>
-                    <div className="text-gray-400 text-xs">Total</div>
-                  </div>
-                  <div className="text-2xl font-bold text-blue-400">{stats.total}</div>
-                </div>
-                <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-lg">🌱</span>
-                    <div className="text-gray-400 text-xs">Learning</div>
-                  </div>
-                  <div className="text-2xl font-bold text-yellow-400">{stats.learning}</div>
-                  {stats.learning > 0 && (
-                    <div className="text-xs text-gray-500 mt-1">New cards</div>
-                  )}
-                </div>
-                <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-lg">🔄</span>
-                    <div className="text-gray-400 text-xs">Review</div>
-                  </div>
-                  <div className="text-2xl font-bold text-yellow-400">{stats.review}</div>
-                  {stats.review > 0 && (
-                    <div className="text-xs text-gray-500 mt-1">In progress</div>
-                  )}
-                </div>
-                <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-lg">⭐</span>
-                    <div className="text-gray-400 text-xs">Mastered</div>
-                  </div>
-                  <div className="text-2xl font-bold text-blue-400">{stats.mastered}</div>
-                  {stats.mastered > 0 && (
-                    <div className="text-xs text-gray-500 mt-1">
-                      {Math.round((stats.mastered / stats.total) * 100)}% complete
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Study Button */}
               <div className="text-center mb-8">
                 {dueCards.length > 0 && (
                   <div className="inline-block mb-6">
@@ -593,6 +547,124 @@ export default function FlashcardsPage() {
               <p className="text-gray-400 text-lg">No flashcards yet</p>
               <p className="text-gray-500 text-sm mt-2">
                 Create your first flashcard to start studying
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Performance option selected
+  if (selectedOption === 'performance') {
+    return (
+      <div className="min-h-screen bg-gray-900 text-white">
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
+          {/* Header */}
+          <div className="mb-8">
+            <div className="flex justify-between items-center mb-6">
+              <button
+                onClick={() => setSelectedOption(null)}
+                className="bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-300 px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                Back
+              </button>
+
+              <div className="relative" ref={menuRef}>
+                <button
+                  onClick={() => setMenuOpen(!menuOpen)}
+                  className="text-gray-400 hover:text-white transition-colors p-2"
+                  title="Menu"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
+
+                {menuOpen && user && !user?.isAnonymous && (
+                  <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
+                    <div className="px-4 py-2 text-sm text-gray-300 border-b border-gray-700">
+                      <div className="flex items-center gap-2">
+                        <span>👤</span>
+                        <span>{user?.displayName || 'User'}</span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={async () => {
+                        if (confirm('Are you sure you want to sign out?')) {
+                          await handleSignOut();
+                          setMenuOpen(false);
+                        }
+                      }}
+                      className="w-full px-4 py-2 text-sm text-left text-red-400 hover:bg-gray-700 transition-colors flex items-center gap-2"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+            <h1 className="text-3xl font-bold mb-2 text-white">Performance</h1>
+            <p className="text-gray-400">View your progress and statistics</p>
+          </div>
+
+          {/* Stats */}
+          {flashcards.length > 0 && (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">📚</span>
+                  <div className="text-gray-400 text-xs">Total</div>
+                </div>
+                <div className="text-2xl font-bold text-blue-400">{stats.total}</div>
+              </div>
+              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">🌱</span>
+                  <div className="text-gray-400 text-xs">Learning</div>
+                </div>
+                <div className="text-2xl font-bold text-yellow-400">{stats.learning}</div>
+                {stats.learning > 0 && (
+                  <div className="text-xs text-gray-500 mt-1">New cards</div>
+                )}
+              </div>
+              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">🔄</span>
+                  <div className="text-gray-400 text-xs">Review</div>
+                </div>
+                <div className="text-2xl font-bold text-yellow-400">{stats.review}</div>
+                {stats.review > 0 && (
+                  <div className="text-xs text-gray-500 mt-1">In progress</div>
+                )}
+              </div>
+              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">⭐</span>
+                  <div className="text-gray-400 text-xs">Mastered</div>
+                </div>
+                <div className="text-2xl font-bold text-blue-400">{stats.mastered}</div>
+                {stats.mastered > 0 && (
+                  <div className="text-xs text-gray-500 mt-1">
+                    {Math.round((stats.mastered / stats.total) * 100)}% complete
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {flashcards.length === 0 && (
+            <div className="text-center py-12">
+              <div className="text-6xl mb-4">📊</div>
+              <p className="text-gray-400 text-lg">No flashcards yet</p>
+              <p className="text-gray-500 text-sm mt-2">
+                Create your first flashcard to start tracking performance
               </p>
             </div>
           )}
