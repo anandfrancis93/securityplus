@@ -388,7 +388,7 @@ export default function StudyPage() {
             <div className="text-xl font-bold text-yellow-400">{stats.learning}</div>
             {openTooltip === 'learning' && (
               <div className="absolute z-50 bottom-full left-0 mb-2 w-64 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl">
-                <p className="text-sm text-gray-300">Cards you've attempted but got wrong or rated as "Again". These cards have 0 successful repetitions and need daily practice.</p>
+                <p className="text-sm text-gray-300">Cards you&apos;ve attempted but got wrong or rated as &quot;Again&quot;. These cards have 0 successful repetitions and need daily practice.</p>
                 <button
                   onClick={() => setOpenTooltip(null)}
                   className="absolute top-1 right-1 text-gray-500 hover:text-gray-300"
@@ -420,7 +420,7 @@ export default function StudyPage() {
             <div className="text-xl font-bold text-yellow-400">{stats.review}</div>
             {openTooltip === 'review' && (
               <div className="absolute z-50 bottom-full left-0 mb-2 w-64 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl">
-                <p className="text-sm text-gray-300">Cards you're actively learning and have reviewed correctly 1-2 times. These cards are in progress but not yet mastered.</p>
+                <p className="text-sm text-gray-300">Cards you&apos;re actively learning and have reviewed correctly 1-2 times. These cards are in progress but not yet mastered.</p>
                 <button
                   onClick={() => setOpenTooltip(null)}
                   className="absolute top-1 right-1 text-gray-500 hover:text-gray-300"
@@ -452,7 +452,7 @@ export default function StudyPage() {
             <div className="text-xl font-bold text-blue-400">{stats.mastered}</div>
             {openTooltip === 'mastered' && (
               <div className="absolute z-50 bottom-full left-0 mb-2 w-64 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl">
-                <p className="text-sm text-gray-300">Cards you've successfully reviewed 3 or more times. These cards are well-learned and appear less frequently to maintain long-term retention.</p>
+                <p className="text-sm text-gray-300">Cards you&apos;ve successfully reviewed 3 or more times. These cards are well-learned and appear less frequently to maintain long-term retention.</p>
                 <button
                   onClick={() => setOpenTooltip(null)}
                   className="absolute top-1 right-1 text-gray-500 hover:text-gray-300"
