@@ -61,7 +61,7 @@ export default function SubjectSelection() {
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
         <div className="mb-12">
-          <div className="flex justify-between items-center mb-8 relative">
+          <div className="flex justify-end items-center mb-8 relative">
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
@@ -75,7 +75,7 @@ export default function SubjectSelection() {
 
               {/* Dropdown Menu */}
               {menuOpen && user && !user?.isAnonymous && (
-                <div className="absolute left-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
+                <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
                   {/* User Name */}
                   <div className="px-4 py-2 text-sm text-gray-300 border-b border-gray-700">
                     <div className="flex items-center gap-2">
@@ -102,7 +102,6 @@ export default function SubjectSelection() {
                 </div>
               )}
             </div>
-            <div></div>
           </div>
           <div className="text-center">
             <h1 className="text-5xl font-bold mb-4 text-white">
