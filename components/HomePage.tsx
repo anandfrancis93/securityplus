@@ -206,28 +206,42 @@ export default function HomePage() {
             <div className="mt-12">
               <h3 className="text-xl font-bold mb-4">Recent Quizzes</h3>
               <div className="space-y-3">
-                {userProgress.quizHistory.slice(-5).reverse().map((quiz) => (
-                  <div key={quiz.id} className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <div className="text-sm text-gray-400">
-                          {new Date(quiz.startedAt).toLocaleDateString()} at {new Date(quiz.startedAt).toLocaleTimeString()}
+                {userProgress.quizHistory.slice(-5).reverse().map((quiz) => {
+                  const date = new Date(quiz.startedAt);
+                  const formattedDate = date.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                  });
+                  const formattedTime = date.toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                  });
+
+                  return (
+                    <div key={quiz.id} className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <div className="text-sm text-gray-400">
+                            {formattedDate} • {formattedTime}
+                          </div>
+                          <div className="text-sm mt-1">
+                            <span className="text-gray-300">{quiz.questions.length} questions</span>
+                          </div>
                         </div>
-                        <div className="text-sm mt-1">
-                          <span className="text-gray-300">{quiz.questions.length} questions</span>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-2xl font-bold text-blue-400">
-                          {quiz.score}/{quiz.questions.length}
-                        </div>
-                        <div className="text-sm text-gray-400">
-                          {((quiz.score / quiz.questions.length) * 100).toFixed(0)}%
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-blue-400">
+                            {quiz.score}/{quiz.questions.length}
+                          </div>
+                          <div className="text-sm text-gray-400">
+                            {((quiz.score / quiz.questions.length) * 100).toFixed(0)}%
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
