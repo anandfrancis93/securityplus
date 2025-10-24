@@ -20,7 +20,7 @@ import {
   checkAndNotifyDueFlashcards,
   getNotificationPreference,
 } from '@/lib/notifications';
-import { getUserFlashcards, getUserReviews } from '@/lib/flashcardDb';
+import { getUserReviews } from '@/lib/flashcardDb';
 
 interface AppContextType {
   userId: string | null;
@@ -78,14 +78,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       if (getNotificationPreference()) {
         const checkFlashcards = async () => {
           try {
-            const [flashcards, reviews] = await Promise.all([
-              getUserFlashcards(userId),
-              getUserReviews(userId),
-            ]);
-            await checkAndNotifyDueFlashcards(
-              reviews,
-              flashcards.map((f) => f.id)
-            );
+            const reviews = await getUserReviews(userId);
+            await checkAndNotifyDueFlashcards(reviews);
           } catch (error) {
             console.error('Error checking due flashcards:', error);
           }

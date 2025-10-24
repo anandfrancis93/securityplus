@@ -117,6 +117,24 @@ export function getDueFlashcards(
 }
 
 /**
+ * Get only reviewed flashcards that are due (excludes new/never-reviewed cards)
+ * This is useful for notifications - only notify about cards that need re-review
+ *
+ * @param reviews - Array of all flashcard reviews
+ * @returns Array of flashcard IDs that have been reviewed and are now due
+ */
+export function getReviewedDueFlashcards(
+  reviews: FlashcardReview[]
+): string[] {
+  const now = Date.now();
+
+  // Only return cards that have been reviewed and are due
+  return reviews
+    .filter(review => review.nextReviewDate <= now)
+    .map(review => review.flashcardId);
+}
+
+/**
  * Get statistics about flashcard deck
  */
 export function getDeckStats(

@@ -6,7 +6,7 @@
  */
 
 import { FlashcardReview } from './types';
-import { getDueFlashcards } from './spacedRepetition';
+import { getReviewedDueFlashcards } from './spacedRepetition';
 
 // Check if notifications are supported
 export function areNotificationsSupported(): boolean {
@@ -94,11 +94,11 @@ export async function showNotification(
 }
 
 // Check for due flashcards and send notification
+// Only notifies for cards that have been reviewed at least once (excludes new/unreviewed cards)
 export async function checkAndNotifyDueFlashcards(
-  reviews: FlashcardReview[],
-  allFlashcardIds: string[]
+  reviews: FlashcardReview[]
 ): Promise<void> {
-  const dueCards = getDueFlashcards(reviews, allFlashcardIds);
+  const dueCards = getReviewedDueFlashcards(reviews);
 
   if (dueCards.length > 0) {
     const title = '📚 Flashcards Due for Review!';
