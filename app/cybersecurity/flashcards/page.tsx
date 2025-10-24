@@ -160,11 +160,13 @@ export default function FlashcardsPage() {
 
   const handleEditFlashcard = (card: Flashcard) => {
     console.log('Edit button clicked for card:', card.term);
+    console.log('Setting editingCard to:', card);
     setEditingCard(card);
     setEditTerm(card.term);
     setEditDefinition(card.definition);
     setEditDomain(card.domain || 'General Security Concepts');
     setEditImagePreview(card.imageUrl || null);
+    console.log('State setters called, editingCard should be:', card);
   };
 
   const handleCancelEdit = () => {
@@ -1163,8 +1165,11 @@ export default function FlashcardsPage() {
       </div>
 
       {/* Edit Modal - Outside scrollable container */}
+      {console.log('Render check - editingCard:', editingCard)}
       {editingCard && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 overflow-y-auto">
+        <>
+          {console.log('Modal is rendering! editingCard:', editingCard)}
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 overflow-y-auto">
             <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full border border-gray-700 shadow-2xl my-8">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold">Edit Flashcard</h2>
@@ -1287,6 +1292,7 @@ export default function FlashcardsPage() {
               </div>
             </div>
           </div>
+        </>
         )}
     </div>
   );
