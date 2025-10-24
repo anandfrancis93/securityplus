@@ -184,7 +184,7 @@ export default function FlashcardsPage() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold text-white">
               Flashcards
             </h1>
             <button

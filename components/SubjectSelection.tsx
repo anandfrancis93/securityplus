@@ -73,7 +73,7 @@ export default function SubjectSelection() {
             )}
           </div>
           <div className="text-center">
-            <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-green-500 to-yellow-500 bg-clip-text text-transparent">
+            <h1 className="text-5xl font-bold mb-4 text-white">
               Learning Hub
             </h1>
             <p className="text-gray-400 text-lg">Select a subject to begin studying</p>
@@ -97,9 +97,7 @@ export default function SubjectSelection() {
               <div className="text-6xl mb-4">{subject.icon}</div>
 
               {/* Subject Name */}
-              <h2
-                className={`text-2xl font-bold mb-2 bg-gradient-to-r ${subject.color} bg-clip-text text-transparent`}
-              >
+              <h2 className="text-2xl font-bold mb-2 text-white">
                 {subject.name}
               </h2>
 

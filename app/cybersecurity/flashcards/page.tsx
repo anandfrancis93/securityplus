@@ -312,7 +312,7 @@ export default function FlashcardsPage() {
               </svg>
               Back
             </button>
-            <h1 className="text-3xl font-bold mb-2 text-green-400">Flashcards</h1>
+            <h1 className="text-3xl font-bold mb-2 text-white">Flashcards</h1>
             <p className="text-gray-400">Choose an option</p>
           </div>
 
@@ -326,7 +326,7 @@ export default function FlashcardsPage() {
             >
               <div className="text-center">
                 <div className="text-6xl mb-4">📖</div>
-                <h2 className="text-2xl font-bold mb-2 text-green-400">Study</h2>
+                <h2 className="text-2xl font-bold mb-2 text-white">Study</h2>
                 <p className="text-gray-400 text-sm">Review your flashcards with spaced repetition</p>
                 {dueCards.length > 0 && (
                   <p className="text-green-300 text-sm font-medium mt-3">{dueCards.length} cards due</p>
@@ -342,7 +342,7 @@ export default function FlashcardsPage() {
             >
               <div className="text-center">
                 <div className="text-6xl mb-4">✍️</div>
-                <h2 className="text-2xl font-bold mb-2 text-blue-400">Create</h2>
+                <h2 className="text-2xl font-bold mb-2 text-white">Create</h2>
                 <p className="text-gray-400 text-sm">Make new flashcards for your study</p>
               </div>
             </button>
@@ -355,7 +355,7 @@ export default function FlashcardsPage() {
             >
               <div className="text-center">
                 <div className="text-6xl mb-4">🔍</div>
-                <h2 className="text-2xl font-bold mb-2 text-yellow-400">Search</h2>
+                <h2 className="text-2xl font-bold mb-2 text-white">Search</h2>
                 <p className="text-gray-400 text-sm">Find and manage your flashcards</p>
                 <p className="text-gray-500 text-sm mt-3">{flashcards.length} total cards</p>
               </div>
@@ -405,7 +405,7 @@ export default function FlashcardsPage() {
               </svg>
               Back
             </button>
-            <h1 className="text-3xl font-bold mb-2 text-green-400">Study Flashcards</h1>
+            <h1 className="text-3xl font-bold mb-2 text-white">Study Flashcards</h1>
             <p className="text-gray-400">Review using spaced repetition</p>
           </div>
 
@@ -522,7 +522,7 @@ export default function FlashcardsPage() {
               </svg>
               Back
             </button>
-            <h1 className="text-3xl font-bold mb-2 text-blue-400">Create Flashcard</h1>
+            <h1 className="text-3xl font-bold mb-2 text-white">Create Flashcard</h1>
             <p className="text-gray-400">Make a new flashcard for your study</p>
           </div>
 
@@ -643,7 +643,7 @@ export default function FlashcardsPage() {
             </svg>
             Back
           </button>
-          <h1 className="text-3xl font-bold mb-2 text-blue-400">Search Flashcards</h1>
+          <h1 className="text-3xl font-bold mb-2 text-white">Search Flashcards</h1>
           <p className="text-gray-400">Find and manage your flashcards</p>
         </div>
 
@@ -843,7 +843,7 @@ export default function FlashcardsPage() {
             </svg>
             Back
           </button>
-          <h1 className="text-3xl font-bold mb-2 text-blue-400">Search Flashcards</h1>
+          <h1 className="text-3xl font-bold mb-2 text-white">Search Flashcards</h1>
           <p className="text-gray-400">Find and manage your flashcards</p>
         </div>
 

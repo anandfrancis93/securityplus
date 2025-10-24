@@ -90,7 +90,7 @@ export default function HomePage() {
                 </svg>
                 Back
               </button>
-              <h1 className="text-3xl font-bold mb-2 text-blue-400">Quiz</h1>
+              <h1 className="text-3xl font-bold mb-2 text-white">Quiz</h1>
               <p className="text-gray-400">Choose an option</p>
             </div>
 
@@ -104,7 +104,7 @@ export default function HomePage() {
               >
                 <div className="text-center">
                   <div className="text-6xl mb-4">🚀</div>
-                  <h2 className="text-2xl font-bold mb-2 text-blue-400">Start New Quiz</h2>
+                  <h2 className="text-2xl font-bold mb-2 text-white">Start New Quiz</h2>
                   <p className="text-gray-400 text-sm">Take 10 AI-generated synthesis questions</p>
                 </div>
               </button>
@@ -117,7 +117,7 @@ export default function HomePage() {
               >
                 <div className="text-center">
                   <div className="text-6xl mb-4">📊</div>
-                  <h2 className="text-2xl font-bold mb-2 text-yellow-400">Performance</h2>
+                  <h2 className="text-2xl font-bold mb-2 text-white">Performance</h2>
                   <p className="text-gray-400 text-sm">View your scores, IRT analysis, and history</p>
                 </div>
               </button>
@@ -143,7 +143,7 @@ export default function HomePage() {
               </svg>
               Back
             </button>
-            <h1 className="text-3xl font-bold mb-2 text-yellow-400">Performance</h1>
+            <h1 className="text-3xl font-bold mb-2 text-white">Performance</h1>
             <p className="text-gray-400">Track your progress and improvement</p>
           </div>
 
@@ -487,7 +487,7 @@ export default function HomePage() {
             )}
           </div>
           <div className="text-center">
-            <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold mb-2 text-white">
               Cybersecurity
             </h1>
             <p className="text-gray-400 text-lg">Choose your study method</p>
@@ -504,7 +504,7 @@ export default function HomePage() {
           >
             <div className="text-center">
               <div className="text-6xl mb-4">📝</div>
-              <h2 className="text-2xl font-bold mb-2 text-blue-400">Quiz</h2>
+              <h2 className="text-2xl font-bold mb-2 text-white">Quiz</h2>
               <p className="text-gray-400 text-sm">Test your knowledge with AI-generated questions</p>
             </div>
           </button>
@@ -517,7 +517,7 @@ export default function HomePage() {
           >
             <div className="text-center">
               <div className="text-6xl mb-4">📚</div>
-              <h2 className="text-2xl font-bold mb-2 text-green-400">Flashcards</h2>
+              <h2 className="text-2xl font-bold mb-2 text-white">Flashcards</h2>
               <p className="text-gray-400 text-sm">Learn with spaced repetition</p>
             </div>
           </button>
