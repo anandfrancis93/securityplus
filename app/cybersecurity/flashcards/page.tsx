@@ -981,7 +981,8 @@ export default function FlashcardsPage() {
 
   // Search view (default when selectedOption === 'search')
   return (
-    <div className="fixed inset-0 bg-gray-900 text-white overflow-hidden flex flex-col">
+    <>
+      <div className="fixed inset-0 bg-gray-900 text-white overflow-hidden flex flex-col">
       <div className="container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0" style={{ overscrollBehavior: 'none' }}>
         {/* Header */}
         <div className="mb-4 flex-shrink-0">
@@ -1173,8 +1174,9 @@ export default function FlashcardsPage() {
           </div>
         )}
       </div>
+    </div>
 
-      {/* Edit Modal - Outside scrollable container */}
+      {/* Edit Modal - Now completely outside overflow-hidden div */}
       {editingCard && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 overflow-y-auto">
             <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full border border-gray-700 shadow-2xl my-8">
@@ -1300,6 +1302,6 @@ export default function FlashcardsPage() {
             </div>
           </div>
         )}
-    </div>
+    </>
   );
 }
