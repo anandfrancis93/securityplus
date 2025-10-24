@@ -376,17 +376,26 @@ export default function FlashcardsPage() {
           {/* Four Options */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Study Option */}
-            <button
-              onClick={() => dueCards.length > 0 ? handleStartStudy() : setSelectedOption('study')}
-              className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-white cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
+            <div className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-white cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0 flex flex-col"
               style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
             >
-              <div className="text-center">
+              <div className="text-center flex-1 flex flex-col justify-center" onClick={() => dueCards.length > 0 ? handleStartStudy() : setSelectedOption('study')}>
                 <div className="text-6xl mb-4">📖</div>
                 <h2 className="text-2xl font-bold mb-2 text-white">Study</h2>
                 <p className="text-gray-400 text-sm">Review with spaced repetition and interleaving</p>
               </div>
-            </button>
+              {flashcards.length > 0 && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleResetProgress();
+                  }}
+                  className="mt-4 bg-yellow-600/20 hover:bg-yellow-600/30 text-yellow-400 border border-yellow-600/50 font-medium py-2 px-4 rounded-lg transition-all text-sm"
+                >
+                  Reset Progress
+                </button>
+              )}
+            </div>
 
             {/* Create Option */}
             <button
@@ -431,18 +440,6 @@ export default function FlashcardsPage() {
               </div>
             </div>
           </div>
-
-          {/* Reset Progress Button */}
-          {flashcards.length > 0 && (
-            <div className="mt-8 text-center">
-              <button
-                onClick={handleResetProgress}
-                className="bg-yellow-600/20 hover:bg-yellow-600/30 text-yellow-400 border border-yellow-600/50 font-medium py-2 px-6 rounded-lg transition-all min-h-[44px]"
-              >
-                Reset Progress
-              </button>
-            </div>
-          )}
 
           {/* Notification Settings at bottom */}
           {flashcards.length > 0 && (
@@ -585,14 +582,6 @@ export default function FlashcardsPage() {
                     </p>
                   </div>
                 )}
-                <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-                  <button
-                    onClick={handleResetProgress}
-                    className="bg-yellow-600/20 hover:bg-yellow-600/30 text-yellow-400 border border-yellow-600/50 font-medium py-2 px-6 rounded-lg transition-all min-h-[44px]"
-                  >
-                    Reset Progress
-                  </button>
-                </div>
               </div>
             </>
           )}
