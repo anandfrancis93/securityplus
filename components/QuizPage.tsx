@@ -388,9 +388,18 @@ export default function QuizPage() {
             {/* Next Button */}
             <button
               onClick={handleNextQuestion}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-bold text-lg transition-all"
+              disabled={generatingNext}
+              className={`w-full py-3 rounded-lg font-bold text-lg transition-all ${
+                generatingNext
+                  ? 'bg-gray-600 cursor-not-allowed text-gray-400'
+                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+              }`}
             >
-              {currentQuestionIndex < questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
+              {generatingNext
+                ? 'Generating next question...'
+                : currentQuestionIndex < totalQuestions - 1
+                ? 'Next Question'
+                : 'Finish Quiz'}
             </button>
           </div>
         )}
