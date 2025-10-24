@@ -135,38 +135,3 @@ export function schedulePeriodicCheck(
 export function clearPeriodicCheck(intervalId: number): void {
   window.clearInterval(intervalId);
 }
-
-// Save notification preference to localStorage
-export function saveNotificationPreference(enabled: boolean): void {
-  localStorage.setItem('flashcard-notifications-enabled', enabled.toString());
-}
-
-// Get notification preference from localStorage
-export function getNotificationPreference(): boolean {
-  const pref = localStorage.getItem('flashcard-notifications-enabled');
-  return pref === 'true';
-}
-
-// Initialize notifications (call this on app startup)
-export async function initializeNotifications(): Promise<boolean> {
-  const preference = getNotificationPreference();
-
-  if (!preference) {
-    return false;
-  }
-
-  if (!areNotificationsSupported()) {
-    console.warn('Notifications not supported');
-    return false;
-  }
-
-  // Register service worker
-  await registerServiceWorker();
-
-  // Check if we already have permission
-  if (Notification.permission === 'granted') {
-    return true;
-  }
-
-  return false;
-}

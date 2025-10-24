@@ -24,6 +24,7 @@ export interface UserProgress {
   lastUpdated: number;
   quizHistory: QuizSession[];
   estimatedAbility?: number; // IRT ability estimate (theta)
+  notificationsEnabled?: boolean; // Whether flashcard notifications are enabled
 }
 
 export interface QuizSession {

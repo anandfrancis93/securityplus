@@ -15,12 +15,11 @@ import {
 import { calculatePartialCredit } from '@/lib/irt';
 import AuthModal from './AuthModal';
 import {
-  initializeNotifications,
   schedulePeriodicCheck,
   checkAndNotifyDueFlashcards,
-  getNotificationPreference,
 } from '@/lib/notifications';
 import { getUserReviews } from '@/lib/flashcardDb';
+import { getNotificationPreference } from '@/lib/db';
 
 interface AppContextType {
   userId: string | null;
@@ -71,11 +70,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
     let intervalId: number | null = null;
 
     const setupNotifications = async () => {
-      // Initialize notifications (will check preference and permission)
-      await initializeNotifications();
-
-      // Set up periodic checking if notifications are enabled
-      if (getNotificationPreference()) {
+      // Set up periodic checking if notifications are enabled in Firebase
+      const notifEnabled = await getNotificationPreference(userId);
+      if (notifEnabled) {
         const checkFlashcards = async () => {
           try {
             const reviews = await getUserReviews(userId);

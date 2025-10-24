@@ -212,3 +212,26 @@ export async function resetUserProgress(userId: string): Promise<void> {
     throw error;
   }
 }
+
+// Notification preference functions
+export async function saveNotificationPreference(userId: string, enabled: boolean): Promise<void> {
+  try {
+    const userRef = doc(db, USERS_COLLECTION, userId);
+    await updateDoc(userRef, {
+      notificationsEnabled: enabled,
+    });
+  } catch (error) {
+    console.error('Error saving notification preference:', error);
+    throw error;
+  }
+}
+
+export async function getNotificationPreference(userId: string): Promise<boolean> {
+  try {
+    const progress = await getUserProgress(userId);
+    return progress?.notificationsEnabled ?? false;
+  } catch (error) {
+    console.error('Error getting notification preference:', error);
+    return false;
+  }
+}

@@ -6,28 +6,37 @@ import {
   getNotificationPermission,
   requestNotificationPermission,
   registerServiceWorker,
+} from '@/lib/notifications';
+import {
   saveNotificationPreference,
   getNotificationPreference,
-} from '@/lib/notifications';
+} from '@/lib/db';
+import { useApp } from './AppProvider';
 
 export default function NotificationSettings() {
+  const { userId } = useApp();
   const [isSupported, setIsSupported] = useState(false);
   const [permission, setPermission] = useState<NotificationPermission>('default');
   const [enabled, setEnabled] = useState(false);
   const [requesting, setRequesting] = useState(false);
 
   useEffect(() => {
-    const supported = areNotificationsSupported();
-    setIsSupported(supported);
+    const loadSettings = async () => {
+      const supported = areNotificationsSupported();
+      setIsSupported(supported);
 
-    if (supported) {
-      setPermission(getNotificationPermission());
-      setEnabled(getNotificationPreference());
-    }
-  }, []);
+      if (supported && userId) {
+        setPermission(getNotificationPermission());
+        const pref = await getNotificationPreference(userId);
+        setEnabled(pref);
+      }
+    };
+
+    loadSettings();
+  }, [userId]);
 
   const handleToggle = async () => {
-    if (!isSupported) {
+    if (!isSupported || !userId) {
       alert('Notifications are not supported in this browser.');
       return;
     }
@@ -35,7 +44,7 @@ export default function NotificationSettings() {
     if (enabled) {
       // Disable notifications
       setEnabled(false);
-      saveNotificationPreference(false);
+      await saveNotificationPreference(userId, false);
       return;
     }
 
@@ -55,9 +64,9 @@ export default function NotificationSettings() {
       // Register service worker
       await registerServiceWorker();
 
-      // Save preference
+      // Save preference to Firebase
       setEnabled(true);
-      saveNotificationPreference(true);
+      await saveNotificationPreference(userId, true);
 
       alert('Notifications enabled! You will be notified when flashcards are due for review.');
     } catch (error) {
