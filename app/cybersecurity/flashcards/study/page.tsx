@@ -297,56 +297,155 @@ export default function StudyPage() {
 
         {/* Answer Buttons - Show when flipped */}
         {isFlipped && (
-          <>
-            <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4 mb-4">
-              <h4 className="text-base font-bold text-blue-300 mb-3">💡 How to Rate Your Recall:</h4>
-              <div className="text-sm text-gray-300 space-y-2">
-                <p><strong className="text-red-400">Again:</strong> Couldn&apos;t remember or got it wrong → Review in 1 day</p>
-                <p><strong className="text-yellow-400">Hard:</strong> Difficult to recall, needed time → Review in 1 day</p>
-                <p><strong className="text-green-400">Good:</strong> Recalled with some effort → Review in 3 days</p>
-                <p><strong className="text-blue-400">Easy:</strong> Instant recall, confident → Review in 7 days</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            {/* Again Button */}
+            <div className="relative">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenTooltip(openTooltip === 'again' ? null : 'again');
+                }}
+                className="absolute top-1 right-1 text-white/70 hover:text-white transition-colors z-10"
+              >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+              </button>
               <button
                 onClick={() => handleAnswer('again')}
                 disabled={answering}
-                className="bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation hover:-translate-y-1 hover:shadow-lg hover:shadow-red-500/50 active:translate-y-0"
+                className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation hover:-translate-y-1 hover:shadow-lg hover:shadow-red-500/50 active:translate-y-0"
                 style={{ transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
               >
                 <div className="text-lg font-bold">Again</div>
                 <div className="text-xs opacity-75">1 day</div>
               </button>
+              {openTooltip === 'again' && (
+                <div className="fixed z-50 left-4 right-4 bottom-20 md:absolute md:bottom-full md:left-1/2 md:-translate-x-1/2 md:right-auto mb-2 md:w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl">
+                  <p className="text-sm text-gray-300">Couldn&apos;t remember or got it wrong. Card will be reviewed in 1 day.</p>
+                  <button
+                    onClick={() => setOpenTooltip(null)}
+                    className="absolute top-1 right-1 text-gray-500 hover:text-gray-300"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Hard Button */}
+            <div className="relative">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenTooltip(openTooltip === 'hard' ? null : 'hard');
+                }}
+                className="absolute top-1 right-1 text-white/70 hover:text-white transition-colors z-10"
+              >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+              </button>
               <button
                 onClick={() => handleAnswer('hard')}
                 disabled={answering}
-                className="bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation hover:-translate-y-1 hover:shadow-lg hover:shadow-yellow-500/50 active:translate-y-0"
+                className="w-full bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation hover:-translate-y-1 hover:shadow-lg hover:shadow-yellow-500/50 active:translate-y-0"
                 style={{ transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
               >
                 <div className="text-lg font-bold">Hard</div>
                 <div className="text-xs opacity-75">1 day</div>
               </button>
+              {openTooltip === 'hard' && (
+                <div className="fixed z-50 left-4 right-4 bottom-20 md:absolute md:bottom-full md:left-1/2 md:-translate-x-1/2 md:right-auto mb-2 md:w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl">
+                  <p className="text-sm text-gray-300">Difficult to recall, needed time. Card will be reviewed in 1 day.</p>
+                  <button
+                    onClick={() => setOpenTooltip(null)}
+                    className="absolute top-1 right-1 text-gray-500 hover:text-gray-300"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Good Button */}
+            <div className="relative">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenTooltip(openTooltip === 'good' ? null : 'good');
+                }}
+                className="absolute top-1 right-1 text-white/70 hover:text-white transition-colors z-10"
+              >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+              </button>
               <button
                 onClick={() => handleAnswer('good')}
                 disabled={answering}
-                className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation hover:-translate-y-1 hover:shadow-lg hover:shadow-green-500/50 active:translate-y-0"
+                className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation hover:-translate-y-1 hover:shadow-lg hover:shadow-green-500/50 active:translate-y-0"
                 style={{ transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
               >
                 <div className="text-lg font-bold">Good</div>
                 <div className="text-xs opacity-75">3 days</div>
               </button>
+              {openTooltip === 'good' && (
+                <div className="fixed z-50 left-4 right-4 bottom-20 md:absolute md:bottom-full md:left-1/2 md:-translate-x-1/2 md:right-auto mb-2 md:w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl">
+                  <p className="text-sm text-gray-300">Recalled with some effort. Card will be reviewed in 3 days.</p>
+                  <button
+                    onClick={() => setOpenTooltip(null)}
+                    className="absolute top-1 right-1 text-gray-500 hover:text-gray-300"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Easy Button */}
+            <div className="relative">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenTooltip(openTooltip === 'easy' ? null : 'easy');
+                }}
+                className="absolute top-1 right-1 text-white/70 hover:text-white transition-colors z-10"
+              >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+              </button>
               <button
                 onClick={() => handleAnswer('easy')}
                 disabled={answering}
-                className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/50 active:translate-y-0"
+                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/50 active:translate-y-0"
                 style={{ transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
               >
                 <div className="text-lg font-bold">Easy</div>
                 <div className="text-xs opacity-75">7 days</div>
               </button>
+              {openTooltip === 'easy' && (
+                <div className="fixed z-50 left-4 right-4 bottom-20 md:absolute md:bottom-full md:left-1/2 md:-translate-x-1/2 md:right-auto mb-2 md:w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl">
+                  <p className="text-sm text-gray-300">Instant recall, confident. Card will be reviewed in 7 days.</p>
+                  <button
+                    onClick={() => setOpenTooltip(null)}
+                    className="absolute top-1 right-1 text-gray-500 hover:text-gray-300"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              )}
             </div>
-          </>
+          </div>
         )}
 
         {/* Stats - Always Visible at Bottom */}
