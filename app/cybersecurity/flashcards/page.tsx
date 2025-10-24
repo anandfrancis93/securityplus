@@ -384,7 +384,7 @@ export default function FlashcardsPage() {
               <div className="text-center">
                 <div className="text-6xl mb-4">📖</div>
                 <h2 className="text-2xl font-bold mb-2 text-white">Study</h2>
-                <p className="text-gray-400 text-sm">Review your flashcards with spaced repetition</p>
+                <p className="text-gray-400 text-sm">Review with spaced repetition and interleaving</p>
               </div>
             </button>
 
