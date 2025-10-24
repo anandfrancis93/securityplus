@@ -91,11 +91,25 @@ export function calculateNextReview(
 }
 
 /**
- * Get flashcards due for review
+ * Shuffle array using Fisher-Yates algorithm
+ * @param array - Array to shuffle
+ * @returns Shuffled array
+ */
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+/**
+ * Get flashcards due for review (randomized/interleaved)
  *
  * @param reviews - Array of all flashcard reviews
  * @param allFlashcardIds - All available flashcard IDs
- * @returns Array of flashcard IDs due for review (including new cards)
+ * @returns Array of flashcard IDs due for review (including new cards), randomized for better learning
  */
 export function getDueFlashcards(
   reviews: FlashcardReview[],
@@ -112,8 +126,10 @@ export function getDueFlashcards(
     .filter(review => review.nextReviewDate <= now)
     .map(review => review.flashcardId);
 
-  // Return new cards first, then due cards
-  return [...newCards, ...dueCards];
+  // Combine and shuffle for interleaved/randomized presentation
+  // This improves learning while maintaining spaced repetition integrity
+  const allDueCards = [...newCards, ...dueCards];
+  return shuffleArray(allDueCards);
 }
 
 /**
