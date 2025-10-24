@@ -230,7 +230,7 @@ export default function StudyPage() {
             <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4 mb-4">
               <h4 className="text-sm font-bold text-blue-300 mb-2">💡 How to Rate Your Recall:</h4>
               <div className="text-xs text-gray-300 space-y-1">
-                <p><strong className="text-red-400">Again:</strong> Couldn't remember or got it wrong → Review tomorrow</p>
+                <p><strong className="text-red-400">Again:</strong> Couldn&apos;t remember or got it wrong → Review tomorrow</p>
                 <p><strong className="text-orange-400">Hard:</strong> Difficult to recall, needed time → Review in 1-3 days</p>
                 <p><strong className="text-green-400">Good:</strong> Recalled with some effort → Review in 3-6 days</p>
                 <p><strong className="text-blue-400">Easy:</strong> Instant recall, confident → Review in 7+ days</p>
