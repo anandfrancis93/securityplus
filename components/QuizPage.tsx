@@ -16,7 +16,6 @@ export default function QuizPage() {
   const [loading, setLoading] = useState(true);
   const [generatingNext, setGeneratingNext] = useState(false);
   const [totalQuestions] = useState(10);
-  const generatingRef = React.useRef(false); // Track if we're already generating
 
   useEffect(() => {
     initQuiz();
@@ -24,17 +23,15 @@ export default function QuizPage() {
 
   // Automatically generate next question in background whenever a new question is added
   useEffect(() => {
-    if (!loading && questions.length > 0 && questions.length < totalQuestions && !generatingRef.current) {
+    if (!loading && questions.length > 0 && questions.length < totalQuestions && !generatingNext) {
       // Generate the next question immediately after the current one is added
       console.log(`Auto-generating question ${questions.length + 1} in background...`);
-      generatingRef.current = true;
       setGeneratingNext(true);
       generateNextQuestion().then(() => {
         setGeneratingNext(false);
-        generatingRef.current = false;
       });
     }
-  }, [loading, questions.length]); // Only watch questions.length, NOT currentQuestionIndex
+  }, [loading, questions.length, generatingNext]); // Watch generatingNext too
 
   const initQuiz = async () => {
     if (!currentQuiz) {
