@@ -475,24 +475,16 @@ export default function FlashcardsPage() {
               </div>
             </div>
 
-            {/* Study Button - Visual Anchors & Serial Position Effect */}
+            {/* Study Button - Serial Position Effect */}
             <div className="text-center mb-8">
               {dueCards.length > 0 && (
-                <div className="relative inline-block mb-6">
-                  <div className="absolute left-1/2 -translate-x-1/2 -top-8 text-yellow-400 animate-bounce text-2xl">
-                    ↓
-                  </div>
+                <div className="inline-block mb-6">
                   <button
                     onClick={handleStartStudy}
-                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-5 px-12 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg shadow-green-500/50 min-h-[56px] touch-manipulation ring-2 ring-green-400/50 ring-offset-2 ring-offset-gray-900"
+                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-5 px-12 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg shadow-green-500/50 min-h-[56px] touch-manipulation"
                   >
-                    ⚡ Study Now ({dueCards.length} due)
+                    Study Now ({dueCards.length} due)
                   </button>
-                  {dueCards.length >= 10 && (
-                    <div className="absolute -top-3 -right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">
-                      HOT!
-                    </div>
-                  )}
                   <p className="text-xs text-gray-400 mt-3">
                     {dueCards.length >= 20 ? '⚠️ Cards piling up! Study now to stay on track' :
                      dueCards.length >= 10 ? '⏰ Many cards waiting - great study opportunity!' :
