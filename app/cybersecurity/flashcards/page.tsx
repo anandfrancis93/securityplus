@@ -733,8 +733,8 @@ export default function FlashcardsPage() {
 
   // Search option selected
   return (
-    <div className="h-screen bg-gray-900 text-white overflow-hidden flex flex-col">
-      <div className="container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0">
+    <div className="fixed inset-0 bg-gray-900 text-white overflow-hidden flex flex-col">
+      <div className="container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0" style={{ overscrollBehavior: 'none' }}>
         {/* Header */}
         <div className="mb-4 flex-shrink-0">
           <div className="flex justify-between items-center mb-3">
@@ -835,7 +835,7 @@ export default function FlashcardsPage() {
                 </div>
               </div>
 
-              <div className="space-y-2 flex-1 overflow-y-auto">
+              <div className="space-y-2 flex-1 overflow-y-auto" style={{ overscrollBehavior: 'contain' }}>
                 {filteredFlashcards.length === 0 ? (
                   <div className="text-center py-8 text-gray-400">
                     {searchQuery ? 'No flashcards match your search.' : 'No flashcards yet.'}
@@ -922,8 +922,8 @@ export default function FlashcardsPage() {
 
   // Search view (default when selectedOption === 'search')
   return (
-    <div className="h-screen bg-gray-900 text-white overflow-hidden flex flex-col">
-      <div className="container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0">
+    <div className="fixed inset-0 bg-gray-900 text-white overflow-hidden flex flex-col">
+      <div className="container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0" style={{ overscrollBehavior: 'none' }}>
         {/* Header */}
         <div className="mb-4 flex-shrink-0">
           <div className="flex justify-between items-center mb-3">
@@ -1024,7 +1024,7 @@ export default function FlashcardsPage() {
                 </div>
               </div>
 
-              <div className="space-y-2 flex-1 overflow-y-auto">
+              <div className="space-y-2 flex-1 overflow-y-auto" style={{ overscrollBehavior: 'contain' }}>
                 {filteredFlashcards.length === 0 ? (
                   <div className="text-center py-8 text-gray-400">
                     {searchQuery ? 'No flashcards match your search.' : 'No flashcards yet.'}
