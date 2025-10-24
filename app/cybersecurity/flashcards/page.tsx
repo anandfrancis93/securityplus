@@ -354,107 +354,191 @@ export default function FlashcardsPage() {
   // Global debug overlay component
   const DebugOverlay = () => (
     <>
-      <div style={{
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: 'rgba(255, 0, 0, 0.9)',
-        color: 'white',
-        padding: '10px',
-        zIndex: 99999,
-        fontFamily: 'monospace',
-        fontSize: '12px',
-        borderTop: '3px solid yellow'
-      }}>
-        <div><strong>DEBUG INFO:</strong></div>
-        <div>selectedOption: <strong>{selectedOption || 'null'}</strong></div>
-        <div>editingCard: <strong>{editingCard ? editingCard.term : 'null'}</strong></div>
-        <div>Modal should render: <strong>{editingCard ? 'YES' : 'NO'}</strong></div>
-        <div>Rendered: {new Date().toLocaleTimeString()}</div>
-      </div>
-
-      {/* Test indicator - should appear when editingCard is set */}
+      {/* Edit Modal - Working version */}
       {editingCard && (
-        <div style={{
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          backgroundColor: 'orange',
-          color: 'black',
-          padding: '40px',
-          fontSize: '32px',
-          fontWeight: 'bold',
-          zIndex: 999999,
-          border: '10px solid red',
-          textAlign: 'center'
-        }}>
-          EDIT FLASHCARD<br/>
-          <div style={{ marginTop: '20px', textAlign: 'left', width: '500px' }}>
-            <div style={{ marginBottom: '15px' }}>
-              <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}>Term:</label>
-              <input
-                type="text"
-                value={editTerm}
-                onChange={(e) => setEditTerm(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '8px',
-                  fontSize: '14px',
-                  borderRadius: '4px',
-                  border: '2px solid #666'
-                }}
-              />
-            </div>
-            <div style={{ marginBottom: '15px' }}>
-              <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}>Definition:</label>
-              <textarea
-                value={editDefinition}
-                onChange={(e) => setEditDefinition(e.target.value)}
-                rows={4}
-                style={{
-                  width: '100%',
-                  padding: '8px',
-                  fontSize: '14px',
-                  borderRadius: '4px',
-                  border: '2px solid #666'
-                }}
-              />
-            </div>
-            <div style={{ display: 'flex', gap: '10px' }}>
+        <>
+          {/* Modal Backdrop */}
+          <div
+            onClick={handleCancelEdit}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.75)',
+              zIndex: 999998
+            }}
+          />
+
+          {/* Modal Content */}
+          <div style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: '#1f2937',
+            color: 'white',
+            padding: '24px',
+            borderRadius: '12px',
+            width: '90%',
+            maxWidth: '600px',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            zIndex: 999999,
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+            border: '1px solid #374151'
+          }}>
+            {/* Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>Edit Flashcard</h2>
               <button
                 onClick={handleCancelEdit}
                 style={{
-                  padding: '10px 20px',
-                  backgroundColor: '#666',
-                  color: 'white',
+                  background: 'none',
                   border: 'none',
-                  borderRadius: '5px',
-                  fontSize: '14px',
-                  cursor: 'pointer'
+                  color: '#9ca3af',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  padding: '0',
+                  lineHeight: '1'
                 }}
               >
-                Cancel
-              </button>
-              <button
-                onClick={handleSaveEdit}
-                disabled={generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10}
-                style={{
-                  padding: '10px 20px',
-                  backgroundColor: generating ? '#666' : '#2563eb',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '5px',
-                  fontSize: '14px',
-                  cursor: generating ? 'not-allowed' : 'pointer'
-                }}
-              >
-                {generating ? 'Saving...' : 'Save'}
+                ×
               </button>
             </div>
+
+            {/* Form */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', color: '#d1d5db' }}>
+                  Term / Question *
+                </label>
+                <input
+                  type="text"
+                  value={editTerm}
+                  onChange={(e) => setEditTerm(e.target.value)}
+                  placeholder="e.g., What is Zero Trust?"
+                  disabled={generating}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    fontSize: '14px',
+                    borderRadius: '8px',
+                    border: '1px solid #4b5563',
+                    backgroundColor: '#374151',
+                    color: 'white',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
+                />
+                {editTerm.length > 0 && editTerm.length < 2 && (
+                  <span style={{ color: '#fbbf24', fontSize: '12px', marginTop: '4px', display: 'block' }}>
+                    Term must be at least 2 characters
+                  </span>
+                )}
+              </div>
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', color: '#d1d5db' }}>
+                  Definition / Answer *
+                </label>
+                <textarea
+                  value={editDefinition}
+                  onChange={(e) => setEditDefinition(e.target.value)}
+                  placeholder="Enter the definition or answer here..."
+                  rows={6}
+                  disabled={generating}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    fontSize: '14px',
+                    borderRadius: '8px',
+                    border: '1px solid #4b5563',
+                    backgroundColor: '#374151',
+                    color: 'white',
+                    outline: 'none',
+                    resize: 'vertical',
+                    boxSizing: 'border-box'
+                  }}
+                />
+                {editDefinition.length > 0 && editDefinition.length < 10 && (
+                  <span style={{ color: '#fbbf24', fontSize: '12px', marginTop: '4px', display: 'block' }}>
+                    Definition must be at least 10 characters
+                  </span>
+                )}
+              </div>
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', color: '#d1d5db' }}>
+                  Security+ Domain
+                </label>
+                <select
+                  value={editDomain}
+                  onChange={(e) => setEditDomain(e.target.value)}
+                  disabled={generating}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    fontSize: '14px',
+                    borderRadius: '8px',
+                    border: '1px solid #4b5563',
+                    backgroundColor: '#374151',
+                    color: 'white',
+                    outline: 'none',
+                    cursor: 'pointer',
+                    boxSizing: 'border-box'
+                  }}
+                >
+                  <option value="General Security Concepts">General Security Concepts</option>
+                  <option value="Threats, Vulnerabilities, and Mitigations">Threats, Vulnerabilities, and Mitigations</option>
+                  <option value="Security Architecture">Security Architecture</option>
+                  <option value="Security Operations">Security Operations</option>
+                  <option value="Security Program Management and Oversight">Security Program Management and Oversight</option>
+                </select>
+              </div>
+
+              {/* Buttons */}
+              <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
+                <button
+                  onClick={handleCancelEdit}
+                  disabled={generating}
+                  style={{
+                    flex: 1,
+                    padding: '12px 24px',
+                    backgroundColor: '#4b5563',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    cursor: generating ? 'not-allowed' : 'pointer',
+                    opacity: generating ? 0.6 : 1
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSaveEdit}
+                  disabled={generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10}
+                  style={{
+                    flex: 1,
+                    padding: '12px 24px',
+                    backgroundColor: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? '#4b5563' : '#2563eb',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    cursor: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? 'not-allowed' : 'pointer'
+                  }}
+                >
+                  {generating ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </>
   );
