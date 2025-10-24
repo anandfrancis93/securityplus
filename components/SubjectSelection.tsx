@@ -47,8 +47,8 @@ export default function SubjectSelection() {
             <div className="flex-1">
               {user && !user.isAnonymous && (
                 <div className="text-sm text-gray-400">
-                  {user.email ? (
-                    <span>👤 {user.email}</span>
+                  {user.displayName ? (
+                    <span>👤 {user.displayName}</span>
                   ) : (
                     <span>👤 Signed in</span>
                   )}
