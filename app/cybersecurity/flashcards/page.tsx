@@ -733,10 +733,10 @@ export default function FlashcardsPage() {
 
   // Search option selected
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="h-screen bg-gray-900 text-white overflow-hidden flex flex-col">
+      <div className="container mx-auto px-4 pt-8 pb-8 max-w-4xl flex-1 flex flex-col min-h-0">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-8 flex-shrink-0">
           <div className="flex justify-between items-center mb-6">
             <button
               onClick={() => setSelectedOption(null)}
@@ -927,8 +927,8 @@ export default function FlashcardsPage() {
 
   // Search view (default when selectedOption === 'search')
   return (
-    <div className="h-screen bg-gray-900 text-white overflow-hidden">
-      <div className="container mx-auto px-4 py-8 max-w-4xl h-full flex flex-col">
+    <div className="h-screen bg-gray-900 text-white overflow-hidden flex flex-col">
+      <div className="container mx-auto px-4 pt-8 pb-8 max-w-4xl flex-1 flex flex-col min-h-0">
         {/* Header */}
         <div className="mb-8 flex-shrink-0">
           <div className="flex justify-between items-center mb-6">
