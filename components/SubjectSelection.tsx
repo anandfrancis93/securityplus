@@ -43,18 +43,18 @@ export default function SubjectSelection() {
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
         <div className="mb-12">
-          <div className="flex justify-between items-start mb-4">
-            <div className="flex-1">
-              {user && !user.isAnonymous && (
-                <div className="text-sm text-gray-400">
-                  {user.displayName ? (
-                    <span>👤 {user.displayName}</span>
-                  ) : (
-                    <span>👤 Signed in</span>
-                  )}
-                </div>
-              )}
-            </div>
+          <div className="flex justify-between items-center mb-8">
+            {user && !user.isAnonymous ? (
+              <div className="text-sm text-gray-400">
+                {user.displayName ? (
+                  <span>👤 {user.displayName}</span>
+                ) : (
+                  <span>👤 Signed in</span>
+                )}
+              </div>
+            ) : (
+              <div></div>
+            )}
             {user && !user.isAnonymous && (
               <button
                 onClick={async () => {
