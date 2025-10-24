@@ -16,6 +16,7 @@ export default function QuizPage() {
   const [loading, setLoading] = useState(true);
   const [generatingNext, setGeneratingNext] = useState(false);
   const [totalQuestions] = useState(10);
+  const [showCelebration, setShowCelebration] = useState(false);
 
   useEffect(() => {
     initQuiz();
@@ -133,12 +134,17 @@ export default function QuizPage() {
     try {
       console.log('Ending quiz...');
       await endQuiz();
-      console.log('Quiz ended successfully, navigating to cybersecurity home...');
-      router.push('/cybersecurity');
+      console.log('Quiz ended successfully, showing celebration...');
+      setShowCelebration(true);
     } catch (error) {
       console.error('Error ending quiz:', error);
       alert('Failed to save quiz results. Please try again.');
     }
+  };
+
+  const handleCelebrationClose = () => {
+    setShowCelebration(false);
+    router.push('/cybersecurity');
   };
 
   if (loading) {
@@ -179,8 +185,68 @@ export default function QuizPage() {
       selectedAnswers.every(ans => (currentQuestion.correctAnswer as number[]).includes(ans))
     : selectedAnswer === currentQuestion.correctAnswer;
 
+  // Calculate quiz stats for celebration
+  const totalAnswered = currentQuiz?.questions.length || 0;
+  const correctAnswers = currentQuiz?.questions.filter(q => q.isCorrect).length || 0;
+  const accuracy = totalAnswered > 0 ? Math.round((correctAnswers / totalAnswered) * 100) : 0;
+  const isPassing = accuracy >= 75;
+
   return (
     <div className="min-h-screen bg-gray-900 text-white">
+      {/* Celebration Modal (Peak-End Rule) */}
+      {showCelebration && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 max-w-lg w-full border-2 border-blue-500/30 shadow-2xl animate-scale-in">
+            <div className="text-center">
+              {/* Confetti effect */}
+              <div className="text-7xl mb-4 animate-bounce">
+                {isPassing ? '🎉' : '🎯'}
+              </div>
+
+              <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                Quiz Complete!
+              </h2>
+
+              <div className="mb-6">
+                <div className="text-6xl font-bold mb-2 text-blue-400">
+                  {correctAnswers}/{totalAnswered}
+                </div>
+                <div className="text-xl text-gray-400">{accuracy}% Accuracy</div>
+              </div>
+
+              {isPassing ? (
+                <div className="bg-green-900/30 border border-green-500/50 rounded-lg p-4 mb-6">
+                  <p className="text-green-400 font-bold text-lg mb-2">🌟 Great Job!</p>
+                  <p className="text-gray-300 text-sm">
+                    You&apos;re showing strong understanding of Security+ concepts. Keep up the excellent work!
+                  </p>
+                </div>
+              ) : (
+                <div className="bg-yellow-900/30 border border-yellow-500/50 rounded-lg p-4 mb-6">
+                  <p className="text-yellow-400 font-bold text-lg mb-2">💪 Keep Practicing!</p>
+                  <p className="text-gray-300 text-sm">
+                    Review the explanations and try again. Each quiz helps you improve!
+                  </p>
+                </div>
+              )}
+
+              <div className="space-y-2 mb-6 text-sm text-gray-400">
+                <p>✓ Progress saved to your account</p>
+                <p>✓ IRT score updated</p>
+                <p>✓ Predicted exam score recalculated</p>
+              </div>
+
+              <button
+                onClick={handleCelebrationClose}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg"
+              >
+                View Results
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">

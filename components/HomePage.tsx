@@ -1,13 +1,42 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from './AppProvider';
 import { useRouter } from 'next/navigation';
+import { getUserFlashcards, getUserReviews } from '@/lib/flashcardDb';
+import { getDueFlashcards } from '@/lib/spacedRepetition';
 
 export default function HomePage() {
-  const { user, userProgress, predictedScore, loading, resetProgress, handleSignOut } = useApp();
+  const { user, userProgress, predictedScore, loading, resetProgress, handleSignOut, userId } = useApp();
   const router = useRouter();
   const [selectedCard, setSelectedCard] = useState<'quiz' | 'flashcards' | null>(null);
+  const [dueFlashcardsCount, setDueFlashcardsCount] = useState(0);
+  const [irtExpanded, setIrtExpanded] = useState(false);
+  const [recentQuizzesExpanded, setRecentQuizzesExpanded] = useState(false);
+
+  useEffect(() => {
+    const loadDueCount = async () => {
+      if (!userId) return;
+
+      try {
+        const [allCards, reviews] = await Promise.all([
+          getUserFlashcards(userId),
+          getUserReviews(userId),
+        ]);
+
+        const due = getDueFlashcards(
+          reviews,
+          allCards.map((c) => c.id)
+        );
+
+        setDueFlashcardsCount(due.length);
+      } catch (error) {
+        console.error('Error loading due flashcards count:', error);
+      }
+    };
+
+    loadDueCount();
+  }, [userId]);
 
   const handleStartQuiz = () => {
     router.push('/cybersecurity/quiz');
@@ -62,6 +91,20 @@ export default function HomePage() {
             <p className="text-gray-400">AI-generated synthesis questions</p>
           </div>
 
+          {/* Primary Action - Most Important (Serial Position Effect & Visual Anchors) */}
+          <div className="text-center mb-8 relative">
+            <div className="absolute left-1/2 -translate-x-1/2 -top-6 text-yellow-400 animate-bounce text-xl">
+              ↓
+            </div>
+            <button
+              onClick={handleStartQuiz}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-5 px-12 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg shadow-blue-500/50 min-h-[56px] touch-manipulation ring-2 ring-blue-400/50 ring-offset-2 ring-offset-gray-900"
+            >
+              ⭐ Start New Quiz (10 Questions)
+            </button>
+            <p className="text-xs text-gray-400 mt-3">Recommended: Take a quiz daily</p>
+          </div>
+
           {/* Predicted Score Card */}
           <div className="bg-gray-800 rounded-lg p-8 mb-8 border border-gray-700 shadow-xl">
             <div className="text-center mb-6">
@@ -81,20 +124,23 @@ export default function HomePage() {
               </div>
             </div>
 
-            {totalAnswered > 0 && (
-              <div className="mt-6">
-                <div className="flex justify-between text-sm text-gray-400 mb-2">
-                  <span>Passing score: 750</span>
-                  <span>Your score: {predictedScore}</span>
-                </div>
-                <div className="w-full bg-gray-700 rounded-full h-3">
-                  <div
-                    className={`h-3 rounded-full transition-all duration-500 ${isPassing ? 'bg-green-500' : 'bg-yellow-500'}`}
-                    style={{ width: `${Math.min((predictedScore / 900) * 100, 100)}%` }}
-                  ></div>
-                </div>
+            <div className="mt-6">
+              <div className="flex justify-between text-sm text-gray-400 mb-2">
+                <span>Passing score: 750</span>
+                <span>Your score: {predictedScore}</span>
               </div>
-            )}
+              <div className="w-full bg-gray-700 rounded-full h-3 relative overflow-hidden">
+                {/* Endowed Progress - Show baseline progress even at 0 */}
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-transparent" style={{ width: '10%' }}></div>
+                <div
+                  className={`h-3 rounded-full transition-all duration-500 ${isPassing ? 'bg-green-500' : 'bg-yellow-500'}`}
+                  style={{ width: `${Math.max(10, Math.min((predictedScore / 900) * 100, 100))}%` }}
+                ></div>
+              </div>
+              {totalAnswered === 0 && (
+                <p className="text-xs text-gray-500 mt-2 text-center">Start your journey - you&apos;re 10% there just by beginning!</p>
+              )}
+            </div>
           </div>
 
           {/* Stats Grid */}
@@ -113,136 +159,244 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* IRT Score Analysis */}
+          {/* IRT Score Analysis - Collapsible (Cognitive Load) */}
           {totalAnswered > 0 && (
             <div className="bg-gradient-to-br from-blue-900/30 to-purple-900/30 border border-blue-500/30 rounded-lg p-6 mb-8">
-              <h3 className="text-lg font-bold text-blue-300 mb-4">📊 IRT Performance Analysis</h3>
+              <button
+                onClick={() => setIrtExpanded(!irtExpanded)}
+                className="w-full flex items-center justify-between text-left hover:opacity-80 transition-opacity"
+              >
+                <h3 className="text-lg font-bold text-blue-300">📊 IRT Performance Analysis</h3>
+                <svg
+                  className={`w-5 h-5 text-blue-300 transition-transform duration-200 ${irtExpanded ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
 
-              <div className="bg-gray-800/50 rounded-lg p-4 mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <div>
-                    <h4 className="text-sm font-medium text-purple-200">Ability Level (θ theta)</h4>
-                    <p className="text-xs text-gray-400 mt-1">Accounts for question difficulty in your performance</p>
+              {irtExpanded ? (
+                <>
+                  <div className="bg-gray-800/50 rounded-lg p-4 mb-4 mt-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <h4 className="text-sm font-medium text-purple-200">Ability Level (θ theta)</h4>
+                        <p className="text-xs text-gray-400 mt-1">Accounts for question difficulty in your performance</p>
+                      </div>
+                      <div className="text-3xl font-bold text-purple-400">
+                        {estimatedAbility.toFixed(2)}
+                      </div>
+                    </div>
+                    <div className="flex items-center mt-3">
+                      <div className="flex-1 bg-gray-700 rounded-full h-2">
+                        <div
+                          className="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full transition-all duration-500"
+                          style={{ width: `${((estimatedAbility + 3) / 6) * 100}%` }}
+                        ></div>
+                      </div>
+                      <div className="ml-3 text-xs text-gray-400 whitespace-nowrap">
+                        -3 to +3
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-3xl font-bold text-purple-400">
-                    {estimatedAbility.toFixed(2)}
-                  </div>
-                </div>
-                <div className="flex items-center mt-3">
-                  <div className="flex-1 bg-gray-700 rounded-full h-2">
-                    <div
-                      className="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full transition-all duration-500"
-                      style={{ width: `${((estimatedAbility + 3) / 6) * 100}%` }}
-                    ></div>
-                  </div>
-                  <div className="ml-3 text-xs text-gray-400 whitespace-nowrap">
-                    -3 to +3
-                  </div>
-                </div>
-              </div>
 
-              <div className="bg-gray-800/50 rounded-lg p-4">
-                <h4 className="text-sm font-medium text-green-300 mb-2">📈 What This Means</h4>
-                <div className="text-sm text-gray-300 space-y-2">
-                  {estimatedAbility >= 1.5 ? (
-                    <>
-                      <p className="text-green-400 font-medium">✓ Excellent Performance!</p>
-                      <p>Your ability level of <span className="font-bold text-blue-400">{estimatedAbility.toFixed(2)}</span> indicates strong mastery. You&apos;re performing well on harder questions, demonstrating deep understanding across multiple security concepts.</p>
-                    </>
-                  ) : estimatedAbility >= 1.0 ? (
-                    <>
-                      <p className="text-green-400 font-medium">✓ Good Performance</p>
-                      <p>Your ability level of <span className="font-bold text-blue-400">{estimatedAbility.toFixed(2)}</span> suggests you&apos;re on track to pass. You&apos;re handling medium to hard questions effectively. Keep practicing synthesis questions to solidify your knowledge.</p>
-                    </>
-                  ) : estimatedAbility >= 0 ? (
-                    <>
-                      <p className="text-yellow-400 font-medium">⚠ Average Performance</p>
-                      <p>Your ability level of <span className="font-bold text-blue-400">{estimatedAbility.toFixed(2)}</span> indicates moderate understanding. Focus on harder questions that combine multiple concepts. Review explanations carefully to improve your score.</p>
-                    </>
-                  ) : estimatedAbility >= -1 ? (
-                    <>
-                      <p className="text-orange-400 font-medium">⚠ Below Average</p>
-                      <p>Your ability level of <span className="font-bold text-blue-400">{estimatedAbility.toFixed(2)}</span> suggests you&apos;re struggling with harder questions. Review fundamental concepts and focus on understanding why correct answers are right, not just memorizing them.</p>
-                    </>
-                  ) : (
-                    <>
-                      <p className="text-red-400 font-medium">⚠ Needs Improvement</p>
-                      <p>Your ability level of <span className="font-bold text-blue-400">{estimatedAbility.toFixed(2)}</span> indicates you need more practice. Start with easier questions, carefully read explanations, and build foundational knowledge before tackling harder synthesis questions.</p>
-                    </>
-                  )}
-                  {isPassing && (
-                    <p className="text-xs text-gray-400 mt-3 pt-3 border-t border-gray-700">
-                      This performance level suggests you would likely pass the Security+ exam if you maintain it.
-                    </p>
-                  )}
+                  <div className="bg-gray-800/50 rounded-lg p-4">
+                    <h4 className="text-sm font-medium text-green-300 mb-3">📈 What This Means</h4>
+                    <div className="text-sm text-gray-300">
+                      {estimatedAbility >= 1.5 ? (
+                        <>
+                          <p className="text-green-400 font-medium mb-3 flex items-center gap-2">
+                            <span className="text-2xl">✓</span> Excellent Performance!
+                          </p>
+                          <ul className="space-y-2 text-xs">
+                            <li className="flex items-start gap-2">
+                              <span className="text-blue-400 mt-0.5">▸</span>
+                              <span>Strong mastery across Security+ topics</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-blue-400 mt-0.5">▸</span>
+                              <span>Handling harder synthesis questions well</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-blue-400 mt-0.5">▸</span>
+                              <span>Deep understanding demonstrated</span>
+                            </li>
+                          </ul>
+                        </>
+                      ) : estimatedAbility >= 1.0 ? (
+                        <>
+                          <p className="text-green-400 font-medium mb-3 flex items-center gap-2">
+                            <span className="text-2xl">✓</span> Good Performance
+                          </p>
+                          <ul className="space-y-2 text-xs">
+                            <li className="flex items-start gap-2">
+                              <span className="text-blue-400 mt-0.5">▸</span>
+                              <span>On track to pass the exam</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-blue-400 mt-0.5">▸</span>
+                              <span>Handling medium-hard questions effectively</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-blue-400 mt-0.5">▸</span>
+                              <span>Continue practicing to solidify knowledge</span>
+                            </li>
+                          </ul>
+                        </>
+                      ) : estimatedAbility >= 0 ? (
+                        <>
+                          <p className="text-yellow-400 font-medium mb-3 flex items-center gap-2">
+                            <span className="text-2xl">⚠</span> Average Performance
+                          </p>
+                          <ul className="space-y-2 text-xs">
+                            <li className="flex items-start gap-2">
+                              <span className="text-yellow-400 mt-0.5">▸</span>
+                              <span>Moderate understanding shown</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-yellow-400 mt-0.5">▸</span>
+                              <span>Focus on multi-concept questions</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-yellow-400 mt-0.5">▸</span>
+                              <span>Review explanations carefully</span>
+                            </li>
+                          </ul>
+                        </>
+                      ) : estimatedAbility >= -1 ? (
+                        <>
+                          <p className="text-orange-400 font-medium mb-3 flex items-center gap-2">
+                            <span className="text-2xl">⚠</span> Below Average
+                          </p>
+                          <ul className="space-y-2 text-xs">
+                            <li className="flex items-start gap-2">
+                              <span className="text-orange-400 mt-0.5">▸</span>
+                              <span>Struggling with harder questions</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-orange-400 mt-0.5">▸</span>
+                              <span>Review fundamental concepts</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-orange-400 mt-0.5">▸</span>
+                              <span>Focus on understanding, not memorizing</span>
+                            </li>
+                          </ul>
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-red-400 font-medium mb-3 flex items-center gap-2">
+                            <span className="text-2xl">⚠</span> Needs Improvement
+                          </p>
+                          <ul className="space-y-2 text-xs">
+                            <li className="flex items-start gap-2">
+                              <span className="text-red-400 mt-0.5">▸</span>
+                              <span>More practice needed</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-red-400 mt-0.5">▸</span>
+                              <span>Start with easier questions</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-red-400 mt-0.5">▸</span>
+                              <span>Build foundational knowledge first</span>
+                            </li>
+                          </ul>
+                        </>
+                      )}
+                      {isPassing && (
+                        <p className="text-xs text-gray-400 mt-3 pt-3 border-t border-gray-700 flex items-start gap-2">
+                          <span className="text-green-400">✓</span>
+                          <span>This level suggests likely exam success</span>
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="mt-4 text-sm text-gray-400">
+                  Click to view detailed IRT analysis
                 </div>
-              </div>
+              )}
             </div>
           )}
 
-          {/* Action Buttons */}
-          <div className="text-center">
-            <button
-              onClick={handleStartQuiz}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-12 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg mb-4"
-            >
-              Start New Quiz (10 Questions)
-            </button>
-
-            {totalAnswered > 0 && (
-              <div className="mt-6">
-                <button
-                  onClick={handleResetProgress}
-                  className="bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-600/50 font-medium py-2 px-6 rounded-lg text-sm transition-all"
-                >
-                  Reset Progress
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Recent Activity */}
+          {/* Recent Activity - Collapsible (Hick's Law) */}
           {userProgress && userProgress.quizHistory.length > 0 && (
-            <div className="mt-12">
-              <h3 className="text-xl font-bold mb-4">Recent Quizzes</h3>
-              <div className="space-y-3">
-                {userProgress.quizHistory.slice(-5).reverse().map((quiz) => {
-                  const date = new Date(quiz.startedAt);
-                  const formattedDate = date.toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
-                  });
-                  const formattedTime = date.toLocaleTimeString('en-US', {
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    hour12: true
-                  });
+            <div className="mt-12 bg-gray-800 rounded-lg p-6 border border-gray-700">
+              <button
+                onClick={() => setRecentQuizzesExpanded(!recentQuizzesExpanded)}
+                className="w-full flex items-center justify-between text-left hover:opacity-80 transition-opacity"
+              >
+                <h3 className="text-xl font-bold">Recent Quizzes ({userProgress.quizHistory.length})</h3>
+                <svg
+                  className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${recentQuizzesExpanded ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
 
-                  return (
-                    <div key={quiz.id} className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <div className="text-sm text-gray-400">
-                            {formattedDate} • {formattedTime}
+              {recentQuizzesExpanded ? (
+                <div className="space-y-3 mt-4">
+                  {userProgress.quizHistory.slice(-5).reverse().map((quiz) => {
+                    const date = new Date(quiz.startedAt);
+                    const formattedDate = date.toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric'
+                    });
+                    const formattedTime = date.toLocaleTimeString('en-US', {
+                      hour: 'numeric',
+                      minute: '2-digit',
+                      hour12: true
+                    });
+
+                    return (
+                      <div key={quiz.id} className="bg-gray-700/50 rounded-lg p-4 border border-gray-600">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <div className="text-sm text-gray-400">
+                              {formattedDate} • {formattedTime}
+                            </div>
+                            <div className="text-sm mt-1">
+                              <span className="text-gray-300">{quiz.questions.length} questions</span>
+                            </div>
                           </div>
-                          <div className="text-sm mt-1">
-                            <span className="text-gray-300">{quiz.questions.length} questions</span>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-2xl font-bold text-blue-400">
-                            {quiz.score}/{quiz.questions.length}
-                          </div>
-                          <div className="text-sm text-gray-400">
-                            {((quiz.score / quiz.questions.length) * 100).toFixed(0)}%
+                          <div className="text-right">
+                            <div className="text-2xl font-bold text-blue-400">
+                              {quiz.score}/{quiz.questions.length}
+                            </div>
+                            <div className="text-sm text-gray-400">
+                              {((quiz.score / quiz.questions.length) * 100).toFixed(0)}%
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="mt-4 text-sm text-gray-400">
+                  Click to view your last 5 quizzes
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Reset Progress - Destructive Action at End (Serial Position Effect) */}
+          {totalAnswered > 0 && (
+            <div className="mt-8 text-center">
+              <button
+                onClick={handleResetProgress}
+                className="bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-600/50 font-medium py-2 px-6 rounded-lg text-sm transition-all"
+              >
+                Reset Progress
+              </button>
             </div>
           )}
         </div>
@@ -299,11 +453,14 @@ export default function HomePage() {
 
         {/* Three Simple Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Quiz Card */}
+          {/* Quiz Card - Decoy Effect */}
           <button
             onClick={() => setSelectedCard('quiz')}
-            className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-blue-500 transition-all cursor-pointer transform hover:scale-105 shadow-lg hover:shadow-blue-500/20"
+            className="bg-gray-800 rounded-xl p-8 border-2 border-blue-500/50 hover:border-blue-500 transition-all cursor-pointer transform hover:scale-105 shadow-lg hover:shadow-blue-500/20 min-h-[200px] touch-manipulation relative"
           >
+            <div className="absolute top-4 right-4 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+              ⭐ RECOMMENDED
+            </div>
             <div className="text-center">
               <div className="text-6xl mb-4">📝</div>
               <h2 className="text-2xl font-bold mb-2 text-blue-400">Quiz</h2>
@@ -314,12 +471,27 @@ export default function HomePage() {
           {/* Flashcards Card */}
           <button
             onClick={() => setSelectedCard('flashcards')}
-            className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-green-500 transition-all cursor-pointer transform hover:scale-105 shadow-lg hover:shadow-green-500/20"
+            className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-green-500 transition-all cursor-pointer transform hover:scale-105 shadow-lg hover:shadow-green-500/20 relative min-h-[200px] touch-manipulation"
           >
+            {dueFlashcardsCount > 0 && (
+              <>
+                <div className="absolute top-4 right-4 bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full animate-pulse">
+                  {dueFlashcardsCount} due
+                </div>
+                <div className="absolute top-4 left-4 bg-orange-600/80 text-white text-xs font-bold px-2 py-1 rounded">
+                  ⏰ TODAY
+                </div>
+              </>
+            )}
             <div className="text-center">
               <div className="text-6xl mb-4">📚</div>
               <h2 className="text-2xl font-bold mb-2 text-green-400">Flashcards</h2>
               <p className="text-gray-400 text-sm">Learn with spaced repetition</p>
+              {dueFlashcardsCount > 0 ? (
+                <p className="text-red-400 text-xs mt-2 font-medium">⚡ Review now before they pile up!</p>
+              ) : (
+                <p className="text-green-400 text-xs mt-2 font-medium">✓ All caught up!</p>
+              )}
             </div>
           </button>
 
