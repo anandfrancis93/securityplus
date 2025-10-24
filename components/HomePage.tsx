@@ -549,16 +549,6 @@ export default function HomePage() {
             className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-green-500 cursor-pointer shadow-lg hover:shadow-green-500/30 hover:shadow-2xl relative min-h-[200px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
             style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
           >
-            {dueFlashcardsCount > 0 && (
-              <>
-                <div className="absolute top-4 right-4 bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full animate-pulse">
-                  {dueFlashcardsCount} due
-                </div>
-                <div className="absolute top-4 left-4 bg-orange-600/80 text-white text-xs font-bold px-2 py-1 rounded">
-                  ⏰ TODAY
-                </div>
-              </>
-            )}
             <div className="text-center">
               <div className="text-6xl mb-4">📚</div>
               <h2 className="text-2xl font-bold mb-2 text-green-400">Flashcards</h2>
