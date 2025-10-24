@@ -961,7 +961,6 @@ export default function FlashcardsPage() {
                 )}
               </div>
             </div>
-          </>
         )}
 
         {flashcards.length === 0 && (
@@ -1156,7 +1155,6 @@ export default function FlashcardsPage() {
                 )}
               </div>
             </div>
-          </>
         )}
 
         {flashcards.length === 0 && (
