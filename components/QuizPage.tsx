@@ -21,6 +21,23 @@ export default function QuizPage() {
     initQuiz();
   }, []);
 
+  // Automatically generate next question in background when user views current question
+  useEffect(() => {
+    if (!loading && questions.length > 0 && questions.length < totalQuestions) {
+      // Check if we need to generate the next question
+      const nextQuestionNumber = questions.length + 1;
+
+      // Only generate if next question doesn't exist yet
+      if (questions.length === nextQuestionNumber - 1) {
+        console.log(`Auto-generating question ${nextQuestionNumber} in background...`);
+        setGeneratingNext(true);
+        generateNextQuestion().then(() => {
+          setGeneratingNext(false);
+        });
+      }
+    }
+  }, [loading, questions.length]);
+
   const initQuiz = async () => {
     if (!currentQuiz) {
       startNewQuiz();
@@ -28,6 +45,7 @@ export default function QuizPage() {
 
     // Generate first question only
     await generateNextQuestion();
+    // The useEffect will automatically start generating Q2 in the background
   };
 
   const generateNextQuestion = async () => {
@@ -96,34 +114,23 @@ export default function QuizPage() {
   };
 
   const handleNextQuestion = async () => {
+    // Check if we're on the last question
+    if (currentQuestionIndex >= totalQuestions - 1) {
+      handleEndQuiz();
+      return;
+    }
+
+    // Check if next question is already generated
     if (currentQuestionIndex < questions.length - 1) {
-      // Move to next already-generated question
+      // Next question is ready, move to it immediately
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedAnswer(null);
       setSelectedAnswers([]);
       setShowExplanation(false);
-
-      // Preemptively generate the question after next (if not already generated)
-      if (questions.length < totalQuestions && questions.length <= currentQuestionIndex + 2) {
-        setGeneratingNext(true);
-        await generateNextQuestion();
-        setGeneratingNext(false);
-      }
-    } else if (questions.length < totalQuestions) {
-      // Need to generate next question before advancing
-      setGeneratingNext(true);
-      await generateNextQuestion();
-      setGeneratingNext(false);
-
-      if (questions.length > currentQuestionIndex + 1) {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-        setSelectedAnswer(null);
-        setSelectedAnswers([]);
-        setShowExplanation(false);
-      }
+      // The useEffect will automatically generate the question after next
     } else {
-      // Finished all questions
-      handleEndQuiz();
+      // Next question is not ready yet, wait for it
+      alert('Please wait, the next question is still being generated...');
     }
   };
 
@@ -388,14 +395,14 @@ export default function QuizPage() {
             {/* Next Button */}
             <button
               onClick={handleNextQuestion}
-              disabled={generatingNext}
+              disabled={currentQuestionIndex >= questions.length - 1 && currentQuestionIndex < totalQuestions - 1}
               className={`w-full py-3 rounded-lg font-bold text-lg transition-all ${
-                generatingNext
+                currentQuestionIndex >= questions.length - 1 && currentQuestionIndex < totalQuestions - 1
                   ? 'bg-gray-600 cursor-not-allowed text-gray-400'
                   : 'bg-blue-600 hover:bg-blue-700 text-white'
               }`}
             >
-              {generatingNext
+              {currentQuestionIndex >= questions.length - 1 && currentQuestionIndex < totalQuestions - 1
                 ? 'Generating next question...'
                 : currentQuestionIndex < totalQuestions - 1
                 ? 'Next Question'
