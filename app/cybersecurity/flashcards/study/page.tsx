@@ -323,7 +323,7 @@ export default function StudyPage() {
                 <div className="text-xs opacity-75">1 day</div>
               </button>
               {openTooltip === 'again' && (
-                <div className="fixed z-50 left-4 right-4 bottom-20 md:absolute md:bottom-full md:left-1/2 md:-translate-x-1/2 md:right-auto mb-2 md:w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl">
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50">
                   <p className="text-sm text-gray-300">Couldn&apos;t remember or got it wrong. Card will be reviewed in 1 day.</p>
                   <button
                     onClick={() => setOpenTooltip(null)}
@@ -360,7 +360,7 @@ export default function StudyPage() {
                 <div className="text-xs opacity-75">1 day</div>
               </button>
               {openTooltip === 'hard' && (
-                <div className="fixed z-50 left-4 right-4 bottom-20 md:absolute md:bottom-full md:left-1/2 md:-translate-x-1/2 md:right-auto mb-2 md:w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl">
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50">
                   <p className="text-sm text-gray-300">Difficult to recall, needed time. Card will be reviewed in 1 day.</p>
                   <button
                     onClick={() => setOpenTooltip(null)}
@@ -397,7 +397,7 @@ export default function StudyPage() {
                 <div className="text-xs opacity-75">3 days</div>
               </button>
               {openTooltip === 'good' && (
-                <div className="fixed z-50 left-4 right-4 bottom-20 md:absolute md:bottom-full md:left-1/2 md:-translate-x-1/2 md:right-auto mb-2 md:w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl">
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50">
                   <p className="text-sm text-gray-300">Recalled with some effort. Card will be reviewed in 3 days.</p>
                   <button
                     onClick={() => setOpenTooltip(null)}
@@ -434,7 +434,7 @@ export default function StudyPage() {
                 <div className="text-xs opacity-75">7 days</div>
               </button>
               {openTooltip === 'easy' && (
-                <div className="fixed z-50 left-4 right-4 bottom-20 md:absolute md:bottom-full md:left-1/2 md:-translate-x-1/2 md:right-auto mb-2 md:w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl">
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50">
                   <p className="text-sm text-gray-300">Instant recall, confident. Card will be reviewed in 7 days.</p>
                   <button
                     onClick={() => setOpenTooltip(null)}
