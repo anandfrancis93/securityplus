@@ -84,6 +84,7 @@ export default function StudyPage() {
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
+    setOpenTooltip(null); // Close any open tooltips when flipping
   };
 
   const handleAnswer = async (difficulty: 'again' | 'hard' | 'good' | 'easy') => {
@@ -109,6 +110,7 @@ export default function StudyPage() {
         const nextCard = await getFlashcard(dueCardIds[nextIndex]);
         setCurrentCard(nextCard);
         setIsFlipped(false);
+        setOpenTooltip(null); // Close any open tooltips when moving to next card
       } else {
         // Finished all cards
         router.push('/cybersecurity/flashcards?completed=true');
