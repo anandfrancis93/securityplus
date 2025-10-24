@@ -61,6 +61,15 @@ export default function HomePage() {
                 </svg>
                 Back
               </button>
+              {user && !user.isAnonymous && (
+                <div className="text-sm text-gray-400">
+                  {user.displayName ? (
+                    <span>👤 {user.displayName}</span>
+                  ) : (
+                    <span>👤 Signed in</span>
+                  )}
+                </div>
+              )}
             </div>
             {user && !user.isAnonymous && (
               <button
