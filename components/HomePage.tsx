@@ -109,7 +109,7 @@ export default function HomePage() {
                 </div>
               </button>
 
-              {/* Performance Stats Option */}
+              {/* Performance Option */}
               <button
                 onClick={() => setQuizOption('performance')}
                 className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-purple-500 cursor-pointer shadow-lg hover:shadow-purple-500/30 hover:shadow-2xl min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
@@ -117,7 +117,7 @@ export default function HomePage() {
               >
                 <div className="text-center">
                   <div className="text-6xl mb-4">📊</div>
-                  <h2 className="text-2xl font-bold mb-2 text-purple-400">Performance Stats</h2>
+                  <h2 className="text-2xl font-bold mb-2 text-purple-400">Performance</h2>
                   <p className="text-gray-400 text-sm">View your scores, IRT analysis, and history</p>
                 </div>
               </button>
@@ -178,7 +178,7 @@ export default function HomePage() {
               </svg>
               Back
             </button>
-            <h1 className="text-3xl font-bold mb-2 text-purple-400">Performance Stats</h1>
+            <h1 className="text-3xl font-bold mb-2 text-purple-400">Performance</h1>
             <p className="text-gray-400">Track your progress and improvement</p>
           </div>
 
