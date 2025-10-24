@@ -325,7 +325,7 @@ export default function QuizPage() {
                     ? 'bg-yellow-700/30 text-yellow-300'
                     : 'bg-red-700/30 text-red-300'
                 }`}>
-                  {currentQuestion.difficulty.charAt(0).toUpperCase() + currentQuestion.difficulty.slice(1)} • {currentQuestion.maxPoints} pts
+                  {currentQuestion.difficulty.charAt(0).toUpperCase() + currentQuestion.difficulty.slice(1)}
                 </span>
               </div>
               <div className="mb-4">
