@@ -47,10 +47,18 @@ export async function POST(request: NextRequest) {
     console.log(`Question ${questionNumber} generated successfully`);
 
     return NextResponse.json({ question });
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error generating question:`, error);
+    console.error('Error details:', {
+      message: error?.message,
+      stack: error?.stack,
+      name: error?.name
+    });
     return NextResponse.json(
-      { error: 'Failed to generate question' },
+      {
+        error: 'Failed to generate question',
+        details: error?.message || 'Unknown error'
+      },
       { status: 500 }
     );
   }
