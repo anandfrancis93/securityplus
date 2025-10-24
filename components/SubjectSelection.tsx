@@ -130,7 +130,7 @@ export default function SubjectSelection() {
               className={`relative bg-gray-800 rounded-xl p-8 border-2 transition-all duration-300 ${
                 subject.disabled
                   ? 'border-gray-700 opacity-50 cursor-not-allowed'
-                  : 'border-gray-700 hover:border-gray-600 hover:scale-105 hover:shadow-2xl cursor-pointer'
+                  : 'border-gray-700 hover:border-white hover:scale-105 hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] cursor-pointer'
               }`}
             >
               {/* Icon */}
