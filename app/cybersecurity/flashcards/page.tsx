@@ -903,11 +903,6 @@ export default function FlashcardsPage() {
                   </div>
                   ))
                 )}
-                {filteredFlashcards.length > 20 && (
-                  <p className="text-center text-gray-500 text-sm pt-2">
-                    Showing 20 of {filteredFlashcards.length} flashcards
-                  </p>
-                )}
               </div>
             </div>
         )}
@@ -1096,11 +1091,6 @@ export default function FlashcardsPage() {
                     </div>
                   </div>
                   ))
-                )}
-                {filteredFlashcards.length > 20 && (
-                  <p className="text-center text-gray-500 text-sm pt-2">
-                    Showing 20 of {filteredFlashcards.length} flashcards
-                  </p>
                 )}
               </div>
             </div>
