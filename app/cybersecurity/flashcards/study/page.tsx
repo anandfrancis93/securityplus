@@ -182,7 +182,7 @@ export default function StudyPage() {
                     <div className="px-4 py-2 text-sm text-gray-300 border-b border-gray-700">
                       <div className="flex items-center gap-2">
                         <span>👤</span>
-                        <span>{user.displayName || 'User'}</span>
+                        <span>{user?.displayName || 'User'}</span>
                       </div>
                     </div>
                     <button
