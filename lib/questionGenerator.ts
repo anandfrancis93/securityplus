@@ -209,7 +209,6 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
  * This creates a balanced mix similar to the real Security+ exam
  */
 export async function generateQuestionBatch(count: number, excludeTopics: string[] = []): Promise<Question[]> {
-  const questions: Question[] = [];
   const usedTopics = [...excludeTopics];
 
   // Define question configuration for adaptive difficulty
@@ -229,21 +228,27 @@ export async function generateQuestionBatch(count: number, excludeTopics: string
   // Shuffle configs to randomize question order
   const shuffledConfigs = shuffleArray(questionConfigs).slice(0, count);
 
-  for (let i = 0; i < shuffledConfigs.length; i++) {
+  console.log(`Generating ${count} questions in parallel...`);
+
+  // Generate all questions in parallel for much faster generation
+  const questionPromises = shuffledConfigs.map(async (config, index) => {
     try {
-      const config = shuffledConfigs[i];
       const question = await generateSynthesisQuestion(usedTopics, config.difficulty, config.type);
-      questions.push(question);
-      usedTopics.push(...question.topics);
-
-      console.log(`Generated ${i + 1}/${count}: ${config.difficulty} ${config.type}-choice (${question.maxPoints} pts)`);
-
-      // Add a small delay to avoid rate limiting
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log(`Generated ${index + 1}/${count}: ${config.difficulty} ${config.type}-choice (${question.maxPoints} pts)`);
+      return question;
     } catch (error) {
-      console.error(`Error generating question ${i + 1}:`, error);
+      console.error(`Error generating question ${index + 1}:`, error);
+      return null;
     }
-  }
+  });
+
+  // Wait for all questions to be generated
+  const results = await Promise.all(questionPromises);
+
+  // Filter out any failed generations
+  const questions = results.filter((q): q is Question => q !== null);
+
+  console.log(`Successfully generated ${questions.length}/${count} questions`);
 
   return questions;
 }
