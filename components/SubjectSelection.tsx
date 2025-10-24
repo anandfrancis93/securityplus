@@ -28,6 +28,15 @@ export default function SubjectSelection() {
 
   const subjects = [
     {
+      id: 'cybersecurity',
+      name: 'Cybersecurity',
+      description: '',
+      icon: '🔒',
+      color: 'from-green-500 to-green-600',
+      path: '/cybersecurity',
+      disabled: false,
+    },
+    {
       id: 'maths',
       name: 'Mathematics',
       description: 'Coming soon',
@@ -46,13 +55,13 @@ export default function SubjectSelection() {
       disabled: true,
     },
     {
-      id: 'cybersecurity',
-      name: 'Cybersecurity',
-      description: '',
-      icon: '🔒',
-      color: 'from-green-500 to-green-600',
-      path: '/cybersecurity',
-      disabled: false,
+      id: 'english',
+      name: 'English',
+      description: 'Coming soon',
+      icon: '📚',
+      color: 'from-yellow-500 to-yellow-600',
+      path: '/english',
+      disabled: true,
     },
   ];
 
@@ -112,7 +121,7 @@ export default function SubjectSelection() {
         </div>
 
         {/* Subject Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {subjects.map((subject) => (
             <button
               key={subject.id}
