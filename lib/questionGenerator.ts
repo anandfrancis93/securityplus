@@ -232,14 +232,29 @@ export async function generateQuestionBatch(count: number, excludeTopics: string
 
   // Generate all questions in parallel for much faster generation
   const questionPromises = shuffledConfigs.map(async (config, index) => {
-    try {
-      const question = await generateSynthesisQuestion(usedTopics, config.difficulty, config.type);
-      console.log(`Generated ${index + 1}/${count}: ${config.difficulty} ${config.type}-choice (${question.maxPoints} pts)`);
-      return question;
-    } catch (error) {
-      console.error(`Error generating question ${index + 1}:`, error);
-      return null;
+    // Retry up to 3 times if generation fails
+    const maxRetries = 3;
+    let lastError: any = null;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        const question = await generateSynthesisQuestion(usedTopics, config.difficulty, config.type);
+        console.log(`Generated ${index + 1}/${count}: ${config.difficulty} ${config.type}-choice (${question.maxPoints} pts)`);
+        return question;
+      } catch (error) {
+        lastError = error;
+        console.error(`Error generating question ${index + 1} (attempt ${attempt}/${maxRetries}):`, error);
+
+        // Wait a bit before retrying (exponential backoff)
+        if (attempt < maxRetries) {
+          await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+        }
+      }
     }
+
+    // All retries failed
+    console.error(`Failed to generate question ${index + 1} after ${maxRetries} attempts`);
+    return null;
   });
 
   // Wait for all questions to be generated
@@ -249,6 +264,31 @@ export async function generateQuestionBatch(count: number, excludeTopics: string
   const questions = results.filter((q): q is Question => q !== null);
 
   console.log(`Successfully generated ${questions.length}/${count} questions`);
+
+  // If we didn't get enough questions, try to generate more to reach the target
+  if (questions.length < count) {
+    console.log(`Attempting to generate ${count - questions.length} more questions to reach target of ${count}...`);
+
+    const additionalNeeded = count - questions.length;
+    const additionalConfigs = shuffleArray(questionConfigs).slice(0, additionalNeeded);
+
+    const additionalPromises = additionalConfigs.map(async (config, index) => {
+      try {
+        const question = await generateSynthesisQuestion(usedTopics, config.difficulty, config.type);
+        console.log(`Generated additional ${index + 1}/${additionalNeeded}: ${config.difficulty} ${config.type}-choice`);
+        return question;
+      } catch (error) {
+        console.error(`Error generating additional question ${index + 1}:`, error);
+        return null;
+      }
+    });
+
+    const additionalResults = await Promise.all(additionalPromises);
+    const additionalQuestions = additionalResults.filter((q): q is Question => q !== null);
+
+    questions.push(...additionalQuestions);
+    console.log(`Final count: ${questions.length}/${count} questions`);
+  }
 
   return questions;
 }
