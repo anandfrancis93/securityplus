@@ -62,6 +62,16 @@ export default function FlashcardsPage() {
     }
   }, [userId]);
 
+  // Debug: Track editingCard state changes
+  useEffect(() => {
+    console.log('editingCard state changed to:', editingCard);
+    if (editingCard) {
+      console.log('Modal should now be visible for card:', editingCard.term);
+    } else {
+      console.log('Modal should be hidden');
+    }
+  }, [editingCard]);
+
   const loadFlashcards = async () => {
     if (!userId) return;
 
@@ -1165,11 +1175,8 @@ export default function FlashcardsPage() {
       </div>
 
       {/* Edit Modal - Outside scrollable container */}
-      {console.log('Render check - editingCard:', editingCard)}
       {editingCard && (
-        <>
-          {console.log('Modal is rendering! editingCard:', editingCard)}
-          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 overflow-y-auto">
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 overflow-y-auto">
             <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full border border-gray-700 shadow-2xl my-8">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold">Edit Flashcard</h2>
@@ -1292,7 +1299,6 @@ export default function FlashcardsPage() {
               </div>
             </div>
           </div>
-        </>
         )}
     </div>
   );
