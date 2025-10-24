@@ -996,7 +996,7 @@ export default function FlashcardsPage() {
           zIndex: 10000,
           fontWeight: 'bold'
         }}>
-          DEBUG BAR: editingCard is {editingCard.term}
+          DEBUG BAR: editingCard is {editingCard?.term || 'unknown'}
         </div>
       )}
 
