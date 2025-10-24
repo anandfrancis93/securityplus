@@ -596,16 +596,7 @@ export default function FlashcardsPage() {
                 <p className="text-xs text-gray-500 mt-1">Max 5MB, JPG/PNG/GIF/WebP</p>
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="text-sm text-gray-400">
-                  Term: {manualTerm.length} chars | Definition: {manualDefinition.length} chars
-                  {(manualTerm.length > 0 && manualTerm.length < 2) && (
-                    <span className="text-yellow-500 ml-2">(Term needs at least 2 characters)</span>
-                  )}
-                  {(manualDefinition.length > 0 && manualDefinition.length < 10) && (
-                    <span className="text-yellow-500 ml-2">(Definition needs at least 10 characters)</span>
-                  )}
-                </div>
+              <div className="flex items-center justify-end">
                 <button
                   onClick={handleManualCreate}
                   disabled={generating || manualTerm.trim().length < 2 || manualDefinition.trim().length < 10}
