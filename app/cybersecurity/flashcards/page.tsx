@@ -900,7 +900,7 @@ export default function FlashcardsPage() {
                       <div className="flex items-center gap-1">
                         <button
                           onClick={() => handleEditFlashcard(card)}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-blue-400 hover:text-blue-300 p-1"
+                          className="flex-shrink-0 text-blue-400 hover:text-blue-300 p-1"
                           title="Edit flashcard"
                         >
                           <svg
@@ -919,7 +919,7 @@ export default function FlashcardsPage() {
                         </button>
                         <button
                           onClick={() => handleDeleteFlashcard(card.id)}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-red-400 hover:text-red-300 p-1"
+                          className="flex-shrink-0 text-red-400 hover:text-red-300 p-1"
                           title="Delete flashcard"
                         >
                           <svg
@@ -1089,7 +1089,7 @@ export default function FlashcardsPage() {
                       <div className="flex items-center gap-1">
                         <button
                           onClick={() => handleEditFlashcard(card)}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-blue-400 hover:text-blue-300 p-1"
+                          className="flex-shrink-0 text-blue-400 hover:text-blue-300 p-1"
                           title="Edit flashcard"
                         >
                           <svg
@@ -1108,7 +1108,7 @@ export default function FlashcardsPage() {
                         </button>
                         <button
                           onClick={() => handleDeleteFlashcard(card.id)}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-red-400 hover:text-red-300 p-1"
+                          className="flex-shrink-0 text-red-400 hover:text-red-300 p-1"
                           title="Delete flashcard"
                         >
                           <svg
