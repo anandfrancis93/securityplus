@@ -27,6 +27,7 @@ export default function StudyPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const [stats, setStats] = useState({ total: 0, new: 0, learning: 0, review: 0, mastered: 0 });
+  const [openTooltip, setOpenTooltip] = useState<string | null>(null);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -336,21 +337,132 @@ export default function StudyPage() {
 
         {/* Stats - Always Visible at Bottom */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8">
-          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
-            <div className="text-gray-400 text-xs mb-1">Total</div>
+          {/* Total */}
+          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700 relative">
+            <div className="flex items-center gap-1 mb-1">
+              <div className="text-gray-400 text-xs">Total</div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenTooltip(openTooltip === 'total' ? null : 'total');
+                }}
+                className="text-gray-500 hover:text-gray-300 transition-colors"
+              >
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
             <div className="text-xl font-bold text-blue-400">{stats.total}</div>
+            {openTooltip === 'total' && (
+              <div className="absolute z-50 bottom-full left-0 mb-2 w-64 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl">
+                <p className="text-sm text-gray-300">The total number of flashcards in your deck.</p>
+                <button
+                  onClick={() => setOpenTooltip(null)}
+                  className="absolute top-1 right-1 text-gray-500 hover:text-gray-300"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            )}
           </div>
-          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
-            <div className="text-gray-400 text-xs mb-1">Learning</div>
+
+          {/* Learning */}
+          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700 relative">
+            <div className="flex items-center gap-1 mb-1">
+              <div className="text-gray-400 text-xs">Learning</div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenTooltip(openTooltip === 'learning' ? null : 'learning');
+                }}
+                className="text-gray-500 hover:text-gray-300 transition-colors"
+              >
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
             <div className="text-xl font-bold text-yellow-400">{stats.learning}</div>
+            {openTooltip === 'learning' && (
+              <div className="absolute z-50 bottom-full left-0 mb-2 w-64 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl">
+                <p className="text-sm text-gray-300">Cards you've attempted but got wrong or rated as "Again". These cards have 0 successful repetitions and need daily practice.</p>
+                <button
+                  onClick={() => setOpenTooltip(null)}
+                  className="absolute top-1 right-1 text-gray-500 hover:text-gray-300"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            )}
           </div>
-          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
-            <div className="text-gray-400 text-xs mb-1">Review</div>
+
+          {/* Review */}
+          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700 relative">
+            <div className="flex items-center gap-1 mb-1">
+              <div className="text-gray-400 text-xs">Review</div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenTooltip(openTooltip === 'review' ? null : 'review');
+                }}
+                className="text-gray-500 hover:text-gray-300 transition-colors"
+              >
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
             <div className="text-xl font-bold text-yellow-400">{stats.review}</div>
+            {openTooltip === 'review' && (
+              <div className="absolute z-50 bottom-full left-0 mb-2 w-64 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl">
+                <p className="text-sm text-gray-300">Cards you're actively learning and have reviewed correctly 1-2 times. These cards are in progress but not yet mastered.</p>
+                <button
+                  onClick={() => setOpenTooltip(null)}
+                  className="absolute top-1 right-1 text-gray-500 hover:text-gray-300"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            )}
           </div>
-          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
-            <div className="text-gray-400 text-xs mb-1">Mastered</div>
+
+          {/* Mastered */}
+          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700 relative">
+            <div className="flex items-center gap-1 mb-1">
+              <div className="text-gray-400 text-xs">Mastered</div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenTooltip(openTooltip === 'mastered' ? null : 'mastered');
+                }}
+                className="text-gray-500 hover:text-gray-300 transition-colors"
+              >
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
             <div className="text-xl font-bold text-blue-400">{stats.mastered}</div>
+            {openTooltip === 'mastered' && (
+              <div className="absolute z-50 bottom-full left-0 mb-2 w-64 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl">
+                <p className="text-sm text-gray-300">Cards you've successfully reviewed 3 or more times. These cards are well-learned and appear less frequently to maintain long-term retention.</p>
+                <button
+                  onClick={() => setOpenTooltip(null)}
+                  className="absolute top-1 right-1 text-gray-500 hover:text-gray-300"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
