@@ -47,7 +47,7 @@ export default function SubjectSelection() {
     },
     {
       id: 'maths',
-      name: 'Mathematics',
+      name: 'Maths',
       description: 'Coming soon',
       icon: '📐',
       color: 'from-blue-500 to-blue-600',
