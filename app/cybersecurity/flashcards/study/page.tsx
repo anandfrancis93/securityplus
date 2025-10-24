@@ -234,7 +234,7 @@ export default function StudyPage() {
                   <p className="text-gray-400 text-sm mt-8">Click to reveal definition</p>
                 </div>
               ) : (
-                <div className="text-center w-full">
+                <div className="text-left w-full">
                   <p className="text-lg sm:text-xl leading-relaxed mb-6 whitespace-pre-wrap px-2">{currentCard.definition}</p>
                   {currentCard.imageUrl && (
                     <div className="mt-6">
@@ -245,7 +245,7 @@ export default function StudyPage() {
                         className="max-w-full max-h-64 mx-auto rounded-lg border border-gray-600 cursor-pointer hover:border-blue-500 transition-all"
                         title="Click to enlarge"
                       />
-                      <p className="text-xs text-gray-500 mt-2">Click image to enlarge</p>
+                      <p className="text-xs text-gray-500 mt-2 text-center">Click image to enlarge</p>
                     </div>
                   )}
                   {currentCard.context && (
