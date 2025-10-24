@@ -22,24 +22,19 @@ export default function QuizPage() {
     initQuiz();
   }, []);
 
-  // Automatically generate next question in background when user views current question
+  // Automatically generate next question in background whenever a new question is added
   useEffect(() => {
     if (!loading && questions.length > 0 && questions.length < totalQuestions && !generatingRef.current) {
-      // Only generate if we have exactly N questions and need N+1
-      // This ensures we only generate one question ahead
-      const hasNextQuestion = questions.length > currentQuestionIndex + 1;
-
-      if (!hasNextQuestion) {
-        console.log(`Auto-generating question ${questions.length + 1} in background...`);
-        generatingRef.current = true;
-        setGeneratingNext(true);
-        generateNextQuestion().then(() => {
-          setGeneratingNext(false);
-          generatingRef.current = false;
-        });
-      }
+      // Generate the next question immediately after the current one is added
+      console.log(`Auto-generating question ${questions.length + 1} in background...`);
+      generatingRef.current = true;
+      setGeneratingNext(true);
+      generateNextQuestion().then(() => {
+        setGeneratingNext(false);
+        generatingRef.current = false;
+      });
     }
-  }, [loading, questions.length, currentQuestionIndex]);
+  }, [loading, questions.length]); // Only watch questions.length, NOT currentQuestionIndex
 
   const initQuiz = async () => {
     if (!currentQuiz) {
