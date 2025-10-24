@@ -597,11 +597,11 @@ export default function FlashcardsPage() {
   // Create option selected
   if (selectedOption === 'create') {
     return (
-      <div className="min-h-screen bg-gray-900 text-white">
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="fixed inset-0 bg-gray-900 text-white overflow-hidden flex flex-col">
+        <div className="container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0" style={{ overscrollBehavior: 'none' }}>
           {/* Header */}
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-6">
+          <div className="mb-4 flex-shrink-0">
+            <div className="flex justify-between items-center mb-3">
               <button
                 onClick={() => setSelectedOption(null)}
                 className="bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-300 px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2"
@@ -653,8 +653,9 @@ export default function FlashcardsPage() {
             <p className="text-gray-400">Make a new flashcard for your study</p>
           </div>
 
-          {/* Flashcard Creation Form */}
-        <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
+          {/* Flashcard Creation Form - Scrollable */}
+          <div className="flex-1 overflow-y-auto" style={{ overscrollBehavior: 'contain' }}>
+        <div className="bg-gray-800 rounded-lg p-4 mb-4 border border-gray-700">
           <h2 className="text-xl font-bold mb-4">✍️ Create Flashcard</h2>
             <p className="text-gray-400 text-sm mb-4">
               Enter a term/question and its definition to create a single flashcard.
@@ -761,6 +762,7 @@ export default function FlashcardsPage() {
                 </button>
               </div>
             </div>
+          </div>
           </div>
         </div>
       </div>
