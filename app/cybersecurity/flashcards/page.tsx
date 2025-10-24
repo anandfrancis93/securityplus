@@ -736,14 +736,18 @@ export default function FlashcardsPage() {
           {/* Stats */}
           {flashcards.length > 0 && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 relative group cursor-help">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-lg">📚</span>
                   <div className="text-gray-400 text-xs">Total</div>
                 </div>
                 <div className="text-2xl font-bold text-blue-400">{stats.total}</div>
+                {/* Hover tooltip */}
+                <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none">
+                  <p className="text-sm text-gray-300">The total number of flashcards in your deck.</p>
+                </div>
               </div>
-              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 relative group cursor-help">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-lg">🌱</span>
                   <div className="text-gray-400 text-xs">Learning</div>
@@ -752,8 +756,12 @@ export default function FlashcardsPage() {
                 {stats.learning > 0 && (
                   <div className="text-xs text-gray-500 mt-1">New cards</div>
                 )}
+                {/* Hover tooltip */}
+                <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none">
+                  <p className="text-sm text-gray-300">Cards you&apos;ve attempted but got wrong or rated as &quot;Again&quot;. These cards have 0 successful repetitions and need daily practice.</p>
+                </div>
               </div>
-              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 relative group cursor-help">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-lg">🔄</span>
                   <div className="text-gray-400 text-xs">Review</div>
@@ -762,8 +770,12 @@ export default function FlashcardsPage() {
                 {stats.review > 0 && (
                   <div className="text-xs text-gray-500 mt-1">In progress</div>
                 )}
+                {/* Hover tooltip */}
+                <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none">
+                  <p className="text-sm text-gray-300">Cards you&apos;re actively learning and have reviewed correctly 1-2 times. These cards are in progress but not yet mastered.</p>
+                </div>
               </div>
-              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 relative group cursor-help">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-lg">⭐</span>
                   <div className="text-gray-400 text-xs">Mastered</div>
@@ -774,6 +786,10 @@ export default function FlashcardsPage() {
                     {Math.round((stats.mastered / stats.total) * 100)}% complete
                   </div>
                 )}
+                {/* Hover tooltip */}
+                <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none">
+                  <p className="text-sm text-gray-300">Cards you&apos;ve successfully reviewed 3 or more times. These cards are well-learned and appear less frequently to maintain long-term retention.</p>
+                </div>
               </div>
             </div>
           )}
