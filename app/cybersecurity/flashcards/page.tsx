@@ -512,12 +512,6 @@ export default function FlashcardsPage() {
                 >
                   Reset Progress
                 </button>
-                <button
-                  onClick={handleDeleteAllFlashcards}
-                  className="bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-600/50 font-medium py-2 px-6 rounded-lg transition-all min-h-[44px]"
-                >
-                  Delete All Flashcards
-                </button>
               </div>
             </div>
 
