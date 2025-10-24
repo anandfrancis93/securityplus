@@ -530,15 +530,12 @@ export default function HomePage() {
 
         {/* Three Simple Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Quiz Card - Decoy Effect */}
+          {/* Quiz Card */}
           <button
             onClick={() => setSelectedCard('quiz')}
             className="bg-gray-800 rounded-xl p-8 border-2 border-blue-500/50 hover:border-blue-500 cursor-pointer shadow-lg hover:shadow-blue-500/30 hover:shadow-2xl min-h-[200px] touch-manipulation relative hover:-translate-y-2 active:translate-y-0"
             style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
           >
-            <div className="absolute top-4 right-4 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-              ⭐ RECOMMENDED
-            </div>
             <div className="text-center">
               <div className="text-6xl mb-4">📝</div>
               <h2 className="text-2xl font-bold mb-2 text-blue-400">Quiz</h2>
