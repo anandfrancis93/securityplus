@@ -196,7 +196,7 @@ export default function QuizPage() {
       {/* Celebration Modal (Peak-End Rule) */}
       {showCelebration && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 animate-fade-in">
-          <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 max-w-lg w-full border-2 border-blue-500/30 shadow-2xl animate-scale-in">
+          <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 max-w-lg w-full border-2 border-blue-500/30 shadow-2xl animate-spring-in">
             <div className="text-center">
               {/* Confetti effect */}
               <div className="text-7xl mb-4 animate-bounce">
@@ -238,7 +238,7 @@ export default function QuizPage() {
 
               <button
                 onClick={handleCelebrationClose}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg text-lg transition-spring hover-lift shadow-lg active:scale-95"
               >
                 View Results
               </button>

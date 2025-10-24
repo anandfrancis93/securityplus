@@ -481,7 +481,7 @@ export default function FlashcardsPage() {
                 <div className="inline-block mb-6">
                   <button
                     onClick={handleStartStudy}
-                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-5 px-12 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg shadow-green-500/50 min-h-[56px] touch-manipulation"
+                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-5 px-12 rounded-lg text-lg transition-spring hover-lift shadow-lg shadow-green-500/50 min-h-[56px] touch-manipulation active:scale-95"
                   >
                     Study Now ({dueCards.length} due)
                   </button>

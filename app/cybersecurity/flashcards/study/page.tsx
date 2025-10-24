@@ -160,7 +160,7 @@ export default function StudyPage() {
         {/* Flashcard */}
         <div className="mb-8">
           <div
-            className={`relative bg-gray-800 rounded-xl p-4 sm:p-8 border-2 border-gray-700 min-h-[400px] cursor-pointer transition-all duration-300 ${
+            className={`relative bg-gray-800 rounded-xl p-4 sm:p-8 border-2 border-gray-700 min-h-[400px] cursor-pointer transition-spring hover-lift ${
               isFlipped ? 'bg-blue-900/20 border-blue-500/30' : ''
             }`}
             onClick={handleFlip}
@@ -235,7 +235,7 @@ export default function StudyPage() {
               <button
                 onClick={() => handleAnswer('again')}
                 disabled={answering}
-                className="bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium transition-all min-h-[56px] touch-manipulation"
+                className="bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium transition-spring hover-lift min-h-[56px] touch-manipulation active:scale-95"
               >
                 <div className="text-lg font-bold">Again</div>
                 <div className="text-xs opacity-75">1 day</div>
@@ -243,7 +243,7 @@ export default function StudyPage() {
               <button
                 onClick={() => handleAnswer('hard')}
                 disabled={answering}
-                className="bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium transition-all min-h-[56px] touch-manipulation"
+                className="bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium transition-spring hover-lift min-h-[56px] touch-manipulation active:scale-95"
               >
                 <div className="text-lg font-bold">Hard</div>
                 <div className="text-xs opacity-75">1 day</div>
@@ -251,7 +251,7 @@ export default function StudyPage() {
               <button
                 onClick={() => handleAnswer('good')}
                 disabled={answering}
-                className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium transition-all min-h-[56px] touch-manipulation"
+                className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium transition-spring hover-lift min-h-[56px] touch-manipulation active:scale-95"
               >
                 <div className="text-lg font-bold">Good</div>
                 <div className="text-xs opacity-75">3 days</div>
@@ -259,7 +259,7 @@ export default function StudyPage() {
               <button
                 onClick={() => handleAnswer('easy')}
                 disabled={answering}
-                className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium transition-all min-h-[56px] touch-manipulation"
+                className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium transition-spring hover-lift min-h-[56px] touch-manipulation active:scale-95"
               >
                 <div className="text-lg font-bold">Easy</div>
                 <div className="text-xs opacity-75">7 days</div>
