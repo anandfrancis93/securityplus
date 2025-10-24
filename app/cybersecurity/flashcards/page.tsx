@@ -1241,7 +1241,7 @@ export default function FlashcardsPage() {
                   {editImagePreview ? (
                     <div className="relative">
                       <img
-                        src={editImagePreview}
+                        src={editImagePreview || ''}
                         alt="Preview"
                         className="w-full max-h-48 object-contain rounded-lg border border-gray-600 bg-gray-900"
                       />
