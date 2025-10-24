@@ -153,25 +153,6 @@ export default function HomePage() {
           <div className="bg-gradient-to-br from-blue-900/30 to-purple-900/30 border border-blue-500/30 rounded-lg p-6 mb-8">
             <h3 className="text-lg font-bold text-blue-300 mb-4">📊 IRT Performance Analysis</h3>
 
-            {/* IRT Score */}
-            <div className="bg-gray-800/50 rounded-lg p-4 mb-4">
-              <div className="flex items-center justify-between mb-2">
-                <div>
-                  <h4 className="text-sm font-medium text-blue-200">Your IRT Score</h4>
-                  <p className="text-xs text-gray-400 mt-1">Based on Item Response Theory psychometric model</p>
-                </div>
-                <div className="text-4xl font-bold text-blue-400">
-                  {predictedScore}
-                </div>
-              </div>
-              <div className="w-full bg-gray-700 rounded-full h-3 mt-3">
-                <div
-                  className={`h-3 rounded-full transition-all duration-500 ${isPassing ? 'bg-gradient-to-r from-green-500 to-green-400' : 'bg-gradient-to-r from-yellow-500 to-orange-400'}`}
-                  style={{ width: `${Math.min((predictedScore / 900) * 100, 100)}%` }}
-                ></div>
-              </div>
-            </div>
-
             {/* Ability Level (Theta) */}
             <div className="bg-gray-800/50 rounded-lg p-4 mb-4">
               <div className="flex items-center justify-between mb-2">
@@ -227,11 +208,9 @@ export default function HomePage() {
                   </>
                 )}
                 <p className="text-xs text-gray-400 mt-3 pt-3 border-t border-gray-700">
-                  <strong>IRT Score {predictedScore}/900:</strong> {' '}
                   {isPassing
-                    ? 'This score suggests you would likely pass the Security+ exam if you maintain this performance level.'
-                    : `You need ${750 - predictedScore} more points to reach the passing threshold. Keep practicing!`
-                  }
+                    ? 'This performance level suggests you would likely pass the Security+ exam if you maintain it.'
+                    : 'Keep practicing to improve your score and reach the passing threshold of 750/900.'}
                 </p>
               </div>
             </div>
