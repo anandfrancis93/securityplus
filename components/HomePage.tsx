@@ -190,16 +190,11 @@ export default function HomePage() {
                 <span>Your score: {predictedScore}</span>
               </div>
               <div className="w-full bg-gray-700 rounded-full h-3 relative overflow-hidden">
-                {/* Endowed Progress - Show baseline progress even at 0 */}
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-transparent" style={{ width: '10%' }}></div>
                 <div
                   className={`h-3 rounded-full transition-all duration-500 ${isPassing ? 'bg-green-500' : 'bg-yellow-500'}`}
-                  style={{ width: `${Math.max(10, Math.min((predictedScore / 900) * 100, 100))}%` }}
+                  style={{ width: `${Math.min((predictedScore / 900) * 100, 100)}%` }}
                 ></div>
               </div>
-              {totalAnswered === 0 && (
-                <p className="text-xs text-gray-500 mt-2 text-center">Start your journey - you&apos;re 10% there just by beginning!</p>
-              )}
             </div>
           </div>
 
