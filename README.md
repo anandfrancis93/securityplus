@@ -5,7 +5,7 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 ## Features
 
 ### Quiz Mode
-- **AI-Generated Synthesis Questions**: Creates complex questions combining multiple security concepts using Claude 3.5 Sonnet
+- **AI-Generated Synthesis Questions**: Creates complex questions combining multiple security concepts using Claude 4.5 Sonnet
 - **Instant Start with On-Demand Generation**: First question appears in ~10 seconds, remaining questions generate automatically in the background
 - **Progressive Loading**: Zero wait time between questions - next question is always ready when you click "Next"
 - **Adaptive Difficulty**: Questions vary across easy, medium, and hard levels with weighted scoring
@@ -46,7 +46,7 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 ## Tech Stack
 
 - **Frontend**: Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS
-- **AI**: Claude 3.5 Sonnet (claude-sonnet-4-5-20250929) for question generation and flashcard extraction
+- **AI**: Claude 4.5 Sonnet (claude-sonnet-4-5-20250929) for question generation and flashcard extraction
 - **Backend**: Firebase (Firestore Database + Firebase Storage + Google Authentication)
 - **Document Processing**: pdf-parse for PDF text extraction
 - **Image Hosting**: Firebase Storage with CORS configuration
