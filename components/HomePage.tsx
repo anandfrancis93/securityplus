@@ -553,11 +553,6 @@ export default function HomePage() {
               <div className="text-6xl mb-4">📚</div>
               <h2 className="text-2xl font-bold mb-2 text-green-400">Flashcards</h2>
               <p className="text-gray-400 text-sm">Learn with spaced repetition</p>
-              {dueFlashcardsCount > 0 ? (
-                <p className="text-red-400 text-xs mt-2 font-medium">⚡ Review now before they pile up!</p>
-              ) : (
-                <p className="text-green-400 text-xs mt-2 font-medium">✓ All caught up!</p>
-              )}
             </div>
           </button>
 
