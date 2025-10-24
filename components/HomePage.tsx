@@ -95,7 +95,8 @@ export default function HomePage() {
           <div className="text-center mb-8">
             <button
               onClick={handleStartQuiz}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-5 px-12 rounded-lg text-lg transition-spring hover-lift shadow-lg shadow-blue-500/50 min-h-[56px] touch-manipulation active:scale-95"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-5 px-12 rounded-lg text-lg shadow-lg shadow-blue-500/50 hover:shadow-blue-500/70 hover:shadow-2xl min-h-[56px] touch-manipulation hover:-translate-y-1 active:translate-y-0"
+              style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
             >
               Start New Quiz (10 Questions)
             </button>
@@ -453,7 +454,8 @@ export default function HomePage() {
           {/* Quiz Card - Decoy Effect */}
           <button
             onClick={() => setSelectedCard('quiz')}
-            className="bg-gray-800 rounded-xl p-8 border-2 border-blue-500/50 hover:border-blue-500 transition-spring cursor-pointer hover-lift shadow-lg hover:shadow-blue-500/20 min-h-[200px] touch-manipulation relative active:scale-95"
+            className="bg-gray-800 rounded-xl p-8 border-2 border-blue-500/50 hover:border-blue-500 cursor-pointer shadow-lg hover:shadow-blue-500/30 hover:shadow-2xl min-h-[200px] touch-manipulation relative hover:-translate-y-2 active:translate-y-0"
+            style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
           >
             <div className="absolute top-4 right-4 bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full">
               ⭐ RECOMMENDED
@@ -468,7 +470,8 @@ export default function HomePage() {
           {/* Flashcards Card */}
           <button
             onClick={() => setSelectedCard('flashcards')}
-            className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-green-500 transition-spring cursor-pointer hover-lift shadow-lg hover:shadow-green-500/20 relative min-h-[200px] touch-manipulation active:scale-95"
+            className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-green-500 cursor-pointer shadow-lg hover:shadow-green-500/30 hover:shadow-2xl relative min-h-[200px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
+            style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
           >
             {dueFlashcardsCount > 0 && (
               <>

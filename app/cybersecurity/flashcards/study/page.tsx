@@ -235,7 +235,8 @@ export default function StudyPage() {
               <button
                 onClick={() => handleAnswer('again')}
                 disabled={answering}
-                className="bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium transition-spring hover-lift min-h-[56px] touch-manipulation active:scale-95"
+                className="bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation hover:-translate-y-1 hover:shadow-lg hover:shadow-red-500/50 active:translate-y-0"
+                style={{ transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
               >
                 <div className="text-lg font-bold">Again</div>
                 <div className="text-xs opacity-75">1 day</div>
@@ -243,7 +244,8 @@ export default function StudyPage() {
               <button
                 onClick={() => handleAnswer('hard')}
                 disabled={answering}
-                className="bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium transition-spring hover-lift min-h-[56px] touch-manipulation active:scale-95"
+                className="bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/50 active:translate-y-0"
+                style={{ transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
               >
                 <div className="text-lg font-bold">Hard</div>
                 <div className="text-xs opacity-75">1 day</div>
@@ -251,7 +253,8 @@ export default function StudyPage() {
               <button
                 onClick={() => handleAnswer('good')}
                 disabled={answering}
-                className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium transition-spring hover-lift min-h-[56px] touch-manipulation active:scale-95"
+                className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation hover:-translate-y-1 hover:shadow-lg hover:shadow-green-500/50 active:translate-y-0"
+                style={{ transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
               >
                 <div className="text-lg font-bold">Good</div>
                 <div className="text-xs opacity-75">3 days</div>
@@ -259,7 +262,8 @@ export default function StudyPage() {
               <button
                 onClick={() => handleAnswer('easy')}
                 disabled={answering}
-                className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium transition-spring hover-lift min-h-[56px] touch-manipulation active:scale-95"
+                className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/50 active:translate-y-0"
+                style={{ transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
               >
                 <div className="text-lg font-bold">Easy</div>
                 <div className="text-xs opacity-75">7 days</div>
