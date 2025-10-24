@@ -353,24 +353,48 @@ export default function FlashcardsPage() {
 
   // Global debug overlay component
   const DebugOverlay = () => (
-    <div style={{
-      position: 'fixed',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      backgroundColor: 'rgba(255, 0, 0, 0.9)',
-      color: 'white',
-      padding: '10px',
-      zIndex: 99999,
-      fontFamily: 'monospace',
-      fontSize: '12px',
-      borderTop: '3px solid yellow'
-    }}>
-      <div><strong>DEBUG INFO:</strong></div>
-      <div>selectedOption: <strong>{selectedOption || 'null'}</strong></div>
-      <div>editingCard: <strong>{editingCard ? editingCard.term : 'null'}</strong></div>
-      <div>Rendered: {new Date().toLocaleTimeString()}</div>
-    </div>
+    <>
+      <div style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: 'rgba(255, 0, 0, 0.9)',
+        color: 'white',
+        padding: '10px',
+        zIndex: 99999,
+        fontFamily: 'monospace',
+        fontSize: '12px',
+        borderTop: '3px solid yellow'
+      }}>
+        <div><strong>DEBUG INFO:</strong></div>
+        <div>selectedOption: <strong>{selectedOption || 'null'}</strong></div>
+        <div>editingCard: <strong>{editingCard ? editingCard.term : 'null'}</strong></div>
+        <div>Modal should render: <strong>{editingCard ? 'YES' : 'NO'}</strong></div>
+        <div>Rendered: {new Date().toLocaleTimeString()}</div>
+      </div>
+
+      {/* Test indicator - should appear when editingCard is set */}
+      {editingCard && (
+        <div style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: 'orange',
+          color: 'black',
+          padding: '40px',
+          fontSize: '32px',
+          fontWeight: 'bold',
+          zIndex: 999999,
+          border: '10px solid red',
+          textAlign: 'center'
+        }}>
+          TEST DIV VISIBLE!<br/>
+          editingCard: {editingCard.term}
+        </div>
+      )}
+    </>
   );
 
   // If no option selected, show three option cards
