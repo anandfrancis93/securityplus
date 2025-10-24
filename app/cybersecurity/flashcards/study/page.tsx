@@ -337,31 +337,19 @@ export default function StudyPage() {
         {/* Stats - Always Visible at Bottom */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8">
           <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-base">📚</span>
-              <div className="text-gray-400 text-xs">Total</div>
-            </div>
+            <div className="text-gray-400 text-xs mb-1">Total</div>
             <div className="text-xl font-bold text-blue-400">{stats.total}</div>
           </div>
           <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-base">🌱</span>
-              <div className="text-gray-400 text-xs">Learning</div>
-            </div>
+            <div className="text-gray-400 text-xs mb-1">Learning</div>
             <div className="text-xl font-bold text-yellow-400">{stats.learning}</div>
           </div>
           <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-base">🔄</span>
-              <div className="text-gray-400 text-xs">Review</div>
-            </div>
+            <div className="text-gray-400 text-xs mb-1">Review</div>
             <div className="text-xl font-bold text-yellow-400">{stats.review}</div>
           </div>
           <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-base">⭐</span>
-              <div className="text-gray-400 text-xs">Mastered</div>
-            </div>
+            <div className="text-gray-400 text-xs mb-1">Mastered</div>
             <div className="text-xl font-bold text-blue-400">{stats.mastered}</div>
           </div>
         </div>
