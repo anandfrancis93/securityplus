@@ -15,8 +15,7 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 - **Intelligent Score Prediction**: IRT-based ability estimation predicts your exam score (100-900 scale)
 
 ### Flashcard Mode
-- **PDF/Text Upload**: Upload study materials (PDF or TXT files) for automatic processing
-- **AI Key Term Extraction**: Claude AI analyzes documents and extracts Security+ relevant terms and definitions
+- **Manual Flashcard Creation**: Create custom flashcards with terms, definitions, and optional context
 - **Image Support**: Add images to flashcards with Firebase Storage integration (up to 5MB per image)
 - **Image Lightbox**: Click images to view enlarged versions with zoom functionality
 - **Spaced Repetition (SM-2 Algorithm)**: Intelligent review scheduling based on your performance
@@ -46,9 +45,8 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 ## Tech Stack
 
 - **Frontend**: Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS
-- **AI**: Claude 4.5 Sonnet (claude-sonnet-4-5-20250929) for question generation and flashcard extraction
+- **AI**: Claude 4.5 Sonnet (claude-sonnet-4-5-20250929) for question generation
 - **Backend**: Firebase (Firestore Database + Firebase Storage + Google Authentication)
-- **Document Processing**: pdf-parse for PDF text extraction
 - **Image Hosting**: Firebase Storage with CORS configuration
 - **Deployment**: Vercel with automatic CI/CD
 
@@ -197,18 +195,17 @@ Add these in your Vercel project settings:
 9. **Smart Tracking**: Keeps track of answered questions to avoid repetition
 
 ### Flashcard Mode
-1. **Upload**: User uploads PDF or TXT file containing Security+ study material
-2. **Text Extraction**: System extracts text from PDF using pdf-parse or reads TXT directly
-3. **AI Analysis**: Claude AI analyzes content and extracts key Security+ terms with definitions
-4. **Flashcard Creation**: Terms are saved to Firestore in order of appearance
-5. **Image Upload**: Optional image attachments stored in Firebase Storage (supports PNG, JPG, GIF, WebP up to 5MB)
-6. **Spaced Repetition**: SM-2 algorithm calculates optimal review intervals
+1. **Manual Creation**: User creates flashcards by entering term, definition, optional context, and domain
+2. **Image Upload**: Optional image attachments stored in Firebase Storage (supports PNG, JPG, GIF, WebP up to 5MB)
+3. **Flashcard Storage**: Flashcards saved to Firestore with user association
+4. **Spaced Repetition**: SM-2 algorithm calculates optimal review intervals
    - Ease Factor: Starts at 2.5, adjusts based on performance
    - Intervals: Dynamically calculated based on user ratings
    - Quality Score: Maps user difficulty ratings to 0-5 scale
-7. **Review Tracking**: System monitors each card's review history and next due date
-8. **Automatic Scheduling**: Cards appear when due based on spaced repetition algorithm
-9. **Search & Filter**: Real-time search across terms, definitions, domains, and source files
+5. **Review Tracking**: System monitors each card's review history and next due date
+6. **Automatic Scheduling**: Cards appear when due based on spaced repetition algorithm
+7. **Search & Filter**: Real-time search across terms, definitions, domains, and source files
+8. **Edit & Delete**: Modify or remove flashcards at any time
 
 ## Features in Detail
 
@@ -284,15 +281,21 @@ The app uses the SuperMemo 2 (SM-2) algorithm, a proven method for optimizing lo
 - **Mastered**: Well-learned (3+ successful reviews)
 - **Total**: All flashcards in your collection
 
-#### Supported File Formats
+#### Domain Categories
 
-- **PDF**: Automatically extracts text from PDF documents
-- **TXT**: Plain text files with Security+ content
+Choose from predefined Security+ domains when creating flashcards:
+- General Security Concepts
+- Threats, Vulnerabilities, and Mitigations
+- Security Architecture
+- Security Operations
+- Security Program Management and Oversight
 
 **Best Practices:**
-- Upload study guides, textbooks, or notes
-- Ensure content is Security+ SY0-701 related for best results
-- AI extracts terms in document order for logical learning flow
+- Use concise terms (2+ characters)
+- Write clear definitions (10+ characters)
+- Add context for complex concepts
+- Include diagrams/images when helpful
+- Organize by domain for structured learning
 
 ## License
 
