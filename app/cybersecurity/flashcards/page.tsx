@@ -1143,11 +1143,12 @@ export default function FlashcardsPage() {
             </p>
           </div>
         )}
+      </div>
 
-        {/* Edit Modal */}
-        {editingCard && (
-          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full border border-gray-700 shadow-2xl">
+      {/* Edit Modal - Outside scrollable container */}
+      {editingCard && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 overflow-y-auto">
+            <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full border border-gray-700 shadow-2xl my-8">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold">Edit Flashcard</h2>
                 <button
@@ -1270,7 +1271,6 @@ export default function FlashcardsPage() {
             </div>
           </div>
         )}
-      </div>
     </div>
   );
 }
