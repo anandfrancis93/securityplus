@@ -14,7 +14,7 @@ export default function HomePage() {
   };
 
   const handleResetProgress = async () => {
-    if (confirm('Are you sure you want to reset all your progress? This cannot be undone.')) {
+    if (confirm('Are you sure you want to reset your quiz progress? This cannot be undone.')) {
       try {
         await resetProgress();
         alert('Progress reset successfully!');
@@ -195,7 +195,7 @@ export default function HomePage() {
                   onClick={handleResetProgress}
                   className="bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-600/50 font-medium py-2 px-6 rounded-lg text-sm transition-all"
                 >
-                  Reset All Progress
+                  Reset Progress
                 </button>
               </div>
             )}
