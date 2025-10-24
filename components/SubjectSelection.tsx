@@ -152,25 +152,6 @@ export default function SubjectSelection() {
                   </span>
                 </div>
               )}
-
-              {/* Arrow Icon for Available Subjects */}
-              {!subject.disabled && (
-                <div className="absolute bottom-4 right-4">
-                  <svg
-                    className="w-6 h-6 text-gray-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 7l5 5m0 0l-5 5m5-5H6"
-                    />
-                  </svg>
-                </div>
-              )}
             </button>
           ))}
         </div>
