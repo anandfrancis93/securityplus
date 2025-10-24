@@ -207,11 +207,11 @@ export default function HomePage() {
                     <p>Your ability level of <span className="font-bold text-blue-400">{estimatedAbility.toFixed(2)}</span> indicates you need more practice. Start with easier questions, carefully read explanations, and build foundational knowledge before tackling harder synthesis questions.</p>
                   </>
                 )}
-                <p className="text-xs text-gray-400 mt-3 pt-3 border-t border-gray-700">
-                  {isPassing
-                    ? 'This performance level suggests you would likely pass the Security+ exam if you maintain it.'
-                    : 'Keep practicing to improve your score and reach the passing threshold of 750/900.'}
-                </p>
+                {isPassing && (
+                  <p className="text-xs text-gray-400 mt-3 pt-3 border-t border-gray-700">
+                    This performance level suggests you would likely pass the Security+ exam if you maintain it.
+                  </p>
+                )}
               </div>
             </div>
           </div>
