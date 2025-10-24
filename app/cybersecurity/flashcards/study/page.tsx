@@ -165,12 +165,6 @@ export default function StudyPage() {
             }`}
             onClick={handleFlip}
           >
-            <div className="absolute top-4 right-4">
-              <div className="bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">
-                {isFlipped ? 'Definition' : 'Term'}
-              </div>
-            </div>
-
             <div className="flex items-center justify-center min-h-[350px]">
               {!isFlipped ? (
                 <div className="text-center">
