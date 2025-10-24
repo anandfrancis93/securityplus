@@ -377,7 +377,7 @@ export default function FlashcardsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Study Option */}
             <button
-              onClick={() => dueCards.length > 0 ? handleStartStudy() : setSelectedOption('study')}
+              onClick={() => setSelectedOption('study')}
               className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-white cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
               style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
             >
