@@ -385,9 +385,6 @@ export default function FlashcardsPage() {
                 <div className="text-6xl mb-4">📖</div>
                 <h2 className="text-2xl font-bold mb-2 text-white">Study</h2>
                 <p className="text-gray-400 text-sm">Review your flashcards with spaced repetition</p>
-                {dueCards.length > 0 && (
-                  <p className="text-green-300 text-sm font-medium mt-3">{dueCards.length} cards due</p>
-                )}
               </div>
             </button>
 
