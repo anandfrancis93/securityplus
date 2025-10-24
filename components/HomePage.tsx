@@ -233,9 +233,6 @@ export default function HomePage() {
               📚 Study Flashcards
             </button>
           </div>
-          <p className="mt-4 text-gray-500 text-sm">
-            Practice with AI-generated quizzes or create flashcards from your study materials
-          </p>
 
           {/* Reset Progress Button */}
           {totalAnswered > 0 && (
