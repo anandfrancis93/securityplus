@@ -292,3 +292,103 @@ export async function generateQuestionBatch(count: number, excludeTopics: string
 
   return questions;
 }
+
+/**
+ * Generate questions progressively - first question immediately, then the rest
+ * This allows the UI to show the first question while generating others in the background
+ */
+export async function generateProgressiveQuestions(
+  count: number,
+  excludeTopics: string[] = []
+): Promise<Question[]> {
+  const usedTopics = [...excludeTopics];
+
+  // Define question configuration for adaptive difficulty
+  const questionConfigs = [
+    { difficulty: 'easy' as const, type: 'single' as const },
+    { difficulty: 'easy' as const, type: 'single' as const },
+    { difficulty: 'easy' as const, type: 'single' as const },
+    { difficulty: 'medium' as const, type: 'single' as const },
+    { difficulty: 'medium' as const, type: 'single' as const },
+    { difficulty: 'medium' as const, type: 'multiple' as const },
+    { difficulty: 'medium' as const, type: 'multiple' as const },
+    { difficulty: 'hard' as const, type: 'single' as const },
+    { difficulty: 'hard' as const, type: 'single' as const },
+    { difficulty: 'hard' as const, type: 'multiple' as const },
+  ];
+
+  // Shuffle configs to randomize question order
+  const shuffledConfigs = shuffleArray(questionConfigs).slice(0, count);
+
+  console.log(`Generating first question immediately...`);
+
+  // Generate first question immediately
+  const firstConfig = shuffledConfigs[0];
+  const firstQuestion = await generateSynthesisQuestion(
+    usedTopics,
+    firstConfig.difficulty,
+    firstConfig.type
+  );
+  console.log(`First question ready: ${firstConfig.difficulty} ${firstConfig.type}-choice`);
+
+  // Start generating remaining questions in parallel (but don't wait for them)
+  const remainingConfigs = shuffledConfigs.slice(1);
+  console.log(`Generating remaining ${remainingConfigs.length} questions in parallel...`);
+
+  const remainingPromises = remainingConfigs.map(async (config, index) => {
+    // Retry up to 3 times if generation fails
+    const maxRetries = 3;
+    let lastError: any = null;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        const question = await generateSynthesisQuestion(usedTopics, config.difficulty, config.type);
+        console.log(`Generated ${index + 2}/${count}: ${config.difficulty} ${config.type}-choice`);
+        return question;
+      } catch (error) {
+        lastError = error;
+        console.error(`Error generating question ${index + 2} (attempt ${attempt}/${maxRetries}):`, error);
+
+        // Wait a bit before retrying (exponential backoff)
+        if (attempt < maxRetries) {
+          await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+        }
+      }
+    }
+
+    // All retries failed
+    console.error(`Failed to generate question ${index + 2} after ${maxRetries} attempts`);
+    return null;
+  });
+
+  // Wait for all remaining questions
+  const remainingResults = await Promise.all(remainingPromises);
+  const remainingQuestions = remainingResults.filter((q): q is Question => q !== null);
+
+  // Combine first question with remaining
+  const allQuestions = [firstQuestion, ...remainingQuestions];
+
+  console.log(`Progressive generation complete: ${allQuestions.length}/${count} questions`);
+
+  // If we still don't have enough, generate more
+  if (allQuestions.length < count) {
+    console.log(`Generating ${count - allQuestions.length} additional questions...`);
+    const additionalNeeded = count - allQuestions.length;
+    const additionalConfigs = shuffleArray(questionConfigs).slice(0, additionalNeeded);
+
+    const additionalPromises = additionalConfigs.map(async (config) => {
+      try {
+        return await generateSynthesisQuestion(usedTopics, config.difficulty, config.type);
+      } catch (error) {
+        console.error('Error generating additional question:', error);
+        return null;
+      }
+    });
+
+    const additionalResults = await Promise.all(additionalPromises);
+    const additionalQuestions = additionalResults.filter((q): q is Question => q !== null);
+    allQuestions.push(...additionalQuestions);
+  }
+
+  return allQuestions;
+}

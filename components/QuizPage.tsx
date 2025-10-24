@@ -32,21 +32,47 @@ export default function QuizPage() {
   const generateQuestions = async () => {
     setGenerating(true);
     try {
-      const response = await fetch('/api/generate-questions', {
+      // Step 1: Generate first question immediately
+      console.log('Fetching first question...');
+      const firstResponse = await fetch('/api/generate-first-question', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          count: 10,
           excludeTopics: userProgress?.answeredQuestions || [],
         }),
       });
 
-      const data = await response.json();
-      setQuestions(data.questions);
+      const firstData = await firstResponse.json();
+
+      if (firstData.question) {
+        // Show first question immediately
+        setQuestions([firstData.question]);
+        setLoading(false); // User can now see and answer the first question!
+        console.log('First question loaded - user can start answering');
+
+        // Step 2: Generate remaining 9 questions in the background
+        console.log('Generating remaining 9 questions in background...');
+        const remainingResponse = await fetch('/api/generate-remaining-questions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            count: 9,
+            excludeTopics: userProgress?.answeredQuestions || [],
+          }),
+        });
+
+        const remainingData = await remainingResponse.json();
+
+        if (remainingData.questions) {
+          // Add remaining questions to the quiz
+          setQuestions(prev => [...prev, ...remainingData.questions]);
+          console.log(`All questions ready: ${1 + remainingData.questions.length} total`);
+        }
+      }
     } catch (error) {
       console.error('Error generating questions:', error);
-    } finally {
       setLoading(false);
+    } finally {
       setGenerating(false);
     }
   };
@@ -89,6 +115,9 @@ export default function QuizPage() {
       setSelectedAnswer(null);
       setSelectedAnswers([]);
       setShowExplanation(false);
+    } else if (generating && questions.length < 10) {
+      // Still generating more questions - wait a moment
+      alert('Please wait, generating more questions...');
     } else {
       handleEndQuiz();
     }
@@ -156,6 +185,12 @@ export default function QuizPage() {
             {showExplanation && (
               <div className="text-sm text-gray-400 mt-1">
                 Topics: {currentQuestion.topics.join(', ')}
+              </div>
+            )}
+            {generating && questions.length < 10 && (
+              <div className="text-xs text-blue-400 mt-1 flex items-center gap-2">
+                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-400"></div>
+                Generating remaining questions in background...
               </div>
             )}
           </div>

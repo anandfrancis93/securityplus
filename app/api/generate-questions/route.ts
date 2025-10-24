@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { generateQuestionBatch } from '@/lib/questionGenerator';
+import { generateProgressiveQuestions } from '@/lib/questionGenerator';
 
 export async function POST(request: NextRequest) {
   try {
     const { count = 10, excludeTopics = [] } = await request.json();
 
-    const questions = await generateQuestionBatch(count, excludeTopics);
+    const questions = await generateProgressiveQuestions(count, excludeTopics);
 
     return NextResponse.json({ questions });
   } catch (error) {
