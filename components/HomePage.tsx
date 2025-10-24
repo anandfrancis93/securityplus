@@ -522,20 +522,6 @@ export default function HomePage() {
             </div>
           </button>
 
-          {/* Simulate Exam Card (Coming Soon) */}
-          <div className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 opacity-60 cursor-not-allowed shadow-lg relative min-h-[200px]">
-            <div className="absolute top-4 right-4">
-              <span className="bg-gray-700 text-gray-400 text-xs px-3 py-1 rounded-full">
-                Coming Soon
-              </span>
-            </div>
-            <div className="text-center">
-              <div className="text-6xl mb-4">⏱️</div>
-              <h2 className="text-2xl font-bold mb-2 text-gray-400">Simulate Exam</h2>
-              <p className="text-gray-500 text-sm">90-minute timed exam</p>
-            </div>
-          </div>
-
           {/* PBQ Card (Coming Soon) */}
           <div className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 opacity-60 cursor-not-allowed shadow-lg relative min-h-[200px]">
             <div className="absolute top-4 right-4">
@@ -547,6 +533,20 @@ export default function HomePage() {
               <div className="text-6xl mb-4">🖥️</div>
               <h2 className="text-2xl font-bold mb-2 text-gray-400">Performance-Based Questions</h2>
               <p className="text-gray-500 text-sm">Hands-on scenarios</p>
+            </div>
+          </div>
+
+          {/* Simulate Exam Card (Coming Soon) */}
+          <div className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 opacity-60 cursor-not-allowed shadow-lg relative min-h-[200px]">
+            <div className="absolute top-4 right-4">
+              <span className="bg-gray-700 text-gray-400 text-xs px-3 py-1 rounded-full">
+                Coming Soon
+              </span>
+            </div>
+            <div className="text-center">
+              <div className="text-6xl mb-4">⏱️</div>
+              <h2 className="text-2xl font-bold mb-2 text-gray-400">Simulate Exam</h2>
+              <p className="text-gray-500 text-sm">90-minute timed exam</p>
             </div>
           </div>
         </div>
