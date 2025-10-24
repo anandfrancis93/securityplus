@@ -1215,14 +1215,27 @@ export default function FlashcardsPage() {
       {/* Edit Modal - Now completely outside overflow-hidden div */}
       {editingCard && (
         <div
-          className="fixed inset-0 flex items-center justify-center p-4 overflow-y-auto"
+          className="fixed flex items-center justify-center p-4 overflow-y-auto"
           style={{
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            zIndex: 9999,
-            border: '5px solid red' // Debug: Make modal backdrop visible
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(255, 0, 255, 0.95)', // BRIGHT MAGENTA - impossible to miss!
+            zIndex: 99999,
+            border: '10px solid lime' // BRIGHT GREEN border
           }}
         >
-            <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full border border-gray-700 shadow-2xl my-8" style={{ border: '5px solid yellow' }}>
+            <div style={{
+              backgroundColor: '#1f2937',
+              borderRadius: '8px',
+              padding: '24px',
+              maxWidth: '672px',
+              width: '100%',
+              border: '10px solid yellow',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+            }}>
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold">Edit Flashcard</h2>
                 <button
