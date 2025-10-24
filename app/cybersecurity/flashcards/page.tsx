@@ -45,6 +45,8 @@ export default function FlashcardsPage() {
   const [manualDomain, setManualDomain] = useState('General Security Concepts');
   const [manualImage, setManualImage] = useState<File | null>(null);
   const [manualImagePreview, setManualImagePreview] = useState<string | null>(null);
+  const [manualTermError, setManualTermError] = useState('');
+  const [manualDefinitionError, setManualDefinitionError] = useState('');
 
   // Edit mode states
   const [editingCard, setEditingCard] = useState<Flashcard | null>(null);
@@ -79,12 +81,32 @@ export default function FlashcardsPage() {
   };
 
   const handleManualCreate = async () => {
-    if (!manualTerm.trim() || !manualDefinition.trim() || !userId) return;
+    if (!userId) return;
 
-    if (manualTerm.trim().length < 2 || manualDefinition.trim().length < 10) {
-      alert('Please enter a valid term (min 2 characters) and definition (min 10 characters).');
-      return;
+    // Clear previous errors
+    setManualTermError('');
+    setManualDefinitionError('');
+
+    // Validate term
+    let hasError = false;
+    if (!manualTerm.trim()) {
+      setManualTermError('Term is required');
+      hasError = true;
+    } else if (manualTerm.trim().length < 2) {
+      setManualTermError('Term must be at least 2 characters');
+      hasError = true;
     }
+
+    // Validate definition
+    if (!manualDefinition.trim()) {
+      setManualDefinitionError('Definition is required');
+      hasError = true;
+    } else if (manualDefinition.trim().length < 10) {
+      setManualDefinitionError('Definition must be at least 10 characters');
+      hasError = true;
+    }
+
+    if (hasError) return;
 
     // Validate image if provided
     if (manualImage) {
@@ -120,6 +142,8 @@ export default function FlashcardsPage() {
       setManualDomain('General Security Concepts');
       setManualImage(null);
       setManualImagePreview(null);
+      setManualTermError('');
+      setManualDefinitionError('');
       await loadFlashcards();
     } catch (error) {
       console.error('Error creating manual flashcard:', error);
@@ -644,11 +668,17 @@ export default function FlashcardsPage() {
                 <input
                   type="text"
                   value={manualTerm}
-                  onChange={(e) => setManualTerm(e.target.value)}
-                  placeholder="e.g., What is Zero Trust?"
+                  onChange={(e) => {
+                    setManualTerm(e.target.value);
+                    if (manualTermError) setManualTermError('');
+                  }}
+                  placeholder="Enter term or question (min. 2 characters)"
                   className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none"
                   disabled={generating}
                 />
+                {manualTermError && (
+                  <p className="text-red-400 text-sm mt-1">{manualTermError}</p>
+                )}
               </div>
 
               <div>
@@ -657,11 +687,17 @@ export default function FlashcardsPage() {
                 </label>
                 <textarea
                   value={manualDefinition}
-                  onChange={(e) => setManualDefinition(e.target.value)}
-                  placeholder="Enter the definition or answer here..."
+                  onChange={(e) => {
+                    setManualDefinition(e.target.value);
+                    if (manualDefinitionError) setManualDefinitionError('');
+                  }}
+                  placeholder="Enter definition or answer (min. 10 characters)"
                   className="w-full h-32 bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none resize-vertical"
                   disabled={generating}
                 />
+                {manualDefinitionError && (
+                  <p className="text-red-400 text-sm mt-1">{manualDefinitionError}</p>
+                )}
               </div>
 
               <div>
@@ -718,7 +754,7 @@ export default function FlashcardsPage() {
               <div className="flex items-center justify-end">
                 <button
                   onClick={handleManualCreate}
-                  disabled={generating || manualTerm.trim().length < 2 || manualDefinition.trim().length < 10}
+                  disabled={generating}
                   className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-all"
                 >
                   {generating ? 'Creating...' : 'Create Flashcard'}
