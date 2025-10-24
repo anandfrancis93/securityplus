@@ -230,10 +230,10 @@ export default function StudyPage() {
             <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4 mb-4">
               <h4 className="text-sm font-bold text-blue-300 mb-2">💡 How to Rate Your Recall:</h4>
               <div className="text-xs text-gray-300 space-y-1">
-                <p><strong className="text-red-400">Again:</strong> Couldn't remember or got it wrong → Review immediately</p>
-                <p><strong className="text-orange-400">Hard:</strong> Difficult to recall, needed time → Review in ~6 hours</p>
-                <p><strong className="text-green-400">Good:</strong> Recalled with some effort → Review in ~10 hours</p>
-                <p><strong className="text-blue-400">Easy:</strong> Instant recall, confident → Review in ~4 days</p>
+                <p><strong className="text-red-400">Again:</strong> Couldn't remember or got it wrong → Review tomorrow</p>
+                <p><strong className="text-orange-400">Hard:</strong> Difficult to recall, needed time → Review in 1-3 days</p>
+                <p><strong className="text-green-400">Good:</strong> Recalled with some effort → Review in 3-6 days</p>
+                <p><strong className="text-blue-400">Easy:</strong> Instant recall, confident → Review in 7+ days</p>
               </div>
             </div>
 
@@ -244,7 +244,7 @@ export default function StudyPage() {
                 className="bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-4 rounded-lg font-medium transition-all"
               >
                 <div className="text-lg font-bold">Again</div>
-                <div className="text-xs opacity-75">&lt;1 min</div>
+                <div className="text-xs opacity-75">1 day</div>
               </button>
               <button
                 onClick={() => handleAnswer('hard')}
@@ -252,7 +252,7 @@ export default function StudyPage() {
                 className="bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-4 rounded-lg font-medium transition-all"
               >
                 <div className="text-lg font-bold">Hard</div>
-                <div className="text-xs opacity-75">&lt;6 hours</div>
+                <div className="text-xs opacity-75">1 day</div>
               </button>
               <button
                 onClick={() => handleAnswer('good')}
@@ -260,7 +260,7 @@ export default function StudyPage() {
                 className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-4 rounded-lg font-medium transition-all"
               >
                 <div className="text-lg font-bold">Good</div>
-                <div className="text-xs opacity-75">&lt;10 hours</div>
+                <div className="text-xs opacity-75">3 days</div>
               </button>
               <button
                 onClick={() => handleAnswer('easy')}
@@ -268,7 +268,7 @@ export default function StudyPage() {
                 className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-4 rounded-lg font-medium transition-all"
               >
                 <div className="text-lg font-bold">Easy</div>
-                <div className="text-xs opacity-75">~4 days</div>
+                <div className="text-xs opacity-75">7 days</div>
               </button>
             </div>
           </>
