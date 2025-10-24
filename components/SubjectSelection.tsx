@@ -37,6 +37,15 @@ export default function SubjectSelection() {
       disabled: false,
     },
     {
+      id: 'networking',
+      name: 'Networking',
+      description: 'Coming soon',
+      icon: '🌐',
+      color: 'from-blue-500 to-blue-600',
+      path: '/networking',
+      disabled: true,
+    },
+    {
       id: 'maths',
       name: 'Mathematics',
       description: 'Coming soon',
@@ -121,7 +130,7 @@ export default function SubjectSelection() {
         </div>
 
         {/* Subject Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {subjects.map((subject) => (
             <button
               key={subject.id}
