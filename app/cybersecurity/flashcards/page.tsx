@@ -835,7 +835,7 @@ export default function FlashcardsPage() {
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 max-h-[600px] overflow-y-auto">
                 {filteredFlashcards.length === 0 ? (
                   <div className="text-center py-8 text-gray-400">
                     {searchQuery ? 'No flashcards match your search.' : 'No flashcards yet.'}
@@ -1029,7 +1029,7 @@ export default function FlashcardsPage() {
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 max-h-[600px] overflow-y-auto">
                 {filteredFlashcards.length === 0 ? (
                   <div className="text-center py-8 text-gray-400">
                     {searchQuery ? 'No flashcards match your search.' : 'No flashcards yet.'}
