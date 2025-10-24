@@ -384,29 +384,7 @@ export default function FlashcardsPage() {
               <div className="text-center">
                 <div className="text-6xl mb-4">📖</div>
                 <h2 className="text-2xl font-bold mb-2 text-white">Study</h2>
-                <p className="text-gray-400 text-sm mb-4">Review with spaced repetition and interleaving</p>
-
-                {/* Stats */}
-                {flashcards.length > 0 && (
-                  <div className="grid grid-cols-2 gap-2 mt-4">
-                    <div className="bg-gray-700/50 rounded p-2">
-                      <div className="text-xs text-gray-400">Total</div>
-                      <div className="text-lg font-bold text-blue-400">{stats.total}</div>
-                    </div>
-                    <div className="bg-gray-700/50 rounded p-2">
-                      <div className="text-xs text-gray-400">Learning</div>
-                      <div className="text-lg font-bold text-yellow-400">{stats.learning}</div>
-                    </div>
-                    <div className="bg-gray-700/50 rounded p-2">
-                      <div className="text-xs text-gray-400">Review</div>
-                      <div className="text-lg font-bold text-yellow-400">{stats.review}</div>
-                    </div>
-                    <div className="bg-gray-700/50 rounded p-2">
-                      <div className="text-xs text-gray-400">Mastered</div>
-                      <div className="text-lg font-bold text-blue-400">{stats.mastered}</div>
-                    </div>
-                  </div>
-                )}
+                <p className="text-gray-400 text-sm">Review with spaced repetition and interleaving</p>
               </div>
             </button>
 
