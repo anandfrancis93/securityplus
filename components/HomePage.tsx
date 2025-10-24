@@ -98,7 +98,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Start New Quiz Option */}
               <button
-                onClick={() => setQuizOption('start')}
+                onClick={handleStartQuiz}
                 className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-blue-500 cursor-pointer shadow-lg hover:shadow-blue-500/30 hover:shadow-2xl min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
                 style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
               >
@@ -127,44 +127,9 @@ export default function HomePage() {
       );
     }
 
-    // Start New Quiz option selected
-    if (quizOption === 'start') {
+    // Performance option selected
+    if (quizOption === 'performance') {
       return (
-        <div className="min-h-screen bg-gray-900 text-white">
-          <div className="container mx-auto px-4 py-8 max-w-4xl">
-            {/* Header */}
-            <div className="mb-8">
-              <button
-                onClick={() => setQuizOption(null)}
-                className="bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-300 px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2 mb-6"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-                Back
-              </button>
-              <h1 className="text-3xl font-bold mb-2 text-blue-400">Start New Quiz</h1>
-              <p className="text-gray-400">Ready to test your knowledge?</p>
-            </div>
-
-            {/* Primary Action */}
-            <div className="text-center mb-8">
-              <button
-                onClick={handleStartQuiz}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-5 px-12 rounded-lg text-lg shadow-lg shadow-blue-500/50 hover:shadow-blue-500/70 hover:shadow-2xl min-h-[56px] touch-manipulation hover:-translate-y-1 active:translate-y-0"
-                style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
-              >
-                Start New Quiz (10 Questions)
-              </button>
-              <p className="text-xs text-gray-400 mt-3">Recommended: Take a quiz daily</p>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // Performance Stats option selected
-    return (
       <div className="min-h-screen bg-gray-900 text-white">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           {/* Header */}
@@ -478,7 +443,8 @@ export default function HomePage() {
           )}
         </div>
       </div>
-    );
+      );
+    }
   }
 
   if (selectedCard === 'flashcards') {
