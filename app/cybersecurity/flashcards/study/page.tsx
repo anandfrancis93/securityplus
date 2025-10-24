@@ -280,39 +280,7 @@ export default function StudyPage() {
           </div>
         </div>
 
-        {/* Stats - Always Visible */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-base">📚</span>
-              <div className="text-gray-400 text-xs">Total</div>
-            </div>
-            <div className="text-xl font-bold text-blue-400">{stats.total}</div>
-          </div>
-          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-base">🌱</span>
-              <div className="text-gray-400 text-xs">Learning</div>
-            </div>
-            <div className="text-xl font-bold text-yellow-400">{stats.learning}</div>
-          </div>
-          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-base">🔄</span>
-              <div className="text-gray-400 text-xs">Review</div>
-            </div>
-            <div className="text-xl font-bold text-yellow-400">{stats.review}</div>
-          </div>
-          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-base">⭐</span>
-              <div className="text-gray-400 text-xs">Mastered</div>
-            </div>
-            <div className="text-xl font-bold text-blue-400">{stats.mastered}</div>
-          </div>
-        </div>
-
-        {/* Answer Buttons */}
+        {/* Answer Buttons - Show when flipped */}
         {isFlipped && (
           <>
             <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4 mb-4">
@@ -365,6 +333,38 @@ export default function StudyPage() {
             </div>
           </>
         )}
+
+        {/* Stats - Always Visible at Bottom */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8">
+          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-base">📚</span>
+              <div className="text-gray-400 text-xs">Total</div>
+            </div>
+            <div className="text-xl font-bold text-blue-400">{stats.total}</div>
+          </div>
+          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-base">🌱</span>
+              <div className="text-gray-400 text-xs">Learning</div>
+            </div>
+            <div className="text-xl font-bold text-yellow-400">{stats.learning}</div>
+          </div>
+          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-base">🔄</span>
+              <div className="text-gray-400 text-xs">Review</div>
+            </div>
+            <div className="text-xl font-bold text-yellow-400">{stats.review}</div>
+          </div>
+          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-base">⭐</span>
+              <div className="text-gray-400 text-xs">Mastered</div>
+            </div>
+            <div className="text-xl font-bold text-blue-400">{stats.mastered}</div>
+          </div>
+        </div>
 
       </div>
 
