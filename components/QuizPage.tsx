@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useApp } from './AppProvider';
 import { useRouter } from 'next/navigation';
 import { Question } from '@/lib/types';
 
 export default function QuizPage() {
-  const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz } = useApp();
+  const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, user, handleSignOut } = useApp();
   const router = useRouter();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -17,6 +17,24 @@ export default function QuizPage() {
   const [generatingNext, setGeneratingNext] = useState(false);
   const [totalQuestions] = useState(10);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    }
+
+    if (menuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [menuOpen]);
 
   useEffect(() => {
     initQuiz();
@@ -262,12 +280,51 @@ export default function QuizPage() {
               {questions.length} question{questions.length !== 1 ? 's' : ''} generated so far
             </div>
           </div>
-          <button
-            onClick={handleEndQuiz}
-            className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm"
-          >
-            End Quiz
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleEndQuiz}
+              className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm"
+            >
+              End Quiz
+            </button>
+
+            <div className="relative" ref={menuRef}>
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="text-gray-400 hover:text-white transition-colors p-2"
+                title="Menu"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+
+              {menuOpen && user && !user.isAnonymous && (
+                <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
+                  <div className="px-4 py-2 text-sm text-gray-300 border-b border-gray-700">
+                    <div className="flex items-center gap-2">
+                      <span>👤</span>
+                      <span>{user.displayName || 'User'}</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={async () => {
+                      if (confirm('Are you sure you want to sign out?')) {
+                        await handleSignOut();
+                        setMenuOpen(false);
+                      }
+                    }}
+                    className="w-full px-4 py-2 text-sm text-left text-red-400 hover:bg-gray-700 transition-colors flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Progress Bar */}
