@@ -435,53 +435,98 @@ export default function FlashcardsPage() {
           <>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
               <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                <div className="text-gray-400 text-xs mb-1">Total</div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">📚</span>
+                  <div className="text-gray-400 text-xs">Total</div>
+                </div>
                 <div className="text-2xl font-bold text-blue-400">{stats.total}</div>
               </div>
               <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                <div className="text-gray-400 text-xs mb-1">Learning</div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">🌱</span>
+                  <div className="text-gray-400 text-xs">Learning</div>
+                </div>
                 <div className="text-2xl font-bold text-yellow-400">{stats.learning}</div>
+                {stats.learning > 0 && (
+                  <div className="text-xs text-gray-500 mt-1">New cards</div>
+                )}
               </div>
               <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                <div className="text-gray-400 text-xs mb-1">Review</div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">🔄</span>
+                  <div className="text-gray-400 text-xs">Review</div>
+                </div>
                 <div className="text-2xl font-bold text-orange-400">{stats.review}</div>
+                {stats.review > 0 && (
+                  <div className="text-xs text-gray-500 mt-1">In progress</div>
+                )}
               </div>
               <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                <div className="text-gray-400 text-xs mb-1">Mastered</div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">⭐</span>
+                  <div className="text-gray-400 text-xs">Mastered</div>
+                </div>
                 <div className="text-2xl font-bold text-purple-400">{stats.mastered}</div>
+                {stats.mastered > 0 && (
+                  <div className="text-xs text-gray-500 mt-1">
+                    {Math.round((stats.mastered / stats.total) * 100)}% complete
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Study Button */}
+            {/* Study Button - Visual Anchors & Serial Position Effect */}
             <div className="text-center mb-8">
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <button
-                  onClick={handleStartStudy}
-                  disabled={dueCards.length === 0}
-                  className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-4 px-12 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg"
-                >
-                  {dueCards.length > 0
-                    ? `Study Now (${dueCards.length} due)`
-                    : 'No cards due'}
-                </button>
+              {dueCards.length > 0 && (
+                <div className="relative inline-block mb-6">
+                  <div className="absolute left-1/2 -translate-x-1/2 -top-8 text-yellow-400 animate-bounce text-2xl">
+                    ↓
+                  </div>
+                  <button
+                    onClick={handleStartStudy}
+                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-5 px-12 rounded-lg text-lg transition-all transform hover:scale-105 shadow-lg shadow-green-500/50 min-h-[56px] touch-manipulation ring-2 ring-green-400/50 ring-offset-2 ring-offset-gray-900"
+                  >
+                    ⚡ Study Now ({dueCards.length} due)
+                  </button>
+                  {dueCards.length >= 10 && (
+                    <div className="absolute -top-3 -right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">
+                      HOT!
+                    </div>
+                  )}
+                  <p className="text-xs text-gray-400 mt-3">
+                    {dueCards.length >= 20 ? '⚠️ Cards piling up! Study now to stay on track' :
+                     dueCards.length >= 10 ? '⏰ Many cards waiting - great study opportunity!' :
+                     '🎯 Perfect time to review'}
+                  </p>
+                </div>
+              )}
+              {dueCards.length === 0 && flashcards.length > 0 && (
+                <div className="mb-6">
+                  <button
+                    disabled
+                    className="bg-gray-600 cursor-not-allowed text-white font-bold py-5 px-12 rounded-lg text-lg min-h-[56px] touch-manipulation opacity-50"
+                  >
+                    ✓ All caught up!
+                  </button>
+                  <p className="mt-4 text-green-400 text-sm">
+                    🌟 Great job! Come back later for reviews.
+                  </p>
+                </div>
+              )}
+              <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
                 <button
                   onClick={handleResetProgress}
-                  className="bg-yellow-600/20 hover:bg-yellow-600/30 text-yellow-400 border border-yellow-600/50 font-medium py-2 px-6 rounded-lg transition-all"
+                  className="bg-yellow-600/20 hover:bg-yellow-600/30 text-yellow-400 border border-yellow-600/50 font-medium py-2 px-6 rounded-lg transition-all min-h-[44px]"
                 >
                   Reset Progress
                 </button>
                 <button
                   onClick={handleDeleteAllFlashcards}
-                  className="bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-600/50 font-medium py-2 px-6 rounded-lg transition-all"
+                  className="bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-600/50 font-medium py-2 px-6 rounded-lg transition-all min-h-[44px]"
                 >
                   Delete All Flashcards
                 </button>
               </div>
-              {dueCards.length === 0 && flashcards.length > 0 && (
-                <p className="mt-4 text-gray-500 text-sm">
-                  All caught up! Come back later for reviews.
-                </p>
-              )}
             </div>
 
             {/* Flashcard List */}
