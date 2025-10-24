@@ -268,10 +268,6 @@ export default function StudyPage() {
           </>
         )}
 
-        {/* Source Info */}
-        <div className="mt-8 text-center text-sm text-gray-500">
-          From: {currentCard.sourceFile}
-        </div>
       </div>
 
       {/* Image Lightbox */}
