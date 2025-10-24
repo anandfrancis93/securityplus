@@ -19,7 +19,7 @@ export default function FlashcardsPage() {
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedOption, setSelectedOption] = useState<'study' | 'create' | 'search' | null>(null);
+  const [selectedOption, setSelectedOption] = useState<'study' | 'create' | 'search' | 'performance' | null>(null);
 
   // Manual mode states
   const [manualTerm, setManualTerm] = useState('');
@@ -316,8 +316,8 @@ export default function FlashcardsPage() {
             <p className="text-gray-400">Choose an option</p>
           </div>
 
-          {/* Three Options */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Four Options */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Study Option */}
             <button
               onClick={() => dueCards.length > 0 ? handleStartStudy() : setSelectedOption('study')}
@@ -358,6 +358,22 @@ export default function FlashcardsPage() {
                 <h2 className="text-2xl font-bold mb-2 text-purple-400">Search</h2>
                 <p className="text-gray-400 text-sm">Find and manage your flashcards</p>
                 <p className="text-gray-500 text-sm mt-3">{flashcards.length} total cards</p>
+              </div>
+            </button>
+
+            {/* Performance Option */}
+            <button
+              onClick={() => setSelectedOption('performance')}
+              className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-orange-500 cursor-pointer shadow-lg hover:shadow-orange-500/30 hover:shadow-2xl min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
+              style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+            >
+              <div className="text-center">
+                <div className="text-6xl mb-4">📊</div>
+                <h2 className="text-2xl font-bold mb-2 text-orange-400">Performance</h2>
+                <p className="text-gray-400 text-sm">View your progress and statistics</p>
+                {flashcards.length > 0 && (
+                  <p className="text-orange-300 text-sm font-medium mt-3">{stats.mastered}/{stats.total} mastered</p>
+                )}
               </div>
             </button>
           </div>
@@ -613,6 +629,354 @@ export default function FlashcardsPage() {
   }
 
   // Search option selected
+  return (
+    <div className="min-h-screen bg-gray-900 text-white">
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        {/* Header */}
+        <div className="mb-8">
+          <button
+            onClick={() => setSelectedOption(null)}
+            className="bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-300 px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2 mb-6"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back
+          </button>
+          <h1 className="text-3xl font-bold mb-2 text-purple-400">Search Flashcards</h1>
+          <p className="text-gray-400">Find and manage your flashcards</p>
+        </div>
+
+        {/* Stats */}
+        {flashcards.length > 0 && (
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">📚</span>
+                  <div className="text-gray-400 text-xs">Total</div>
+                </div>
+                <div className="text-2xl font-bold text-blue-400">{stats.total}</div>
+              </div>
+              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">🌱</span>
+                  <div className="text-gray-400 text-xs">Learning</div>
+                </div>
+                <div className="text-2xl font-bold text-yellow-400">{stats.learning}</div>
+                {stats.learning > 0 && (
+                  <div className="text-xs text-gray-500 mt-1">New cards</div>
+                )}
+              </div>
+              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">🔄</span>
+                  <div className="text-gray-400 text-xs">Review</div>
+                </div>
+                <div className="text-2xl font-bold text-orange-400">{stats.review}</div>
+                {stats.review > 0 && (
+                  <div className="text-xs text-gray-500 mt-1">In progress</div>
+                )}
+              </div>
+              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-lg">⭐</span>
+                  <div className="text-gray-400 text-xs">Mastered</div>
+                </div>
+                <div className="text-2xl font-bold text-purple-400">{stats.mastered}</div>
+                {stats.mastered > 0 && (
+                  <div className="text-xs text-gray-500 mt-1">
+                    {Math.round((stats.mastered / stats.total) * 100)}% complete
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Flashcard List */}
+            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold">
+                  Your Flashcards ({filteredFlashcards.length}{filteredFlashcards.length !== flashcards.length && ` of ${flashcards.length}`})
+                </h3>
+              </div>
+
+              {/* Search Input */}
+              <div className="mb-4">
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search by term, definition, domain, or source..."
+                    className="w-full bg-gray-700 text-white rounded-lg pl-10 pr-10 py-3 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                  />
+                  <svg
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                      title="Clear search"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2 max-h-96 overflow-y-auto">
+                {filteredFlashcards.length === 0 ? (
+                  <div className="text-center py-8 text-gray-400">
+                    {searchQuery ? 'No flashcards match your search.' : 'No flashcards yet.'}
+                  </div>
+                ) : (
+                  filteredFlashcards.slice(0, 20).map((card) => (
+                  <div
+                    key={card.id}
+                    className="bg-gray-700/50 rounded-lg p-3 hover:bg-gray-700 transition-all group"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm">{card.term}</div>
+                        <div className="text-xs text-gray-400 mt-1 line-clamp-2">
+                          {card.definition}
+                        </div>
+                        <div className="text-xs text-gray-500 mt-1 flex items-center gap-2">
+                          <span>From: {card.sourceFile}</span>
+                          {card.domain && (
+                            <span className="text-blue-400">• {card.domain}</span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => handleEditFlashcard(card)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-blue-400 hover:text-blue-300 p-1"
+                          title="Edit flashcard"
+                        >
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleDeleteFlashcard(card.id)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-red-400 hover:text-red-300 p-1"
+                          title="Delete flashcard"
+                        >
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  ))
+                )}
+                {filteredFlashcards.length > 20 && (
+                  <p className="text-center text-gray-500 text-sm pt-2">
+                    Showing 20 of {filteredFlashcards.length} flashcards
+                  </p>
+                )}
+              </div>
+            </div>
+          </>
+        )}
+
+        {flashcards.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-6xl mb-4">📚</div>
+            <p className="text-gray-400 text-lg">No flashcards yet</p>
+            <p className="text-gray-500 text-sm mt-2">
+              Create flashcards to start searching
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+  }
+
+  // Performance option selected
+  if (selectedOption === 'performance') {
+    return (
+      <div className="min-h-screen bg-gray-900 text-white">
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
+          {/* Header */}
+          <div className="mb-8">
+            <button
+              onClick={() => setSelectedOption(null)}
+              className="bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-300 px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2 mb-6"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              Back
+            </button>
+            <h1 className="text-3xl font-bold mb-2 text-orange-400">Performance</h1>
+            <p className="text-gray-400">Track your flashcard progress</p>
+          </div>
+
+          {flashcards.length > 0 ? (
+            <>
+              {/* Overall Progress Card */}
+              <div className="bg-gradient-to-br from-orange-900/30 to-yellow-900/30 border border-orange-500/30 rounded-xl p-8 mb-8">
+                <h2 className="text-2xl font-bold mb-6 text-orange-300">📈 Overall Progress</h2>
+
+                {/* Progress Bar */}
+                <div className="mb-6">
+                  <div className="flex justify-between text-sm text-gray-300 mb-2">
+                    <span>Mastery Progress</span>
+                    <span>{stats.mastered} / {stats.total} cards ({Math.round((stats.mastered / stats.total) * 100)}%)</span>
+                  </div>
+                  <div className="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
+                    <div
+                      className="bg-gradient-to-r from-orange-500 to-yellow-500 h-4 rounded-full transition-all duration-500"
+                      style={{ width: `${Math.max(10, (stats.mastered / stats.total) * 100)}%` }}
+                    ></div>
+                  </div>
+                </div>
+
+                {/* Summary Stats */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-gray-800/50 rounded-lg p-4">
+                    <div className="text-gray-400 text-sm mb-1">Cards Due Today</div>
+                    <div className="text-3xl font-bold text-green-400">{dueCards.length}</div>
+                  </div>
+                  <div className="bg-gray-800/50 rounded-lg p-4">
+                    <div className="text-gray-400 text-sm mb-1">Total Reviews</div>
+                    <div className="text-3xl font-bold text-blue-400">{reviews.length}</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Detailed Stats */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-lg">📚</span>
+                    <div className="text-gray-400 text-xs">Total Cards</div>
+                  </div>
+                  <div className="text-2xl font-bold text-blue-400">{stats.total}</div>
+                </div>
+                <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-lg">🌱</span>
+                    <div className="text-gray-400 text-xs">Learning</div>
+                  </div>
+                  <div className="text-2xl font-bold text-yellow-400">{stats.learning}</div>
+                  <div className="text-xs text-gray-500 mt-1">New cards</div>
+                </div>
+                <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-lg">🔄</span>
+                    <div className="text-gray-400 text-xs">Review</div>
+                  </div>
+                  <div className="text-2xl font-bold text-orange-400">{stats.review}</div>
+                  <div className="text-xs text-gray-500 mt-1">In progress</div>
+                </div>
+                <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-lg">⭐</span>
+                    <div className="text-gray-400 text-xs">Mastered</div>
+                  </div>
+                  <div className="text-2xl font-bold text-purple-400">{stats.mastered}</div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    {Math.round((stats.mastered / stats.total) * 100)}% complete
+                  </div>
+                </div>
+              </div>
+
+              {/* Study Insights */}
+              <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 mb-8">
+                <h3 className="text-xl font-bold mb-4 text-orange-300">💡 Study Insights</h3>
+                <div className="space-y-3">
+                  {dueCards.length > 0 && (
+                    <div className="flex items-start gap-3 bg-green-900/20 border border-green-500/30 rounded-lg p-4">
+                      <span className="text-2xl">✅</span>
+                      <div>
+                        <p className="font-medium text-green-300">Keep up the momentum!</p>
+                        <p className="text-sm text-gray-400">You have {dueCards.length} cards ready for review.</p>
+                      </div>
+                    </div>
+                  )}
+                  {stats.learning > 0 && (
+                    <div className="flex items-start gap-3 bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-4">
+                      <span className="text-2xl">🌱</span>
+                      <div>
+                        <p className="font-medium text-yellow-300">Building foundation</p>
+                        <p className="text-sm text-gray-400">{stats.learning} cards are in the learning phase.</p>
+                      </div>
+                    </div>
+                  )}
+                  {stats.mastered >= stats.total * 0.5 && (
+                    <div className="flex items-start gap-3 bg-purple-900/20 border border-purple-500/30 rounded-lg p-4">
+                      <span className="text-2xl">🎯</span>
+                      <div>
+                        <p className="font-medium text-purple-300">Excellent progress!</p>
+                        <p className="text-sm text-gray-400">You've mastered over 50% of your flashcards!</p>
+                      </div>
+                    </div>
+                  )}
+                  {dueCards.length === 0 && flashcards.length > 0 && (
+                    <div className="flex items-start gap-3 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                      <span className="text-2xl">🌟</span>
+                      <div>
+                        <p className="font-medium text-blue-300">All caught up!</p>
+                        <p className="text-sm text-gray-400">No cards due right now. Great work!</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="text-center py-12">
+              <div className="text-6xl mb-4">📊</div>
+              <p className="text-gray-400 text-lg">No performance data yet</p>
+              <p className="text-gray-500 text-sm mt-2">
+                Create and study flashcards to see your progress
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Search view continues...
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
