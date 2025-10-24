@@ -835,13 +835,13 @@ export default function FlashcardsPage() {
                 </div>
               </div>
 
-              <div className="space-y-2 max-h-96 overflow-y-auto">
+              <div className="space-y-2">
                 {filteredFlashcards.length === 0 ? (
                   <div className="text-center py-8 text-gray-400">
                     {searchQuery ? 'No flashcards match your search.' : 'No flashcards yet.'}
                   </div>
                 ) : (
-                  filteredFlashcards.slice(0, 20).map((card) => (
+                  filteredFlashcards.map((card) => (
                   <div
                     key={card.id}
                     className="bg-gray-700/50 rounded-lg p-3 hover:bg-gray-700 transition-all group"
@@ -1029,13 +1029,13 @@ export default function FlashcardsPage() {
                 </div>
               </div>
 
-              <div className="space-y-2 max-h-96 overflow-y-auto">
+              <div className="space-y-2">
                 {filteredFlashcards.length === 0 ? (
                   <div className="text-center py-8 text-gray-400">
                     {searchQuery ? 'No flashcards match your search.' : 'No flashcards yet.'}
                   </div>
                 ) : (
-                  filteredFlashcards.slice(0, 20).map((card) => (
+                  filteredFlashcards.map((card) => (
                   <div
                     key={card.id}
                     className="bg-gray-700/50 rounded-lg p-3 hover:bg-gray-700 transition-all group"
