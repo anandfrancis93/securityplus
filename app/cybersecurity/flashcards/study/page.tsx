@@ -160,20 +160,20 @@ export default function StudyPage() {
         {/* Flashcard */}
         <div className="mb-8">
           <div
-            className={`relative bg-gray-800 rounded-xl p-8 border-2 border-gray-700 min-h-[400px] cursor-pointer transition-all duration-300 ${
+            className={`relative bg-gray-800 rounded-xl p-4 sm:p-8 border-2 border-gray-700 min-h-[400px] cursor-pointer transition-all duration-300 ${
               isFlipped ? 'bg-blue-900/20 border-blue-500/30' : ''
             }`}
             onClick={handleFlip}
           >
-            <div className="flex items-center justify-center min-h-[350px]">
+            <div className="flex items-center justify-center min-h-[350px] px-2 sm:px-0">
               {!isFlipped ? (
-                <div className="text-center">
-                  <h2 className="text-3xl font-bold mb-4">{currentCard.term}</h2>
+                <div className="text-center w-full">
+                  <h2 className="text-2xl sm:text-3xl font-bold mb-4 px-2">{currentCard.term}</h2>
                   <p className="text-gray-400 text-sm mt-8">Click to reveal definition</p>
                 </div>
               ) : (
-                <div className="text-center">
-                  <p className="text-xl leading-relaxed mb-6 whitespace-pre-wrap">{currentCard.definition}</p>
+                <div className="text-center w-full">
+                  <p className="text-lg sm:text-xl leading-relaxed mb-6 whitespace-pre-wrap px-2">{currentCard.definition}</p>
                   {currentCard.imageUrl && (
                     <div className="mt-6">
                       <img
