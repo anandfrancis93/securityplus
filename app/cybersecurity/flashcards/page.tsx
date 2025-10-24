@@ -362,20 +362,20 @@ export default function FlashcardsPage() {
             </button>
 
             {/* Performance Option */}
-            <button
-              onClick={() => setSelectedOption('performance')}
-              className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-orange-500 cursor-pointer shadow-lg hover:shadow-orange-500/30 hover:shadow-2xl min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
-              style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+            <div
+              className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 opacity-60 cursor-not-allowed shadow-lg relative min-h-[250px]"
             >
+              <div className="absolute top-4 right-4">
+                <span className="bg-gray-700 text-gray-400 text-xs px-3 py-1 rounded-full">
+                  Coming Soon
+                </span>
+              </div>
               <div className="text-center">
                 <div className="text-6xl mb-4">📊</div>
-                <h2 className="text-2xl font-bold mb-2 text-orange-400">Performance</h2>
-                <p className="text-gray-400 text-sm">View your progress and statistics</p>
-                {flashcards.length > 0 && (
-                  <p className="text-orange-300 text-sm font-medium mt-3">{stats.mastered}/{stats.total} mastered</p>
-                )}
+                <h2 className="text-2xl font-bold mb-2 text-gray-400">Performance</h2>
+                <p className="text-gray-500 text-sm">View your progress and statistics</p>
               </div>
-            </button>
+            </div>
           </div>
 
           {/* Notification Settings at bottom */}
@@ -827,153 +827,6 @@ export default function FlashcardsPage() {
       </div>
     </div>
   );
-
-  // Performance option selected
-  if (selectedOption === 'performance') {
-    return (
-      <div className="min-h-screen bg-gray-900 text-white">
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
-          {/* Header */}
-          <div className="mb-8">
-            <button
-              onClick={() => setSelectedOption(null)}
-              className="bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-300 px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2 mb-6"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              Back
-            </button>
-            <h1 className="text-3xl font-bold mb-2 text-orange-400">Performance</h1>
-            <p className="text-gray-400">Track your flashcard progress</p>
-          </div>
-
-          {flashcards.length > 0 ? (
-            <>
-              {/* Overall Progress Card */}
-              <div className="bg-gradient-to-br from-orange-900/30 to-yellow-900/30 border border-orange-500/30 rounded-xl p-8 mb-8">
-                <h2 className="text-2xl font-bold mb-6 text-orange-300">📈 Overall Progress</h2>
-
-                {/* Progress Bar */}
-                <div className="mb-6">
-                  <div className="flex justify-between text-sm text-gray-300 mb-2">
-                    <span>Mastery Progress</span>
-                    <span>{stats.mastered} / {stats.total} cards ({Math.round((stats.mastered / stats.total) * 100)}%)</span>
-                  </div>
-                  <div className="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
-                    <div
-                      className="bg-gradient-to-r from-orange-500 to-yellow-500 h-4 rounded-full transition-all duration-500"
-                      style={{ width: `${Math.max(10, (stats.mastered / stats.total) * 100)}%` }}
-                    ></div>
-                  </div>
-                </div>
-
-                {/* Summary Stats */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gray-800/50 rounded-lg p-4">
-                    <div className="text-gray-400 text-sm mb-1">Cards Due Today</div>
-                    <div className="text-3xl font-bold text-green-400">{dueCards.length}</div>
-                  </div>
-                  <div className="bg-gray-800/50 rounded-lg p-4">
-                    <div className="text-gray-400 text-sm mb-1">Total Reviews</div>
-                    <div className="text-3xl font-bold text-blue-400">{reviews.length}</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Detailed Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-lg">📚</span>
-                    <div className="text-gray-400 text-xs">Total Cards</div>
-                  </div>
-                  <div className="text-2xl font-bold text-blue-400">{stats.total}</div>
-                </div>
-                <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-lg">🌱</span>
-                    <div className="text-gray-400 text-xs">Learning</div>
-                  </div>
-                  <div className="text-2xl font-bold text-yellow-400">{stats.learning}</div>
-                  <div className="text-xs text-gray-500 mt-1">New cards</div>
-                </div>
-                <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-lg">🔄</span>
-                    <div className="text-gray-400 text-xs">Review</div>
-                  </div>
-                  <div className="text-2xl font-bold text-orange-400">{stats.review}</div>
-                  <div className="text-xs text-gray-500 mt-1">In progress</div>
-                </div>
-                <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-lg">⭐</span>
-                    <div className="text-gray-400 text-xs">Mastered</div>
-                  </div>
-                  <div className="text-2xl font-bold text-purple-400">{stats.mastered}</div>
-                  <div className="text-xs text-gray-500 mt-1">
-                    {Math.round((stats.mastered / stats.total) * 100)}% complete
-                  </div>
-                </div>
-              </div>
-
-              {/* Study Insights */}
-              <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 mb-8">
-                <h3 className="text-xl font-bold mb-4 text-orange-300">💡 Study Insights</h3>
-                <div className="space-y-3">
-                  {dueCards.length > 0 && (
-                    <div className="flex items-start gap-3 bg-green-900/20 border border-green-500/30 rounded-lg p-4">
-                      <span className="text-2xl">✅</span>
-                      <div>
-                        <p className="font-medium text-green-300">Keep up the momentum!</p>
-                        <p className="text-sm text-gray-400">You have {dueCards.length} cards ready for review.</p>
-                      </div>
-                    </div>
-                  )}
-                  {stats.learning > 0 && (
-                    <div className="flex items-start gap-3 bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-4">
-                      <span className="text-2xl">🌱</span>
-                      <div>
-                        <p className="font-medium text-yellow-300">Building foundation</p>
-                        <p className="text-sm text-gray-400">{stats.learning} cards are in the learning phase.</p>
-                      </div>
-                    </div>
-                  )}
-                  {stats.mastered >= stats.total * 0.5 && (
-                    <div className="flex items-start gap-3 bg-purple-900/20 border border-purple-500/30 rounded-lg p-4">
-                      <span className="text-2xl">🎯</span>
-                      <div>
-                        <p className="font-medium text-purple-300">Excellent progress!</p>
-                        <p className="text-sm text-gray-400">You&apos;ve mastered over 50% of your flashcards!</p>
-                      </div>
-                    </div>
-                  )}
-                  {dueCards.length === 0 && flashcards.length > 0 && (
-                    <div className="flex items-start gap-3 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
-                      <span className="text-2xl">🌟</span>
-                      <div>
-                        <p className="font-medium text-blue-300">All caught up!</p>
-                        <p className="text-sm text-gray-400">No cards due right now. Great work!</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">📊</div>
-              <p className="text-gray-400 text-lg">No performance data yet</p>
-              <p className="text-gray-500 text-sm mt-2">
-                Create and study flashcards to see your progress
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
 
   // Search view (default when selectedOption === 'search')
   return (
