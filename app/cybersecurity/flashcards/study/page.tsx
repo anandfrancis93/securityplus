@@ -221,14 +221,25 @@ export default function StudyPage() {
         </div>
 
         {/* Flashcard */}
-        <div className="mb-8">
+        <div className="mb-8" style={{ perspective: '1000px' }}>
           <div
-            className={`relative bg-gray-800 rounded-xl p-4 sm:p-8 border-2 border-gray-700 min-h-[400px] cursor-pointer transition-spring hover-lift ${
+            className={`relative bg-gray-800 rounded-xl p-4 sm:p-8 border-2 border-gray-700 cursor-pointer transition-all duration-500 ease-in-out ${
               isFlipped ? 'bg-blue-900/20 border-blue-500/30' : ''
             }`}
+            style={{
+              minHeight: '400px',
+              transformStyle: 'preserve-3d',
+              transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+            }}
             onClick={handleFlip}
           >
-            <div className="flex items-center justify-center min-h-[350px] px-2 sm:px-0">
+            <div
+              className="flex items-center justify-center min-h-[350px] px-2 sm:px-0"
+              style={{
+                transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                backfaceVisibility: 'hidden',
+              }}
+            >
               {!isFlipped ? (
                 <div className="text-center w-full">
                   <h2 className="text-2xl sm:text-3xl font-bold mb-4 px-2">{currentCard.term}</h2>
@@ -242,7 +253,10 @@ export default function StudyPage() {
                       <img
                         src={currentCard.imageUrl}
                         alt="Flashcard visual"
-                        onClick={() => setImageEnlarged(true)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setImageEnlarged(true);
+                        }}
                         className="max-w-full max-h-64 mx-auto rounded-lg border border-gray-600 cursor-pointer hover:border-blue-500 transition-all"
                         title="Click to enlarge"
                       />
