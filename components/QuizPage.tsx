@@ -203,7 +203,7 @@ export default function QuizPage() {
                 {isPassing ? '🎉' : '🎯'}
               </div>
 
-              <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                 Quiz Complete!
               </h2>
 

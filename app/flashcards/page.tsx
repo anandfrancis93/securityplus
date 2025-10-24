@@ -287,11 +287,11 @@ export default function FlashcardsPage() {
               </div>
               <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
                 <div className="text-gray-400 text-xs mb-1">Review</div>
-                <div className="text-2xl font-bold text-orange-400">{stats.review}</div>
+                <div className="text-2xl font-bold text-yellow-400">{stats.review}</div>
               </div>
               <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
                 <div className="text-gray-400 text-xs mb-1">Mastered</div>
-                <div className="text-2xl font-bold text-purple-400">{stats.mastered}</div>
+                <div className="text-2xl font-bold text-blue-400">{stats.mastered}</div>
               </div>
             </div>
 

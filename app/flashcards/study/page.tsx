@@ -225,7 +225,7 @@ export default function StudyPage() {
             <button
               onClick={() => handleAnswer('hard')}
               disabled={answering}
-              className="bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-4 rounded-lg font-medium transition-all"
+              className="bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-4 rounded-lg font-medium transition-all"
             >
               <div className="text-lg font-bold">Hard</div>
               <div className="text-xs opacity-75">&lt;6 min</div>

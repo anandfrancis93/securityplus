@@ -225,7 +225,7 @@ export default function StudyPage() {
               <h4 className="text-sm font-bold text-blue-300 mb-2">💡 How to Rate Your Recall:</h4>
               <div className="text-xs text-gray-300 space-y-1">
                 <p><strong className="text-red-400">Again:</strong> Couldn&apos;t remember or got it wrong → Review in 1 day</p>
-                <p><strong className="text-orange-400">Hard:</strong> Difficult to recall, needed time → Review in 1 day</p>
+                <p><strong className="text-yellow-400">Hard:</strong> Difficult to recall, needed time → Review in 1 day</p>
                 <p><strong className="text-green-400">Good:</strong> Recalled with some effort → Review in 3 days</p>
                 <p><strong className="text-blue-400">Easy:</strong> Instant recall, confident → Review in 7 days</p>
               </div>
@@ -244,7 +244,7 @@ export default function StudyPage() {
               <button
                 onClick={() => handleAnswer('hard')}
                 disabled={answering}
-                className="bg-orange-600 hover:bg-orange-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-500/50 active:translate-y-0"
+                className="bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation hover:-translate-y-1 hover:shadow-lg hover:shadow-yellow-500/50 active:translate-y-0"
                 style={{ transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
               >
                 <div className="text-lg font-bold">Hard</div>

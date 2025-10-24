@@ -14,7 +14,7 @@ export default function SubjectSelection() {
       name: 'Mathematics',
       description: 'Coming soon',
       icon: '📐',
-      color: 'from-blue-500 to-cyan-500',
+      color: 'from-blue-500 to-blue-600',
       path: '/maths',
       disabled: true,
     },
@@ -23,7 +23,7 @@ export default function SubjectSelection() {
       name: 'Physics',
       description: 'Coming soon',
       icon: '⚛️',
-      color: 'from-purple-500 to-pink-500',
+      color: 'from-red-500 to-red-600',
       path: '/physics',
       disabled: true,
     },
@@ -32,7 +32,7 @@ export default function SubjectSelection() {
       name: 'Cybersecurity',
       description: '',
       icon: '🔒',
-      color: 'from-green-500 to-emerald-500',
+      color: 'from-green-500 to-green-600',
       path: '/cybersecurity',
       disabled: false,
     },
@@ -73,7 +73,7 @@ export default function SubjectSelection() {
             )}
           </div>
           <div className="text-center">
-            <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-green-500 to-yellow-500 bg-clip-text text-transparent">
               Learning Hub
             </h1>
             <p className="text-gray-400 text-lg">Select a subject to begin studying</p>

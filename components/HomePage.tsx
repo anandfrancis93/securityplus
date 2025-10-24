@@ -112,12 +112,12 @@ export default function HomePage() {
               {/* Performance Option */}
               <button
                 onClick={() => setQuizOption('performance')}
-                className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-purple-500 cursor-pointer shadow-lg hover:shadow-purple-500/30 hover:shadow-2xl min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
+                className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-yellow-500 cursor-pointer shadow-lg hover:shadow-yellow-500/30 hover:shadow-2xl min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
                 style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
               >
                 <div className="text-center">
                   <div className="text-6xl mb-4">📊</div>
-                  <h2 className="text-2xl font-bold mb-2 text-purple-400">Performance</h2>
+                  <h2 className="text-2xl font-bold mb-2 text-yellow-400">Performance</h2>
                   <p className="text-gray-400 text-sm">View your scores, IRT analysis, and history</p>
                 </div>
               </button>
@@ -143,7 +143,7 @@ export default function HomePage() {
               </svg>
               Back
             </button>
-            <h1 className="text-3xl font-bold mb-2 text-purple-400">Performance</h1>
+            <h1 className="text-3xl font-bold mb-2 text-yellow-400">Performance</h1>
             <p className="text-gray-400">Track your progress and improvement</p>
           </div>
 
@@ -197,13 +197,13 @@ export default function HomePage() {
             </div>
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
               <div className="text-gray-400 text-sm mb-1">Accuracy</div>
-              <div className="text-3xl font-bold text-purple-400">{accuracy}%</div>
+              <div className="text-3xl font-bold text-yellow-400">{accuracy}%</div>
             </div>
           </div>
 
           {/* IRT Score Analysis - Collapsible (Cognitive Load) */}
           {totalAnswered > 0 && (
-            <div className="bg-gradient-to-br from-blue-900/30 to-purple-900/30 border border-blue-500/30 rounded-lg p-6 mb-8">
+            <div className="bg-gradient-to-br from-blue-900/30 to-blue-800/30 border border-blue-500/30 rounded-lg p-6 mb-8">
               <button
                 onClick={() => setIrtExpanded(!irtExpanded)}
                 className="w-full flex items-center justify-between text-left hover:opacity-80 transition-opacity"
@@ -224,17 +224,17 @@ export default function HomePage() {
                   <div className="bg-gray-800/50 rounded-lg p-4 mb-4 mt-4">
                     <div className="flex items-center justify-between mb-2">
                       <div>
-                        <h4 className="text-sm font-medium text-purple-200">Ability Level (θ theta)</h4>
+                        <h4 className="text-sm font-medium text-blue-200">Ability Level (θ theta)</h4>
                         <p className="text-xs text-gray-400 mt-1">Accounts for question difficulty in your performance</p>
                       </div>
-                      <div className="text-3xl font-bold text-purple-400">
+                      <div className="text-3xl font-bold text-blue-400">
                         {estimatedAbility.toFixed(2)}
                       </div>
                     </div>
                     <div className="flex items-center mt-3">
                       <div className="flex-1 bg-gray-700 rounded-full h-2">
                         <div
-                          className="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full transition-all duration-500"
+                          className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500"
                           style={{ width: `${((estimatedAbility + 3) / 6) * 100}%` }}
                         ></div>
                       </div>
@@ -309,20 +309,20 @@ export default function HomePage() {
                         </>
                       ) : estimatedAbility >= -1 ? (
                         <>
-                          <p className="text-orange-400 font-medium mb-3 flex items-center gap-2">
+                          <p className="text-yellow-400 font-medium mb-3 flex items-center gap-2">
                             <span className="text-2xl">⚠</span> Below Average
                           </p>
                           <ul className="space-y-2 text-xs">
                             <li className="flex items-start gap-2">
-                              <span className="text-orange-400 mt-0.5">▸</span>
+                              <span className="text-yellow-400 mt-0.5">▸</span>
                               <span>Struggling with harder questions</span>
                             </li>
                             <li className="flex items-start gap-2">
-                              <span className="text-orange-400 mt-0.5">▸</span>
+                              <span className="text-yellow-400 mt-0.5">▸</span>
                               <span>Review fundamental concepts</span>
                             </li>
                             <li className="flex items-start gap-2">
-                              <span className="text-orange-400 mt-0.5">▸</span>
+                              <span className="text-yellow-400 mt-0.5">▸</span>
                               <span>Focus on understanding, not memorizing</span>
                             </li>
                           </ul>
@@ -487,7 +487,7 @@ export default function HomePage() {
             )}
           </div>
           <div className="text-center">
-            <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
               Cybersecurity
             </h1>
             <p className="text-gray-400 text-lg">Choose your study method</p>
