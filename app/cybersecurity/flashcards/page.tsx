@@ -351,10 +351,34 @@ export default function FlashcardsPage() {
     );
   });
 
+  // Global debug overlay component
+  const DebugOverlay = () => (
+    <div style={{
+      position: 'fixed',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: 'rgba(255, 0, 0, 0.9)',
+      color: 'white',
+      padding: '10px',
+      zIndex: 99999,
+      fontFamily: 'monospace',
+      fontSize: '12px',
+      borderTop: '3px solid yellow'
+    }}>
+      <div><strong>DEBUG INFO:</strong></div>
+      <div>selectedOption: <strong>{selectedOption || 'null'}</strong></div>
+      <div>editingCard: <strong>{editingCard ? editingCard.term : 'null'}</strong></div>
+      <div>Rendered: {new Date().toLocaleTimeString()}</div>
+    </div>
+  );
+
   // If no option selected, show three option cards
   if (selectedOption === null) {
     return (
-      <div className="min-h-screen bg-gray-900 text-white">
+      <>
+        <DebugOverlay />
+        <div className="min-h-screen bg-gray-900 text-white">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           {/* Header */}
           <div className="mb-8">
@@ -474,13 +498,16 @@ export default function FlashcardsPage() {
           )}
         </div>
       </div>
+      </>
     );
   }
 
   // Performance option selected
   if (selectedOption === 'performance') {
     return (
-      <div className="min-h-screen bg-gray-900 text-white">
+      <>
+        <DebugOverlay />
+        <div className="min-h-screen bg-gray-900 text-white">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           {/* Header */}
           <div className="mb-8">
@@ -604,13 +631,16 @@ export default function FlashcardsPage() {
           )}
         </div>
       </div>
+      </>
     );
   }
 
   // Create option selected
   if (selectedOption === 'create') {
     return (
-      <div className="fixed inset-0 bg-gray-900 text-white overflow-hidden flex flex-col">
+      <>
+        <DebugOverlay />
+        <div className="fixed inset-0 bg-gray-900 text-white overflow-hidden flex flex-col">
         <div className="container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0" style={{ overscrollBehavior: 'none' }}>
           {/* Header */}
           <div className="mb-4 flex-shrink-0">
@@ -977,28 +1007,13 @@ export default function FlashcardsPage() {
         )}
       </div>
     </div>
+    </>
   );
 
   // Search view (default when selectedOption === 'search')
   return (
     <>
-      {/* Debug: Visual indicator that should appear when editingCard is set */}
-      {editingCard && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: 'red',
-          color: 'white',
-          padding: '10px',
-          textAlign: 'center',
-          zIndex: 10000,
-          fontWeight: 'bold'
-        }}>
-          DEBUG BAR: editingCard is {editingCard?.term || 'unknown'}
-        </div>
-      )}
+      <DebugOverlay />
 
       <div className="fixed inset-0 bg-gray-900 text-white overflow-hidden flex flex-col">
       <div className="container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0" style={{ overscrollBehavior: 'none' }}>
