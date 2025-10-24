@@ -841,7 +841,7 @@ export default function FlashcardsPage() {
                     {searchQuery ? 'No flashcards match your search.' : 'No flashcards yet.'}
                   </div>
                 ) : (
-                  filteredFlashcards.map((card) => (
+                  filteredFlashcards.slice(0, 10).map((card) => (
                   <div
                     key={card.id}
                     className="bg-gray-700/50 rounded-lg p-3 hover:bg-gray-700 transition-all group"
@@ -1035,7 +1035,7 @@ export default function FlashcardsPage() {
                     {searchQuery ? 'No flashcards match your search.' : 'No flashcards yet.'}
                   </div>
                 ) : (
-                  filteredFlashcards.map((card) => (
+                  filteredFlashcards.slice(0, 10).map((card) => (
                   <div
                     key={card.id}
                     className="bg-gray-700/50 rounded-lg p-3 hover:bg-gray-700 transition-all group"
