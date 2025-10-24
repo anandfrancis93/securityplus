@@ -30,7 +30,7 @@ export default function SubjectSelection() {
     {
       id: 'cybersecurity',
       name: 'Cybersecurity',
-      description: 'Security+ SY0-701 Practice',
+      description: '',
       icon: '🔒',
       color: 'from-green-500 to-emerald-500',
       path: '/cybersecurity',
