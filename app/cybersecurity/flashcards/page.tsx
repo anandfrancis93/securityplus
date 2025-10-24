@@ -734,10 +734,10 @@ export default function FlashcardsPage() {
   // Search option selected
   return (
     <div className="h-screen bg-gray-900 text-white overflow-hidden flex flex-col">
-      <div className="container mx-auto px-4 pt-8 pb-8 max-w-4xl flex-1 flex flex-col min-h-0">
+      <div className="container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0">
         {/* Header */}
-        <div className="mb-8 flex-shrink-0">
-          <div className="flex justify-between items-center mb-6">
+        <div className="mb-4 flex-shrink-0">
+          <div className="flex justify-between items-center mb-3">
             <button
               onClick={() => setSelectedOption(null)}
               className="bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-300 px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2"
@@ -791,15 +791,15 @@ export default function FlashcardsPage() {
 
         {/* Flashcard List */}
         {flashcards.length > 0 && (
-          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 flex-1 flex flex-col overflow-hidden">
-              <div className="flex items-center justify-between mb-4 flex-shrink-0">
+          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 flex-1 flex flex-col overflow-hidden">
+              <div className="flex items-center justify-between mb-3 flex-shrink-0">
                 <h3 className="text-lg font-bold">
                   Your Flashcards ({filteredFlashcards.length}{filteredFlashcards.length !== flashcards.length && ` of ${flashcards.length}`})
                 </h3>
               </div>
 
               {/* Search Input */}
-              <div className="mb-4 flex-shrink-0">
+              <div className="mb-3 flex-shrink-0">
                 <div className="relative">
                   <input
                     type="text"
@@ -928,10 +928,10 @@ export default function FlashcardsPage() {
   // Search view (default when selectedOption === 'search')
   return (
     <div className="h-screen bg-gray-900 text-white overflow-hidden flex flex-col">
-      <div className="container mx-auto px-4 pt-8 pb-8 max-w-4xl flex-1 flex flex-col min-h-0">
+      <div className="container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0">
         {/* Header */}
-        <div className="mb-8 flex-shrink-0">
-          <div className="flex justify-between items-center mb-6">
+        <div className="mb-4 flex-shrink-0">
+          <div className="flex justify-between items-center mb-3">
             <button
               onClick={() => setSelectedOption(null)}
               className="bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-300 px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2"
@@ -985,15 +985,15 @@ export default function FlashcardsPage() {
 
         {/* Flashcard List */}
         {flashcards.length > 0 && (
-          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 flex-1 flex flex-col overflow-hidden">
-              <div className="flex items-center justify-between mb-4 flex-shrink-0">
+          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 flex-1 flex flex-col overflow-hidden">
+              <div className="flex items-center justify-between mb-3 flex-shrink-0">
                 <h3 className="text-lg font-bold">
                   Your Flashcards ({filteredFlashcards.length}{filteredFlashcards.length !== flashcards.length && ` of ${flashcards.length}`})
                 </h3>
               </div>
 
               {/* Search Input */}
-              <div className="mb-4 flex-shrink-0">
+              <div className="mb-3 flex-shrink-0">
                 <div className="relative">
                   <input
                     type="text"
