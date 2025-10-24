@@ -945,7 +945,7 @@ export default function FlashcardsPage() {
                       <span className="text-2xl">🎯</span>
                       <div>
                         <p className="font-medium text-purple-300">Excellent progress!</p>
-                        <p className="text-sm text-gray-400">You've mastered over 50% of your flashcards!</p>
+                        <p className="text-sm text-gray-400">You&apos;ve mastered over 50% of your flashcards!</p>
                       </div>
                     </div>
                   )}
