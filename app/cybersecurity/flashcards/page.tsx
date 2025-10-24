@@ -809,12 +809,15 @@ export default function FlashcardsPage() {
           </div>
         </div>
       </div>
+      </>
     );
   }
 
   // Search option selected
   return (
-    <div className="fixed inset-0 bg-gray-900 text-white overflow-hidden flex flex-col">
+    <>
+      <DebugOverlay />
+      <div className="fixed inset-0 bg-gray-900 text-white overflow-hidden flex flex-col">
       <div className="container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0" style={{ overscrollBehavior: 'none' }}>
         {/* Header */}
         <div className="mb-4 flex-shrink-0">
