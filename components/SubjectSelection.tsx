@@ -135,14 +135,6 @@ export default function SubjectSelection() {
           ))}
         </div>
 
-        {/* Info Section */}
-        <div className="bg-gray-800/50 rounded-lg p-6 border border-gray-700">
-          <h3 className="text-lg font-bold text-gray-300 mb-2">Welcome to Learning Hub</h3>
-          <p className="text-gray-400 text-sm">
-            Choose a subject above to access practice quizzes, flashcards, and study materials.
-            More subjects will be added soon!
-          </p>
-        </div>
       </div>
     </div>
   );
