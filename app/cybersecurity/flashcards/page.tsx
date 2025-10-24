@@ -390,8 +390,70 @@ export default function FlashcardsPage() {
           border: '10px solid red',
           textAlign: 'center'
         }}>
-          TEST DIV VISIBLE!<br/>
-          editingCard: {editingCard.term}
+          EDIT FLASHCARD<br/>
+          <div style={{ marginTop: '20px', textAlign: 'left', width: '500px' }}>
+            <div style={{ marginBottom: '15px' }}>
+              <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}>Term:</label>
+              <input
+                type="text"
+                value={editTerm}
+                onChange={(e) => setEditTerm(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '8px',
+                  fontSize: '14px',
+                  borderRadius: '4px',
+                  border: '2px solid #666'
+                }}
+              />
+            </div>
+            <div style={{ marginBottom: '15px' }}>
+              <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px' }}>Definition:</label>
+              <textarea
+                value={editDefinition}
+                onChange={(e) => setEditDefinition(e.target.value)}
+                rows={4}
+                style={{
+                  width: '100%',
+                  padding: '8px',
+                  fontSize: '14px',
+                  borderRadius: '4px',
+                  border: '2px solid #666'
+                }}
+              />
+            </div>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                onClick={handleCancelEdit}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: '#666',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  fontSize: '14px',
+                  cursor: 'pointer'
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveEdit}
+                disabled={generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: generating ? '#666' : '#2563eb',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  fontSize: '14px',
+                  cursor: generating ? 'not-allowed' : 'pointer'
+                }}
+              >
+                {generating ? 'Saving...' : 'Save'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </>
@@ -1235,153 +1297,6 @@ export default function FlashcardsPage() {
         )}
       </div>
     </div>
-
-      {/* Edit Modal - Now completely outside overflow-hidden div */}
-      {editingCard && (
-        <div
-          className="fixed flex items-center justify-center p-4 overflow-y-auto"
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(255, 0, 255, 0.95)', // BRIGHT MAGENTA - impossible to miss!
-            zIndex: 99999,
-            border: '10px solid lime' // BRIGHT GREEN border
-          }}
-        >
-            <div style={{
-              backgroundColor: '#1f2937',
-              borderRadius: '8px',
-              padding: '24px',
-              maxWidth: '672px',
-              width: '100%',
-              border: '10px solid yellow',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
-            }}>
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">Edit Flashcard</h2>
-                <button
-                  onClick={handleCancelEdit}
-                  className="text-gray-400 hover:text-white transition-colors"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Term / Question *
-                  </label>
-                  <input
-                    type="text"
-                    value={editTerm}
-                    onChange={(e) => setEditTerm(e.target.value)}
-                    placeholder="e.g., What is Zero Trust?"
-                    className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none"
-                    disabled={generating}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Definition / Answer *
-                  </label>
-                  <textarea
-                    value={editDefinition}
-                    onChange={(e) => setEditDefinition(e.target.value)}
-                    placeholder="Enter the definition or answer here..."
-                    className="w-full h-40 bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none resize-vertical"
-                    disabled={generating}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Security+ Domain
-                  </label>
-                  <select
-                    value={editDomain}
-                    onChange={(e) => setEditDomain(e.target.value)}
-                    className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none"
-                    disabled={generating}
-                  >
-                    <option value="General Security Concepts">General Security Concepts</option>
-                    <option value="Threats, Vulnerabilities, and Mitigations">Threats, Vulnerabilities, and Mitigations</option>
-                    <option value="Security Architecture">Security Architecture</option>
-                    <option value="Security Operations">Security Operations</option>
-                    <option value="Security Program Management and Oversight">Security Program Management and Oversight</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Image (Optional)
-                  </label>
-                  {editImagePreview ? (
-                    <div className="relative">
-                      <img
-                        src={editImagePreview || ''}
-                        alt="Preview"
-                        className="w-full max-h-48 object-contain rounded-lg border border-gray-600 bg-gray-900"
-                      />
-                      <button
-                        onClick={handleRemoveEditImage}
-                        className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-all"
-                        disabled={generating}
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </div>
-                  ) : (
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleEditImageChange}
-                      className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:cursor-pointer"
-                      disabled={generating}
-                    />
-                  )}
-                  <p className="text-xs text-gray-500 mt-1">Max 5MB, JPG/PNG/GIF/WebP</p>
-                </div>
-
-                <div className="flex items-center justify-between pt-4 border-t border-gray-700">
-                  <div className="text-sm text-gray-400">
-                    Term: {editTerm.length} chars | Definition: {editDefinition.length} chars
-                    {(editTerm.length > 0 && editTerm.length < 2) && (
-                      <span className="text-yellow-500 ml-2">(Term needs at least 2 characters)</span>
-                    )}
-                    {(editDefinition.length > 0 && editDefinition.length < 10) && (
-                      <span className="text-yellow-500 ml-2">(Definition needs at least 10 characters)</span>
-                    )}
-                  </div>
-                  <div className="flex gap-3">
-                    <button
-                      onClick={handleCancelEdit}
-                      disabled={generating}
-                      className="bg-gray-700 hover:bg-gray-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-all"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleSaveEdit}
-                      disabled={generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10}
-                      className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-all"
-                    >
-                      {generating ? 'Saving...' : 'Save Changes'}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
     </>
   );
 }
