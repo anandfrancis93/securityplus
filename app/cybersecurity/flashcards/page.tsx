@@ -791,15 +791,15 @@ export default function FlashcardsPage() {
 
         {/* Flashcard List */}
         {flashcards.length > 0 && (
-          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <div className="flex items-center justify-between mb-4">
+          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 flex-1 flex flex-col overflow-hidden">
+              <div className="flex items-center justify-between mb-4 flex-shrink-0">
                 <h3 className="text-lg font-bold">
                   Your Flashcards ({filteredFlashcards.length}{filteredFlashcards.length !== flashcards.length && ` of ${flashcards.length}`})
                 </h3>
               </div>
 
               {/* Search Input */}
-              <div className="mb-4">
+              <div className="mb-4 flex-shrink-0">
                 <div className="relative">
                   <input
                     type="text"
@@ -835,7 +835,7 @@ export default function FlashcardsPage() {
                 </div>
               </div>
 
-              <div className="space-y-2 max-h-[600px] overflow-y-auto">
+              <div className="space-y-2 flex-1 overflow-y-auto">
                 {filteredFlashcards.length === 0 ? (
                   <div className="text-center py-8 text-gray-400">
                     {searchQuery ? 'No flashcards match your search.' : 'No flashcards yet.'}
@@ -927,10 +927,10 @@ export default function FlashcardsPage() {
 
   // Search view (default when selectedOption === 'search')
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="h-screen bg-gray-900 text-white overflow-hidden">
+      <div className="container mx-auto px-4 py-8 max-w-4xl h-full flex flex-col">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-8 flex-shrink-0">
           <div className="flex justify-between items-center mb-6">
             <button
               onClick={() => setSelectedOption(null)}
@@ -985,15 +985,15 @@ export default function FlashcardsPage() {
 
         {/* Flashcard List */}
         {flashcards.length > 0 && (
-          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <div className="flex items-center justify-between mb-4">
+          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 flex-1 flex flex-col overflow-hidden">
+              <div className="flex items-center justify-between mb-4 flex-shrink-0">
                 <h3 className="text-lg font-bold">
                   Your Flashcards ({filteredFlashcards.length}{filteredFlashcards.length !== flashcards.length && ` of ${flashcards.length}`})
                 </h3>
               </div>
 
               {/* Search Input */}
-              <div className="mb-4">
+              <div className="mb-4 flex-shrink-0">
                 <div className="relative">
                   <input
                     type="text"
@@ -1029,7 +1029,7 @@ export default function FlashcardsPage() {
                 </div>
               </div>
 
-              <div className="space-y-2 max-h-[600px] overflow-y-auto">
+              <div className="space-y-2 flex-1 overflow-y-auto">
                 {filteredFlashcards.length === 0 ? (
                   <div className="text-center py-8 text-gray-400">
                     {searchQuery ? 'No flashcards match your search.' : 'No flashcards yet.'}
