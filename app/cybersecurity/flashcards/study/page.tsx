@@ -11,7 +11,7 @@ import {
   getFlashcard,
   saveFlashcardReview,
 } from '@/lib/flashcardDb';
-import { getDueFlashcards, calculateNextReview } from '@/lib/spacedRepetition';
+import { getDueFlashcards, calculateNextReview, getDeckStats } from '@/lib/spacedRepetition';
 import { Flashcard, FlashcardReview } from '@/lib/types';
 
 export default function StudyPage() {
@@ -26,6 +26,7 @@ export default function StudyPage() {
   const [imageEnlarged, setImageEnlarged] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const [stats, setStats] = useState({ total: 0, new: 0, learning: 0, review: 0, mastered: 0 });
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -64,6 +65,10 @@ export default function StudyPage() {
       );
 
       setDueCardIds(due);
+
+      // Calculate deck stats
+      const deckStats = getDeckStats(reviews, allCards.map((c) => c.id));
+      setStats(deckStats);
 
       if (due.length > 0) {
         const card = await getFlashcard(due[0]);
@@ -272,6 +277,38 @@ export default function StudyPage() {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Stats - Always Visible */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-base">📚</span>
+              <div className="text-gray-400 text-xs">Total</div>
+            </div>
+            <div className="text-xl font-bold text-blue-400">{stats.total}</div>
+          </div>
+          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-base">🌱</span>
+              <div className="text-gray-400 text-xs">Learning</div>
+            </div>
+            <div className="text-xl font-bold text-yellow-400">{stats.learning}</div>
+          </div>
+          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-base">🔄</span>
+              <div className="text-gray-400 text-xs">Review</div>
+            </div>
+            <div className="text-xl font-bold text-yellow-400">{stats.review}</div>
+          </div>
+          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-base">⭐</span>
+              <div className="text-gray-400 text-xs">Mastered</div>
+            </div>
+            <div className="text-xl font-bold text-blue-400">{stats.mastered}</div>
           </div>
         </div>
 
