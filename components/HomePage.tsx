@@ -479,13 +479,12 @@ export default function HomePage() {
           <div className="flex justify-between items-center mb-8 relative">
             <button
               onClick={() => router.push('/')}
-              className="bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-300 px-3 py-2 rounded-lg text-sm transition-all flex items-center gap-2"
+              className="text-gray-400 hover:text-white transition-colors p-2"
               title="Back to subjects"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              Back
             </button>
 
             <div className="relative" ref={menuRef}>
