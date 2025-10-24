@@ -14,6 +14,13 @@ import {
 } from '@/lib/pairing';
 import { calculatePartialCredit } from '@/lib/irt';
 import AuthModal from './AuthModal';
+import {
+  initializeNotifications,
+  schedulePeriodicCheck,
+  checkAndNotifyDueFlashcards,
+  getNotificationPreference,
+} from '@/lib/notifications';
+import { getUserFlashcards, getUserReviews } from '@/lib/flashcardDb';
 
 interface AppContextType {
   userId: string | null;
@@ -56,6 +63,49 @@ export function AppProvider({ children }: { children: ReactNode }) {
       calculatePredictedScore(userProgress).then(setPredictedScore);
     }
   }, [userProgress]);
+
+  // Initialize notifications and periodic checks
+  useEffect(() => {
+    if (!userId) return;
+
+    let intervalId: number | null = null;
+
+    const setupNotifications = async () => {
+      // Initialize notifications (will check preference and permission)
+      await initializeNotifications();
+
+      // Set up periodic checking if notifications are enabled
+      if (getNotificationPreference()) {
+        const checkFlashcards = async () => {
+          try {
+            const [flashcards, reviews] = await Promise.all([
+              getUserFlashcards(userId),
+              getUserReviews(userId),
+            ]);
+            await checkAndNotifyDueFlashcards(
+              reviews,
+              flashcards.map((f) => f.id)
+            );
+          } catch (error) {
+            console.error('Error checking due flashcards:', error);
+          }
+        };
+
+        // Schedule checks every hour
+        intervalId = schedulePeriodicCheck(checkFlashcards, 60);
+      }
+    };
+
+    setupNotifications();
+
+    // Cleanup
+    return () => {
+      if (intervalId !== null) {
+        const { clearPeriodicCheck } = require('@/lib/notifications');
+        clearPeriodicCheck(intervalId);
+      }
+    };
+  }, [userId]);
 
   const initAuth = async () => {
     try {

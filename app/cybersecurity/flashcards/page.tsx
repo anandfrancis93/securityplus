@@ -9,6 +9,7 @@ import { getUserFlashcards, saveFlashcards, getUserReviews } from '@/lib/flashca
 import { getDueFlashcards, getDeckStats } from '@/lib/spacedRepetition';
 import { uploadFlashcardImage, validateImageFile } from '@/lib/imageUpload';
 import { Flashcard, FlashcardReview } from '@/lib/types';
+import NotificationSettings from '@/components/NotificationSettings';
 
 export default function FlashcardsPage() {
   const { userId } = useApp();
@@ -314,6 +315,13 @@ export default function FlashcardsPage() {
             Create flashcards for your Security+ study
           </p>
         </div>
+
+        {/* Notification Settings */}
+        {flashcards.length > 0 && (
+          <div className="mb-8">
+            <NotificationSettings />
+          </div>
+        )}
 
         {/* Flashcard Creation Form */}
         <div className="bg-gray-800 rounded-lg p-6 mb-8 border border-gray-700">
