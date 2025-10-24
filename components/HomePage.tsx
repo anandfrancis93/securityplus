@@ -541,7 +541,7 @@ export default function HomePage() {
           {/* Quiz Card */}
           <button
             onClick={() => setSelectedCard('quiz')}
-            className="bg-gray-800 rounded-xl p-8 border-2 border-blue-500/50 hover:border-blue-500 cursor-pointer shadow-lg hover:shadow-blue-500/30 hover:shadow-2xl min-h-[200px] touch-manipulation relative hover:-translate-y-2 active:translate-y-0"
+            className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-white cursor-pointer min-h-[200px] touch-manipulation relative hover:-translate-y-2 active:translate-y-0"
             style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
           >
             <div className="text-center">
@@ -554,7 +554,7 @@ export default function HomePage() {
           {/* Flashcards Card */}
           <button
             onClick={() => setSelectedCard('flashcards')}
-            className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-green-500 cursor-pointer shadow-lg hover:shadow-green-500/30 hover:shadow-2xl relative min-h-[200px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
+            className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-white cursor-pointer relative min-h-[200px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
             style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
           >
             <div className="text-center">
