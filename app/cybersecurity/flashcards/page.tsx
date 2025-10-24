@@ -432,6 +432,18 @@ export default function FlashcardsPage() {
             </div>
           </div>
 
+          {/* Reset Progress Button */}
+          {flashcards.length > 0 && (
+            <div className="mt-8 text-center">
+              <button
+                onClick={handleResetProgress}
+                className="bg-yellow-600/20 hover:bg-yellow-600/30 text-yellow-400 border border-yellow-600/50 font-medium py-2 px-6 rounded-lg transition-all min-h-[44px]"
+              >
+                Reset Progress
+              </button>
+            </div>
+          )}
+
           {/* Notification Settings at bottom */}
           {flashcards.length > 0 && (
             <div className="mt-12">
