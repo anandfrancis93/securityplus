@@ -343,7 +343,7 @@ export default function FlashcardsPage() {
                   </svg>
                 </button>
 
-                {menuOpen && user && !user.isAnonymous && (
+                {menuOpen && user && !user?.isAnonymous && (
                   <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
                     <div className="px-4 py-2 text-sm text-gray-300 border-b border-gray-700">
                       <div className="flex items-center gap-2">
@@ -475,7 +475,7 @@ export default function FlashcardsPage() {
                   </svg>
                 </button>
 
-                {menuOpen && user && !user.isAnonymous && (
+                {menuOpen && user && !user?.isAnonymous && (
                   <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
                     <div className="px-4 py-2 text-sm text-gray-300 border-b border-gray-700">
                       <div className="flex items-center gap-2">
@@ -631,7 +631,7 @@ export default function FlashcardsPage() {
                   </svg>
                 </button>
 
-                {menuOpen && user && !user.isAnonymous && (
+                {menuOpen && user && !user?.isAnonymous && (
                   <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
                     <div className="px-4 py-2 text-sm text-gray-300 border-b border-gray-700">
                       <div className="flex items-center gap-2">
@@ -791,7 +791,7 @@ export default function FlashcardsPage() {
                 </svg>
               </button>
 
-              {menuOpen && user && !user.isAnonymous && (
+              {menuOpen && user && !user?.isAnonymous && (
                 <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
                   <div className="px-4 py-2 text-sm text-gray-300 border-b border-gray-700">
                     <div className="flex items-center gap-2">
@@ -1030,7 +1030,7 @@ export default function FlashcardsPage() {
                 </svg>
               </button>
 
-              {menuOpen && user && !user.isAnonymous && (
+              {menuOpen && user && !user?.isAnonymous && (
                 <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
                   <div className="px-4 py-2 text-sm text-gray-300 border-b border-gray-700">
                     <div className="flex items-center gap-2">
