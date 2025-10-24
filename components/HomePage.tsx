@@ -488,7 +488,7 @@ export default function HomePage() {
           </div>
           <div className="text-center">
             <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-              Security+ SY0-701
+              Cybersecurity
             </h1>
             <p className="text-gray-400 text-lg">Choose your study method</p>
           </div>
