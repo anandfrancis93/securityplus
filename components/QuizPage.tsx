@@ -14,7 +14,8 @@ export default function QuizPage() {
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
   const [showExplanation, setShowExplanation] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [generating, setGenerating] = useState(false);
+  const [generatingNext, setGeneratingNext] = useState(false);
+  const [totalQuestions] = useState(10);
 
   useEffect(() => {
     initQuiz();
@@ -25,55 +26,40 @@ export default function QuizPage() {
       startNewQuiz();
     }
 
-    // Generate questions
-    await generateQuestions();
+    // Generate first question only
+    await generateNextQuestion();
   };
 
-  const generateQuestions = async () => {
-    setGenerating(true);
+  const generateNextQuestion = async () => {
     try {
-      // Step 1: Generate first question immediately
-      console.log('Fetching first question...');
-      const firstResponse = await fetch('/api/generate-first-question', {
+      const questionNumber = questions.length + 1;
+
+      if (questionNumber > totalQuestions) {
+        console.log('All questions generated');
+        return;
+      }
+
+      console.log(`Generating question ${questionNumber}...`);
+
+      const response = await fetch('/api/generate-single-question', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           excludeTopics: userProgress?.answeredQuestions || [],
+          questionNumber,
         }),
       });
 
-      const firstData = await firstResponse.json();
+      const data = await response.json();
 
-      if (firstData.question) {
-        // Show first question immediately
-        setQuestions([firstData.question]);
-        setLoading(false); // User can now see and answer the first question!
-        console.log('First question loaded - user can start answering');
-
-        // Step 2: Generate remaining 9 questions in the background
-        console.log('Generating remaining 9 questions in background...');
-        const remainingResponse = await fetch('/api/generate-remaining-questions', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            count: 9,
-            excludeTopics: userProgress?.answeredQuestions || [],
-          }),
-        });
-
-        const remainingData = await remainingResponse.json();
-
-        if (remainingData.questions) {
-          // Add remaining questions to the quiz
-          setQuestions(prev => [...prev, ...remainingData.questions]);
-          console.log(`All questions ready: ${1 + remainingData.questions.length} total`);
-        }
+      if (data.question) {
+        setQuestions(prev => [...prev, data.question]);
+        console.log(`Question ${questionNumber} loaded`);
       }
     } catch (error) {
-      console.error('Error generating questions:', error);
-      setLoading(false);
+      console.error('Error generating question:', error);
     } finally {
-      setGenerating(false);
+      setLoading(false);
     }
   };
 
@@ -109,16 +95,34 @@ export default function QuizPage() {
     setShowExplanation(true);
   };
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = async () => {
     if (currentQuestionIndex < questions.length - 1) {
+      // Move to next already-generated question
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedAnswer(null);
       setSelectedAnswers([]);
       setShowExplanation(false);
-    } else if (generating && questions.length < 10) {
-      // Still generating more questions - wait a moment
-      alert('Please wait, generating more questions...');
+
+      // Preemptively generate the question after next (if not already generated)
+      if (questions.length < totalQuestions && questions.length <= currentQuestionIndex + 2) {
+        setGeneratingNext(true);
+        await generateNextQuestion();
+        setGeneratingNext(false);
+      }
+    } else if (questions.length < totalQuestions) {
+      // Need to generate next question before advancing
+      setGeneratingNext(true);
+      await generateNextQuestion();
+      setGeneratingNext(false);
+
+      if (questions.length > currentQuestionIndex + 1) {
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+        setSelectedAnswer(null);
+        setSelectedAnswers([]);
+        setShowExplanation(false);
+      }
     } else {
+      // Finished all questions
       handleEndQuiz();
     }
   };
@@ -135,15 +139,13 @@ export default function QuizPage() {
     }
   };
 
-  if (loading || generating) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-900">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-400">
-            {generating ? 'Generating synthesis questions...' : 'Loading quiz...'}
-          </p>
-          <p className="mt-2 text-gray-500 text-sm">This may take a few moments</p>
+          <p className="mt-4 text-gray-400">Generating first question...</p>
+          <p className="mt-2 text-gray-500 text-sm">This will take about 10 seconds</p>
         </div>
       </div>
     );
@@ -166,7 +168,7 @@ export default function QuizPage() {
   }
 
   const currentQuestion = questions[currentQuestionIndex];
-  const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+  const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
 
   // Check if answer is correct
   const isCorrect = currentQuestion.questionType === 'multiple'
@@ -181,18 +183,21 @@ export default function QuizPage() {
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-2xl font-bold">Question {currentQuestionIndex + 1} of {questions.length}</h1>
+            <h1 className="text-2xl font-bold">Question {currentQuestionIndex + 1} of {totalQuestions}</h1>
             {showExplanation && (
               <div className="text-sm text-gray-400 mt-1">
                 Topics: {currentQuestion.topics.join(', ')}
               </div>
             )}
-            {generating && questions.length < 10 && (
+            {generatingNext && (
               <div className="text-xs text-blue-400 mt-1 flex items-center gap-2">
                 <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-400"></div>
-                Generating remaining questions in background...
+                Generating next question...
               </div>
             )}
+            <div className="text-xs text-gray-500 mt-1">
+              {questions.length} question{questions.length !== 1 ? 's' : ''} generated so far
+            </div>
           </div>
           <button
             onClick={handleEndQuiz}
