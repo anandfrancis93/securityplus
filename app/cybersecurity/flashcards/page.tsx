@@ -899,8 +899,11 @@ export default function FlashcardsPage() {
                       </div>
                       <div className="flex items-center gap-1">
                         <button
-                          onClick={() => handleEditFlashcard(card)}
-                          className="flex-shrink-0 text-blue-400 hover:text-blue-300 p-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditFlashcard(card);
+                          }}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-blue-400 hover:text-blue-300 p-1 z-10"
                           title="Edit flashcard"
                         >
                           <svg
@@ -918,8 +921,11 @@ export default function FlashcardsPage() {
                           </svg>
                         </button>
                         <button
-                          onClick={() => handleDeleteFlashcard(card.id)}
-                          className="flex-shrink-0 text-red-400 hover:text-red-300 p-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteFlashcard(card.id);
+                          }}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-red-400 hover:text-red-300 p-1 z-10"
                           title="Delete flashcard"
                         >
                           <svg
@@ -1088,8 +1094,11 @@ export default function FlashcardsPage() {
                       </div>
                       <div className="flex items-center gap-1">
                         <button
-                          onClick={() => handleEditFlashcard(card)}
-                          className="flex-shrink-0 text-blue-400 hover:text-blue-300 p-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditFlashcard(card);
+                          }}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-blue-400 hover:text-blue-300 p-1 z-10"
                           title="Edit flashcard"
                         >
                           <svg
@@ -1107,8 +1116,11 @@ export default function FlashcardsPage() {
                           </svg>
                         </button>
                         <button
-                          onClick={() => handleDeleteFlashcard(card.id)}
-                          className="flex-shrink-0 text-red-400 hover:text-red-300 p-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteFlashcard(card.id);
+                          }}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-red-400 hover:text-red-300 p-1 z-10"
                           title="Delete flashcard"
                         >
                           <svg
