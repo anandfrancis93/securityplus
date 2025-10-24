@@ -182,6 +182,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
       return;
     }
 
+    // Only save quiz if at least one question was answered
+    if (currentQuiz.questions.length === 0) {
+      console.log('Quiz ended without answering any questions - not saving');
+      setCurrentQuiz(null);
+      return;
+    }
+
     console.log('Ending quiz with data:', {
       userId,
       quizId: currentQuiz.id,
