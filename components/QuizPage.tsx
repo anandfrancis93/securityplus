@@ -339,9 +339,11 @@ export default function QuizPage() {
           <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 max-w-lg w-full border-2 border-blue-500/30 shadow-2xl animate-spring-in">
             <div className="text-center">
               {/* Confetti effect */}
-              <div className="text-7xl mb-4 animate-bounce">
-                {isPassing ? '🎉' : '🎯'}
-              </div>
+              {isPassing && (
+                <div className="text-7xl mb-4 animate-bounce">
+                  🎉
+                </div>
+              )}
 
               <h2 className="text-3xl font-bold mb-4 text-white">
                 Quiz Complete!
@@ -363,7 +365,7 @@ export default function QuizPage() {
                 </div>
               ) : (
                 <div className="bg-yellow-900/30 border border-yellow-500/50 rounded-lg p-4 mb-6">
-                  <p className="text-yellow-400 font-bold text-lg mb-2">💪 Keep Practicing!</p>
+                  <p className="text-yellow-400 font-bold text-lg mb-2">Keep Practicing!</p>
                   <p className="text-gray-300 text-sm">
                     Review the explanations and try again. Each quiz helps you improve!
                   </p>
@@ -380,7 +382,7 @@ export default function QuizPage() {
                 onClick={handleCelebrationClose}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg text-lg transition-spring hover-lift shadow-lg active:scale-95"
               >
-                View Results
+                Done
               </button>
             </div>
           </div>
