@@ -677,6 +677,16 @@ export default function FlashcardsPage() {
     return (
       <>
         <DebugOverlay />
+        {/* Global tooltip animation */}
+        <style jsx global>{`
+          @keyframes tooltipFade {
+            0% { opacity: 0; }
+            26.3% { opacity: 0; }
+            30.3% { opacity: 1; }
+            96.1% { opacity: 1; }
+            100% { opacity: 0; }
+          }
+        `}</style>
         <div className="min-h-screen bg-gray-900 text-white">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           {/* Header */}
@@ -743,7 +753,7 @@ export default function FlashcardsPage() {
                 </div>
                 <div className="text-2xl font-bold text-blue-400">{stats.total}</div>
                 {/* Hover tooltip */}
-                <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none" style={{ transition: 'opacity 0.3s ease-in-out 2s' }}>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
                   <p className="text-sm text-gray-300">The total number of flashcards in your deck.</p>
                 </div>
               </div>
@@ -757,7 +767,7 @@ export default function FlashcardsPage() {
                   <div className="text-xs text-gray-500 mt-1">New cards</div>
                 )}
                 {/* Hover tooltip */}
-                <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none" style={{ transition: 'opacity 0.3s ease-in-out 2s' }}>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
                   <p className="text-sm text-gray-300">Cards you&apos;ve attempted but got wrong or rated as &quot;Again&quot;. These cards have 0 successful repetitions and need daily practice.</p>
                 </div>
               </div>
@@ -771,7 +781,7 @@ export default function FlashcardsPage() {
                   <div className="text-xs text-gray-500 mt-1">In progress</div>
                 )}
                 {/* Hover tooltip */}
-                <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none" style={{ transition: 'opacity 0.3s ease-in-out 2s' }}>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
                   <p className="text-sm text-gray-300">Cards you&apos;re actively learning and have reviewed correctly 1-2 times. These cards are in progress but not yet mastered.</p>
                 </div>
               </div>
@@ -787,7 +797,7 @@ export default function FlashcardsPage() {
                   </div>
                 )}
                 {/* Hover tooltip */}
-                <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none" style={{ transition: 'opacity 0.3s ease-in-out 2s' }}>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
                   <p className="text-sm text-gray-300">Cards you&apos;ve successfully reviewed 3 or more times. These cards are well-learned and appear less frequently to maintain long-term retention.</p>
                 </div>
               </div>
