@@ -172,58 +172,57 @@ export default function StudyPage() {
           {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-4">
-            <div>
-              <h1 className="text-2xl font-bold">Study Session</h1>
-              <p className="text-gray-400 text-sm">
-                Card {currentCardIndex + 1} of {dueCardIds.length}
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
+            <button
+              onClick={() => router.push('/cybersecurity/flashcards')}
+              className="text-gray-400 hover:text-white transition-colors p-2"
+              title="Back to Flashcards"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            <p className="text-gray-400 text-sm">
+              Card {currentCardIndex + 1} of {dueCardIds.length}
+            </p>
+
+            <div className="relative" ref={menuRef}>
               <button
-                onClick={() => router.push('/cybersecurity/flashcards')}
-                className="bg-gray-800 hover:bg-gray-700 text-gray-300 px-4 py-2 rounded-lg transition-all text-sm"
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="text-gray-400 hover:text-white transition-colors p-2"
+                title="Menu"
               >
-                Exit
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
               </button>
 
-              <div className="relative" ref={menuRef}>
-                <button
-                  onClick={() => setMenuOpen(!menuOpen)}
-                  className="text-gray-400 hover:text-white transition-colors p-2"
-                  title="Menu"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                </button>
-
-                {menuOpen && user && !user?.isAnonymous && (
-                  <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
-                    <div className="px-4 py-2 text-sm text-white border-b border-gray-700">
-                      <div className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        <span>{user?.displayName || 'User'}</span>
-                      </div>
-                    </div>
-                    <button
-                      onClick={async () => {
-                        if (confirm('Are you sure you want to sign out?')) {
-                          await handleSignOut();
-                          setMenuOpen(false);
-                        }
-                      }}
-                      className="w-full px-4 py-2 text-sm text-left text-white hover:bg-gray-700 transition-colors flex items-center gap-2"
-                    >
-                      <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              {menuOpen && user && !user?.isAnonymous && (
+                <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
+                  <div className="px-4 py-2 text-sm text-white border-b border-gray-700">
+                    <div className="flex items-center gap-2">
+                      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
-                      Sign Out
-                    </button>
+                      <span>{user?.displayName || 'User'}</span>
+                    </div>
                   </div>
-                )}
-              </div>
+                  <button
+                    onClick={async () => {
+                      if (confirm('Are you sure you want to sign out?')) {
+                        await handleSignOut();
+                        setMenuOpen(false);
+                      }
+                    }}
+                    className="w-full px-4 py-2 text-sm text-left text-white hover:bg-gray-700 transition-colors flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Sign Out
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
