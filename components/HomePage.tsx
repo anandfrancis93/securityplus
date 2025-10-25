@@ -300,16 +300,16 @@ export default function HomePage() {
 
           {/* IRT Score Analysis - Collapsible (Cognitive Load) */}
           {totalAnswered > 0 && (
-            <div className="bg-gradient-to-br from-blue-900/30 to-blue-800/30 border border-blue-500/30 rounded-lg p-6 mb-8">
+            <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 mb-8">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-blue-300">IRT Performance Analysis</h3>
+                <h3 className="text-lg font-bold text-white">IRT Performance Analysis</h3>
                 <button
                   onClick={() => setIrtExpanded(!irtExpanded)}
                   className="p-2 hover:opacity-80 transition-opacity"
                   aria-label="Toggle IRT Performance Analysis"
                 >
                   <svg
-                    className={`w-5 h-5 text-blue-300 transition-transform duration-200 ${irtExpanded ? 'rotate-180' : ''}`}
+                    className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${irtExpanded ? 'rotate-180' : ''}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -335,7 +335,7 @@ export default function HomePage() {
                   <div className="bg-gray-800/50 rounded-lg p-4 mb-4 mt-4">
                     <div className="flex items-center justify-between mb-2">
                       <div className="relative group cursor-help">
-                        <h4 className="text-sm font-medium text-blue-200">Ability Level (θ theta)</h4>
+                        <h4 className="text-sm font-medium text-gray-300">Ability Level (θ theta)</h4>
                         {/* Hover tooltip */}
                         <div className="absolute bottom-full left-0 mb-2 w-64 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
                           <p className="text-sm text-gray-300">Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
