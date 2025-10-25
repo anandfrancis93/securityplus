@@ -362,6 +362,12 @@ export default function QuizPage() {
       selectedAnswers.every(ans => (currentQuestion.correctAnswer as number[]).includes(ans))
     : selectedAnswer === currentQuestion.correctAnswer;
 
+  // Check if answer is partially correct (for multiple-response questions)
+  const isPartiallyCorrect = currentQuestion.questionType === 'multiple' &&
+    !isCorrect &&
+    Array.isArray(currentQuestion.correctAnswer) &&
+    selectedAnswers.some(ans => (currentQuestion.correctAnswer as number[]).includes(ans));
+
   // Calculate quiz stats for celebration - use captured stats if available, otherwise try currentQuiz
   const totalAnswered = quizStats?.total ?? currentQuiz?.questions.length ?? 0;
   const correctAnswers = quizStats?.correct ?? currentQuiz?.questions.filter(q => q.isCorrect).length ?? 0;
@@ -595,12 +601,20 @@ export default function QuizPage() {
               className={`rounded-lg p-6 border-2 ${
                 isCorrect
                   ? 'border-green-500 bg-green-900/20'
+                  : isPartiallyCorrect
+                  ? 'border-yellow-500 bg-yellow-900/20'
                   : 'border-red-500 bg-red-900/20'
               }`}
             >
               <div className="flex items-center justify-between mb-3">
-                <h3 className={`text-xl font-bold ${isCorrect ? 'text-green-400' : 'text-red-400'}`}>
-                  {isCorrect ? '✓ Correct!' : '✗ Incorrect'}
+                <h3 className={`text-xl font-bold ${
+                  isCorrect
+                    ? 'text-green-400'
+                    : isPartiallyCorrect
+                    ? 'text-yellow-400'
+                    : 'text-red-400'
+                }`}>
+                  {isCorrect ? '✓ Correct!' : isPartiallyCorrect ? '◐ Partially Correct' : '✗ Incorrect'}
                 </h3>
                 <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                   currentQuestion.difficulty === 'easy'
