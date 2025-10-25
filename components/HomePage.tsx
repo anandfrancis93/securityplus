@@ -561,9 +561,8 @@ export default function HomePage() {
                         </>
                       )}
                       {isGoodPerformance && (
-                        <p className="text-xs text-gray-400 mt-3 pt-3 border-t border-gray-700 flex items-start gap-2">
-                          <span className="text-green-400">✓</span>
-                          <span>This level suggests likely exam success</span>
+                        <p className="text-xs text-gray-400 mt-3 pt-3 border-t border-gray-700">
+                          This level suggests likely exam success
                         </p>
                       )}
                     </div>
