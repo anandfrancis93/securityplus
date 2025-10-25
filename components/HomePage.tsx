@@ -254,6 +254,17 @@ export default function HomePage() {
 
           {/* Predicted Score Card */}
           <div className="bg-gray-800 rounded-lg p-8 mb-8 border border-gray-700 shadow-xl">
+            {/* Tooltip animation for Predicted Score */}
+            <style jsx global>{`
+              @keyframes tooltipFade {
+                0% { opacity: 0; }
+                26.3% { opacity: 0; }
+                30.3% { opacity: 1; }
+                96.1% { opacity: 1; }
+                100% { opacity: 0; }
+              }
+            `}</style>
+
             <div className="text-center mb-6">
               <h2 className="text-xl text-gray-400 mb-2">Predicted Score</h2>
               <div className="relative group cursor-help inline-block">
