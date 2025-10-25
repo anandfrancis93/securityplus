@@ -305,11 +305,19 @@ export default function HomePage() {
             </div>
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
               <div className="text-gray-400 text-sm mb-1">Correct Answers</div>
-              <div className={`text-3xl font-bold ${isPassing ? 'text-green-400' : 'text-yellow-400'}`}>{correctAnswers}</div>
+              <div className={`text-3xl font-bold ${
+                isPassing ? 'text-green-400' :
+                isNeedsWork ? 'text-red-400' :
+                'text-yellow-400'
+              }`}>{correctAnswers}</div>
             </div>
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
               <div className="text-gray-400 text-sm mb-1">Accuracy</div>
-              <div className={`text-3xl font-bold ${isPassing ? 'text-green-400' : 'text-yellow-400'}`}>{accuracy}%</div>
+              <div className={`text-3xl font-bold ${
+                isPassing ? 'text-green-400' :
+                isNeedsWork ? 'text-red-400' :
+                'text-yellow-400'
+              }`}>{accuracy}%</div>
             </div>
           </div>
 
