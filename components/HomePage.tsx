@@ -349,19 +349,26 @@ export default function HomePage() {
                         {estimatedAbility.toFixed(2)}
                       </div>
                     </div>
-                    <div className="flex items-center mt-3">
-                      <div className="flex-1 bg-gray-700 rounded-full h-2">
-                        <div
-                          className={`h-2 rounded-full transition-all duration-500 ${
-                            estimatedAbility >= 1.0 ? 'bg-gradient-to-r from-green-500 to-green-600' :
-                            estimatedAbility >= -1.0 ? 'bg-gradient-to-r from-yellow-500 to-yellow-600' :
-                            'bg-gradient-to-r from-red-500 to-red-600'
-                          }`}
-                          style={{ width: `${((estimatedAbility + 3) / 6) * 100}%` }}
-                        ></div>
+                    <div className="mt-3">
+                      <div className="flex items-center">
+                        <div className="flex-1 bg-gray-700 rounded-full h-2">
+                          <div
+                            className={`h-2 rounded-full transition-all duration-500 ${
+                              estimatedAbility >= 1.0 ? 'bg-gradient-to-r from-green-500 to-green-600' :
+                              estimatedAbility >= -1.0 ? 'bg-gradient-to-r from-yellow-500 to-yellow-600' :
+                              'bg-gradient-to-r from-red-500 to-red-600'
+                            }`}
+                            style={{ width: `${((estimatedAbility + 3) / 6) * 100}%` }}
+                          ></div>
+                        </div>
+                        <div className="ml-3 text-xs text-gray-400 whitespace-nowrap">
+                          -3 to +3
+                        </div>
                       </div>
-                      <div className="ml-3 text-xs text-gray-400 whitespace-nowrap">
-                        -3 to +3
+                      <div className="flex justify-between text-xs text-gray-500 mt-1">
+                        <span>Beginner</span>
+                        <span>Average</span>
+                        <span>Expert</span>
                       </div>
                     </div>
                   </div>
