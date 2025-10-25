@@ -218,8 +218,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       'Ransomware', 'Trojan', 'Worm', 'Spyware', 'Bloatware', 'Virus', 'Keylogger', 'Logic bomb', 'Rootkit',
       'Brute force', 'Radio frequency identification (RFID) cloning', 'Environmental',
       'Distributed denial-of-service (DDoS)', 'Amplified', 'Reflected', 'Domain Name System (DNS) attacks',
-      'On-path', 'Credential replay', 'Malicious code', 'Injection', 'Replay', 'Privilege escalation',
-      'Forgery', 'Directory traversal', 'Downgrade', 'Collision', 'Birthday',
+      'On-path', 'Credential replay', 'Malicious code', 'Application attacks', 'Injection', 'Replay', 'Privilege escalation',
+      'Forgery', 'Directory traversal', 'Cryptographic attacks', 'Downgrade', 'Collision', 'Birthday', 'Password attacks',
       'Spraying', 'Account lockout', 'Concurrent session usage', 'Blocked content', 'Impossible travel',
       'Resource consumption', 'Resource inaccessibility', 'Out-of-cycle logging', 'Published/documented', 'Missing logs',
       // 2.5 Explain the purpose of mitigation techniques
