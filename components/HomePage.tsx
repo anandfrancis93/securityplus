@@ -99,15 +99,57 @@ export default function HomePage() {
           <div className="container mx-auto px-4 py-8 max-w-4xl">
             {/* Header */}
             <div className="mb-8">
-              <button
-                onClick={() => setSelectedCard(null)}
-                className="text-gray-400 hover:text-white transition-colors p-2 mb-6"
-                title="Back to Cybersecurity"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
+              <div className="flex justify-between items-center mb-6">
+                <button
+                  onClick={() => setSelectedCard(null)}
+                  className="text-gray-400 hover:text-white transition-colors p-2"
+                  title="Back to Cybersecurity"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+
+                <div className="relative" ref={menuRef}>
+                  <button
+                    onClick={() => setMenuOpen(!menuOpen)}
+                    className="text-gray-400 hover:text-white transition-colors p-2"
+                    title="Menu"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                  </button>
+
+                  {menuOpen && user && !user?.isAnonymous && (
+                    <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
+                      <div className="px-4 py-2 text-sm text-white border-b border-gray-700">
+                        <div className="flex items-center gap-2">
+                          <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                          <span>{user?.displayName || 'User'}</span>
+                        </div>
+                      </div>
+                      <button
+                        onClick={async () => {
+                          if (confirm('Are you sure you want to sign out?')) {
+                            await handleSignOut();
+                            setMenuOpen(false);
+                          }
+                        }}
+                        className="w-full px-4 py-2 text-sm text-left text-white hover:bg-gray-700 transition-colors flex items-center gap-2"
+                      >
+                        <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        Sign Out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <h1 className="text-3xl font-bold mb-2 text-white">Quiz</h1>
               <p className="text-gray-400">Choose an option</p>
             </div>
@@ -152,15 +194,57 @@ export default function HomePage() {
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           {/* Header */}
           <div className="mb-8">
-            <button
-              onClick={() => setQuizOption(null)}
-              className="text-gray-400 hover:text-white transition-colors p-2 mb-6"
-              title="Back to Quiz"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
+            <div className="flex justify-between items-center mb-6">
+              <button
+                onClick={() => setQuizOption(null)}
+                className="text-gray-400 hover:text-white transition-colors p-2"
+                title="Back to Quiz"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+
+              <div className="relative" ref={menuRef}>
+                <button
+                  onClick={() => setMenuOpen(!menuOpen)}
+                  className="text-gray-400 hover:text-white transition-colors p-2"
+                  title="Menu"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
+
+                {menuOpen && user && !user?.isAnonymous && (
+                  <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
+                    <div className="px-4 py-2 text-sm text-white border-b border-gray-700">
+                      <div className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <span>{user?.displayName || 'User'}</span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={async () => {
+                        if (confirm('Are you sure you want to sign out?')) {
+                          await handleSignOut();
+                          setMenuOpen(false);
+                        }
+                      }}
+                      className="w-full px-4 py-2 text-sm text-left text-white hover:bg-gray-700 transition-colors flex items-center gap-2"
+                    >
+                      <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
             <h1 className="text-3xl font-bold mb-2 text-white">Performance</h1>
             <p className="text-gray-400">Track your progress and improvement</p>
           </div>
