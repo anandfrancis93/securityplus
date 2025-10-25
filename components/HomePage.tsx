@@ -642,6 +642,17 @@ export default function HomePage() {
                       hour12: true
                     });
 
+                    // Calculate time taken
+                    const timeTakenMs = (quiz.endedAt || quiz.startedAt) - quiz.startedAt;
+                    const timeTakenMinutes = Math.floor(timeTakenMs / 60000);
+                    const timeTakenSeconds = Math.floor((timeTakenMs % 60000) / 1000);
+                    const timeDisplay = timeTakenMinutes > 0
+                      ? `${timeTakenMinutes}m ${timeTakenSeconds}s`
+                      : `${timeTakenSeconds}s`;
+
+                    // Check if quiz is incomplete
+                    const isIncomplete = quiz.questions.length < 10;
+
                     return (
                       <div key={quiz.id} className="bg-gray-700/50 rounded-lg p-4 border border-gray-600">
                         <div className="flex justify-between items-center">
@@ -649,8 +660,18 @@ export default function HomePage() {
                             <div className="text-sm text-gray-400">
                               {formattedDate} • {formattedTime}
                             </div>
-                            <div className="text-sm mt-1">
-                              <span className="text-gray-300">{quiz.questions.length} questions</span>
+                            <div className="text-sm mt-1 space-y-1">
+                              <div>
+                                <span className="text-gray-300">{quiz.questions.length} questions</span>
+                                {isIncomplete && (
+                                  <span className="ml-2 text-xs px-2 py-0.5 rounded bg-yellow-700/30 text-yellow-400">
+                                    Incomplete
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-gray-400">
+                                Time: {timeDisplay}
+                              </div>
                             </div>
                           </div>
                           <div className="text-right">
