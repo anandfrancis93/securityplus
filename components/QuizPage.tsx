@@ -417,13 +417,6 @@ export default function QuizPage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <button
-              onClick={handleEndQuiz}
-              className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm"
-            >
-              End Quiz
-            </button>
-
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
@@ -672,6 +665,16 @@ export default function QuizPage() {
             </button>
           </div>
         )}
+
+        {/* End Quiz Button */}
+        <div className="mt-8 text-center">
+          <button
+            onClick={handleEndQuiz}
+            className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium"
+          >
+            End Quiz
+          </button>
+        </div>
       </div>
     </div>
   );
