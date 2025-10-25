@@ -17,6 +17,15 @@ export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // Debug state changes
+  useEffect(() => {
+    console.log('irtExpanded state changed:', irtExpanded);
+  }, [irtExpanded]);
+
+  useEffect(() => {
+    console.log('recentQuizzesExpanded state changed:', recentQuizzesExpanded);
+  }, [recentQuizzesExpanded]);
+
   // Close menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -165,6 +174,13 @@ export default function HomePage() {
             <p className="text-gray-400">Track your progress and improvement</p>
           </div>
 
+          {/* Debug Info */}
+          <div className="bg-red-900 border border-red-500 rounded-lg p-4 mb-4">
+            <h4 className="text-white font-bold mb-2">DEBUG INFO:</h4>
+            <p className="text-white text-sm">irtExpanded: {String(irtExpanded)}</p>
+            <p className="text-white text-sm">recentQuizzesExpanded: {String(recentQuizzesExpanded)}</p>
+          </div>
+
           {/* Predicted Score Card */}
           <div className="bg-gray-800 rounded-lg p-8 mb-8 border border-gray-700 shadow-xl">
             <div className="text-center mb-6">
@@ -218,7 +234,11 @@ export default function HomePage() {
           {totalAnswered > 0 && (
             <div className="bg-gradient-to-br from-blue-900/30 to-blue-800/30 border border-blue-500/30 rounded-lg p-6 mb-8">
               <button
-                onClick={() => setIrtExpanded(!irtExpanded)}
+                onClick={() => {
+                  console.log('IRT button clicked! Current state:', irtExpanded);
+                  setIrtExpanded(!irtExpanded);
+                  console.log('Setting irtExpanded to:', !irtExpanded);
+                }}
                 className="w-full flex items-center justify-between text-left hover:opacity-80 transition-opacity"
               >
                 <h3 className="text-lg font-bold text-blue-300 pointer-events-none">📊 IRT Performance Analysis</h3>
@@ -382,7 +402,11 @@ export default function HomePage() {
           {userProgress && userProgress.quizHistory.length > 0 && (
             <div className="mt-12 bg-gray-800 rounded-lg p-6 border border-gray-700">
               <button
-                onClick={() => setRecentQuizzesExpanded(!recentQuizzesExpanded)}
+                onClick={() => {
+                  console.log('Recent Quizzes button clicked! Current state:', recentQuizzesExpanded);
+                  setRecentQuizzesExpanded(!recentQuizzesExpanded);
+                  console.log('Setting recentQuizzesExpanded to:', !recentQuizzesExpanded);
+                }}
                 className="w-full flex items-center justify-between text-left hover:opacity-80 transition-opacity"
               >
                 <h3 className="text-xl font-bold pointer-events-none">Recent Quizzes ({userProgress.quizHistory.length})</h3>
