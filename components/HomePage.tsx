@@ -302,7 +302,7 @@ export default function HomePage() {
           {totalAnswered > 0 && (
             <div className="bg-gradient-to-br from-blue-900/30 to-blue-800/30 border border-blue-500/30 rounded-lg p-6 mb-8">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-blue-300">📊 IRT Performance Analysis</h3>
+                <h3 className="text-lg font-bold text-blue-300">IRT Performance Analysis</h3>
                 <button
                   onClick={() => setIrtExpanded(!irtExpanded)}
                   className="p-2 hover:opacity-80 transition-opacity"
