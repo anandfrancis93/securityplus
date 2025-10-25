@@ -167,11 +167,58 @@ export default function QuizPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-900">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-400">Generating first question...</p>
-          <p className="mt-2 text-gray-500 text-sm">This will take about 10 seconds</p>
+      <div className="min-h-screen bg-gray-900 text-white">
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
+          {/* Header with hamburger menu */}
+          <div className="flex justify-end items-center mb-8">
+            <div className="relative" ref={menuRef}>
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="text-gray-400 hover:text-white transition-colors p-2"
+                title="Menu"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+
+              {menuOpen && user && !user?.isAnonymous && (
+                <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
+                  <div className="px-4 py-2 text-sm text-white border-b border-gray-700">
+                    <div className="flex items-center gap-2">
+                      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      <span>{user?.displayName || 'User'}</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={async () => {
+                      if (confirm('Are you sure you want to sign out?')) {
+                        await handleSignOut();
+                        setMenuOpen(false);
+                      }
+                    }}
+                    className="w-full px-4 py-2 text-sm text-left text-white hover:bg-gray-700 transition-colors flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Loading spinner */}
+          <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto"></div>
+              <p className="mt-4 text-gray-400">Generating first question...</p>
+              <p className="mt-2 text-gray-500 text-sm">This will take about 10 seconds</p>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -179,15 +226,62 @@ export default function QuizPage() {
 
   if (questions.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-900">
-        <div className="text-center">
-          <p className="text-red-400">Failed to generate questions. Please try again.</p>
-          <button
-            onClick={() => router.push('/cybersecurity')}
-            className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
-          >
-            Back to Cybersecurity
-          </button>
+      <div className="min-h-screen bg-gray-900 text-white">
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
+          {/* Header with hamburger menu */}
+          <div className="flex justify-end items-center mb-8">
+            <div className="relative" ref={menuRef}>
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="text-gray-400 hover:text-white transition-colors p-2"
+                title="Menu"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+
+              {menuOpen && user && !user?.isAnonymous && (
+                <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
+                  <div className="px-4 py-2 text-sm text-white border-b border-gray-700">
+                    <div className="flex items-center gap-2">
+                      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      <span>{user?.displayName || 'User'}</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={async () => {
+                      if (confirm('Are you sure you want to sign out?')) {
+                        await handleSignOut();
+                        setMenuOpen(false);
+                      }
+                    }}
+                    className="w-full px-4 py-2 text-sm text-left text-white hover:bg-gray-700 transition-colors flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Error message */}
+          <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
+            <div className="text-center">
+              <p className="text-red-400">Failed to generate questions. Please try again.</p>
+              <button
+                onClick={() => router.push('/cybersecurity')}
+                className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
+              >
+                Back to Cybersecurity
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -215,6 +309,48 @@ export default function QuizPage() {
       {showCelebration && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 animate-fade-in">
           <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 max-w-lg w-full border-2 border-blue-500/30 shadow-2xl animate-spring-in">
+            {/* Header with hamburger menu */}
+            <div className="flex justify-end mb-4">
+              <div className="relative" ref={menuRef}>
+                <button
+                  onClick={() => setMenuOpen(!menuOpen)}
+                  className="text-gray-400 hover:text-white transition-colors p-2"
+                  title="Menu"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
+
+                {menuOpen && user && !user?.isAnonymous && (
+                  <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
+                    <div className="px-4 py-2 text-sm text-white border-b border-gray-700">
+                      <div className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <span>{user?.displayName || 'User'}</span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={async () => {
+                        if (confirm('Are you sure you want to sign out?')) {
+                          await handleSignOut();
+                          setMenuOpen(false);
+                        }
+                      }}
+                      className="w-full px-4 py-2 text-sm text-left text-white hover:bg-gray-700 transition-colors flex items-center gap-2"
+                    >
+                      <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
             <div className="text-center">
               {/* Confetti effect */}
               <div className="text-7xl mb-4 animate-bounce">
