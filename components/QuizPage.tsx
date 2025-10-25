@@ -152,13 +152,18 @@ export default function QuizPage() {
   const handleEndQuiz = async () => {
     try {
       console.log('Ending quiz...');
+      console.log('currentQuiz:', currentQuiz);
+      console.log('currentQuiz?.questions:', currentQuiz?.questions);
 
       // Capture quiz stats before endQuiz clears currentQuiz
       if (currentQuiz) {
         const totalAnswered = currentQuiz.questions.length;
         const correctAnswers = currentQuiz.questions.filter(q => q.isCorrect).length;
         const accuracy = totalAnswered > 0 ? Math.round((correctAnswers / totalAnswered) * 100) : 0;
+        console.log('Captured stats:', { totalAnswered, correctAnswers, accuracy });
         setQuizStats({ total: totalAnswered, correct: correctAnswers, accuracy });
+      } else {
+        console.error('currentQuiz is null or undefined!');
       }
 
       await endQuiz();
@@ -313,6 +318,18 @@ export default function QuizPage() {
   const correctAnswers = quizStats?.correct ?? currentQuiz?.questions.filter(q => q.isCorrect).length ?? 0;
   const accuracy = quizStats?.accuracy ?? (totalAnswered > 0 ? Math.round((correctAnswers / totalAnswered) * 100) : 0);
   const isPassing = accuracy >= 75;
+
+  // Debug logging for celebration modal
+  if (showCelebration) {
+    console.log('Celebration modal stats:', {
+      quizStats,
+      totalAnswered,
+      correctAnswers,
+      accuracy,
+      currentQuizExists: !!currentQuiz,
+      currentQuizQuestionsLength: currentQuiz?.questions.length
+    });
+  }
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
