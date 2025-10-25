@@ -680,7 +680,7 @@ export default function QuizPage() {
                 {/* Domain */}
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-400 font-semibold">Domain:</span>
-                  <span className="px-3 py-1 rounded-full text-sm bg-indigo-700/30 text-indigo-300 border border-indigo-600/50">
+                  <span className="px-3 py-1 rounded-full text-sm bg-gray-700 text-gray-300">
                     {getDomainFromTopics(currentQuestion.topics)}
                   </span>
                 </div>
