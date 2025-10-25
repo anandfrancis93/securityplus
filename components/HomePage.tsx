@@ -269,6 +269,7 @@ export default function HomePage() {
               <h2 className="text-xl text-gray-400 mb-2">Predicted Score</h2>
               <div className="relative group cursor-help inline-block">
                 <div className={`text-6xl font-bold mb-2 ${
+                  totalAnswered === 0 ? 'text-gray-400' :
                   isGoodPerformance ? 'text-green-400' :
                   isNeedsWork ? 'text-red-400' :
                   'text-yellow-400'
@@ -311,15 +312,17 @@ export default function HomePage() {
 
             <div className="mt-6">
               <div className="w-full bg-gray-700 rounded-full h-3 relative overflow-hidden">
-                {/* Progress bar fill */}
-                <div
-                  className={`h-3 rounded-full transition-all duration-500 ${
-                    isGoodPerformance ? 'bg-green-500' :
-                    isNeedsWork ? 'bg-red-500' :
-                    'bg-yellow-500'
-                  }`}
-                  style={{ width: `${Math.min(((predictedScore - 100) / 800) * 100, 100)}%` }}
-                ></div>
+                {/* Progress bar fill - only show if totalAnswered > 0 */}
+                {totalAnswered > 0 && (
+                  <div
+                    className={`h-3 rounded-full transition-all duration-500 ${
+                      isGoodPerformance ? 'bg-green-500' :
+                      isNeedsWork ? 'bg-red-500' :
+                      'bg-yellow-500'
+                    }`}
+                    style={{ width: `${Math.min(((predictedScore - 100) / 800) * 100, 100)}%` }}
+                  ></div>
+                )}
 
                 {/* Passing line marker at 750 */}
                 <div
@@ -340,8 +343,8 @@ export default function HomePage() {
                 <span>900</span>
               </div>
 
-              {/* Current score indicator */}
-              {predictedScore >= 100 && predictedScore <= 900 && (
+              {/* Current score indicator - only show if totalAnswered > 0 */}
+              {totalAnswered > 0 && predictedScore >= 100 && predictedScore <= 900 && (
                 <div
                   className="relative -mt-1"
                   style={{ paddingLeft: `${((predictedScore - 100) / 800) * 100}%` }}
