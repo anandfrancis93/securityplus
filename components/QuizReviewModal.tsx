@@ -9,19 +9,11 @@ interface QuizReviewModalProps {
 }
 
 export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps) {
-  console.log('=== QuizReviewModal COMPONENT CALLED ===');
-  console.log('quiz prop:', quiz);
-  console.log('quiz.questions:', quiz.questions);
-
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    console.log('=== Modal mounting ===');
     setMounted(true);
-    return () => {
-      console.log('=== Modal unmounting ===');
-      setMounted(false);
-    };
+    return () => setMounted(false);
   }, []);
 
   // Close modal on Escape key
@@ -41,12 +33,7 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
     };
   }, []);
 
-  if (!mounted) {
-    console.log('=== Modal not mounted yet, returning null ===');
-    return null;
-  }
-
-  console.log('=== Modal IS mounted, rendering content ===');
+  if (!mounted) return null;
 
   const date = new Date(quiz.startedAt);
   const formattedDate = date.toLocaleDateString('en-US', {
@@ -135,71 +122,8 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
     return '1.0 General Security Concepts';
   };
 
-  const renderAnswer = (attempt: QuestionAttempt) => {
-    const { question, userAnswer } = attempt;
-    const isMultiple = question.questionType === 'multiple';
-    const correctAnswers = Array.isArray(question.correctAnswer)
-      ? question.correctAnswer
-      : [question.correctAnswer];
-    const userAnswers = Array.isArray(userAnswer) ? userAnswer : (userAnswer !== null ? [userAnswer] : []);
-
-    return question.options.map((option, idx) => {
-      const isCorrect = correctAnswers.includes(idx);
-      const isUserAnswer = userAnswers.includes(idx);
-      const shouldHaveSelected = isCorrect;
-      const incorrectlySelected = isUserAnswer && !isCorrect;
-      const missedCorrect = !isUserAnswer && isCorrect;
-
-      let bgColor = 'bg-gray-700';
-      let borderColor = 'border-gray-600';
-      let textColor = 'text-gray-300';
-
-      if (incorrectlySelected) {
-        bgColor = 'bg-red-900/30';
-        borderColor = 'border-red-500';
-        textColor = 'text-red-300';
-      } else if (isUserAnswer && isCorrect) {
-        bgColor = 'bg-green-900/30';
-        borderColor = 'border-green-500';
-        textColor = 'text-green-300';
-      } else if (missedCorrect) {
-        bgColor = 'bg-yellow-900/20';
-        borderColor = 'border-yellow-500/50';
-        textColor = 'text-yellow-300';
-      }
-
-      return (
-        <div
-          key={idx}
-          className={`${bgColor} border-2 ${borderColor} rounded-lg p-3 ${textColor}`}
-        >
-          <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-semibold">
-              {String.fromCharCode(65 + idx)}
-            </div>
-            <div className="flex-1">
-              <p className="text-sm">{option}</p>
-              {incorrectlySelected && (
-                <p className="text-xs mt-1 text-red-400">Your incorrect answer</p>
-              )}
-              {isUserAnswer && isCorrect && (
-                <p className="text-xs mt-1 text-green-400">Your correct answer</p>
-              )}
-              {missedCorrect && (
-                <p className="text-xs mt-1 text-yellow-400">Correct answer (not selected)</p>
-              )}
-            </div>
-          </div>
-        </div>
-      );
-    });
-  };
-
-  console.log('=== Creating modal content ===');
-
   const modalContent = (
     <>
-      {console.log('=== RENDERING BACKDROP ===')}
       {/* Modal Backdrop */}
       <div
         onClick={onClose}
@@ -273,99 +197,188 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
         </div>
 
         {/* Questions List */}
-        <div className="p-6 space-y-8 max-h-[calc(100vh-16rem)] overflow-y-auto">
+        <div className="p-6 space-y-8">
           {quiz.questions.map((attempt, index) => {
             const { question } = attempt;
-            const domains = getDomainFromTopics(question.topics);
+            const correctAnswers = Array.isArray(question.correctAnswer)
+              ? question.correctAnswer
+              : [question.correctAnswer];
+            const userAnswers = Array.isArray(attempt.userAnswer)
+              ? attempt.userAnswer
+              : (attempt.userAnswer !== null ? [attempt.userAnswer] : []);
+
+            // Check if partially correct (for multiple-response questions)
+            const isPartiallyCorrect = question.questionType === 'multiple' &&
+              !attempt.isCorrect &&
+              userAnswers.some(ans => correctAnswers.includes(ans)) &&
+              userAnswers.length > 0;
 
             return (
-              <div key={attempt.questionId} className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-                {/* Question Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
-                      {index + 1}
+              <div key={attempt.questionId} className="space-y-4">
+                {/* Question Number Header */}
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
+                    {index + 1}
+                  </div>
+                  <h3 className="text-lg font-semibold text-white">Question {index + 1}</h3>
+                </div>
+
+                {/* Question Card - matches QuizPage */}
+                <div className="bg-gray-800 rounded-lg p-8 border border-gray-700 shadow-xl">
+                  <h2 className="text-xl font-medium mb-4 leading-relaxed">{question.question}</h2>
+
+                  {/* Multiple-response indicator */}
+                  {question.questionType === 'multiple' && (
+                    <div className="mb-4 text-sm text-blue-400 bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
+                      <strong>Select all that apply</strong> - This question has multiple correct answers
                     </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        {attempt.isCorrect ? (
-                          <span className="px-2 py-1 rounded text-xs font-semibold bg-green-700/30 text-green-400 border border-green-600/50">
-                            Correct
-                          </span>
-                        ) : (
-                          <span className="px-2 py-1 rounded text-xs font-semibold bg-red-700/30 text-red-400 border border-red-600/50">
-                            Incorrect
-                          </span>
-                        )}
-                        <span className="px-2 py-1 rounded text-xs bg-gray-700 text-gray-300">
-                          {question.difficulty}
-                        </span>
-                        {question.questionType === 'multiple' && (
-                          <span className="px-2 py-1 rounded text-xs bg-purple-700/30 text-purple-400 border border-purple-600/50">
-                            Multiple Response
-                          </span>
-                        )}
+                  )}
+
+                  {/* Answer Options - matches QuizPage */}
+                  <div className="space-y-3">
+                    {question.options.map((option, idx) => {
+                      const isSelected = userAnswers.includes(idx);
+                      const isCorrectAnswer = correctAnswers.includes(idx);
+                      const showCorrect = isCorrectAnswer;
+                      const showIncorrect = isSelected && !isCorrectAnswer;
+
+                      return (
+                        <div
+                          key={idx}
+                          className={`w-full text-left p-4 rounded-lg border-2 ${
+                            showCorrect
+                              ? 'border-green-500 bg-green-900/20'
+                              : showIncorrect
+                              ? 'border-red-500 bg-red-900/20'
+                              : isSelected
+                              ? 'border-blue-500 bg-blue-900/20'
+                              : 'border-gray-600 bg-gray-700/50'
+                          }`}
+                        >
+                          <div className="flex items-start">
+                            {/* Checkbox or Radio indicator */}
+                            <div className="flex items-center mr-3">
+                              {question.questionType === 'multiple' ? (
+                                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                                  isSelected ? 'bg-blue-500 border-blue-500' : 'border-gray-400'
+                                }`}>
+                                  {isSelected && <span className="text-white text-xs">✓</span>}
+                                </div>
+                              ) : (
+                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                                  isSelected ? 'border-blue-500' : 'border-gray-400'
+                                }`}>
+                                  {isSelected && <div className="w-3 h-3 rounded-full bg-blue-500"></div>}
+                                </div>
+                              )}
+                            </div>
+                            <span className="font-bold mr-3 text-gray-400">
+                              {String.fromCharCode(65 + idx)}.
+                            </span>
+                            <span className="flex-1">{option}</span>
+                            {showCorrect && <span className="ml-2 text-green-400">✓</span>}
+                            {showIncorrect && <span className="ml-2 text-red-400">✗</span>}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Explanation Section - matches QuizPage */}
+                <div className="space-y-4">
+                  <div
+                    className={`rounded-lg p-6 border-2 ${
+                      attempt.isCorrect
+                        ? 'border-green-500 bg-green-900/20'
+                        : isPartiallyCorrect
+                        ? 'border-yellow-500 bg-yellow-900/20'
+                        : 'border-red-500 bg-red-900/20'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className={`text-xl font-bold ${
+                        attempt.isCorrect
+                          ? 'text-green-400'
+                          : isPartiallyCorrect
+                          ? 'text-yellow-400'
+                          : 'text-red-400'
+                      }`}>
+                        {attempt.isCorrect ? '✓ Correct!' : isPartiallyCorrect ? '◐ Partially Correct' : '✗ Incorrect'}
+                      </h3>
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        question.difficulty === 'easy'
+                          ? 'bg-green-700/30 text-green-300'
+                          : question.difficulty === 'medium'
+                          ? 'bg-yellow-700/30 text-yellow-300'
+                          : 'bg-red-700/30 text-red-300'
+                      }`}>
+                        {question.difficulty.charAt(0).toUpperCase() + question.difficulty.slice(1)}
+                      </span>
+                    </div>
+                    <div className="mb-4">
+                      <p className="font-medium text-gray-300 mb-2">
+                        {question.questionType === 'multiple' ? 'Correct Answers:' : 'Correct Answer:'}
+                      </p>
+                      {question.questionType === 'multiple' && Array.isArray(question.correctAnswer) ? (
+                        <div className="space-y-2">
+                          {question.correctAnswer.map((answerIndex) => (
+                            <p key={answerIndex} className="text-white">
+                              {String.fromCharCode(65 + answerIndex)}. {question.options[answerIndex]}
+                            </p>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-white">
+                          {String.fromCharCode(65 + (question.correctAnswer as number))}. {question.options[question.correctAnswer as number]}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-300 mb-2">Explanation:</p>
+                      <p className="text-gray-100 leading-relaxed">{question.explanation}</p>
+                    </div>
+                  </div>
+
+                  {/* Why Other Answers Are Wrong */}
+                  {question.incorrectExplanations && question.incorrectExplanations.length > 0 && (
+                    <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                      <h4 className="font-bold text-gray-300 mb-3">Why Other Answers Are Incorrect:</h4>
+                      <div className="space-y-3">
+                        {question.incorrectExplanations.map((explanation, idx) => {
+                          if (correctAnswers.includes(idx)) return null;
+
+                          return (
+                            <div key={idx} className="text-sm">
+                              <span className="font-bold text-gray-400">
+                                {String.fromCharCode(65 + idx)}.
+                              </span>
+                              <span className="text-gray-300 ml-2">{explanation}</span>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
-                  </div>
-                  <div className="text-right text-sm">
-                    <div className="text-gray-400">Points</div>
-                    <div className="font-semibold">
-                      <span className={attempt.isCorrect ? 'text-green-400' : 'text-red-400'}>
-                        {attempt.pointsEarned}
-                      </span>
-                      <span className="text-gray-500">/</span>
-                      <span className="text-gray-300">{attempt.maxPoints}</span>
-                    </div>
-                  </div>
-                </div>
+                  )}
 
-                {/* Question Text */}
-                <div className="mb-4">
-                  <p className="text-white font-medium text-lg leading-relaxed">{question.question}</p>
-                </div>
-
-                {/* Answer Options */}
-                <div className="space-y-2 mb-4">
-                  {renderAnswer(attempt)}
-                </div>
-
-                {/* Explanation */}
-                <div className="mt-4 p-4 bg-gray-900/50 rounded-lg border border-gray-600">
-                  <div className="flex items-start gap-2">
-                    <svg className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                    </svg>
-                    <div className="flex-1">
-                      <h4 className="text-sm font-semibold text-blue-400 mb-1">Explanation</h4>
-                      <p className="text-sm text-gray-300 leading-relaxed">{question.explanation}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Topics and Domains */}
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-500 font-semibold">Domain:</span>
-                    <span className="px-2 py-1 rounded text-xs bg-indigo-700/30 text-indigo-300 border border-indigo-600/50">
-                      {domains}
-                    </span>
-                  </div>
+                  {/* Topics Covered */}
                   {question.topics && question.topics.length > 0 && (
-                    <>
-                      <span className="text-gray-600">|</span>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs text-gray-500 font-semibold">Topics:</span>
+                    <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                      <h4 className="font-bold text-blue-300 mb-2">📚 Topics Covered in This Question:</h4>
+                      <div className="flex flex-wrap gap-2">
                         {question.topics.map((topic, idx) => (
                           <span
                             key={idx}
-                            className="px-2 py-1 rounded text-xs bg-gray-700 text-gray-300"
+                            className="bg-blue-700/30 text-blue-200 px-3 py-1 rounded-full text-sm"
                           >
                             {topic}
                           </span>
                         ))}
                       </div>
-                    </>
+                      <p className="text-xs text-blue-400 mt-2">
+                        This synthesis question combined {question.topics.length} security concept{question.topics.length > 1 ? 's' : ''} to test your understanding.
+                      </p>
+                    </div>
                   )}
                 </div>
               </div>
