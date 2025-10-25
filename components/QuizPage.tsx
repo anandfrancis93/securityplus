@@ -670,7 +670,7 @@ export default function QuizPage() {
         <div className="mt-8 text-center">
           <button
             onClick={handleEndQuiz}
-            className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium"
+            className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-medium"
           >
             End Quiz
           </button>
