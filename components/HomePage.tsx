@@ -727,6 +727,24 @@ export default function HomePage() {
             </div>
           )}
         </div>
+
+        {/* Quiz Review Modal - Inside Performance View */}
+        {(() => {
+          console.log('=== RENDER CHECK (Performance View) ===');
+          console.log('Checking if modal should render...');
+          console.log('selectedQuizForReview:', selectedQuizForReview);
+          console.log('Should render modal?', !!selectedQuizForReview);
+          return null;
+        })()}
+        {selectedQuizForReview && (
+          <>
+            {console.log('=== RENDERING MODAL (Performance View) ===')}
+            <QuizReviewModal
+              quiz={selectedQuizForReview}
+              onClose={() => setSelectedQuizForReview(null)}
+            />
+          </>
+        )}
       </div>
       );
     }
