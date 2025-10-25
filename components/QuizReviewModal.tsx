@@ -9,11 +9,19 @@ interface QuizReviewModalProps {
 }
 
 export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps) {
+  console.log('=== QuizReviewModal COMPONENT CALLED ===');
+  console.log('quiz prop:', quiz);
+  console.log('quiz.questions:', quiz.questions);
+
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    console.log('=== Modal mounting ===');
     setMounted(true);
-    return () => setMounted(false);
+    return () => {
+      console.log('=== Modal unmounting ===');
+      setMounted(false);
+    };
   }, []);
 
   // Close modal on Escape key
@@ -33,7 +41,12 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
     };
   }, []);
 
-  if (!mounted) return null;
+  if (!mounted) {
+    console.log('=== Modal not mounted yet, returning null ===');
+    return null;
+  }
+
+  console.log('=== Modal IS mounted, rendering content ===');
 
   const date = new Date(quiz.startedAt);
   const formattedDate = date.toLocaleDateString('en-US', {
@@ -182,8 +195,11 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
     });
   };
 
+  console.log('=== Creating modal content ===');
+
   const modalContent = (
     <>
+      {console.log('=== RENDERING BACKDROP ===')}
       {/* Modal Backdrop */}
       <div
         onClick={onClose}
