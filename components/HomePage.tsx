@@ -101,12 +101,12 @@ export default function HomePage() {
             <div className="mb-8">
               <button
                 onClick={() => setSelectedCard(null)}
-                className="bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-300 px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2 mb-6"
+                className="text-gray-400 hover:text-white transition-colors p-2 mb-6"
+                title="Back to Cybersecurity"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
-                Back
               </button>
               <h1 className="text-3xl font-bold mb-2 text-white">Quiz</h1>
               <p className="text-gray-400">Choose an option</p>
@@ -154,12 +154,12 @@ export default function HomePage() {
           <div className="mb-8">
             <button
               onClick={() => setQuizOption(null)}
-              className="bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-300 px-4 py-2 rounded-lg text-sm transition-all flex items-center gap-2 mb-6"
+              className="text-gray-400 hover:text-white transition-colors p-2 mb-6"
+              title="Back to Quiz"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              Back
             </button>
             <h1 className="text-3xl font-bold mb-2 text-white">Performance</h1>
             <p className="text-gray-400">Track your progress and improvement</p>
