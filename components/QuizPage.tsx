@@ -172,6 +172,8 @@ export default function QuizPage() {
       setSelectedAnswer(null);
       setSelectedAnswers([]);
       setShowExplanation(false);
+      // Scroll to top of page
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       // The useEffect will automatically generate the question after next
     } else {
       // Next question is not ready yet, wait for it
