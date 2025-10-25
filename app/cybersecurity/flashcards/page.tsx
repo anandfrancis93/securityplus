@@ -919,7 +919,7 @@ export default function FlashcardsPage() {
                     if (manualTermError) setManualTermError('');
                   }}
                   placeholder="e.g., What is Zero Trust?"
-                  className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                  className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-white focus:outline-none"
                   disabled={generating}
                 />
                 {manualTermError && (
@@ -938,7 +938,7 @@ export default function FlashcardsPage() {
                     if (manualDefinitionError) setManualDefinitionError('');
                   }}
                   placeholder="Enter the definition or answer here..."
-                  className="w-full h-32 bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none resize-vertical"
+                  className="w-full h-32 bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-white focus:outline-none resize-vertical"
                   disabled={generating}
                 />
                 {manualDefinitionError && (
@@ -953,7 +953,7 @@ export default function FlashcardsPage() {
                 <select
                   value={manualDomain}
                   onChange={(e) => setManualDomain(e.target.value)}
-                  className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                  className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-white focus:outline-none"
                   disabled={generating}
                 >
                   <option value="General Security Concepts">General Security Concepts</option>
@@ -990,7 +990,7 @@ export default function FlashcardsPage() {
                     type="file"
                     accept="image/*"
                     onChange={handleManualImageChange}
-                    className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-blue-500 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:cursor-pointer"
+                    className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-white focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:cursor-pointer"
                     disabled={generating}
                   />
                 )}
@@ -1094,7 +1094,7 @@ export default function FlashcardsPage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search by term, definition, domain, or source..."
-                    className="w-full bg-gray-700 text-white rounded-lg pl-10 pr-10 py-3 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                    className="w-full bg-gray-700 text-white rounded-lg pl-10 pr-10 py-3 border border-gray-600 focus:border-white focus:outline-none"
                   />
                   <svg
                     className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
@@ -1297,7 +1297,7 @@ export default function FlashcardsPage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search by term, definition, domain, or source..."
-                    className="w-full bg-gray-700 text-white rounded-lg pl-10 pr-10 py-3 border border-gray-600 focus:border-blue-500 focus:outline-none"
+                    className="w-full bg-gray-700 text-white rounded-lg pl-10 pr-10 py-3 border border-gray-600 focus:border-white focus:outline-none"
                   />
                   <svg
                     className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
