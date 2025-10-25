@@ -17,6 +17,7 @@ export default function QuizPage() {
   const [generatingNext, setGeneratingNext] = useState(false);
   const [totalQuestions] = useState(10);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [quizStats, setQuizStats] = useState<{ total: number; correct: number; accuracy: number } | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -151,6 +152,15 @@ export default function QuizPage() {
   const handleEndQuiz = async () => {
     try {
       console.log('Ending quiz...');
+
+      // Capture quiz stats before endQuiz clears currentQuiz
+      if (currentQuiz) {
+        const totalAnswered = currentQuiz.questions.length;
+        const correctAnswers = currentQuiz.questions.filter(q => q.isCorrect).length;
+        const accuracy = totalAnswered > 0 ? Math.round((correctAnswers / totalAnswered) * 100) : 0;
+        setQuizStats({ total: totalAnswered, correct: correctAnswers, accuracy });
+      }
+
       await endQuiz();
       console.log('Quiz ended successfully, showing celebration...');
       setShowCelebration(true);
@@ -162,6 +172,7 @@ export default function QuizPage() {
 
   const handleCelebrationClose = () => {
     setShowCelebration(false);
+    setQuizStats(null);
     router.push('/cybersecurity');
   };
 
@@ -297,10 +308,10 @@ export default function QuizPage() {
       selectedAnswers.every(ans => (currentQuestion.correctAnswer as number[]).includes(ans))
     : selectedAnswer === currentQuestion.correctAnswer;
 
-  // Calculate quiz stats for celebration
-  const totalAnswered = currentQuiz?.questions.length || 0;
-  const correctAnswers = currentQuiz?.questions.filter(q => q.isCorrect).length || 0;
-  const accuracy = totalAnswered > 0 ? Math.round((correctAnswers / totalAnswered) * 100) : 0;
+  // Calculate quiz stats for celebration - use captured stats if available, otherwise try currentQuiz
+  const totalAnswered = quizStats?.total ?? currentQuiz?.questions.length ?? 0;
+  const correctAnswers = quizStats?.correct ?? currentQuiz?.questions.filter(q => q.isCorrect).length ?? 0;
+  const accuracy = quizStats?.accuracy ?? (totalAnswered > 0 ? Math.round((correctAnswers / totalAnswered) * 100) : 0);
   const isPassing = accuracy >= 75;
 
   return (
