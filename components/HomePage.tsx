@@ -233,24 +233,27 @@ export default function HomePage() {
           {/* IRT Score Analysis - Collapsible (Cognitive Load) */}
           {totalAnswered > 0 && (
             <div className="bg-gradient-to-br from-blue-900/30 to-blue-800/30 border border-blue-500/30 rounded-lg p-6 mb-8">
-              <button
-                onClick={() => {
-                  console.log('IRT button clicked! Current state:', irtExpanded);
-                  setIrtExpanded(!irtExpanded);
-                  console.log('Setting irtExpanded to:', !irtExpanded);
-                }}
-                className="w-full flex items-center justify-between text-left hover:opacity-80 transition-opacity"
-              >
-                <h3 className="text-lg font-bold text-blue-300 pointer-events-none">📊 IRT Performance Analysis</h3>
-                <svg
-                  className={`w-5 h-5 text-blue-300 transition-transform duration-200 pointer-events-none ${irtExpanded ? 'rotate-180' : ''}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-bold text-blue-300">📊 IRT Performance Analysis</h3>
+                <button
+                  onClick={() => {
+                    console.log('IRT button clicked! Current state:', irtExpanded);
+                    setIrtExpanded(!irtExpanded);
+                    console.log('Setting irtExpanded to:', !irtExpanded);
+                  }}
+                  className="p-2 hover:opacity-80 transition-opacity"
+                  aria-label="Toggle IRT Performance Analysis"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" pointerEvents="none" />
-                </svg>
-              </button>
+                  <svg
+                    className={`w-5 h-5 text-blue-300 transition-transform duration-200 ${irtExpanded ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </div>
 
               {irtExpanded ? (
                 <>
@@ -401,24 +404,27 @@ export default function HomePage() {
           {/* Recent Activity - Collapsible (Hick's Law) */}
           {userProgress && userProgress.quizHistory.length > 0 && (
             <div className="mt-12 bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <button
-                onClick={() => {
-                  console.log('Recent Quizzes button clicked! Current state:', recentQuizzesExpanded);
-                  setRecentQuizzesExpanded(!recentQuizzesExpanded);
-                  console.log('Setting recentQuizzesExpanded to:', !recentQuizzesExpanded);
-                }}
-                className="w-full flex items-center justify-between text-left hover:opacity-80 transition-opacity"
-              >
-                <h3 className="text-xl font-bold pointer-events-none">Recent Quizzes ({userProgress.quizHistory.length})</h3>
-                <svg
-                  className={`w-5 h-5 text-gray-400 transition-transform duration-200 pointer-events-none ${recentQuizzesExpanded ? 'rotate-180' : ''}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold">Recent Quizzes ({userProgress.quizHistory.length})</h3>
+                <button
+                  onClick={() => {
+                    console.log('Recent Quizzes button clicked! Current state:', recentQuizzesExpanded);
+                    setRecentQuizzesExpanded(!recentQuizzesExpanded);
+                    console.log('Setting recentQuizzesExpanded to:', !recentQuizzesExpanded);
+                  }}
+                  className="p-2 hover:opacity-80 transition-opacity"
+                  aria-label="Toggle Recent Quizzes"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" pointerEvents="none" />
-                </svg>
-              </button>
+                  <svg
+                    className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${recentQuizzesExpanded ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </div>
 
               {recentQuizzesExpanded ? (
                 <div className="space-y-3 mt-4">
