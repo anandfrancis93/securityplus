@@ -227,13 +227,6 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
                 <div className="bg-gray-800 rounded-lg p-8 border border-gray-700 shadow-xl">
                   <h2 className="text-xl font-medium mb-4 leading-relaxed">{question.question}</h2>
 
-                  {/* Multiple-response indicator */}
-                  {question.questionType === 'multiple' && (
-                    <div className="mb-4 text-sm text-blue-400 bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
-                      <strong>Select all that apply</strong> - This question has multiple correct answers
-                    </div>
-                  )}
-
                   {/* Answer Options - matches QuizPage */}
                   <div className="space-y-3">
                     {question.options.map((option, idx) => {
