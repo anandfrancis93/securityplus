@@ -168,6 +168,27 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
   const hasSufficientQuestions = hasSufficientData(userProgress.totalQuestions);
 
+  // Graph 6: Topic Coverage Frequency per Domain
+  // Group topics by domain and count how many times each topic was covered
+  const topicCoverageByDomain: { [domain: string]: { topicName: string; count: number; accuracy: number }[] } = {};
+
+  Object.values(userProgress.topicPerformance || {}).forEach(topicPerf => {
+    if (!topicCoverageByDomain[topicPerf.domain]) {
+      topicCoverageByDomain[topicPerf.domain] = [];
+    }
+    topicCoverageByDomain[topicPerf.domain].push({
+      topicName: topicPerf.topicName,
+      count: topicPerf.questionsAnswered,
+      accuracy: Math.round(topicPerf.accuracy),
+    });
+  });
+
+  // Sort topics within each domain by count (descending) and take top 10
+  Object.keys(topicCoverageByDomain).forEach(domain => {
+    topicCoverageByDomain[domain].sort((a, b) => b.count - a.count);
+    topicCoverageByDomain[domain] = topicCoverageByDomain[domain].slice(0, 10); // Top 10 topics per domain
+  });
+
   return (
     <div className="space-y-8">
       {/* Phase 1 Warning if insufficient data */}
@@ -289,6 +310,51 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         </ResponsiveContainer>
         <p className="text-gray-400 text-sm mt-2">Cumulative questions answered across all quiz sessions</p>
       </div>
+
+      {/* Graph 6: Topic Coverage Frequency per Domain */}
+      {Object.keys(topicCoverageByDomain).length > 0 && (
+        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+          <h3 className="text-xl font-bold text-white mb-4">Topic Coverage Frequency by Domain</h3>
+          <p className="text-gray-400 text-sm mb-6">Shows how many times each topic has been covered in quizzes (top 10 per domain)</p>
+
+          <div className="space-y-8">
+            {Object.entries(topicCoverageByDomain)
+              .sort(([domainA], [domainB]) => {
+                const numA = domainA.split(' ')[0];
+                const numB = domainB.split(' ')[0];
+                return numA.localeCompare(numB);
+              })
+              .map(([domain, topics]) => {
+                const domainName = domain.replace(/^\d+\.\d+\s+/, '');
+                const domainNum = domain.split(' ')[0];
+
+                return (
+                  <div key={domain} className="space-y-2">
+                    <h4 className="text-lg font-semibold text-blue-400">{domainNum} {domainName}</h4>
+                    <ResponsiveContainer width="100%" height={Math.max(200, topics.length * 30)}>
+                      <BarChart data={topics} layout="vertical">
+                        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                        <XAxis type="number" stroke="#9CA3AF" label={{ value: 'Times Covered', position: 'insideBottom', offset: -5, fill: '#9CA3AF' }} />
+                        <YAxis type="category" dataKey="topicName" stroke="#9CA3AF" width={150} />
+                        <Tooltip
+                          contentStyle={{ backgroundColor: '#1F2937', border: '1px solid #374151', borderRadius: '8px' }}
+                          labelStyle={{ color: '#F3F4F6' }}
+                          formatter={(value: any, name: string, props: any) => {
+                            if (name === 'count') {
+                              return [`${value} times (${props.payload.accuracy}% accuracy)`, 'Coverage'];
+                            }
+                            return [value, name];
+                          }}
+                        />
+                        <Bar dataKey="count" fill="#60A5FA" radius={[0, 8, 8, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
