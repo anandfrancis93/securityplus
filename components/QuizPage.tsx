@@ -19,6 +19,7 @@ export default function QuizPage() {
   const [showCelebration, setShowCelebration] = useState(false);
   const [quizStats, setQuizStats] = useState<{ total: number; correct: number; accuracy: number } | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Close menu when clicking outside
@@ -85,12 +86,34 @@ export default function QuizPage() {
 
       const data = await response.json();
 
+      // Check for API errors
+      if (!response.ok) {
+        if (response.status === 429) {
+          setErrorMessage('Too many requests. Please wait a moment and try again.');
+        } else if (response.status === 500) {
+          setErrorMessage('Server error generating questions. This may be due to API limits or a temporary issue. Please try again in a few minutes.');
+        } else if (response.status === 401 || response.status === 403) {
+          setErrorMessage('Authentication error. Please contact support.');
+        } else {
+          setErrorMessage(`Failed to generate question: ${data.error || 'Unknown error'}. Please try again.`);
+        }
+        console.error('API error:', data);
+        return;
+      }
+
       if (data.question) {
         setQuestions(prev => [...prev, data.question]);
         console.log(`Question ${questionNumber} loaded`);
+      } else {
+        setErrorMessage('No question was generated. Please try again.');
       }
     } catch (error) {
       console.error('Error generating question:', error);
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        setErrorMessage('Network error. Please check your internet connection and try again.');
+      } else {
+        setErrorMessage('An unexpected error occurred. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -288,14 +311,34 @@ export default function QuizPage() {
 
           {/* Error message */}
           <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
-            <div className="text-center">
-              <p className="text-red-400">Failed to generate questions. Please try again.</p>
-              <button
-                onClick={() => router.push('/cybersecurity')}
-                className="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
-              >
-                Back to Cybersecurity
-              </button>
+            <div className="text-center max-w-md">
+              <div className="bg-red-900/20 border border-red-500/50 rounded-lg p-6 mb-6">
+                <div className="text-red-400 text-5xl mb-4">⚠️</div>
+                <h3 className="text-xl font-bold text-red-400 mb-3">Question Generation Failed</h3>
+                <p className="text-gray-300 text-sm leading-relaxed">
+                  {errorMessage || 'Failed to generate questions. Please try again.'}
+                </p>
+              </div>
+              <div className="flex gap-3 justify-center">
+                <button
+                  onClick={() => {
+                    setErrorMessage('');
+                    router.push('/cybersecurity');
+                  }}
+                  className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-lg"
+                >
+                  Back to Cybersecurity
+                </button>
+                <button
+                  onClick={() => {
+                    setErrorMessage('');
+                    window.location.reload();
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
+                >
+                  Try Again
+                </button>
+              </div>
             </div>
           </div>
         </div>
