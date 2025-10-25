@@ -434,7 +434,7 @@ export default function HomePage() {
                       ) : estimatedAbility >= -1 ? (
                         <>
                           <p className="text-yellow-400 font-medium mb-3 flex items-center gap-2">
-                            <span className="text-2xl">⚠</span> Below Average
+                            Below Average
                           </p>
                           <ul className="space-y-2 text-xs">
                             <li className="flex items-start gap-2">
