@@ -354,25 +354,36 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
                     </div>
                   )}
 
-                  {/* Topics Covered */}
-                  {question.topics && question.topics.length > 0 && (
-                    <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
-                      <h4 className="font-bold text-blue-300 mb-2">📚 Topics Covered in This Question:</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {question.topics.map((topic, idx) => (
-                          <span
-                            key={idx}
-                            className="bg-blue-700/30 text-blue-200 px-3 py-1 rounded-full text-sm"
-                          >
-                            {topic}
-                          </span>
-                        ))}
+                  {/* Domain and Topics */}
+                  <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                    <div className="flex flex-wrap gap-4 items-start">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-400 font-semibold">Domain:</span>
+                        <span className="px-3 py-1 rounded-full text-sm bg-indigo-700/30 text-indigo-300 border border-indigo-600/50">
+                          {getDomainFromTopics(question.topics)}
+                        </span>
                       </div>
-                      <p className="text-xs text-blue-400 mt-2">
-                        This synthesis question combined {question.topics.length} security concept{question.topics.length > 1 ? 's' : ''} to test your understanding.
-                      </p>
+
+                      {question.topics && question.topics.length > 0 && (
+                        <>
+                          <span className="text-gray-600">|</span>
+                          <div className="flex items-start gap-2 flex-wrap flex-1">
+                            <span className="text-sm text-gray-400 font-semibold">Topics:</span>
+                            <div className="flex flex-wrap gap-2">
+                              {question.topics.map((topic, idx) => (
+                                <span
+                                  key={idx}
+                                  className="px-3 py-1 rounded-full text-sm bg-gray-700 text-gray-300"
+                                >
+                                  {topic}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
             );
