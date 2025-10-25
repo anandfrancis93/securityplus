@@ -19,13 +19,13 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 - **Intelligent Score Prediction**: IRT-based ability estimation predicts your exam score (100-900 scale)
 
 ### Performance Analytics & Progress Tracking
-- **6 Interactive Performance Graphs**:
+- **5 Interactive Performance Graphs**:
   1. **Ability Level Over Time**: Track your IRT ability (θ) progression from -3 (beginner) to +3 (expert)
   2. **Predicted Score Over Time**: Monitor your exam readiness with 750 passing threshold
   3. **Accuracy by Difficulty**: See performance breakdown across easy/medium/hard questions
   4. **Performance by Domain**: Track coverage and accuracy across all 5 SY0-701 domains (unique question counts)
   5. **Study Volume Over Time**: Cumulative question count showing study consistency
-  6. **Topic Coverage Frequency**: See how many times each topic has been covered, organized by domain (top 10 topics per domain)
+- **Topic Coverage Tables**: 5 scrollable tables (one per domain) showing ALL Security+ topics with coverage count and accuracy, including topics with 0 occurrences
 - **Cross-Session Topic Tracking**: Comprehensive tracking of performance across all SY0-701 topics and domains
 - **IRT Performance Analysis**: Detailed ability metrics with visual progress indicators
 - **Domain Coverage Monitoring**: Automatic categorization and tracking across 5 exam domains
@@ -231,7 +231,11 @@ Add these in your Vercel project settings:
 3. **Accuracy by Difficulty**: Bar chart showing percentage correct for easy/medium/hard questions
 4. **Domain Performance**: Horizontal bar chart showing accuracy across all 5 SY0-701 domains (counts unique questions, not topic occurrences)
 5. **Study Volume**: Cumulative line chart showing total questions answered over time
-6. **Topic Coverage Frequency**: Shows how many times each topic has been covered in quizzes, organized by domain with top 10 topics displayed per domain
+6. **Topic Coverage Tables**: 5 scrollable tables (one per domain) displaying all Security+ SY0-701 topics with:
+   - Topic name
+   - Times covered (including 0 occurrences)
+   - Accuracy percentage (color-coded: green ≥80%, yellow ≥60%, red <60%)
+   - Coverage summary per domain (e.g., "45 of 93 topics covered")
 7. **Cross-Session Topic Tracking**:
    - Tracks every topic across all quiz sessions
    - Automatically maps topics to correct SY0-701 domain using keyword matching

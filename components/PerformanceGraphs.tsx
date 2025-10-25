@@ -168,25 +168,184 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
   const hasSufficientQuestions = hasSufficientData(userProgress.totalQuestions);
 
-  // Graph 6: Topic Coverage Frequency per Domain
-  // Group topics by domain and count how many times each topic was covered
-  const topicCoverageByDomain: { [domain: string]: { topicName: string; count: number; accuracy: number }[] } = {};
+  // All Security+ SY0-701 Topics organized by domain
+  const allTopicsByDomain: { [domain: string]: string[] } = {
+    '1.0 General Security Concepts': [
+      'Security Controls', 'Technical Controls', 'Managerial Controls', 'Operational Controls', 'Physical Controls',
+      'Preventive Controls', 'Deterrent Controls', 'Detective Controls', 'Corrective Controls', 'Compensating Controls',
+      'CIA Triad', 'Confidentiality', 'Integrity', 'Availability', 'Non-repudiation',
+      'Authentication', 'Authorization', 'Accounting', 'AAA Framework',
+      'Zero Trust', 'Adaptive Identity', 'Threat Scope Reduction', 'Policy-driven Access Control',
+      'Control Plane', 'Data Plane', 'Policy Enforcement Point',
+      'Physical Security', 'Bollards', 'Access Control Vestibule', 'Fencing', 'Video Surveillance',
+      'Security Guard', 'Access Badge', 'Lighting', 'Sensors', 'Infrared', 'Pressure Sensor', 'Microwave', 'Ultrasonic',
+      'Honeypot', 'Honeynet', 'Honeyfile', 'Honeytoken', 'Deception Technology',
+      'Change Management', 'Approval Process', 'Impact Analysis', 'Backout Plan', 'Maintenance Window',
+      'Allow Lists', 'Deny Lists', 'Version Control',
+      'PKI', 'Public Key Infrastructure', 'Public Key', 'Private Key', 'Key Escrow',
+      'Encryption', 'Full-disk Encryption', 'File Encryption', 'Volume Encryption', 'Database Encryption',
+      'Asymmetric Encryption', 'Symmetric Encryption', 'Key Exchange',
+      'TPM', 'HSM', 'Key Management', 'Secure Enclave',
+      'Obfuscation', 'Steganography', 'Tokenization', 'Data Masking',
+      'Hashing', 'Salting', 'Digital Signatures', 'Key Stretching',
+      'Blockchain', 'Public Ledger',
+      'Certificates', 'Certificate Authority', 'CRL', 'OCSP', 'Self-signed Certificate', 'Root of Trust', 'CSR', 'Wildcard Certificate'
+    ],
+    '2.0 Threats, Vulnerabilities, and Mitigations': [
+      'Threat Actors', 'Nation-state', 'Unskilled Attacker', 'Hacktivist', 'Insider Threat', 'Organized Crime', 'Shadow IT',
+      'Threat Motivations', 'Data Exfiltration', 'Espionage', 'Service Disruption', 'Blackmail', 'Financial Gain',
+      'Attack Vectors', 'Email', 'SMS', 'Phishing', 'Vishing', 'Smishing',
+      'Social Engineering', 'Impersonation', 'Business Email Compromise', 'Pretexting', 'Watering Hole', 'Brand Impersonation', 'Typosquatting',
+      'Removable Device', 'Voice Call', 'Instant Messaging',
+      'Unsupported Systems', 'Default Credentials', 'Open Service Ports',
+      'Supply Chain', 'MSP', 'Vendors', 'Suppliers',
+      'Vulnerabilities', 'Buffer Overflow', 'Memory Injection', 'Race Conditions', 'TOC/TOU', 'Malicious Update',
+      'SQL Injection', 'SQLi', 'XSS', 'Cross-site Scripting',
+      'Firmware Vulnerabilities', 'End-of-life', 'Legacy Systems',
+      'VM Escape', 'Resource Reuse', 'Cloud-specific Vulnerabilities',
+      'Misconfiguration', 'Zero-day', 'Side Loading', 'Jailbreaking',
+      'Malware', 'Ransomware', 'Trojan', 'Worm', 'Spyware', 'Bloatware', 'Virus', 'Keylogger', 'Logic Bomb', 'Rootkit',
+      'Physical Attacks', 'Brute Force', 'RFID Cloning',
+      'Network Attacks', 'DDoS', 'DNS Attacks', 'Wireless Attacks', 'On-path Attack', 'Credential Replay',
+      'Application Attacks', 'Injection Attacks', 'Replay Attack', 'Privilege Escalation', 'Directory Traversal',
+      'Cryptographic Attacks', 'Downgrade Attack', 'Collision Attack', 'Birthday Attack',
+      'Password Attacks', 'Password Spraying', 'Brute Force Attack',
+      'Indicators of Compromise', 'Account Lockout', 'Concurrent Sessions', 'Impossible Travel', 'Resource Consumption',
+      'Mitigation Techniques', 'Segmentation', 'Access Control', 'ACL', 'Permissions',
+      'Application Allow List', 'Isolation', 'Patching', 'Monitoring', 'Least Privilege',
+      'Hardening', 'Endpoint Protection', 'Host-based Firewall', 'HIPS', 'Configuration Enforcement', 'Decommissioning'
+    ],
+    '3.0 Security Architecture': [
+      'Cloud Architecture', 'Responsibility Matrix', 'Hybrid Cloud', 'Third-party Vendors',
+      'IaC', 'Infrastructure as Code', 'Serverless', 'Microservices', 'Containerization', 'Virtualization',
+      'Network Infrastructure', 'Physical Isolation', 'Air-gapped', 'Logical Segmentation', 'SDN',
+      'On-premises', 'Centralized', 'Decentralized',
+      'IoT', 'ICS', 'SCADA', 'RTOS', 'Embedded Systems',
+      'High Availability', 'Resilience', 'Scalability', 'Risk Transference',
+      'Infrastructure Considerations', 'Device Placement', 'Security Zones', 'Attack Surface', 'Connectivity',
+      'Failure Modes', 'Fail-open', 'Fail-closed',
+      'Active vs Passive', 'Inline', 'Tap', 'Monitor',
+      'Network Appliances', 'Jump Server', 'Proxy Server', 'IPS', 'IDS', 'Load Balancer', 'Sensors',
+      'Port Security', '802.1X', 'EAP',
+      'Firewall', 'WAF', 'UTM', 'NGFW', 'Layer 4 Firewall', 'Layer 7 Firewall',
+      'VPN', 'Remote Access', 'Tunneling', 'TLS', 'IPSec', 'SD-WAN', 'SASE',
+      'Data Types', 'Regulated Data', 'Trade Secret', 'Intellectual Property', 'Financial Information',
+      'Data Classification', 'Sensitive', 'Confidential', 'Public', 'Restricted', 'Private', 'Critical',
+      'Data States', 'Data at Rest', 'Data in Transit', 'Data in Use',
+      'Data Sovereignty', 'Geolocation',
+      'Data Protection', 'Geographic Restrictions', 'Permission Restrictions',
+      'Resilience and Recovery', 'Load Balancing', 'Clustering',
+      'Site Considerations', 'Hot Site', 'Cold Site', 'Warm Site', 'Geographic Dispersion',
+      'Platform Diversity', 'Multi-cloud', 'Continuity of Operations',
+      'Capacity Planning', 'Backups', 'Onsite Backup', 'Offsite Backup', 'Snapshots', 'Replication', 'Journaling',
+      'Power', 'Generators', 'UPS'
+    ],
+    '4.0 Security Operations': [
+      'Secure Baselines', 'Hardening Targets', 'Mobile Devices', 'Workstations', 'Switches', 'Routers',
+      'Cloud Infrastructure', 'Servers', 'Wireless Devices',
+      'Mobile Solutions', 'MDM', 'BYOD', 'COPE', 'CYOD',
+      'Cellular', 'Wi-Fi', 'Bluetooth',
+      'WPA3', 'AAA', 'RADIUS', 'Cryptographic Protocols', 'Authentication Protocols',
+      'Application Security', 'Input Validation', 'Secure Cookies', 'Static Code Analysis', 'Code Signing', 'Sandboxing',
+      'Asset Management', 'Acquisition', 'Procurement', 'Assignment', 'Ownership Classification',
+      'Monitoring', 'Asset Tracking', 'Inventory', 'Enumeration',
+      'Disposal', 'Decommissioning', 'Sanitization', 'Destruction', 'Data Retention',
+      'Vulnerability Management', 'Vulnerability Scan', 'Dynamic Analysis', 'Package Monitoring',
+      'Threat Feed', 'OSINT', 'Information-sharing', 'Dark Web',
+      'Penetration Testing', 'Bug Bounty', 'Responsible Disclosure',
+      'CVSS', 'CVE', 'Vulnerability Classification', 'Risk Tolerance',
+      'Vulnerability Response', 'Compensating Controls', 'Exceptions', 'Exemptions', 'Validation of Remediation',
+      'Security Alerting', 'Log Aggregation', 'Alerting', 'Scanning', 'Reporting', 'Archiving',
+      'SCAP', 'Benchmarks', 'Agents', 'Agentless', 'SIEM', 'Antivirus', 'DLP', 'SNMP', 'NetFlow',
+      'Firewall Rules', 'Access Lists', 'Ports and Protocols', 'Screened Subnets',
+      'IDS/IPS Signatures', 'Web Filter', 'URL Scanning', 'Content Categorization', 'Block Rules', 'Reputation',
+      'Operating System Security', 'Group Policy', 'SELinux',
+      'Secure Protocols', 'Protocol Selection', 'Port Selection', 'Transport Method',
+      'DNS Filtering', 'Email Security', 'DMARC', 'DKIM', 'SPF', 'Gateway',
+      'File Integrity Monitoring', 'NAC', 'EDR', 'XDR', 'User Behavior Analytics',
+      'Identity and Access Management', 'Provisioning', 'De-provisioning', 'Permission Assignments',
+      'Identity Proofing', 'Federation', 'Single Sign-on', 'SSO', 'LDAP', 'OAuth', 'SAML',
+      'Interoperability', 'Attestation',
+      'Access Controls', 'Mandatory Access Control', 'Discretionary Access Control', 'Role-based Access Control',
+      'Rule-based Access Control', 'Attribute-based Access Control', 'Time-of-day Restrictions',
+      'Multifactor Authentication', 'MFA', 'Biometrics', 'Hard Token', 'Soft Token', 'Security Keys',
+      'Password Concepts', 'Password Length', 'Password Complexity', 'Password Reuse', 'Password Expiration',
+      'Password Managers', 'Passwordless',
+      'Privileged Access Management', 'Just-in-time Permissions', 'Password Vaulting', 'Ephemeral Credentials',
+      'Automation', 'Orchestration', 'User Provisioning', 'Resource Provisioning', 'Guard Rails', 'Security Groups',
+      'Ticket Creation', 'Escalation', 'Continuous Integration', 'APIs',
+      'Incident Response', 'Preparation', 'Detection', 'Analysis', 'Containment', 'Eradication', 'Recovery', 'Lessons Learned',
+      'Tabletop Exercise', 'Simulation', 'Root Cause Analysis', 'Threat Hunting',
+      'Digital Forensics', 'Legal Hold', 'Chain of Custody', 'Acquisition', 'Preservation', 'E-discovery',
+      'Log Data', 'Firewall Logs', 'Application Logs', 'Endpoint Logs', 'OS-specific Logs', 'IPS/IDS Logs', 'Network Logs', 'Metadata',
+      'Data Sources', 'Automated Reports', 'Dashboards', 'Packet Captures'
+    ],
+    '5.0 Security Program Management and Oversight': [
+      'Security Governance', 'Guidelines', 'Policies', 'AUP', 'Information Security Policies',
+      'Business Continuity', 'Disaster Recovery', 'Incident Response Policy', 'SDLC', 'Change Management Policy',
+      'Standards', 'Password Standards', 'Access Control Standards', 'Physical Security Standards', 'Encryption Standards',
+      'Procedures', 'Onboarding', 'Offboarding', 'Playbooks',
+      'Regulatory', 'Legal', 'Industry Standards', 'Local/Regional', 'National', 'Global',
+      'Governance Structures', 'Boards', 'Committees', 'Government Entities',
+      'Roles and Responsibilities', 'Owners', 'Controllers', 'Processors', 'Custodians', 'Stewards',
+      'Risk Management', 'Risk Identification', 'Risk Assessment', 'Risk Analysis',
+      'Qualitative Risk Analysis', 'Quantitative Risk Analysis', 'SLE', 'ALE', 'ARO', 'Exposure Factor',
+      'Risk Register', 'Key Risk Indicators', 'Risk Owners', 'Risk Threshold',
+      'Risk Tolerance', 'Risk Appetite', 'Risk Transfer', 'Risk Accept', 'Risk Avoid', 'Risk Mitigate',
+      'Business Impact Analysis', 'RTO', 'RPO', 'MTTR', 'MTBF',
+      'Third-party Risk', 'Vendor Assessment', 'Right-to-audit', 'Internal Audits', 'Independent Assessments',
+      'Supply Chain Analysis', 'Vendor Selection', 'Due Diligence', 'Conflict of Interest',
+      'Agreement Types', 'SLA', 'MOA', 'MOU', 'MSA', 'WO', 'SOW', 'NDA', 'BPA',
+      'Vendor Monitoring', 'Questionnaires', 'Rules of Engagement',
+      'Compliance', 'Compliance Reporting', 'Internal Compliance', 'External Compliance',
+      'Consequences of Non-compliance', 'Fines', 'Sanctions', 'Reputational Damage', 'Loss of License',
+      'Compliance Monitoring', 'Due Care', 'Due Diligence', 'Automation',
+      'Privacy', 'Data Subject', 'Controller vs Processor', 'Data Ownership', 'Data Inventory', 'Data Retention', 'Right to be Forgotten',
+      'Audits and Assessments', 'Internal Audits', 'Audit Committee', 'Self-assessments',
+      'External Audits', 'Regulatory Audits', 'Independent Third-party Audit',
+      'Penetration Testing Types', 'Physical Penetration Testing', 'Offensive', 'Defensive', 'Integrated',
+      'Known Environment', 'Partially Known Environment', 'Unknown Environment',
+      'Reconnaissance', 'Passive Reconnaissance', 'Active Reconnaissance',
+      'Security Awareness', 'Phishing Campaigns', 'Recognizing Phishing', 'Reporting Suspicious Messages',
+      'Anomalous Behavior', 'Risky Behavior', 'Unexpected Behavior', 'Unintentional Behavior',
+      'User Training', 'Policy Handbooks', 'Situational Awareness', 'Insider Threat Awareness',
+      'Password Management Training', 'Removable Media', 'Social Engineering Awareness', 'Operational Security',
+      'Hybrid Work', 'Remote Work'
+    ]
+  };
 
-  Object.values(userProgress.topicPerformance || {}).forEach(topicPerf => {
-    if (!topicCoverageByDomain[topicPerf.domain]) {
-      topicCoverageByDomain[topicPerf.domain] = [];
-    }
-    topicCoverageByDomain[topicPerf.domain].push({
-      topicName: topicPerf.topicName,
-      count: topicPerf.questionsAnswered,
-      accuracy: Math.round(topicPerf.accuracy),
-    });
+  // Build coverage data for all topics
+  const topicCoverageData: { [domain: string]: { topicName: string; count: number; accuracy: number }[] } = {};
+
+  // Initialize all domains with all topics set to 0
+  Object.entries(allTopicsByDomain).forEach(([domain, topics]) => {
+    topicCoverageData[domain] = topics.map(topicName => ({
+      topicName,
+      count: 0,
+      accuracy: 0
+    }));
   });
 
-  // Sort topics within each domain by count (descending) and take top 10
-  Object.keys(topicCoverageByDomain).forEach(domain => {
-    topicCoverageByDomain[domain].sort((a, b) => b.count - a.count);
-    topicCoverageByDomain[domain] = topicCoverageByDomain[domain].slice(0, 10); // Top 10 topics per domain
+  // Fill in actual coverage data from userProgress
+  Object.values(userProgress.topicPerformance || {}).forEach(topicPerf => {
+    const domain = topicPerf.domain;
+    if (topicCoverageData[domain]) {
+      const topicIndex = topicCoverageData[domain].findIndex(t => t.topicName === topicPerf.topicName);
+      if (topicIndex !== -1) {
+        topicCoverageData[domain][topicIndex] = {
+          topicName: topicPerf.topicName,
+          count: topicPerf.questionsAnswered,
+          accuracy: Math.round(topicPerf.accuracy)
+        };
+      } else {
+        // Topic exists in user data but not in our master list - add it
+        topicCoverageData[domain].push({
+          topicName: topicPerf.topicName,
+          count: topicPerf.questionsAnswered,
+          accuracy: Math.round(topicPerf.accuracy)
+        });
+      }
+    }
   });
 
   return (
@@ -311,50 +470,81 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         <p className="text-gray-400 text-sm mt-2">Cumulative questions answered across all quiz sessions</p>
       </div>
 
-      {/* Graph 6: Topic Coverage Frequency per Domain */}
-      {Object.keys(topicCoverageByDomain).length > 0 && (
-        <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
-          <h3 className="text-xl font-bold text-white mb-4">Topic Coverage Frequency by Domain</h3>
-          <p className="text-gray-400 text-sm mb-6">Shows how many times each topic has been covered in quizzes (top 10 per domain)</p>
+      {/* Topic Coverage Tables by Domain */}
+      <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+        <h3 className="text-xl font-bold text-white mb-4">Topic Coverage by Domain</h3>
+        <p className="text-gray-400 text-sm mb-6">All Security+ SY0-701 topics organized by domain, showing coverage frequency</p>
 
-          <div className="space-y-8">
-            {Object.entries(topicCoverageByDomain)
-              .sort(([domainA], [domainB]) => {
-                const numA = domainA.split(' ')[0];
-                const numB = domainB.split(' ')[0];
-                return numA.localeCompare(numB);
-              })
-              .map(([domain, topics]) => {
-                const domainName = domain.replace(/^\d+\.\d+\s+/, '');
-                const domainNum = domain.split(' ')[0];
+        <div className="space-y-6">
+          {Object.entries(topicCoverageData)
+            .sort(([domainA], [domainB]) => {
+              const numA = domainA.split(' ')[0];
+              const numB = domainB.split(' ')[0];
+              return numA.localeCompare(numB);
+            })
+            .map(([domain, topics]) => {
+              const domainName = domain.replace(/^\d+\.\d+\s+/, '');
+              const domainNum = domain.split(' ')[0];
+              const totalCovered = topics.filter(t => t.count > 0).length;
+              const totalTopics = topics.length;
 
-                return (
-                  <div key={domain} className="space-y-2">
-                    <h4 className="text-lg font-semibold text-blue-400">{domainNum} {domainName}</h4>
-                    <ResponsiveContainer width="100%" height={Math.max(200, topics.length * 30)}>
-                      <BarChart data={topics} layout="vertical">
-                        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                        <XAxis type="number" stroke="#9CA3AF" label={{ value: 'Times Covered', position: 'insideBottom', offset: -5, fill: '#9CA3AF' }} />
-                        <YAxis type="category" dataKey="topicName" stroke="#9CA3AF" width={150} />
-                        <Tooltip
-                          contentStyle={{ backgroundColor: '#1F2937', border: '1px solid #374151', borderRadius: '8px' }}
-                          labelStyle={{ color: '#F3F4F6' }}
-                          formatter={(value: any, name: string, props: any) => {
-                            if (name === 'count') {
-                              return [`${value} times (${props.payload.accuracy}% accuracy)`, 'Coverage'];
-                            }
-                            return [value, name];
-                          }}
-                        />
-                        <Bar dataKey="count" fill="#60A5FA" radius={[0, 8, 8, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
+              return (
+                <div key={domain} className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-lg font-semibold text-blue-400">
+                      {domainNum} {domainName}
+                    </h4>
+                    <span className="text-sm text-gray-400">
+                      {totalCovered} of {totalTopics} topics covered
+                    </span>
                   </div>
-                );
-              })}
-          </div>
+
+                  <div className="border border-gray-700 rounded-lg overflow-hidden">
+                    <div className="max-h-96 overflow-y-auto">
+                      <table className="w-full">
+                        <thead className="bg-gray-900 sticky top-0">
+                          <tr>
+                            <th className="text-left px-4 py-3 text-sm font-semibold text-gray-300 w-3/5">Topic</th>
+                            <th className="text-center px-4 py-3 text-sm font-semibold text-gray-300 w-1/5">Times Covered</th>
+                            <th className="text-center px-4 py-3 text-sm font-semibold text-gray-300 w-1/5">Accuracy</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-700">
+                          {topics.map((topic, index) => (
+                            <tr
+                              key={index}
+                              className={`${
+                                topic.count > 0 ? 'bg-gray-800' : 'bg-gray-850'
+                              } hover:bg-gray-750 transition-colors`}
+                            >
+                              <td className="px-4 py-2 text-sm text-gray-300">{topic.topicName}</td>
+                              <td className={`px-4 py-2 text-sm text-center font-medium ${
+                                topic.count === 0 ? 'text-gray-500' : 'text-blue-400'
+                              }`}>
+                                {topic.count}
+                              </td>
+                              <td className={`px-4 py-2 text-sm text-center font-medium ${
+                                topic.count === 0
+                                  ? 'text-gray-500'
+                                  : topic.accuracy >= 80
+                                  ? 'text-green-400'
+                                  : topic.accuracy >= 60
+                                  ? 'text-yellow-400'
+                                  : 'text-red-400'
+                              }`}>
+                                {topic.count > 0 ? `${topic.accuracy}%` : '-'}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
         </div>
-      )}
+      </div>
     </div>
   );
 }
