@@ -2,7 +2,6 @@
 
 import { QuizSession, QuestionAttempt } from '@/lib/types';
 import { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
 
 interface QuizReviewModalProps {
   quiz: QuizSession;
@@ -11,9 +10,6 @@ interface QuizReviewModalProps {
 
 export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps) {
   const [mounted, setMounted] = useState(false);
-
-  console.log('QuizReviewModal rendered with quiz:', quiz);
-  console.log('Quiz questions:', quiz.questions);
 
   useEffect(() => {
     setMounted(true);
@@ -187,17 +183,39 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
   };
 
   const modalContent = (
-    <div
-      className="fixed inset-0 z-[9999] overflow-y-auto bg-black/80 flex items-start justify-center p-4"
-      style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
-      onClick={(e) => {
-        // Close modal if clicking on backdrop
-        if (e.target === e.currentTarget) {
-          onClose();
-        }
-      }}
-    >
-      <div className="relative w-full max-w-4xl bg-gray-900 rounded-xl shadow-2xl my-8">
+    <>
+      {/* Modal Backdrop */}
+      <div
+        onClick={onClose}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          zIndex: 999998
+        }}
+      />
+
+      {/* Modal Content */}
+      <div style={{
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        backgroundColor: '#111827',
+        color: 'white',
+        borderRadius: '12px',
+        width: '90%',
+        maxWidth: '1024px',
+        maxHeight: '90vh',
+        overflowY: 'auto',
+        zIndex: 999999,
+        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+        border: '1px solid #374151'
+      }}>
+      <div className="relative w-full bg-gray-900 rounded-xl shadow-2xl">
         {/* Header */}
         <div className="sticky top-0 z-10 bg-gray-800 border-b border-gray-700 rounded-t-xl p-6">
           <div className="flex items-start justify-between">
@@ -349,10 +367,9 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
           </button>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 
-  // Try direct rendering first to debug
-  // return createPortal(modalContent, document.body);
   return modalContent;
 }

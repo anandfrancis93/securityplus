@@ -62,11 +62,6 @@ export default function HomePage() {
     loadDueCount();
   }, [userId]);
 
-  // Debug: Log when selectedQuizForReview changes
-  useEffect(() => {
-    console.log('selectedQuizForReview changed to:', selectedQuizForReview);
-  }, [selectedQuizForReview]);
-
   const handleStartQuiz = () => {
     router.push('/cybersecurity/quiz');
   };
@@ -664,10 +659,7 @@ export default function HomePage() {
                     return (
                       <button
                         key={quiz.id}
-                        onClick={() => {
-                          console.log('Quiz clicked:', quiz);
-                          setSelectedQuizForReview(quiz);
-                        }}
+                        onClick={() => setSelectedQuizForReview(quiz)}
                         className="w-full bg-gray-700/50 hover:bg-gray-700 rounded-lg p-4 border border-gray-600 hover:border-blue-500 transition-all cursor-pointer text-left"
                       >
                         <div className="flex justify-between items-center">
@@ -859,31 +851,12 @@ export default function HomePage() {
       </div>
 
       {/* Quiz Review Modal */}
-      {selectedQuizForReview ? (
-        <>
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(255, 0, 0, 0.5)',
-            zIndex: 9999,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontSize: '24px'
-          }}>
-            TEST MODAL - If you see this, state is working
-            <button onClick={() => setSelectedQuizForReview(null)}>Close</button>
-          </div>
-          <QuizReviewModal
-            quiz={selectedQuizForReview}
-            onClose={() => setSelectedQuizForReview(null)}
-          />
-        </>
-      ) : null}
+      {selectedQuizForReview && (
+        <QuizReviewModal
+          quiz={selectedQuizForReview}
+          onClose={() => setSelectedQuizForReview(null)}
+        />
+      )}
     </div>
   );
 }
