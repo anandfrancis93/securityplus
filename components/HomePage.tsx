@@ -62,6 +62,11 @@ export default function HomePage() {
     loadDueCount();
   }, [userId]);
 
+  // Debug: Log when selectedQuizForReview changes
+  useEffect(() => {
+    console.log('selectedQuizForReview changed to:', selectedQuizForReview);
+  }, [selectedQuizForReview]);
+
   const handleStartQuiz = () => {
     router.push('/cybersecurity/quiz');
   };
@@ -854,10 +859,8 @@ export default function HomePage() {
       </div>
 
       {/* Quiz Review Modal */}
-      {console.log('selectedQuizForReview state:', selectedQuizForReview)}
       {selectedQuizForReview ? (
         <>
-          {console.log('Rendering QuizReviewModal with quiz:', selectedQuizForReview)}
           <div style={{
             position: 'fixed',
             top: 0,
