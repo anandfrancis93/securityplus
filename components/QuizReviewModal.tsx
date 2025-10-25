@@ -1,7 +1,8 @@
 'use client';
 
 import { QuizSession, QuestionAttempt } from '@/lib/types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 interface QuizReviewModalProps {
   quiz: QuizSession;
@@ -9,6 +10,16 @@ interface QuizReviewModalProps {
 }
 
 export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps) {
+  const [mounted, setMounted] = useState(false);
+
+  console.log('QuizReviewModal rendered with quiz:', quiz);
+  console.log('Quiz questions:', quiz.questions);
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
   // Close modal on Escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -25,6 +36,8 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
       document.body.style.overflow = 'unset';
     };
   }, []);
+
+  if (!mounted) return null;
 
   const date = new Date(quiz.startedAt);
   const formattedDate = date.toLocaleDateString('en-US', {
@@ -173,8 +186,8 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
     });
   };
 
-  return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 flex items-start justify-center p-4">
+  const modalContent = (
+    <div className="fixed inset-0 z-[9999] overflow-y-auto bg-black/80 flex items-start justify-center p-4">
       <div className="relative w-full max-w-4xl bg-gray-900 rounded-xl shadow-2xl my-8">
         {/* Header */}
         <div className="sticky top-0 z-10 bg-gray-800 border-b border-gray-700 rounded-t-xl p-6">
@@ -329,4 +342,6 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 }
