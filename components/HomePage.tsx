@@ -7,6 +7,8 @@ import { getUserFlashcards, getUserReviews } from '@/lib/flashcardDb';
 import { getDueFlashcards } from '@/lib/spacedRepetition';
 import { hasSufficientData } from '@/lib/irt';
 import PerformanceGraphs from './PerformanceGraphs';
+import QuizReviewModal from './QuizReviewModal';
+import { QuizSession } from '@/lib/types';
 
 export default function HomePage() {
   const { user, userProgress, predictedScore, loading, resetProgress, handleSignOut, userId } = useApp();
@@ -17,6 +19,7 @@ export default function HomePage() {
   const [irtExpanded, setIrtExpanded] = useState(false);
   const [recentQuizzesExpanded, setRecentQuizzesExpanded] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [selectedQuizForReview, setSelectedQuizForReview] = useState<QuizSession | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Close menu when clicking outside
@@ -654,7 +657,11 @@ export default function HomePage() {
                     const isIncomplete = quiz.questions.length < 10;
 
                     return (
-                      <div key={quiz.id} className="bg-gray-700/50 rounded-lg p-4 border border-gray-600">
+                      <button
+                        key={quiz.id}
+                        onClick={() => setSelectedQuizForReview(quiz)}
+                        className="w-full bg-gray-700/50 hover:bg-gray-700 rounded-lg p-4 border border-gray-600 hover:border-blue-500 transition-all cursor-pointer text-left"
+                      >
                         <div className="flex justify-between items-center">
                           <div>
                             <div className="text-sm text-gray-400">
@@ -683,7 +690,7 @@ export default function HomePage() {
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </button>
                     );
                   })}
                 </div>
@@ -842,6 +849,14 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* Quiz Review Modal */}
+      {selectedQuizForReview && (
+        <QuizReviewModal
+          quiz={selectedQuizForReview}
+          onClose={() => setSelectedQuizForReview(null)}
+        />
+      )}
     </div>
   );
 }
