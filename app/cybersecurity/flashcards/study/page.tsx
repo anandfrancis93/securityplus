@@ -312,7 +312,7 @@ export default function StudyPage() {
                 <div className="text-xs opacity-75">1 day</div>
               </button>
               {/* Hover tooltip */}
-              <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none">
+              <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none" style={{ transition: 'opacity 0.3s ease-in-out 2s' }}>
                 <p className="text-sm text-gray-300">Couldn&apos;t remember or got it wrong. Card will be reviewed in 1 day.</p>
               </div>
             </div>
@@ -329,7 +329,7 @@ export default function StudyPage() {
                 <div className="text-xs opacity-75">1 day</div>
               </button>
               {/* Hover tooltip */}
-              <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none">
+              <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none" style={{ transition: 'opacity 0.3s ease-in-out 2s' }}>
                 <p className="text-sm text-gray-300">Difficult to recall, needed time. Card will be reviewed in 1 day.</p>
               </div>
             </div>
@@ -346,7 +346,7 @@ export default function StudyPage() {
                 <div className="text-xs opacity-75">3 days</div>
               </button>
               {/* Hover tooltip */}
-              <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none">
+              <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none" style={{ transition: 'opacity 0.3s ease-in-out 2s' }}>
                 <p className="text-sm text-gray-300">Recalled with some effort. Card will be reviewed in 3 days.</p>
               </div>
             </div>
@@ -363,7 +363,7 @@ export default function StudyPage() {
                 <div className="text-xs opacity-75">7 days</div>
               </button>
               {/* Hover tooltip */}
-              <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none">
+              <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none" style={{ transition: 'opacity 0.3s ease-in-out 2s' }}>
                 <p className="text-sm text-gray-300">Instant recall, confident. Card will be reviewed in 7 days.</p>
               </div>
             </div>
@@ -377,7 +377,7 @@ export default function StudyPage() {
             <div className="text-gray-400 text-xs mb-1">Total</div>
             <div className="text-xl font-bold text-blue-400">{stats.total}</div>
             {/* Hover tooltip */}
-            <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none">
+            <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none" style={{ transition: 'opacity 0.3s ease-in-out 2s' }}>
               <p className="text-sm text-gray-300">The total number of flashcards in your deck.</p>
             </div>
           </div>
@@ -387,7 +387,7 @@ export default function StudyPage() {
             <div className="text-gray-400 text-xs mb-1">Learning</div>
             <div className="text-xl font-bold text-yellow-400">{stats.learning}</div>
             {/* Hover tooltip */}
-            <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none">
+            <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none" style={{ transition: 'opacity 0.3s ease-in-out 2s' }}>
               <p className="text-sm text-gray-300">Cards you&apos;ve attempted but got wrong or rated as &quot;Again&quot;. These cards have 0 successful repetitions and need daily practice.</p>
             </div>
           </div>
@@ -397,7 +397,7 @@ export default function StudyPage() {
             <div className="text-gray-400 text-xs mb-1">Review</div>
             <div className="text-xl font-bold text-yellow-400">{stats.review}</div>
             {/* Hover tooltip */}
-            <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none">
+            <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none" style={{ transition: 'opacity 0.3s ease-in-out 2s' }}>
               <p className="text-sm text-gray-300">Cards you&apos;re actively learning and have reviewed correctly 1-2 times. These cards are in progress but not yet mastered.</p>
             </div>
           </div>
@@ -407,7 +407,7 @@ export default function StudyPage() {
             <div className="text-gray-400 text-xs mb-1">Mastered</div>
             <div className="text-xl font-bold text-blue-400">{stats.mastered}</div>
             {/* Hover tooltip */}
-            <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none">
+            <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none" style={{ transition: 'opacity 0.3s ease-in-out 2s' }}>
               <p className="text-sm text-gray-300">Cards you&apos;ve successfully reviewed 3 or more times. These cards are well-learned and appear less frequently to maintain long-term retention.</p>
             </div>
           </div>
