@@ -106,14 +106,37 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
   ];
 
   // Graph 4: Topic Performance Breakdown by Domain
-  const domainStats: { [domain: string]: { correct: number; total: number } } = {};
+  // Count unique questions per domain (not topic occurrences)
+  const domainStats: { [domain: string]: { questionIds: Set<string>; correctQuestionIds: Set<string> } } = {};
 
-  Object.values(userProgress.topicPerformance || {}).forEach(topicPerf => {
-    if (!domainStats[topicPerf.domain]) {
-      domainStats[topicPerf.domain] = { correct: 0, total: 0 };
-    }
-    domainStats[topicPerf.domain].correct += topicPerf.correctAnswers;
-    domainStats[topicPerf.domain].total += topicPerf.questionsAnswered;
+  // Build a map of questionId -> domains for that question
+  userProgress.quizHistory.forEach(quiz => {
+    quiz.questions.forEach(attempt => {
+      const topics = attempt.question.topics || [];
+      const questionId = attempt.questionId;
+
+      // Get all domains for this question's topics
+      const domainsForQuestion = new Set<string>();
+      Object.values(userProgress.topicPerformance || {}).forEach(topicPerf => {
+        if (topics.includes(topicPerf.topicName)) {
+          domainsForQuestion.add(topicPerf.domain);
+        }
+      });
+
+      // Count this question once per domain it appears in
+      domainsForQuestion.forEach(domain => {
+        if (!domainStats[domain]) {
+          domainStats[domain] = {
+            questionIds: new Set<string>(),
+            correctQuestionIds: new Set<string>()
+          };
+        }
+        domainStats[domain].questionIds.add(questionId);
+        if (attempt.isCorrect) {
+          domainStats[domain].correctQuestionIds.add(questionId);
+        }
+      });
+    });
   });
 
   const domainPerformance = Object.entries(domainStats).map(([domain, stats]) => {
@@ -121,11 +144,14 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     const domainNum = domain.split(' ')[0];
     const domainName = domain.replace(/^\d+\.\d+\s+/, ''); // Remove "1.0 " prefix
 
+    const totalQuestions = stats.questionIds.size;
+    const correctQuestions = stats.correctQuestionIds.size;
+
     return {
       domain: domainName,
       domainNum,
-      accuracy: stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : 0,
-      questions: stats.total,
+      accuracy: totalQuestions > 0 ? Math.round((correctQuestions / totalQuestions) * 100) : 0,
+      questions: totalQuestions,
     };
   }).sort((a, b) => a.domainNum.localeCompare(b.domainNum));
 
