@@ -88,8 +88,10 @@ export default function HomePage() {
   const correctAnswers = userProgress?.correctAnswers || 0;
   const estimatedAbility = userProgress?.estimatedAbility || 0;
   const accuracy = totalAnswered > 0 ? ((correctAnswers / totalAnswered) * 100).toFixed(1) : 0;
-  const isPassing = predictedScore >= 750;
-  const isNeedsWork = predictedScore < 600;
+
+  // Color logic based on Ability Level (matches IRT progress bar)
+  const isGoodPerformance = estimatedAbility >= 1.0;
+  const isNeedsWork = estimatedAbility < -1.0;
 
   // If a card is selected, show its details
   if (selectedCard === 'quiz') {
@@ -255,7 +257,7 @@ export default function HomePage() {
             <div className="text-center mb-6">
               <h2 className="text-xl text-gray-400 mb-2">Predicted Score</h2>
               <div className={`text-6xl font-bold mb-2 ${
-                isPassing ? 'text-green-400' :
+                isGoodPerformance ? 'text-green-400' :
                 isNeedsWork ? 'text-red-400' :
                 'text-yellow-400'
               }`}>
@@ -265,11 +267,11 @@ export default function HomePage() {
               <div className="mt-4">
                 {totalAnswered > 0 ? (
                   <div className={`inline-block px-4 py-2 rounded-full ${
-                    isPassing ? 'bg-green-900/30 text-green-400' :
+                    isGoodPerformance ? 'bg-green-900/30 text-green-400' :
                     isNeedsWork ? 'bg-red-900/30 text-red-400' :
                     'bg-yellow-900/30 text-yellow-400'
                   }`}>
-                    {isPassing ? '✓ On track to pass' :
+                    {isGoodPerformance ? '✓ On track to pass' :
                      isNeedsWork ? '✗ Needs significant improvement' :
                      '⚠ More practice needed'}
                   </div>
@@ -287,7 +289,7 @@ export default function HomePage() {
               <div className="w-full bg-gray-700 rounded-full h-3 relative overflow-hidden">
                 <div
                   className={`h-3 rounded-full transition-all duration-500 ${
-                    isPassing ? 'bg-green-500' :
+                    isGoodPerformance ? 'bg-green-500' :
                     isNeedsWork ? 'bg-red-500' :
                     'bg-yellow-500'
                   }`}
@@ -306,7 +308,7 @@ export default function HomePage() {
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
               <div className="text-gray-400 text-sm mb-1">Correct Answers</div>
               <div className={`text-3xl font-bold ${
-                isPassing ? 'text-green-400' :
+                isGoodPerformance ? 'text-green-400' :
                 isNeedsWork ? 'text-red-400' :
                 'text-yellow-400'
               }`}>{correctAnswers}</div>
@@ -314,7 +316,7 @@ export default function HomePage() {
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
               <div className="text-gray-400 text-sm mb-1">Accuracy</div>
               <div className={`text-3xl font-bold ${
-                isPassing ? 'text-green-400' :
+                isGoodPerformance ? 'text-green-400' :
                 isNeedsWork ? 'text-red-400' :
                 'text-yellow-400'
               }`}>{accuracy}%</div>
