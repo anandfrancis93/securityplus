@@ -126,10 +126,33 @@ export function calculatePartialCredit(
 }
 
 /**
+ * Phase 1: Minimum questions threshold for reliable IRT estimates
+ */
+export const MINIMUM_QUESTIONS_THRESHOLD = 15;
+
+/**
+ * Phase 1: Maximum ability estimate when below threshold
+ * Caps extreme values until sufficient data is collected
+ */
+export const CAPPED_ABILITY_LIMIT = 2.0;
+
+/**
+ * Check if user has sufficient data for reliable IRT estimates
+ *
+ * @param totalQuestions - Total number of questions answered
+ * @returns true if sufficient data, false otherwise
+ */
+export function hasSufficientData(totalQuestions: number): boolean {
+  return totalQuestions >= MINIMUM_QUESTIONS_THRESHOLD;
+}
+
+/**
  * Estimate user ability (theta) using Maximum Likelihood Estimation (MLE)
  *
  * This is a simplified MLE that iteratively finds the theta value
  * that maximizes the likelihood of the observed response pattern.
+ *
+ * Phase 1: Applies capping logic when insufficient data
  *
  * @param attempts - Array of question attempts
  * @returns Estimated ability level (theta)
@@ -173,6 +196,11 @@ export function estimateAbility(attempts: QuestionAttempt[]): number {
 
     // Keep theta in reasonable bounds
     theta = Math.max(-3, Math.min(3, theta));
+  }
+
+  // Phase 1: Cap ability estimates when insufficient data
+  if (!hasSufficientData(attempts.length)) {
+    theta = Math.max(-CAPPED_ABILITY_LIMIT, Math.min(CAPPED_ABILITY_LIMIT, theta));
   }
 
   return theta;

@@ -75,12 +75,18 @@ export default function QuizPage() {
 
       console.log(`Generating question ${questionNumber}...`);
 
+      // Calculate current ability for adaptive selection
+      const currentAbility = userProgress?.estimatedAbility || 0;
+      const useAdaptive = true; // Enable pseudo-adaptive selection
+
       const response = await fetch('/api/generate-single-question', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           excludeTopics: userProgress?.answeredQuestions || [],
           questionNumber,
+          currentAbility,
+          useAdaptive,
         }),
       });
 

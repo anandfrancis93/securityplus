@@ -14,6 +14,18 @@ export interface Question {
   maxPoints?: number; // Maximum points for this question
 }
 
+export interface TopicPerformance {
+  topicName: string;
+  domain: string; // Which of the 5 domains this belongs to
+  questionsAnswered: number;
+  correctAnswers: number;
+  totalPoints: number;
+  maxPoints: number;
+  accuracy: number; // Percentage
+  lastTested: number; // Timestamp
+  isMastered: boolean; // accuracy >= 80% && questionsAnswered >= 3
+}
+
 export interface UserProgress {
   userId: string;
   answeredQuestions: string[]; // Array of question IDs
@@ -25,6 +37,7 @@ export interface UserProgress {
   quizHistory: QuizSession[];
   estimatedAbility?: number; // IRT ability estimate (theta)
   notificationsEnabled?: boolean; // Whether flashcard notifications are enabled
+  topicPerformance?: { [topicName: string]: TopicPerformance }; // Cross-session topic tracking
 }
 
 export interface QuizSession {

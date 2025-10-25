@@ -1,47 +1,50 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { generateSynthesisQuestion } from '@/lib/questionGenerator';
-
-// Shuffle array using Fisher-Yates algorithm
-function shuffleArray<T>(array: T[]): T[] {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-}
+import { generateSynthesisQuestion, selectAdaptiveDifficulty, selectQuestionType } from '@/lib/questionGenerator';
 
 export async function POST(request: NextRequest) {
   try {
-    const { excludeTopics = [], questionNumber = 1 } = await request.json();
+    const {
+      excludeTopics = [],
+      questionNumber = 1,
+      currentAbility = 0, // Current ability level for adaptive selection
+      useAdaptive = false // Whether to use adaptive difficulty selection
+    } = await request.json();
 
-    // Define question configurations based on typical distribution
-    const questionConfigs = [
-      { difficulty: 'easy' as const, type: 'single' as const },      // Q1
-      { difficulty: 'easy' as const, type: 'single' as const },      // Q2
-      { difficulty: 'easy' as const, type: 'single' as const },      // Q3
-      { difficulty: 'medium' as const, type: 'single' as const },    // Q4
-      { difficulty: 'medium' as const, type: 'single' as const },    // Q5
-      { difficulty: 'medium' as const, type: 'multiple' as const },  // Q6
-      { difficulty: 'medium' as const, type: 'multiple' as const },  // Q7
-      { difficulty: 'hard' as const, type: 'single' as const },      // Q8
-      { difficulty: 'hard' as const, type: 'single' as const },      // Q9
-      { difficulty: 'hard' as const, type: 'multiple' as const },    // Q10
-    ];
+    let difficulty: 'easy' | 'medium' | 'hard';
+    let questionType: 'single' | 'multiple';
 
-    // Shuffle to randomize order
-    const shuffledConfigs = shuffleArray(questionConfigs);
+    if (useAdaptive && questionNumber > 1) {
+      // Pseudo-Adaptive: Select difficulty based on current ability
+      difficulty = selectAdaptiveDifficulty(currentAbility);
+      questionType = selectQuestionType();
+      console.log(`Adaptive selection for Q${questionNumber}: ability=${currentAbility.toFixed(2)}, difficulty=${difficulty}, type=${questionType}`);
+    } else {
+      // Fixed distribution for first question or non-adaptive mode
+      const questionConfigs = [
+        { difficulty: 'easy' as const, type: 'single' as const },
+        { difficulty: 'easy' as const, type: 'single' as const },
+        { difficulty: 'easy' as const, type: 'single' as const },
+        { difficulty: 'medium' as const, type: 'single' as const },
+        { difficulty: 'medium' as const, type: 'single' as const },
+        { difficulty: 'medium' as const, type: 'multiple' as const },
+        { difficulty: 'medium' as const, type: 'multiple' as const },
+        { difficulty: 'hard' as const, type: 'single' as const },
+        { difficulty: 'hard' as const, type: 'single' as const },
+        { difficulty: 'hard' as const, type: 'multiple' as const },
+      ];
 
-    // Use modulo to cycle through configs if questionNumber > 10
-    const configIndex = (questionNumber - 1) % shuffledConfigs.length;
-    const config = shuffledConfigs[configIndex];
+      const configIndex = (questionNumber - 1) % questionConfigs.length;
+      const config = questionConfigs[configIndex];
+      difficulty = config.difficulty;
+      questionType = config.type;
+    }
 
-    console.log(`Generating question ${questionNumber}: ${config.difficulty} ${config.type}-choice`);
+    console.log(`Generating question ${questionNumber}: ${difficulty} ${questionType}-choice`);
 
     const question = await generateSynthesisQuestion(
       excludeTopics,
-      config.difficulty,
-      config.type
+      difficulty,
+      questionType
     );
 
     console.log(`Question ${questionNumber} generated successfully`);

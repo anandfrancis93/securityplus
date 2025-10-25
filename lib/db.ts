@@ -10,7 +10,7 @@ import {
   getDocs,
   serverTimestamp,
 } from 'firebase/firestore';
-import { UserProgress, QuizSession, Question, QuestionAttempt } from './types';
+import { UserProgress, QuizSession, Question, QuestionAttempt, TopicPerformance } from './types';
 import { estimateAbility, calculateIRTScore } from './irt';
 
 const USERS_COLLECTION = 'users';
@@ -114,6 +114,9 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
     // Estimate ability using IRT
     const estimatedAbility = allAttempts.length > 0 ? estimateAbility(allAttempts) : 0;
 
+    // Update topic performance tracking
+    const topicPerformance = updateTopicPerformance(userData.topicPerformance || {}, session);
+
     const updatedProgress: UserProgress = {
       userId,
       quizHistory,
@@ -123,6 +126,7 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
       totalPoints: (userData.totalPoints || 0) + sessionPoints,
       maxPossiblePoints: (userData.maxPossiblePoints || 0) + sessionMaxPoints,
       estimatedAbility,
+      topicPerformance,
       lastUpdated: Date.now(),
     };
 
@@ -234,4 +238,126 @@ export async function getNotificationPreference(userId: string): Promise<boolean
     console.error('Error getting notification preference:', error);
     return false;
   }
+}
+
+/**
+ * Extract domain from a topic string
+ * Topics from questions are in format like "Zero Trust", "PKI", etc.
+ * Map them to the 5 main SY0-701 domains
+ */
+function extractDomainFromTopics(topics: string[]): string {
+  // Domain mapping keywords
+  const domainKeywords = {
+    '1.0 General Security Concepts': [
+      'security control', 'technical', 'managerial', 'operational', 'physical',
+      'cia', 'confidentiality', 'integrity', 'availability', 'non-repudiation',
+      'authentication', 'authorization', 'accounting', 'aaa',
+      'zero trust', 'adaptive identity', 'policy', 'trust zone',
+      'bollard', 'vestibule', 'fencing', 'surveillance', 'guard', 'badge', 'lighting', 'sensor',
+      'honeypot', 'honeynet', 'honeyfile', 'honeytoken',
+      'change management', 'approval', 'backout', 'maintenance window',
+      'pki', 'encryption', 'cryptographic', 'tpm', 'hsm', 'hashing', 'salting',
+      'certificate', 'crl', 'ocsp', 'blockchain'
+    ],
+    '2.0 Threats, Vulnerabilities, and Mitigations': [
+      'threat actor', 'nation-state', 'hacktivist', 'insider threat', 'organized crime',
+      'phishing', 'vishing', 'smishing', 'social engineering', 'pretexting',
+      'vulnerability', 'buffer overflow', 'injection', 'xss', 'sqli', 'race condition',
+      'malware', 'ransomware', 'trojan', 'worm', 'spyware', 'virus', 'keylogger', 'rootkit',
+      'ddos', 'dns attack', 'brute force', 'password spray',
+      'mitigation', 'segmentation', 'patching', 'hardening', 'least privilege'
+    ],
+    '3.0 Security Architecture': [
+      'cloud', 'iaac', 'serverless', 'microservices', 'containerization',
+      'virtualization', 'iot', 'ics', 'scada', 'rtos', 'embedded',
+      'network infrastructure', 'sdn', 'air-gapped', 'segmentation',
+      'data protection', 'data classification', 'data at rest', 'data in transit',
+      'resilience', 'high availability', 'load balancing', 'clustering',
+      'backup', 'replication', 'snapshot', 'disaster recovery'
+    ],
+    '4.0 Security Operations': [
+      'baseline', 'hardening', 'mdm', 'byod', 'cope', 'cyod',
+      'wpa3', 'radius', 'wireless',
+      'asset management', 'inventory', 'disposal', 'sanitization',
+      'vulnerability scan', 'penetration test', 'cvss', 'cve',
+      'monitoring', 'siem', 'log', 'alert', 'dlp', 'netflow',
+      'firewall', 'ips', 'ids', 'web filter', 'dns filtering',
+      'identity', 'access management', 'provisioning', 'sso', 'ldap', 'oauth', 'saml',
+      'mfa', 'biometric', 'password', 'privileged access',
+      'automation', 'orchestration', 'api', 'ci/cd',
+      'incident response', 'forensics', 'chain of custody'
+    ],
+    '5.0 Security Program Management and Oversight': [
+      'governance', 'policy', 'aup', 'procedure', 'playbook',
+      'compliance', 'regulatory', 'audit', 'attestation',
+      'risk management', 'risk assessment', 'sle', 'ale', 'aro',
+      'third-party', 'vendor', 'sla', 'mou', 'msa', 'nda',
+      'privacy', 'gdpr', 'data subject', 'right to be forgotten',
+      'penetration testing', 'security awareness', 'training'
+    ]
+  };
+
+  // Check each topic against domain keywords
+  const topicsLower = topics.map(t => t.toLowerCase());
+
+  for (const [domain, keywords] of Object.entries(domainKeywords)) {
+    for (const topic of topicsLower) {
+      for (const keyword of keywords) {
+        if (topic.includes(keyword)) {
+          return domain;
+        }
+      }
+    }
+  }
+
+  // Default to most general domain if no match
+  return '1.0 General Security Concepts';
+}
+
+/**
+ * Update topic performance tracking across sessions
+ * Called when saving a quiz session
+ */
+export function updateTopicPerformance(
+  existingTopicPerformance: { [topicName: string]: TopicPerformance } = {},
+  session: QuizSession
+): { [topicName: string]: TopicPerformance } {
+  const updated = { ...existingTopicPerformance };
+
+  for (const attempt of session.questions) {
+    const topics = attempt.question.topics || [];
+
+    for (const topic of topics) {
+      if (!topic) continue;
+
+      const domain = extractDomainFromTopics([topic]);
+
+      if (!updated[topic]) {
+        // Create new topic entry
+        updated[topic] = {
+          topicName: topic,
+          domain,
+          questionsAnswered: 0,
+          correctAnswers: 0,
+          totalPoints: 0,
+          maxPoints: 0,
+          accuracy: 0,
+          lastTested: Date.now(),
+          isMastered: false
+        };
+      }
+
+      // Update topic stats
+      const topicPerf = updated[topic];
+      topicPerf.questionsAnswered += 1;
+      topicPerf.correctAnswers += attempt.isCorrect ? 1 : 0;
+      topicPerf.totalPoints += attempt.pointsEarned;
+      topicPerf.maxPoints += attempt.maxPoints;
+      topicPerf.accuracy = (topicPerf.correctAnswers / topicPerf.questionsAnswered) * 100;
+      topicPerf.lastTested = Date.now();
+      topicPerf.isMastered = topicPerf.accuracy >= 80 && topicPerf.questionsAnswered >= 3;
+    }
+  }
+
+  return updated;
 }
