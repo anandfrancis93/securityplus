@@ -17,15 +17,6 @@ export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Debug state changes
-  useEffect(() => {
-    console.log('irtExpanded state changed:', irtExpanded);
-  }, [irtExpanded]);
-
-  useEffect(() => {
-    console.log('recentQuizzesExpanded state changed:', recentQuizzesExpanded);
-  }, [recentQuizzesExpanded]);
-
   // Close menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -174,13 +165,6 @@ export default function HomePage() {
             <p className="text-gray-400">Track your progress and improvement</p>
           </div>
 
-          {/* Debug Info */}
-          <div className="bg-red-900 border border-red-500 rounded-lg p-4 mb-4">
-            <h4 className="text-white font-bold mb-2">DEBUG INFO:</h4>
-            <p className="text-white text-sm">irtExpanded: {String(irtExpanded)}</p>
-            <p className="text-white text-sm">recentQuizzesExpanded: {String(recentQuizzesExpanded)}</p>
-          </div>
-
           {/* Predicted Score Card */}
           <div className="bg-gray-800 rounded-lg p-8 mb-8 border border-gray-700 shadow-xl">
             <div className="text-center mb-6">
@@ -236,11 +220,7 @@ export default function HomePage() {
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-bold text-blue-300">📊 IRT Performance Analysis</h3>
                 <button
-                  onClick={() => {
-                    console.log('IRT button clicked! Current state:', irtExpanded);
-                    setIrtExpanded(!irtExpanded);
-                    console.log('Setting irtExpanded to:', !irtExpanded);
-                  }}
+                  onClick={() => setIrtExpanded(!irtExpanded)}
                   className="p-2 hover:opacity-80 transition-opacity"
                   aria-label="Toggle IRT Performance Analysis"
                 >
@@ -407,11 +387,7 @@ export default function HomePage() {
               <div className="flex items-center justify-between">
                 <h3 className="text-xl font-bold">Recent Quizzes ({userProgress.quizHistory.length})</h3>
                 <button
-                  onClick={() => {
-                    console.log('Recent Quizzes button clicked! Current state:', recentQuizzesExpanded);
-                    setRecentQuizzesExpanded(!recentQuizzesExpanded);
-                    console.log('Setting recentQuizzesExpanded to:', !recentQuizzesExpanded);
-                  }}
+                  onClick={() => setRecentQuizzesExpanded(!recentQuizzesExpanded)}
                   className="p-2 hover:opacity-80 transition-opacity"
                   aria-label="Toggle Recent Quizzes"
                 >
