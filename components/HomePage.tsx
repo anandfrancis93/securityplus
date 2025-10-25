@@ -276,20 +276,18 @@ export default function HomePage() {
                   {predictedScore}
                 </div>
                 {/* Hover tooltip */}
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-72 bg-gray-900 border border-gray-600 rounded-lg p-4 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                  <p className="text-sm font-medium text-white mb-3">Color indicates performance level:</p>
-                  <div className="space-y-2 text-xs text-gray-300">
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
+                  <div className="space-y-1 text-sm text-gray-300">
                     <div>
-                      <span className="text-green-400 font-medium">Green:</span> Strong performance, typically 750-900 (On track to pass)
+                      <span className="text-green-400 font-medium">Green:</span> 750 - 900
                     </div>
                     <div>
-                      <span className="text-yellow-400 font-medium">Yellow:</span> Average performance, typically 600-749 (More practice needed)
+                      <span className="text-yellow-400 font-medium">Yellow:</span> 600 - 749
                     </div>
                     <div>
-                      <span className="text-red-400 font-medium">Red:</span> Below average, typically below 600 (Needs improvement)
+                      <span className="text-red-400 font-medium">Red:</span> 100 - 599
                     </div>
                   </div>
-                  <p className="text-xs text-gray-400 mt-3 pt-2 border-t border-gray-700">Color is based on your Ability Level from IRT analysis, which correlates with predicted exam score.</p>
                 </div>
               </div>
               <div className="text-sm text-gray-500">out of 900</div>
