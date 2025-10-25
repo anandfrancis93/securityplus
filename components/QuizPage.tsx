@@ -338,13 +338,6 @@ export default function QuizPage() {
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 animate-fade-in">
           <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 max-w-lg w-full border-2 border-blue-500/30 shadow-2xl animate-spring-in">
             <div className="text-center">
-              {/* Confetti effect */}
-              {isPassing && (
-                <div className="text-7xl mb-4 animate-bounce">
-                  🎉
-                </div>
-              )}
-
               <h2 className="text-3xl font-bold mb-4 text-white">
                 Quiz Complete!
               </h2>
@@ -358,7 +351,7 @@ export default function QuizPage() {
 
               {isPassing ? (
                 <div className="bg-green-900/30 border border-green-500/50 rounded-lg p-4 mb-6">
-                  <p className="text-green-400 font-bold text-lg mb-2">🌟 Great Job!</p>
+                  <p className="text-green-400 font-bold text-lg mb-2">Great Job!</p>
                   <p className="text-gray-300 text-sm">
                     You&apos;re showing strong understanding of Security+ concepts. Keep up the excellent work!
                   </p>
