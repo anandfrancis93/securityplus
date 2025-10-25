@@ -221,7 +221,7 @@ export default function HomePage() {
                 onClick={() => setIrtExpanded(!irtExpanded)}
                 className="w-full flex items-center justify-between text-left hover:opacity-80 transition-opacity"
               >
-                <h3 className="text-lg font-bold text-blue-300">📊 IRT Performance Analysis</h3>
+                <h3 className="text-lg font-bold text-blue-300 pointer-events-none">📊 IRT Performance Analysis</h3>
                 <svg
                   className={`w-5 h-5 text-blue-300 transition-transform duration-200 pointer-events-none ${irtExpanded ? 'rotate-180' : ''}`}
                   fill="none"
@@ -385,7 +385,7 @@ export default function HomePage() {
                 onClick={() => setRecentQuizzesExpanded(!recentQuizzesExpanded)}
                 className="w-full flex items-center justify-between text-left hover:opacity-80 transition-opacity"
               >
-                <h3 className="text-xl font-bold">Recent Quizzes ({userProgress.quizHistory.length})</h3>
+                <h3 className="text-xl font-bold pointer-events-none">Recent Quizzes ({userProgress.quizHistory.length})</h3>
                 <svg
                   className={`w-5 h-5 text-gray-400 transition-transform duration-200 pointer-events-none ${recentQuizzesExpanded ? 'rotate-180' : ''}`}
                   fill="none"
