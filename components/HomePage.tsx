@@ -365,11 +365,12 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
               <div className="text-gray-400 text-sm mb-1">Questions Attempted</div>
-              <div className="text-3xl font-bold text-blue-400">{totalAnswered}</div>
+              <div className={`text-3xl font-bold ${totalAnswered === 0 ? 'text-gray-400' : 'text-blue-400'}`}>{totalAnswered}</div>
             </div>
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
               <div className="text-gray-400 text-sm mb-1">Correct Answers</div>
               <div className={`text-3xl font-bold ${
+                totalAnswered === 0 ? 'text-gray-400' :
                 isGoodPerformance ? 'text-green-400' :
                 isNeedsWork ? 'text-red-400' :
                 'text-yellow-400'
@@ -378,6 +379,7 @@ export default function HomePage() {
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
               <div className="text-gray-400 text-sm mb-1">Accuracy</div>
               <div className={`text-3xl font-bold ${
+                totalAnswered === 0 ? 'text-gray-400' :
                 isGoodPerformance ? 'text-green-400' :
                 isNeedsWork ? 'text-red-400' :
                 'text-yellow-400'
