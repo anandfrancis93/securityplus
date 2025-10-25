@@ -237,11 +237,25 @@ export default function HomePage() {
 
               {irtExpanded ? (
                 <>
+                  {/* Global tooltip animation */}
+                  <style jsx global>{`
+                    @keyframes tooltipFade {
+                      0% { opacity: 0; }
+                      26.3% { opacity: 0; }
+                      30.3% { opacity: 1; }
+                      96.1% { opacity: 1; }
+                      100% { opacity: 0; }
+                    }
+                  `}</style>
+
                   <div className="bg-gray-800/50 rounded-lg p-4 mb-4 mt-4">
                     <div className="flex items-center justify-between mb-2">
-                      <div>
+                      <div className="relative group cursor-help">
                         <h4 className="text-sm font-medium text-blue-200">Ability Level (θ theta)</h4>
-                        <p className="text-xs text-gray-400 mt-1">Adjusts your score based on question difficulty</p>
+                        {/* Hover tooltip */}
+                        <div className="absolute bottom-full left-0 mb-2 w-64 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
+                          <p className="text-sm text-gray-300">Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
+                        </div>
                       </div>
                       <div className="text-3xl font-bold text-blue-400">
                         {estimatedAbility.toFixed(2)}
