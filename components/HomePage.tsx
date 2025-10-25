@@ -341,14 +341,22 @@ export default function HomePage() {
                           <p className="text-sm text-gray-300">Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
                         </div>
                       </div>
-                      <div className="text-3xl font-bold text-blue-400">
+                      <div className={`text-3xl font-bold ${
+                        estimatedAbility >= 1.0 ? 'text-green-400' :
+                        estimatedAbility >= -1.0 ? 'text-yellow-400' :
+                        'text-red-400'
+                      }`}>
                         {estimatedAbility.toFixed(2)}
                       </div>
                     </div>
                     <div className="flex items-center mt-3">
                       <div className="flex-1 bg-gray-700 rounded-full h-2">
                         <div
-                          className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500"
+                          className={`h-2 rounded-full transition-all duration-500 ${
+                            estimatedAbility >= 1.0 ? 'bg-gradient-to-r from-green-500 to-green-600' :
+                            estimatedAbility >= -1.0 ? 'bg-gradient-to-r from-yellow-500 to-yellow-600' :
+                            'bg-gradient-to-r from-red-500 to-red-600'
+                          }`}
                           style={{ width: `${((estimatedAbility + 3) / 6) * 100}%` }}
                         ></div>
                       </div>
