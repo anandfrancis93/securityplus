@@ -241,7 +241,7 @@ export default function HomePage() {
                     <div className="flex items-center justify-between mb-2">
                       <div>
                         <h4 className="text-sm font-medium text-blue-200">Ability Level (θ theta)</h4>
-                        <p className="text-xs text-gray-400 mt-1">Accounts for question difficulty in your performance</p>
+                        <p className="text-xs text-gray-400 mt-1">Adjusts your score based on question difficulty</p>
                       </div>
                       <div className="text-3xl font-bold text-blue-400">
                         {estimatedAbility.toFixed(2)}
