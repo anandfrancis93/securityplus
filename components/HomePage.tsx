@@ -335,7 +335,7 @@ export default function HomePage() {
                   <div className="bg-gray-800/50 rounded-lg p-4 mb-4 mt-4">
                     <div className="flex items-center justify-between mb-2">
                       <div className="relative group cursor-help">
-                        <h4 className="text-sm font-medium text-gray-300">Ability Level (θ theta)</h4>
+                        <h4 className="text-sm font-medium text-gray-300">Ability Level (-3 to 3)</h4>
                         {/* Hover tooltip */}
                         <div className="absolute bottom-full left-0 mb-2 w-64 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
                           <p className="text-sm text-gray-300">Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
@@ -350,20 +350,15 @@ export default function HomePage() {
                       </div>
                     </div>
                     <div className="mt-3">
-                      <div className="flex items-center">
-                        <div className="flex-1 bg-gray-700 rounded-full h-2">
-                          <div
-                            className={`h-2 rounded-full transition-all duration-500 ${
-                              estimatedAbility >= 1.0 ? 'bg-gradient-to-r from-green-500 to-green-600' :
-                              estimatedAbility >= -1.0 ? 'bg-gradient-to-r from-yellow-500 to-yellow-600' :
-                              'bg-gradient-to-r from-red-500 to-red-600'
-                            }`}
-                            style={{ width: `${((estimatedAbility + 3) / 6) * 100}%` }}
-                          ></div>
-                        </div>
-                        <div className="ml-3 text-xs text-gray-400 whitespace-nowrap">
-                          -3 to +3
-                        </div>
+                      <div className="bg-gray-700 rounded-full h-2">
+                        <div
+                          className={`h-2 rounded-full transition-all duration-500 ${
+                            estimatedAbility >= 1.0 ? 'bg-gradient-to-r from-green-500 to-green-600' :
+                            estimatedAbility >= -1.0 ? 'bg-gradient-to-r from-yellow-500 to-yellow-600' :
+                            'bg-gradient-to-r from-red-500 to-red-600'
+                          }`}
+                          style={{ width: `${((estimatedAbility + 3) / 6) * 100}%` }}
+                        ></div>
                       </div>
                       <div className="flex justify-between text-xs text-gray-500 mt-1">
                         <span>Beginner</span>
