@@ -369,7 +369,7 @@ export default function HomePage() {
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
-                    <h4 className="text-sm font-medium text-green-300 mb-3">📈 What This Means</h4>
+                    <h4 className="text-sm font-medium text-white mb-3">What This Means</h4>
                     <div className="text-sm text-gray-300">
                       {estimatedAbility >= 1.5 ? (
                         <>
