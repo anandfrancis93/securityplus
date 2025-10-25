@@ -462,7 +462,7 @@ export default function HomePage() {
                       {estimatedAbility >= 1.5 ? (
                         <>
                           <p className="text-green-400 font-medium mb-3 flex items-center gap-2">
-                            <span className="text-2xl">✓</span> Excellent Performance!
+                            Excellent Performance!
                           </p>
                           <ul className="space-y-2 text-xs">
                             <li className="flex items-start gap-2">
