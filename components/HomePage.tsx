@@ -659,7 +659,10 @@ export default function HomePage() {
                     return (
                       <button
                         key={quiz.id}
-                        onClick={() => setSelectedQuizForReview(quiz)}
+                        onClick={() => {
+                          console.log('Quiz clicked:', quiz);
+                          setSelectedQuizForReview(quiz);
+                        }}
                         className="w-full bg-gray-700/50 hover:bg-gray-700 rounded-lg p-4 border border-gray-600 hover:border-blue-500 transition-all cursor-pointer text-left"
                       >
                         <div className="flex justify-between items-center">
@@ -852,10 +855,13 @@ export default function HomePage() {
 
       {/* Quiz Review Modal */}
       {selectedQuizForReview && (
-        <QuizReviewModal
-          quiz={selectedQuizForReview}
-          onClose={() => setSelectedQuizForReview(null)}
-        />
+        <>
+          {console.log('Rendering QuizReviewModal with quiz:', selectedQuizForReview)}
+          <QuizReviewModal
+            quiz={selectedQuizForReview}
+            onClose={() => setSelectedQuizForReview(null)}
+          />
+        </>
       )}
     </div>
   );

@@ -16,6 +16,7 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className="antialiased">
         <AppProvider>{children}</AppProvider>
+        <div id="modal-root"></div>
       </body>
     </html>
   );

@@ -187,7 +187,16 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
   };
 
   const modalContent = (
-    <div className="fixed inset-0 z-[9999] overflow-y-auto bg-black/80 flex items-start justify-center p-4">
+    <div
+      className="fixed inset-0 z-[9999] overflow-y-auto bg-black/80 flex items-start justify-center p-4"
+      style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
+      onClick={(e) => {
+        // Close modal if clicking on backdrop
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+    >
       <div className="relative w-full max-w-4xl bg-gray-900 rounded-xl shadow-2xl my-8">
         {/* Header */}
         <div className="sticky top-0 z-10 bg-gray-800 border-b border-gray-700 rounded-t-xl p-6">
@@ -343,5 +352,7 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
     </div>
   );
 
-  return createPortal(modalContent, document.body);
+  // Try direct rendering first to debug
+  // return createPortal(modalContent, document.body);
+  return modalContent;
 }
