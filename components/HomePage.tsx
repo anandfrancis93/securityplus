@@ -854,15 +854,33 @@ export default function HomePage() {
       </div>
 
       {/* Quiz Review Modal */}
-      {selectedQuizForReview && (
+      {console.log('selectedQuizForReview state:', selectedQuizForReview)}
+      {selectedQuizForReview ? (
         <>
           {console.log('Rendering QuizReviewModal with quiz:', selectedQuizForReview)}
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(255, 0, 0, 0.5)',
+            zIndex: 9999,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            fontSize: '24px'
+          }}>
+            TEST MODAL - If you see this, state is working
+            <button onClick={() => setSelectedQuizForReview(null)}>Close</button>
+          </div>
           <QuizReviewModal
             quiz={selectedQuizForReview}
             onClose={() => setSelectedQuizForReview(null)}
           />
         </>
-      )}
+      ) : null}
     </div>
   );
 }
