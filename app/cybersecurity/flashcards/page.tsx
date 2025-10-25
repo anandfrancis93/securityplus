@@ -1047,9 +1047,11 @@ export default function FlashcardsPage() {
 
               {menuOpen && user && !user?.isAnonymous && (
                 <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
-                  <div className="px-4 py-2 text-sm text-gray-300 border-b border-gray-700">
+                  <div className="px-4 py-2 text-sm text-white border-b border-gray-700">
                     <div className="flex items-center gap-2">
-                      <span>👤</span>
+                      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
                       <span>{user?.displayName || 'User'}</span>
                     </div>
                   </div>
@@ -1248,9 +1250,11 @@ export default function FlashcardsPage() {
 
               {menuOpen && user && !user?.isAnonymous && (
                 <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
-                  <div className="px-4 py-2 text-sm text-gray-300 border-b border-gray-700">
+                  <div className="px-4 py-2 text-sm text-white border-b border-gray-700">
                     <div className="flex items-center gap-2">
-                      <span>👤</span>
+                      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
                       <span>{user?.displayName || 'User'}</span>
                     </div>
                   </div>
