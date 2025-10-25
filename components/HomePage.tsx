@@ -277,21 +277,22 @@ export default function HomePage() {
                 </div>
                 {/* Hover tooltip */}
                 <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-72 bg-gray-900 border border-gray-600 rounded-lg p-4 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                  <p className="text-sm font-medium text-white mb-3">Score Color Ranges:</p>
+                  <p className="text-sm font-medium text-white mb-3">Color indicates performance level:</p>
                   <div className="space-y-2 text-xs text-gray-300">
                     <div className="flex items-center gap-2">
                       <div className="w-3 h-3 bg-green-400 rounded-full flex-shrink-0"></div>
-                      <span><span className="text-green-400 font-medium">Green:</span> Ability Level ≥ 1.0 (On track to pass)</span>
+                      <span><span className="text-green-400 font-medium">Green:</span> Strong performance, typically 750-900 (On track to pass)</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="w-3 h-3 bg-yellow-400 rounded-full flex-shrink-0"></div>
-                      <span><span className="text-yellow-400 font-medium">Yellow:</span> Ability Level -1.0 to 1.0 (More practice needed)</span>
+                      <span><span className="text-yellow-400 font-medium">Yellow:</span> Average performance, typically 600-749 (More practice needed)</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="w-3 h-3 bg-red-400 rounded-full flex-shrink-0"></div>
-                      <span><span className="text-red-400 font-medium">Red:</span> Ability Level &lt; -1.0 (Needs improvement)</span>
+                      <span><span className="text-red-400 font-medium">Red:</span> Below average, typically below 600 (Needs improvement)</span>
                     </div>
                   </div>
+                  <p className="text-xs text-gray-400 mt-3 pt-2 border-t border-gray-700">Color is based on your Ability Level from IRT analysis, which correlates with predicted exam score.</p>
                 </div>
               </div>
               <div className="text-sm text-gray-500">out of 900</div>
