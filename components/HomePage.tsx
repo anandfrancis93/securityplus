@@ -310,20 +310,51 @@ export default function HomePage() {
             </div>
 
             <div className="mt-6">
-              <div className="flex justify-between text-sm text-gray-400 mb-2">
-                <span>Passing score: 750</span>
-                <span>Your score: {predictedScore}</span>
-              </div>
               <div className="w-full bg-gray-700 rounded-full h-3 relative overflow-hidden">
+                {/* Progress bar fill */}
                 <div
                   className={`h-3 rounded-full transition-all duration-500 ${
                     isGoodPerformance ? 'bg-green-500' :
                     isNeedsWork ? 'bg-red-500' :
                     'bg-yellow-500'
                   }`}
-                  style={{ width: `${Math.min((predictedScore / 900) * 100, 100)}%` }}
+                  style={{ width: `${Math.min(((predictedScore - 100) / 800) * 100, 100)}%` }}
+                ></div>
+
+                {/* Passing line marker at 750 */}
+                <div
+                  className="absolute top-0 bottom-0 w-0.5 bg-white opacity-50"
+                  style={{ left: `${((750 - 100) / 800) * 100}%` }}
                 ></div>
               </div>
+
+              {/* Scale labels */}
+              <div className="flex justify-between text-xs text-gray-400 mt-1 relative">
+                <span>100</span>
+                <span
+                  className="absolute text-white font-medium"
+                  style={{ left: `${((750 - 100) / 800) * 100}%`, transform: 'translateX(-50%)' }}
+                >
+                  750
+                </span>
+                <span>900</span>
+              </div>
+
+              {/* Current score indicator */}
+              {predictedScore >= 100 && predictedScore <= 900 && (
+                <div
+                  className="relative -mt-1"
+                  style={{ paddingLeft: `${((predictedScore - 100) / 800) * 100}%` }}
+                >
+                  <div className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${
+                    isGoodPerformance ? 'bg-green-500/20 text-green-400' :
+                    isNeedsWork ? 'bg-red-500/20 text-red-400' :
+                    'bg-yellow-500/20 text-yellow-400'
+                  }`}>
+                    {predictedScore}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
