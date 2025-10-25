@@ -89,6 +89,7 @@ export default function HomePage() {
   const estimatedAbility = userProgress?.estimatedAbility || 0;
   const accuracy = totalAnswered > 0 ? ((correctAnswers / totalAnswered) * 100).toFixed(1) : 0;
   const isPassing = predictedScore >= 750;
+  const isNeedsWork = predictedScore < 600;
 
   // If a card is selected, show its details
   if (selectedCard === 'quiz') {
@@ -253,14 +254,24 @@ export default function HomePage() {
           <div className="bg-gray-800 rounded-lg p-8 mb-8 border border-gray-700 shadow-xl">
             <div className="text-center mb-6">
               <h2 className="text-xl text-gray-400 mb-2">Predicted Score</h2>
-              <div className={`text-6xl font-bold mb-2 ${isPassing ? 'text-green-400' : 'text-yellow-400'}`}>
+              <div className={`text-6xl font-bold mb-2 ${
+                isPassing ? 'text-green-400' :
+                isNeedsWork ? 'text-red-400' :
+                'text-yellow-400'
+              }`}>
                 {predictedScore}
               </div>
               <div className="text-sm text-gray-500">out of 900</div>
               <div className="mt-4">
                 {totalAnswered > 0 ? (
-                  <div className={`inline-block px-4 py-2 rounded-full ${isPassing ? 'bg-green-900/30 text-green-400' : 'bg-yellow-900/30 text-yellow-400'}`}>
-                    {isPassing ? '✓ On track to pass' : '⚠ More practice needed'}
+                  <div className={`inline-block px-4 py-2 rounded-full ${
+                    isPassing ? 'bg-green-900/30 text-green-400' :
+                    isNeedsWork ? 'bg-red-900/30 text-red-400' :
+                    'bg-yellow-900/30 text-yellow-400'
+                  }`}>
+                    {isPassing ? '✓ On track to pass' :
+                     isNeedsWork ? '✗ Needs significant improvement' :
+                     '⚠ More practice needed'}
                   </div>
                 ) : (
                   <div className="text-gray-500">Start answering questions to see your prediction</div>
@@ -275,7 +286,11 @@ export default function HomePage() {
               </div>
               <div className="w-full bg-gray-700 rounded-full h-3 relative overflow-hidden">
                 <div
-                  className={`h-3 rounded-full transition-all duration-500 ${isPassing ? 'bg-green-500' : 'bg-yellow-500'}`}
+                  className={`h-3 rounded-full transition-all duration-500 ${
+                    isPassing ? 'bg-green-500' :
+                    isNeedsWork ? 'bg-red-500' :
+                    'bg-yellow-500'
+                  }`}
                   style={{ width: `${Math.min((predictedScore / 900) * 100, 100)}%` }}
                 ></div>
               </div>
