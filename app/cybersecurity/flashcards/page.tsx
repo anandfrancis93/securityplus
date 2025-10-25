@@ -377,7 +377,7 @@ export default function FlashcardsPage() {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            backgroundColor: '#1f2937',
+            backgroundColor: '#111827',
             color: 'white',
             padding: '24px',
             borderRadius: '12px',
@@ -387,7 +387,7 @@ export default function FlashcardsPage() {
             overflowY: 'auto',
             zIndex: 999999,
             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-            border: '1px solid #374151'
+            border: '1px solid #1f2937'
           }}>
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
@@ -425,8 +425,8 @@ export default function FlashcardsPage() {
                     padding: '12px',
                     fontSize: '14px',
                     borderRadius: '8px',
-                    border: '1px solid #4b5563',
-                    backgroundColor: '#374151',
+                    border: '1px solid #374151',
+                    backgroundColor: '#1f2937',
                     color: 'white',
                     outline: 'none',
                     boxSizing: 'border-box'
@@ -454,8 +454,8 @@ export default function FlashcardsPage() {
                     padding: '12px',
                     fontSize: '14px',
                     borderRadius: '8px',
-                    border: '1px solid #4b5563',
-                    backgroundColor: '#374151',
+                    border: '1px solid #374151',
+                    backgroundColor: '#1f2937',
                     color: 'white',
                     outline: 'none',
                     resize: 'vertical',
@@ -482,8 +482,8 @@ export default function FlashcardsPage() {
                     padding: '12px',
                     fontSize: '14px',
                     borderRadius: '8px',
-                    border: '1px solid #4b5563',
-                    backgroundColor: '#374151',
+                    border: '1px solid #374151',
+                    backgroundColor: '#1f2937',
                     color: 'white',
                     outline: 'none',
                     cursor: 'pointer',
@@ -506,7 +506,7 @@ export default function FlashcardsPage() {
                   style={{
                     flex: 1,
                     padding: '12px 24px',
-                    backgroundColor: '#4b5563',
+                    backgroundColor: '#374151',
                     color: 'white',
                     border: 'none',
                     borderRadius: '8px',
@@ -524,7 +524,7 @@ export default function FlashcardsPage() {
                   style={{
                     flex: 1,
                     padding: '12px 24px',
-                    backgroundColor: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? '#4b5563' : '#2563eb',
+                    backgroundColor: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? '#374151' : '#2563eb',
                     color: 'white',
                     border: 'none',
                     borderRadius: '8px',
