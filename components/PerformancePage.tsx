@@ -367,7 +367,7 @@ export default function PerformancePage() {
                 <div className="bg-black rounded-md p-6 mb-6 mt-6 border border-zinc-800">
                   <div className="flex items-center justify-between mb-3">
                     <div className="relative group cursor-help">
-                      <h4 className="text-sm md:text-lg font-medium text-zinc-300 tracking-tight font-mono">Ability Level (-3 to 3)</h4>
+                      <h4 className="text-sm md:text-lg font-medium text-zinc-300 tracking-tight font-mono">Ability Level</h4>
                       {/* Hover tooltip */}
                       <div className="absolute bottom-full left-0 mb-2 w-64 bg-black border border-zinc-800 rounded-md p-3 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-150">
                         <p className="text-sm text-zinc-300 leading-relaxed font-mono">Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
