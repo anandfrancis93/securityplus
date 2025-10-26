@@ -5,8 +5,6 @@ import { useApp } from './AppProvider';
 import { useRouter } from 'next/navigation';
 import { hasSufficientData } from '@/lib/irt';
 import PerformanceGraphs from './PerformanceGraphs';
-import QuizReviewModal from './QuizReviewModal';
-import { QuizSession } from '@/lib/types';
 
 export default function PerformancePage() {
   const { user, userProgress, predictedScore, loading, resetProgress, handleSignOut } = useApp();
@@ -21,7 +19,6 @@ export default function PerformancePage() {
     }
   }, [user, loading, router]);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [selectedQuizForReview, setSelectedQuizForReview] = useState<QuizSession | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Close menu when clicking outside
@@ -580,7 +577,7 @@ export default function PerformancePage() {
                     <button
                       key={quiz.id}
                       id={`quiz-review-${quiz.id}`}
-                      onClick={() => setSelectedQuizForReview(quiz)}
+                      onClick={() => router.push(`/cybersecurity/quiz/review/${quiz.id}`)}
                       className="w-full bg-black hover:bg-zinc-900 rounded-md p-6 border border-zinc-800 hover:border-zinc-700 transition-all duration-150 cursor-pointer text-left"
                     >
                       <div className="flex justify-between items-center">
@@ -636,14 +633,6 @@ export default function PerformancePage() {
           </div>
         )}
       </div>
-
-      {/* Quiz Review Modal - Inside Performance View */}
-      {selectedQuizForReview && (
-        <QuizReviewModal
-          quiz={selectedQuizForReview}
-          onClose={() => setSelectedQuizForReview(null)}
-        />
-      )}
     </div>
   );
 }
