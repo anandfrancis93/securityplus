@@ -313,7 +313,12 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
   "explanation": "why the correct answer(s) are right",
   "incorrectExplanations": ["why option 0 is wrong/right", "why option 1 is wrong/right", "why option 2 is wrong/right", "why option 3 is wrong/right"],
   "topics": ["topic1", "topic2", "topic3"],
-  "difficulty": "${difficulty}"
+  "difficulty": "${difficulty}",
+  "metadata": {
+    "primaryTopic": "main Security+ topic from the list above",
+    "scenario": "brief scenario type (e.g., 'certificate_validation', 'network_attack', 'access_control')",
+    "keyConcept": "specific concept tested (e.g., 'CRL_vs_OCSP', 'DDoS_mitigation', 'RBAC_implementation')"
+  }
 }`;
 
   try {
@@ -367,6 +372,7 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
       irtDifficulty: irtParams.irtDifficulty,
       irtDiscrimination: irtParams.irtDiscrimination,
       maxPoints: irtParams.maxPoints,
+      metadata: shuffledData.metadata,
       createdAt: Date.now(),
     };
   } catch (error) {

@@ -12,6 +12,11 @@ export interface Question {
   irtDifficulty?: number; // IRT difficulty parameter (-3 to +3, higher = harder)
   irtDiscrimination?: number; // IRT discrimination parameter (0.5 to 2.5, higher = better differentiates ability)
   maxPoints?: number; // Maximum points for this question
+  metadata?: {
+    primaryTopic: string; // Main Security+ topic
+    scenario: string; // Scenario type (e.g., 'certificate_validation')
+    keyConcept: string; // Specific concept tested (e.g., 'CRL_vs_OCSP')
+  };
 }
 
 export interface TopicPerformance {
