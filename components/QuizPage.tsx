@@ -591,7 +591,7 @@ export default function QuizPage() {
 
         {/* Question Card */}
         <div className="bg-zinc-950 rounded-md p-10 md:p-12 border-2 border-zinc-800 mb-10 md:mb-12 animate-in fade-in slide-in-from-bottom-4 duration-150">
-          <h2 className="text-3xl md:text-4xl font-bold mb-8 md:mb-10 leading-tight text-white">{currentQuestion.question}</h2>
+          <h2 className="text-lg md:text-xl font-bold mb-8 md:mb-10 leading-tight text-white">{currentQuestion.question}</h2>
 
           {/* Multiple-response instruction */}
           {currentQuestion.questionType === 'multiple' && !showExplanation && (
