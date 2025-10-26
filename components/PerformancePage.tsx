@@ -185,7 +185,7 @@ export default function PerformancePage() {
 
           {/* Hero Section */}
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold mb-6 text-white
+            <h1 className="text-6xl sm:text-7xl md:text-8xl font-medium mb-6 text-white
                          tracking-tight leading-none font-mono">
               Performance
             </h1>
@@ -343,7 +343,7 @@ export default function PerformancePage() {
         {totalAnswered > 0 && (
           <div className="bg-black border border-zinc-800 rounded-md p-8 md:p-10 mb-8 transition-all duration-150">
             <div className="flex items-center justify-between">
-              <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight font-mono">IRT Performance Analysis</h3>
+              <h3 className="text-2xl md:text-3xl font-medium text-white tracking-tight font-mono">IRT Performance Analysis</h3>
               <button
                 id="toggle-irt"
                 onClick={() => setIrtExpanded(!irtExpanded)}
@@ -522,7 +522,7 @@ export default function PerformancePage() {
         {/* Performance Graphs Section */}
         {userProgress && userProgress.quizHistory.length > 0 && (
           <div className="mt-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 tracking-tight font-mono">Progress Charts</h2>
+            <h2 className="text-3xl md:text-4xl font-medium text-white mb-8 tracking-tight font-mono">Progress Charts</h2>
             <PerformanceGraphs userProgress={userProgress} />
           </div>
         )}
@@ -531,7 +531,7 @@ export default function PerformancePage() {
         {userProgress && userProgress.quizHistory.length > 0 && (
           <div className="mt-12 bg-black rounded-md p-8 md:p-10 border border-zinc-800 transition-all duration-150">
             <div className="flex items-center justify-between">
-              <h3 className="text-2xl md:text-3xl font-bold tracking-tight font-mono">Recent Quizzes ({userProgress.quizHistory.length})</h3>
+              <h3 className="text-2xl md:text-3xl font-medium tracking-tight font-mono">Recent Quizzes ({userProgress.quizHistory.length})</h3>
               <button
                 id="toggle-recent-quizzes"
                 onClick={() => setRecentQuizzesExpanded(!recentQuizzesExpanded)}
