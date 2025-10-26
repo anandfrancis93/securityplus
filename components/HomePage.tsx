@@ -8,6 +8,7 @@ export default function HomePage() {
   const router = useRouter();
   const { user, handleSignOut } = useApp();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Close menu when clicking outside
@@ -30,9 +31,11 @@ export default function HomePage() {
     {
       id: 'cybersecurity',
       name: 'Cybersecurity',
-      description: '',
+      description: 'Master security concepts and best practices',
       icon: '🔒',
-      color: 'from-green-500 to-green-600',
+      gradient: 'from-violet-500/20 via-purple-500/20 to-fuchsia-500/20',
+      borderColor: 'border-violet-500/30 hover:border-violet-400',
+      glowColor: 'shadow-violet-500/50',
       path: '/cybersecurity',
       disabled: false,
     },
@@ -41,7 +44,9 @@ export default function HomePage() {
       name: 'Networking',
       description: 'Coming soon',
       icon: '🌐',
-      color: 'from-blue-500 to-blue-600',
+      gradient: 'from-blue-500/20 via-cyan-500/20 to-teal-500/20',
+      borderColor: 'border-blue-500/30',
+      glowColor: 'shadow-blue-500/50',
       path: '/networking',
       disabled: true,
     },
@@ -50,7 +55,9 @@ export default function HomePage() {
       name: 'Maths',
       description: 'Coming soon',
       icon: '📐',
-      color: 'from-blue-500 to-blue-600',
+      gradient: 'from-emerald-500/20 via-green-500/20 to-lime-500/20',
+      borderColor: 'border-emerald-500/30',
+      glowColor: 'shadow-emerald-500/50',
       path: '/maths',
       disabled: true,
     },
@@ -59,7 +66,9 @@ export default function HomePage() {
       name: 'Physics',
       description: 'Coming soon',
       icon: '⚛️',
-      color: 'from-red-500 to-red-600',
+      gradient: 'from-rose-500/20 via-red-500/20 to-orange-500/20',
+      borderColor: 'border-rose-500/30',
+      glowColor: 'shadow-rose-500/50',
       path: '/physics',
       disabled: true,
     },
@@ -68,44 +77,77 @@ export default function HomePage() {
       name: 'English',
       description: 'Coming soon',
       icon: '📚',
-      color: 'from-yellow-500 to-yellow-600',
+      gradient: 'from-amber-500/20 via-yellow-500/20 to-orange-500/20',
+      borderColor: 'border-amber-500/30',
+      glowColor: 'shadow-amber-500/50',
       path: '/english',
       disabled: true,
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-        {/* Header */}
-        <div className="mb-12">
-          <div className="flex justify-end items-center mb-8 relative">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      {/* Background Pattern Overlay - MD3 Surface Effect */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-900/10 via-transparent to-transparent pointer-events-none" />
+
+      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl">
+        {/* Header - MD3 Top App Bar Pattern */}
+        <header className="mb-16 md:mb-20">
+          {/* Menu Button - MD3 Icon Button with State Layer */}
+          <div className="flex justify-end items-center mb-12 relative">
             <div className="relative" ref={menuRef}>
               <button
                 id="menu"
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="text-gray-400 hover:text-white transition-colors p-2"
+                className="relative group p-3 rounded-full transition-all duration-300 ease-out
+                         hover:bg-violet-500/10 active:bg-violet-500/20
+                         focus:outline-none focus:ring-2 focus:ring-violet-500/50"
                 title="Menu"
+                aria-label="Open menu"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                {/* State Layer */}
+                <span className="absolute inset-0 rounded-full bg-violet-400/0 group-hover:bg-violet-400/10 transition-colors duration-300" />
+
+                <svg
+                  className="w-6 h-6 text-slate-300 group-hover:text-violet-300 transition-colors duration-300 relative z-10"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
 
-              {/* Dropdown Menu */}
+              {/* Dropdown Menu - MD3 Menu Pattern with Elevation 2 */}
               {menuOpen && user && !user?.isAnonymous && (
-                <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
-                  {/* User Name */}
-                  <div className="px-4 py-2 text-sm text-white border-b border-gray-700">
-                    <div className="flex items-center gap-2">
-                      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                      <span>{user?.displayName || 'User'}</span>
+                <div
+                  className="absolute right-0 top-full mt-3 bg-slate-800/95 backdrop-blur-xl
+                           border border-slate-700/50 rounded-3xl overflow-hidden
+                           shadow-[0_8px_32px_rgba(0,0,0,0.4),0_2px_8px_rgba(0,0,0,0.2)]
+                           min-w-[240px] z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+                >
+                  {/* User Name Section - MD3 List Item */}
+                  <div className="px-5 py-4 border-b border-slate-700/50 bg-slate-800/50">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-full bg-violet-500/20">
+                        <svg
+                          className="w-5 h-5 text-violet-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          strokeWidth={2}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                      </div>
+                      <span className="text-sm font-medium text-slate-200">{user?.displayName || 'User'}</span>
                     </div>
                   </div>
 
-                  {/* Sign Out */}
+                  {/* Sign Out Button - MD3 List Item with State Layer */}
                   <button
                     id="sign-out"
                     onClick={async () => {
@@ -114,62 +156,125 @@ export default function HomePage() {
                         setMenuOpen(false);
                       }
                     }}
-                    className="w-full px-4 py-2 text-sm text-left text-white hover:bg-gray-700 transition-colors flex items-center gap-2"
+                    className="w-full px-5 py-4 text-sm text-left text-slate-200
+                             hover:bg-slate-700/50 active:bg-slate-700/70
+                             transition-colors duration-200 flex items-center gap-3 group"
                   >
-                    <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
-                    Sign Out
+                    <div className="p-2 rounded-full bg-red-500/20 group-hover:bg-red-500/30 transition-colors duration-200">
+                      <svg
+                        className="w-4 h-4 text-red-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
+                    </div>
+                    <span className="font-medium">Sign Out</span>
                   </button>
                 </div>
               )}
             </div>
           </div>
-          <div className="text-center">
-            <h1 className="text-5xl font-bold mb-4 text-white">
+
+          {/* Hero Section - MD3 Display Typography */}
+          <div className="text-center max-w-4xl mx-auto">
+            <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold mb-6 bg-gradient-to-br from-white via-violet-100 to-violet-200 bg-clip-text text-transparent
+                         tracking-tight leading-none animate-in fade-in slide-in-from-bottom-4 duration-700">
               Learning Hub
             </h1>
-            <p className="text-gray-400 text-lg">Select a subject to begin studying</p>
+            <p className="text-slate-400 text-lg md:text-xl font-light tracking-wide animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+              Select a subject to begin your learning journey
+            </p>
           </div>
-        </div>
+        </header>
 
-        {/* Subject Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {subjects.map((subject) => (
+        {/* Subject Cards Grid - MD3 Card Pattern with Elevation */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 pb-12">
+          {subjects.map((subject, index) => (
             <button
               key={subject.id}
               id={subject.id}
               onClick={() => !subject.disabled && router.push(subject.path)}
               disabled={subject.disabled}
-              className={`relative bg-gray-800 rounded-xl p-8 border-2 transition-all duration-300 ${
-                subject.disabled
-                  ? 'border-gray-700 opacity-50 cursor-not-allowed'
-                  : 'border-gray-700 hover:border-white hover:scale-105 cursor-pointer'
-              }`}
+              onMouseEnter={() => !subject.disabled && setHoveredCard(subject.id)}
+              onMouseLeave={() => setHoveredCard(null)}
+              className={`group relative bg-gradient-to-br ${subject.gradient}
+                       backdrop-blur-sm rounded-[28px] p-8 border-2 ${subject.borderColor}
+                       transition-all duration-500 ease-out
+                       animate-in fade-in slide-in-from-bottom-8 duration-700
+                       ${subject.disabled
+                         ? 'opacity-40 cursor-not-allowed'
+                         : `cursor-pointer hover:scale-[1.02] active:scale-[0.98]
+                            hover:shadow-2xl hover:${subject.glowColor}
+                            focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:ring-offset-2 focus:ring-offset-slate-950`
+                       }`}
+              style={{
+                animationDelay: `${index * 100}ms`,
+                background: subject.disabled
+                  ? undefined
+                  : hoveredCard === subject.id
+                    ? `linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(168, 85, 247, 0.15) 100%)`
+                    : undefined,
+              }}
             >
-              {/* Icon */}
-              <div className="text-6xl mb-4">{subject.icon}</div>
+              {/* MD3 State Layer Overlay */}
+              {!subject.disabled && (
+                <div className="absolute inset-0 rounded-[28px] bg-white/0 group-hover:bg-white/5 group-active:bg-white/10 transition-colors duration-300 pointer-events-none" />
+              )}
 
-              {/* Subject Name */}
-              <h2 className="text-2xl font-bold mb-2 text-white">
+              {/* Card Background Glow Effect */}
+              {!subject.disabled && hoveredCard === subject.id && (
+                <div className={`absolute inset-0 rounded-[28px] blur-xl ${subject.gradient} opacity-50 -z-10 transition-opacity duration-500`} />
+              )}
+
+              {/* Icon with MD3 Scale Animation */}
+              <div className={`text-7xl md:text-8xl mb-6 transition-transform duration-500 ease-out
+                           ${!subject.disabled && hoveredCard === subject.id ? 'scale-110 rotate-3' : 'scale-100 rotate-0'}`}>
+                {subject.icon}
+              </div>
+
+              {/* Subject Name - MD3 Headline Typography */}
+              <h2 className="text-2xl md:text-3xl font-bold mb-3 text-white tracking-tight relative z-10">
                 {subject.name}
               </h2>
 
-              {/* Description */}
-              <p className="text-gray-400 text-sm mb-4">{subject.description}</p>
+              {/* Description - MD3 Body Typography */}
+              <p className="text-slate-400 text-sm md:text-base leading-relaxed relative z-10 min-h-[3rem]">
+                {subject.description}
+              </p>
 
-              {/* Coming Soon Badge */}
+              {/* Coming Soon Badge - MD3 Chip/Badge Pattern */}
               {subject.disabled && (
-                <div className="absolute top-4 right-4">
-                  <span className="bg-gray-700 text-gray-400 text-xs px-3 py-1 rounded-full">
+                <div className="absolute top-5 right-5">
+                  <span className="inline-flex items-center gap-2 bg-slate-700/80 backdrop-blur-sm text-slate-300
+                                 text-xs font-medium px-4 py-2 rounded-full border border-slate-600/50
+                                 shadow-lg">
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-pulse" />
                     Coming Soon
                   </span>
+                </div>
+              )}
+
+              {/* Active Indicator - MD3 Pattern */}
+              {!subject.disabled && (
+                <div className={`absolute bottom-5 right-5 transition-all duration-300
+                              ${hoveredCard === subject.id ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-2'}`}>
+                  <svg
+                    className="w-6 h-6 text-violet-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2.5}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
                 </div>
               )}
             </button>
           ))}
         </div>
-
       </div>
     </div>
   );
