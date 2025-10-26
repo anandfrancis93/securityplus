@@ -77,9 +77,9 @@ export default function HomePage() {
             <ellipse cx="12" cy="12" rx="9" ry="4.5" strokeLinecap="round" transform="rotate(60 12 12)" />
             {/* Electron orbit 3 - -60° angle */}
             <ellipse cx="12" cy="12" rx="9" ry="4.5" strokeLinecap="round" transform="rotate(-60 12 12)" />
-            {/* Three electrons positioned at the end of each orbit (major axis) */}
-            {/* Electron 1 - at end of horizontal orbit */}
-            <circle cx="21" cy="12" r="1.3" fill="currentColor" />
+            {/* Three electrons positioned at the ends of orbits for balance */}
+            {/* Electron 1 - at LEFT end of horizontal orbit */}
+            <circle cx="3" cy="12" r="1.3" fill="currentColor" />
             {/* Electron 2 - at end of 60° rotated orbit */}
             <circle cx="16.5" cy="19.8" r="1.3" fill="currentColor" />
             {/* Electron 3 - at end of -60° rotated orbit */}
