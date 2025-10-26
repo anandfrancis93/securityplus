@@ -631,7 +631,7 @@ export default function QuizPage() {
                   } ${showExplanation ? 'cursor-default' : 'cursor-pointer'} focus:outline-none focus:ring-2 focus:ring-zinc-700`}
                 >
                   <div>
-                    <div className="inline-flex items-center gap-3 mr-3">
+                    <div className="inline-flex items-center gap-3 mr-3 align-top">
                       {/* Checkbox or Radio indicator */}
                       {currentQuestion.questionType === 'multiple' ? (
                         <div className={`w-7 h-7 rounded-md border-2 flex items-center justify-center transition-all duration-150 shrink-0 ${
@@ -650,9 +650,9 @@ export default function QuizPage() {
                         {String.fromCharCode(65 + index)}.
                       </span>
                     </div>
-                    <span className="text-zinc-100 text-lg md:text-xl leading-relaxed inline">{option}</span>
-                    {showCorrect && <span className="ml-2 text-green-400 text-2xl">✓</span>}
-                    {showIncorrect && <span className="ml-2 text-red-400 text-2xl">✗</span>}
+                    <span className="text-zinc-100 text-lg md:text-xl leading-relaxed inline align-top">{option}</span>
+                    {showCorrect && <span className="ml-2 text-green-400 text-2xl align-top">✓</span>}
+                    {showIncorrect && <span className="ml-2 text-red-400 text-2xl align-top">✗</span>}
                   </div>
                 </button>
               );
