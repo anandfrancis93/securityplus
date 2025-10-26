@@ -458,7 +458,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             <Line type="monotone" dataKey="score" stroke="#10b981" strokeWidth={3} dot={{ fill: '#10b981', r: 5 }} />
           </LineChart>
         </ResponsiveContainer>
-        <p className="text-slate-400 text-base md:text-lg mt-4">Predicted Security+ exam score (750 required to pass)</p>
       </div>
 
       {/* Graph 3: Accuracy by Difficulty */}
