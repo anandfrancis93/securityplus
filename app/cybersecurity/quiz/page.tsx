@@ -1,5 +1,5 @@
-import QuizPage from "@/components/QuizPage";
+import QuizOptionsPage from '@/components/QuizOptionsPage';
 
-export default function Quiz() {
-  return <QuizPage />;
+export default function QuizOptions() {
+  return <QuizOptionsPage />;
 }

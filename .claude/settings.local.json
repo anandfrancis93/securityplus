@@ -9,7 +9,9 @@
       "Bash(npx tsc:*)",
       "Bash(git mv:*)",
       "WebFetch(domain:m3.material.io)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(dir \"C:\\Users\\anand\\securityplus\\app\\cybersecurity\\quiz\")",
+      "Bash(move:*)"
     ],
     "deny": [],
     "ask": []
