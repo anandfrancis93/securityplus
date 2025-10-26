@@ -41,7 +41,7 @@ export default function HomePage() {
     switch (subjectId) {
       case 'cybersecurity':
         return (
-          <svg className={baseClasses} viewBox="0 -1 24 26" fill="none" stroke="currentColor" strokeWidth={1.5}>
+          <svg className={`${baseClasses} text-violet-400`} viewBox="0 -1 24 26" fill="none" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z" />
             <circle cx="12" cy="12" r="3" strokeWidth={1.5} />
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6M9 12h6" />
@@ -49,7 +49,7 @@ export default function HomePage() {
         );
       case 'networking':
         return (
-          <svg className={baseClasses} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+          <svg className={`${baseClasses} text-cyan-400`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
             <circle cx="12" cy="12" r="10" strokeLinecap="round" />
             <path strokeLinecap="round" d="M2 12h20" />
             <ellipse cx="12" cy="12" rx="4" ry="10" strokeLinecap="round" />
@@ -57,7 +57,7 @@ export default function HomePage() {
         );
       case 'maths':
         return (
-          <svg className={baseClasses} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+          <svg className={`${baseClasses} text-emerald-400`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
             <rect x="3" y="3" width="18" height="18" rx="2" strokeLinecap="round" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M7 9h3M8.5 7.5v3" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M14 9h3" />
@@ -69,7 +69,7 @@ export default function HomePage() {
         );
       case 'physics':
         return (
-          <svg className={baseClasses} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={0.9}>
+          <svg className={`${baseClasses} text-rose-400`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={0.9}>
             <circle cx="12" cy="12" r="1.2" fill="currentColor" />
             <ellipse cx="12" cy="12" rx="9" ry="4.5" strokeLinecap="round" />
             <ellipse cx="12" cy="12" rx="9" ry="4.5" strokeLinecap="round" transform="rotate(60 12 12)" />
@@ -81,7 +81,7 @@ export default function HomePage() {
         );
       case 'english':
         return (
-          <svg className={baseClasses} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+          <svg className={`${baseClasses} text-amber-400`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 19.5A2.5 2.5 0 016.5 17H20" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M10 14l2-5 2 5M10.5 12.5h3" />
@@ -236,7 +236,7 @@ export default function HomePage() {
                        focus:outline-none focus:ring-1 focus:ring-zinc-700`}
             >
               {/* Icon */}
-              <div className={`flex justify-center items-center mb-6 ${subject.disabled ? 'text-zinc-700' : 'text-zinc-400'}`}>
+              <div className={`flex justify-center items-center mb-6 ${subject.disabled ? 'opacity-30' : ''}`}>
                 {getSubjectIcon(subject.id)}
               </div>
 
