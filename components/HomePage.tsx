@@ -51,9 +51,18 @@ export default function HomePage() {
       case 'maths':
         return (
           <svg className={`${baseClasses} ${colorClass}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+            {/* Calculator-style math symbols */}
             <rect x="3" y="3" width="18" height="18" rx="2" strokeLinecap="round" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M7 8h10M7 12h10M7 16h6" />
-            <circle cx="16" cy="16" r="1.5" fill="currentColor" />
+            {/* Plus sign */}
+            <path strokeLinecap="round" strokeLinejoin="round" d="M7 9h3M8.5 7.5v3" />
+            {/* Minus sign */}
+            <path strokeLinecap="round" strokeLinejoin="round" d="M14 9h3" />
+            {/* Multiply sign */}
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6.5 14.5l2 2M8.5 14.5l-2 2" />
+            {/* Divide sign */}
+            <circle cx="15.5" cy="14" r="0.5" fill="currentColor" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M14 15.5h3" />
+            <circle cx="15.5" cy="17" r="0.5" fill="currentColor" />
           </svg>
         );
       case 'physics':
@@ -71,9 +80,13 @@ export default function HomePage() {
       case 'english':
         return (
           <svg className={`${baseClasses} ${colorClass}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+            {/* Book with "A" */}
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 19.5A2.5 2.5 0 016.5 17H20" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 7h6M9 11h6M9 15h4" />
+            {/* Letter "A" */}
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10 14l2-5 2 5M10.5 12.5h3" />
+            {/* Underline decoration */}
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 17h6" strokeWidth={1} />
           </svg>
         );
       default:
