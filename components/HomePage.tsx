@@ -67,12 +67,16 @@ export default function HomePage() {
         );
       case 'physics':
         return (
-          <svg className={`${baseClasses} ${colorClass}`} viewBox="0 0 24 24" fill="currentColor" stroke="none">
-            {/* E=mc² formula */}
-            <text x="12" y="15" fontSize="8" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">
-              E=mc
-              <tspan fontSize="5" dy="-3">2</tspan>
-            </text>
+          <svg className={`${baseClasses} ${colorClass}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+            {/* Clean atom design */}
+            {/* Central nucleus */}
+            <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+            {/* Single orbital ring */}
+            <circle cx="12" cy="12" r="8" strokeLinecap="round" />
+            {/* Three electrons evenly spaced on orbit */}
+            <circle cx="20" cy="12" r="1.5" fill="currentColor" />
+            <circle cx="8.07" cy="5.07" r="1.5" fill="currentColor" />
+            <circle cx="8.07" cy="18.93" r="1.5" fill="currentColor" />
           </svg>
         );
       case 'english':
