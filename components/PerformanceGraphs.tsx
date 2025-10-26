@@ -447,7 +447,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={scoreOverTime}>
             <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-            <XAxis dataKey="quiz" stroke="#9ca3af" label={{ value: 'Quiz', position: 'insideBottom', offset: -5, fill: '#9ca3af' }} />
+            <XAxis dataKey="quiz" stroke="#9ca3af" tick={false} label={{ value: 'Quiz', position: 'insideBottom', offset: -5, fill: '#9ca3af' }} />
             <YAxis domain={[100, 900]} stroke="#9ca3af" />
             <Tooltip
               contentStyle={{ backgroundColor: '#000000', border: '1px solid #1f2937', borderRadius: '16px' }}
