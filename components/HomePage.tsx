@@ -68,19 +68,19 @@ export default function HomePage() {
       case 'physics':
         return (
           <svg className={`${baseClasses} ${colorClass}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.2}>
-            {/* 3D Atom with three elliptical orbits - much more space around nucleus */}
-            {/* Smaller nucleus for better visibility */}
+            {/* 3D Atom with three elliptical orbits - flatter orbits for clarity */}
+            {/* Nucleus with good spacing */}
             <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-            {/* Electron orbit 1 - horizontal (increased ry for more clearance) */}
-            <ellipse cx="12" cy="12" rx="9" ry="5.5" strokeLinecap="round" />
+            {/* Electron orbit 1 - horizontal (flatter/wider) */}
+            <ellipse cx="12" cy="12" rx="9" ry="3" strokeLinecap="round" />
             {/* Electron orbit 2 - 60° angle */}
-            <ellipse cx="12" cy="12" rx="9" ry="5.5" strokeLinecap="round" transform="rotate(60 12 12)" />
+            <ellipse cx="12" cy="12" rx="9" ry="3" strokeLinecap="round" transform="rotate(60 12 12)" />
             {/* Electron orbit 3 - -60° angle */}
-            <ellipse cx="12" cy="12" rx="9" ry="5.5" strokeLinecap="round" transform="rotate(-60 12 12)" />
+            <ellipse cx="12" cy="12" rx="9" ry="3" strokeLinecap="round" transform="rotate(-60 12 12)" />
             {/* Three electrons on different orbits */}
             <circle cx="21" cy="12" r="1.3" fill="currentColor" />
-            <circle cx="7.5" cy="16.2" r="1.3" fill="currentColor" />
-            <circle cx="16.5" cy="7.8" r="1.3" fill="currentColor" />
+            <circle cx="7.5" cy="14.5" r="1.3" fill="currentColor" />
+            <circle cx="16.5" cy="9.5" r="1.3" fill="currentColor" />
           </svg>
         );
       case 'english':
