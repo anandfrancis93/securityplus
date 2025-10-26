@@ -70,7 +70,7 @@ export default function HomePage() {
         );
       case 'physics':
         return (
-          <svg className={`${baseClasses} ${colorClass}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.2}>
+          <svg className={`${baseClasses} ${colorClass}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={0.9}>
             {/* 3D Atom with three elliptical orbits - balanced spacing */}
             {/* Smaller nucleus for more clearance */}
             <circle cx="12" cy="12" r="1.2" fill="currentColor" />
