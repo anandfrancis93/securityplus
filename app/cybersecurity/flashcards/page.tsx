@@ -610,6 +610,7 @@ export default function FlashcardsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Study Option */}
             <button
+              id="study"
               onClick={handleStartStudy}
               className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-white cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
               style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
@@ -623,6 +624,7 @@ export default function FlashcardsPage() {
 
             {/* Create Option */}
             <button
+              id="create"
               onClick={() => setSelectedOption('create')}
               className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-white cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
               style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
@@ -636,6 +638,7 @@ export default function FlashcardsPage() {
 
             {/* Search Option */}
             <button
+              id="search"
               onClick={() => setSelectedOption('search')}
               className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-white cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
               style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
@@ -650,6 +653,7 @@ export default function FlashcardsPage() {
 
             {/* Performance Option */}
             <button
+              id="flashcard-performance"
               onClick={() => setSelectedOption('performance')}
               className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-white cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
               style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
@@ -812,6 +816,7 @@ export default function FlashcardsPage() {
           {flashcards.length > 0 && (
             <div className="text-center mt-8">
               <button
+                id="reset-flashcard-progress"
                 onClick={handleResetProgress}
                 className="bg-yellow-600/20 hover:bg-yellow-600/30 text-yellow-400 border border-yellow-600/50 font-medium py-2 px-6 rounded-lg transition-all min-h-[44px]"
               >
@@ -912,6 +917,7 @@ export default function FlashcardsPage() {
                   Term / Question
                 </label>
                 <input
+                  id="term-input"
                   type="text"
                   value={manualTerm}
                   onChange={(e) => {
@@ -932,6 +938,7 @@ export default function FlashcardsPage() {
                   Definition / Answer
                 </label>
                 <textarea
+                  id="definition-input"
                   value={manualDefinition}
                   onChange={(e) => {
                     setManualDefinition(e.target.value);
@@ -951,6 +958,7 @@ export default function FlashcardsPage() {
                   Security+ Domain
                 </label>
                 <select
+                  id="domain-dropdown"
                   value={manualDomain}
                   onChange={(e) => setManualDomain(e.target.value)}
                   className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-white focus:outline-none"
@@ -987,6 +995,7 @@ export default function FlashcardsPage() {
                   </div>
                 ) : (
                   <input
+                    id="file-input"
                     type="file"
                     accept="image/*"
                     onChange={handleManualImageChange}
@@ -999,6 +1008,7 @@ export default function FlashcardsPage() {
 
               <div className="flex items-center justify-end">
                 <button
+                  id="create-flashcard"
                   onClick={handleManualCreate}
                   disabled={generating}
                   className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-all"
@@ -1090,6 +1100,7 @@ export default function FlashcardsPage() {
               <div className="mb-3 flex-shrink-0">
                 <div className="relative">
                   <input
+                    id="search-input"
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -1149,6 +1160,7 @@ export default function FlashcardsPage() {
                       </div>
                       <div className="flex items-center gap-1 relative z-10">
                         <button
+                          id={`edit-flashcard-${card.id}`}
                           onClick={(e) => {
                             e.stopPropagation();
                             console.log('Button clicked!', card.term);
@@ -1172,6 +1184,7 @@ export default function FlashcardsPage() {
                           </svg>
                         </button>
                         <button
+                          id={`delete-flashcard-${card.id}`}
                           onClick={(e) => {
                             e.stopPropagation();
                             console.log('Delete button clicked!', card.id);
@@ -1293,6 +1306,7 @@ export default function FlashcardsPage() {
               <div className="mb-3 flex-shrink-0">
                 <div className="relative">
                   <input
+                    id="search-input"
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -1352,6 +1366,7 @@ export default function FlashcardsPage() {
                       </div>
                       <div className="flex items-center gap-1 relative z-10">
                         <button
+                          id={`edit-flashcard-${card.id}`}
                           onClick={(e) => {
                             e.stopPropagation();
                             console.log('Button clicked!', card.term);
@@ -1375,6 +1390,7 @@ export default function FlashcardsPage() {
                           </svg>
                         </button>
                         <button
+                          id={`delete-flashcard-${card.id}`}
                           onClick={(e) => {
                             e.stopPropagation();
                             console.log('Delete button clicked!', card.id);

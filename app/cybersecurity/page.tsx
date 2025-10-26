@@ -1,5 +1,5 @@
-import HomePage from "@/components/HomePage";
+import CybersecurityPage from "@/components/CybersecurityPage";
 
-export default function CybersecurityPage() {
-  return <HomePage />;
+export default function Cybersecurity() {
+  return <CybersecurityPage />;
 }

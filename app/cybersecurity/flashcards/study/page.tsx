@@ -238,6 +238,7 @@ export default function StudyPage() {
         {/* Flashcard */}
         <div className="mb-8" style={{ perspective: '1000px' }}>
           <div
+            id="flip-card"
             className={`relative bg-gray-800 rounded-xl p-4 sm:p-8 border-2 border-gray-700 cursor-pointer transition-all duration-500 ease-in-out ${
               isFlipped ? 'bg-blue-900/20 border-blue-500/30' : ''
             }`}
@@ -316,6 +317,7 @@ export default function StudyPage() {
             {/* Again Button */}
             <div className="relative group">
               <button
+                id="again"
                 onClick={() => handleAnswer('again')}
                 disabled={answering}
                 className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation border-2 border-transparent hover:border-white active:translate-y-0"
@@ -333,6 +335,7 @@ export default function StudyPage() {
             {/* Hard Button */}
             <div className="relative group">
               <button
+                id="hard"
                 onClick={() => handleAnswer('hard')}
                 disabled={answering}
                 className="w-full bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation border-2 border-transparent hover:border-white active:translate-y-0"
@@ -350,6 +353,7 @@ export default function StudyPage() {
             {/* Good Button */}
             <div className="relative group">
               <button
+                id="good"
                 onClick={() => handleAnswer('good')}
                 disabled={answering}
                 className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation border-2 border-transparent hover:border-white active:translate-y-0"
@@ -367,6 +371,7 @@ export default function StudyPage() {
             {/* Easy Button */}
             <div className="relative group">
               <button
+                id="easy"
                 onClick={() => handleAnswer('easy')}
                 disabled={answering}
                 className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation border-2 border-transparent hover:border-white active:translate-y-0"

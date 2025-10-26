@@ -1,5 +1,5 @@
-import SubjectSelection from "@/components/SubjectSelection";
+import HomePage from "@/components/HomePage";
 
 export default function Home() {
-  return <SubjectSelection />;
+  return <HomePage />;
 }

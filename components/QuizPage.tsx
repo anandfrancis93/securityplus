@@ -580,6 +580,7 @@ export default function QuizPage() {
           {/* Submit Button */}
           {!showExplanation && (
             <button
+              id="submit-answer"
               onClick={handleSubmitAnswer}
               disabled={
                 currentQuestion.questionType === 'multiple'
@@ -708,6 +709,7 @@ export default function QuizPage() {
 
             {/* Next Button */}
             <button
+              id="next"
               onClick={handleNextQuestion}
               disabled={currentQuestionIndex >= questions.length - 1 && currentQuestionIndex < totalQuestions - 1}
               className={`w-full py-3 rounded-lg font-bold text-lg transition-all ${
@@ -728,6 +730,7 @@ export default function QuizPage() {
         {/* End Quiz Button */}
         <div className="mt-8 text-center">
           <button
+            id="end-quiz"
             onClick={handleEndQuiz}
             className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-medium"
           >
