@@ -481,7 +481,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             <BarChart data={domainPerformance} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
               <XAxis type="number" domain={[0, 100]} stroke="#9ca3af" label={{ value: '% Correct', position: 'insideBottom', offset: -5, fill: '#9ca3af' }} />
-              <YAxis type="category" dataKey="domain" stroke="#9ca3af" width={0} tick={false} />
+              <YAxis type="category" dataKey="domain" stroke="#9ca3af" width={0} tick={false} label={{ value: 'Domains', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
               <Tooltip content={<CustomBarTooltip color="#3b82f6" />} cursor={{ fill: 'rgba(71, 85, 105, 0.1)' }} />
               <Bar dataKey="accuracy" fill="#3b82f6" radius={[0, 8, 8, 0]} />
             </BarChart>
