@@ -68,17 +68,13 @@ export default function HomePage() {
       case 'physics':
         return (
           <svg className={`${baseClasses} ${colorClass}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-            {/* Simplified atom - cleaner design */}
-            {/* Nucleus */}
-            <circle cx="12" cy="12" r="2" fill="currentColor" />
-            {/* Two crossing orbital paths */}
-            <ellipse cx="12" cy="12" rx="8" ry="3.5" strokeLinecap="round" />
-            <ellipse cx="12" cy="12" rx="8" ry="3.5" strokeLinecap="round" transform="rotate(90 12 12)" />
-            {/* Electrons */}
-            <circle cx="20" cy="12" r="1.2" fill="currentColor" />
-            <circle cx="4" cy="12" r="1.2" fill="currentColor" />
-            <circle cx="12" cy="4" r="1.2" fill="currentColor" />
-            <circle cx="12" cy="20" r="1.2" fill="currentColor" />
+            {/* Clean wave pattern representing wave physics */}
+            <path strokeLinecap="round" strokeLinejoin="round"
+                  d="M3 12c0-3 1.5-4.5 3-4.5s3 1.5 3 4.5-1.5 4.5-3 4.5-3-1.5-3-4.5z" />
+            <path strokeLinecap="round" strokeLinejoin="round"
+                  d="M9 12c0-3 1.5-4.5 3-4.5s3 1.5 3 4.5-1.5 4.5-3 4.5-3-1.5-3-4.5z" />
+            <path strokeLinecap="round" strokeLinejoin="round"
+                  d="M15 12c0-3 1.5-4.5 3-4.5s3 1.5 3 4.5-1.5 4.5-3 4.5-3-1.5-3-4.5z" />
           </svg>
         );
       case 'english':
