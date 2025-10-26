@@ -41,7 +41,7 @@ export default function QuizOptionsPage() {
       description: 'Take 10 AI-generated synthesis questions',
       onClick: () => router.push('/cybersecurity/quiz/start'),
       icon: (
-        <svg className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+        <svg className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
       ),
@@ -52,7 +52,7 @@ export default function QuizOptionsPage() {
       description: 'View your scores, IRT analysis, and history',
       onClick: () => router.push('/cybersecurity/performance'),
       icon: (
-        <svg className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+        <svg className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
         </svg>
       ),
@@ -155,17 +155,17 @@ export default function QuizOptionsPage() {
 
           {/* Hero Section */}
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 text-white font-mono tracking-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3 text-white font-mono tracking-tight">
               Quiz
             </h1>
-            <p className="text-zinc-500 text-xs sm:text-sm font-mono tracking-tight">
+            <p className="text-zinc-500 text-sm sm:text-base font-mono tracking-tight">
               Choose an option
             </p>
           </div>
         </header>
 
         {/* Options Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6 pb-4 sm:pb-6 md:pb-8 flex-1 content-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 pb-4 sm:pb-6 md:pb-8 flex-1 content-start">
           {options.map((option) => (
             <button
               key={option.id}
@@ -173,7 +173,7 @@ export default function QuizOptionsPage() {
               onClick={option.onClick}
               onMouseEnter={() => setHoveredCard(option.id)}
               onMouseLeave={() => setHoveredCard(null)}
-              className={`relative bg-zinc-950 rounded-md p-6 sm:p-8 md:p-10 border transition-all duration-150
+              className={`relative bg-zinc-950 rounded-md p-10 sm:p-12 md:p-16 border transition-all duration-150
                        ${hoveredCard === option.id
                          ? 'border-zinc-700 bg-zinc-900/50'
                          : 'border-zinc-800 hover:border-zinc-700'
@@ -181,17 +181,17 @@ export default function QuizOptionsPage() {
                        focus:outline-none focus:ring-1 focus:ring-zinc-700`}
             >
               {/* Icon */}
-              <div className="flex justify-center items-center mb-4 sm:mb-5 md:mb-6">
+              <div className="flex justify-center items-center mb-6 sm:mb-8 md:mb-10">
                 {option.icon}
               </div>
 
               {/* Option Name */}
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3 text-white font-mono tracking-tight text-center">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-white font-mono tracking-tight text-center">
                 {option.name}
               </h2>
 
               {/* Description */}
-              <p className="text-zinc-500 text-xs sm:text-sm md:text-base font-mono text-center">
+              <p className="text-zinc-500 text-sm sm:text-base md:text-lg font-mono text-center">
                 {option.description}
               </p>
 
