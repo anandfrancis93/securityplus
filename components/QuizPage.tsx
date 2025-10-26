@@ -630,9 +630,9 @@ export default function QuizPage() {
                       : 'border-zinc-700 hover:border-zinc-600 bg-zinc-950 hover:bg-zinc-900'
                   } ${showExplanation ? 'cursor-default' : 'cursor-pointer'} focus:outline-none focus:ring-2 focus:ring-zinc-700`}
                 >
-                  <div className="flex items-start gap-5">
+                  <div className="flex flex-col gap-3">
                     {/* Checkbox or Radio indicator */}
-                    <div className="flex items-center shrink-0">
+                    <div className="flex items-center">
                       {currentQuestion.questionType === 'multiple' ? (
                         <div className={`w-7 h-7 rounded-md border-2 flex items-center justify-center transition-all duration-150 ${
                           isSelected ? 'bg-zinc-700 border-zinc-600' : 'border-zinc-600'
@@ -647,12 +647,14 @@ export default function QuizPage() {
                         </div>
                       )}
                     </div>
-                    <span className="font-bold text-xl text-zinc-400 min-w-[2rem]">
-                      {String.fromCharCode(65 + index)}.
-                    </span>
-                    <span className="flex-1 text-zinc-100 text-lg md:text-xl leading-relaxed">{option}</span>
-                    {showCorrect && <span className="ml-2 text-green-400 text-2xl">✓</span>}
-                    {showIncorrect && <span className="ml-2 text-red-400 text-2xl">✗</span>}
+                    <div className="flex items-start gap-2">
+                      <span className="font-bold text-xl text-zinc-400 min-w-[2rem] shrink-0">
+                        {String.fromCharCode(65 + index)}.
+                      </span>
+                      <span className="flex-1 text-zinc-100 text-lg md:text-xl leading-relaxed">{option}</span>
+                      {showCorrect && <span className="ml-2 text-green-400 text-2xl shrink-0">✓</span>}
+                      {showIncorrect && <span className="ml-2 text-red-400 text-2xl shrink-0">✗</span>}
+                    </div>
                   </div>
                 </button>
               );
