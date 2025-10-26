@@ -67,12 +67,12 @@ export default function HomePage() {
         );
       case 'physics':
         return (
-          <svg className={`${baseClasses} ${colorClass}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-            {/* Lightning bolt - represents energy/electricity */}
-            <path strokeLinecap="round" strokeLinejoin="round"
-                  d="M13 2L3 14h8l-1 8 10-12h-8l1-8z"
-                  fill="currentColor"
-                  stroke="none" />
+          <svg className={`${baseClasses} ${colorClass}`} viewBox="0 0 24 24" fill="currentColor" stroke="none">
+            {/* E=mc² formula */}
+            <text x="12" y="15" fontSize="8" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">
+              E=mc
+              <tspan fontSize="5" dy="-3">2</tspan>
+            </text>
           </svg>
         );
       case 'english':
