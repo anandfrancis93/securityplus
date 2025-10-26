@@ -477,11 +477,11 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       {domainPerformance.length > 0 && (
         <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
           <h3 className="text-2xl md:text-3xl font-medium text-white mb-6 tracking-tight font-mono">Performance by SY0-701 Domain</h3>
-          <ResponsiveContainer width="100%" height={350}>
+          <ResponsiveContainer width="100%" height={400}>
             <BarChart data={domainPerformance} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
               <XAxis type="number" domain={[0, 100]} stroke="#9ca3af" label={{ value: '% Correct', position: 'insideBottom', offset: -5, fill: '#9ca3af' }} />
-              <YAxis type="category" dataKey="domain" stroke="#9ca3af" width={200} tick={false} />
+              <YAxis type="category" dataKey="domain" stroke="#9ca3af" width={0} tick={false} />
               <Tooltip content={<CustomBarTooltip color="#3b82f6" />} cursor={{ fill: 'rgba(71, 85, 105, 0.1)' }} />
               <Bar dataKey="accuracy" fill="#3b82f6" radius={[0, 8, 8, 0]} />
             </BarChart>
