@@ -186,7 +186,7 @@ export default function PerformancePage() {
           {/* Hero Section */}
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold mb-6 text-white
-                         tracking-tight leading-none">
+                         tracking-tight leading-none font-mono">
               Performance
             </h1>
             <p className="text-zinc-400 text-lg md:text-xl font-light tracking-wide font-mono">

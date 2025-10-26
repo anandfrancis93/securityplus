@@ -422,7 +422,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
       {/* Graph 1: Ability Level Over Time */}
       <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
-        <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight">Ability Level Over Time</h3>
+        <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight font-mono">Ability Level Over Time</h3>
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={abilityOverTime}>
             <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
@@ -443,7 +443,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
       {/* Graph 2: Predicted Score Over Time */}
       <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
-        <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight">Predicted Score Over Time</h3>
+        <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight font-mono">Predicted Score Over Time</h3>
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={scoreOverTime}>
             <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
@@ -463,7 +463,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
       {/* Graph 3: Accuracy by Difficulty */}
       <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
-        <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight">Accuracy by Difficulty Level</h3>
+        <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight font-mono">Accuracy by Difficulty Level</h3>
         <ResponsiveContainer width="100%" height={350}>
           <BarChart data={accuracyByDifficulty}>
             <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
@@ -479,7 +479,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       {/* Graph 4: Topic Performance by Domain */}
       {domainPerformance.length > 0 && (
         <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
-          <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight">Performance by SY0-701 Domain</h3>
+          <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight font-mono">Performance by SY0-701 Domain</h3>
           <ResponsiveContainer width="100%" height={350}>
             <BarChart data={domainPerformance} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
@@ -495,7 +495,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
       {/* Graph 5: Questions Answered Over Time */}
       <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
-        <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight">Study Volume Over Time</h3>
+        <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight font-mono">Study Volume Over Time</h3>
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={questionsOverTime}>
             <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
@@ -514,7 +514,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
       {/* Topic Coverage Tables by Domain */}
       <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 shadow-xl shadow-black/50">
-        <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight">Topic Coverage by Domain</h3>
+        <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight font-mono">Topic Coverage by Domain</h3>
         <p className="text-slate-400 text-base md:text-lg mb-8">All Security+ SY0-701 topics organized by domain, showing coverage frequency</p>
 
         <div className="space-y-6">
