@@ -465,7 +465,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         <ResponsiveContainer width="100%" height={350}>
           <BarChart data={accuracyByDifficulty}>
             <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-            <XAxis dataKey="difficulty" stroke="#9ca3af" />
+            <XAxis dataKey="difficulty" stroke="#9ca3af" tickLine={false} />
             <YAxis domain={[0, 100]} stroke="#9ca3af" label={{ value: '% Correct', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
             <Tooltip content={<CustomBarTooltip color="#10b981" />} cursor={{ fill: 'rgba(71, 85, 105, 0.1)' }} />
             <Bar dataKey="accuracy" fill="#10b981" radius={[8, 8, 0, 0]} />
