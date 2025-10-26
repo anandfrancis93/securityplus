@@ -438,7 +438,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             <Line type="monotone" dataKey="ability" stroke="#3b82f6" strokeWidth={3} dot={{ fill: '#3b82f6', r: 5 }} />
           </LineChart>
         </ResponsiveContainer>
-        <p className="text-slate-400 text-base md:text-lg mt-4">Your ability estimate (θ) ranges from -3 (beginner) to +3 (expert)</p>
       </div>
 
       {/* Graph 2: Predicted Score Over Time */}
