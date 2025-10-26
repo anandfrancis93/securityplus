@@ -35,7 +35,7 @@ export default function HomePage() {
     switch (subjectId) {
       case 'cybersecurity':
         return (
-          <svg className={`${baseClasses} ${colorClass}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+          <svg className={`${baseClasses} ${colorClass}`} viewBox="0 -1 24 26" fill="none" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z" />
             <circle cx="12" cy="12" r="3" strokeWidth={1.5} />
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6M9 12h6" />
