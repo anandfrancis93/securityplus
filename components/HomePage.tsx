@@ -100,34 +100,39 @@ export default function HomePage() {
       description: 'Master security concepts and best practices',
       path: '/cybersecurity',
       disabled: false,
+      clickable: true,
     },
     {
       id: 'networking',
       name: 'Networking',
-      description: 'Coming soon',
+      description: 'Network protocols and infrastructure',
       path: '/networking',
-      disabled: true,
+      disabled: false,
+      clickable: false,
     },
     {
       id: 'maths',
       name: 'Maths',
-      description: 'Coming soon',
+      description: 'Mathematical concepts and problem solving',
       path: '/maths',
-      disabled: true,
+      disabled: false,
+      clickable: false,
     },
     {
       id: 'physics',
       name: 'Physics',
-      description: 'Coming soon',
+      description: 'Physical laws and scientific principles',
       path: '/physics',
-      disabled: true,
+      disabled: false,
+      clickable: false,
     },
     {
       id: 'english',
       name: 'English',
-      description: 'Coming soon',
+      description: 'Language arts and literature',
       path: '/english',
-      disabled: true,
+      disabled: false,
+      clickable: false,
     },
   ];
 
@@ -222,16 +227,18 @@ export default function HomePage() {
             <button
               key={subject.id}
               id={subject.id}
-              onClick={() => !subject.disabled && router.push(subject.path)}
+              onClick={() => subject.clickable && router.push(subject.path)}
               disabled={subject.disabled}
-              onMouseEnter={() => !subject.disabled && setHoveredCard(subject.id)}
+              onMouseEnter={() => subject.clickable && setHoveredCard(subject.id)}
               onMouseLeave={() => setHoveredCard(null)}
               className={`relative bg-zinc-950 backdrop-blur-sm rounded-md p-8 border transition-all duration-150
                        ${subject.disabled
                          ? 'border-zinc-900 opacity-40 cursor-not-allowed'
-                         : hoveredCard === subject.id
-                           ? 'border-zinc-700 bg-zinc-900/50'
-                           : 'border-zinc-800 hover:border-zinc-700'
+                         : subject.clickable
+                           ? hoveredCard === subject.id
+                             ? 'border-zinc-700 bg-zinc-900/50'
+                             : 'border-zinc-800 hover:border-zinc-700'
+                           : 'border-zinc-800 cursor-default'
                        }
                        focus:outline-none focus:ring-1 focus:ring-zinc-700`}
             >
@@ -261,7 +268,7 @@ export default function HomePage() {
               )}
 
               {/* Active Indicator Arrow */}
-              {!subject.disabled && hoveredCard === subject.id && (
+              {subject.clickable && hoveredCard === subject.id && (
                 <div className="absolute bottom-4 right-4 text-zinc-600">
                   <svg
                     className="w-5 h-5"
