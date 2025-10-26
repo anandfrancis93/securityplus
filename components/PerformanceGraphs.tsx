@@ -435,7 +435,20 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             />
             <ReferenceLine y={0} stroke="#6b7280" strokeDasharray="3 3" label={{ value: 'Average', fill: '#9ca3af' }} />
             <ReferenceLine y={1} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Target', fill: '#10b981' }} />
-            <Line type="monotone" dataKey="ability" stroke="#3b82f6" strokeWidth={3} dot={{ fill: '#3b82f6', r: 5 }} />
+            <Line
+              type="monotone"
+              dataKey="ability"
+              stroke="#ffffff"
+              strokeWidth={3}
+              dot={(props: any) => {
+                const { cx, cy, payload } = props;
+                const ability = payload.ability;
+                let fill = '#ef4444'; // Red for below average
+                if (ability >= 1) fill = '#22c55e'; // Green for excellent
+                else if (ability >= 0) fill = '#eab308'; // Yellow for average to good
+                return <circle cx={cx} cy={cy} r={5} fill={fill} />;
+              }}
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>
