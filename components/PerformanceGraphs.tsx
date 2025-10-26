@@ -14,6 +14,7 @@ import {
   ReferenceLine,
   Legend,
   TooltipProps,
+  Cell,
 } from 'recharts';
 import { UserProgress } from '@/lib/types';
 import { hasSufficientData } from '@/lib/irt';
@@ -493,8 +494,25 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
             <XAxis dataKey="difficulty" stroke="#9ca3af" tickLine={false} />
             <YAxis domain={[0, 100]} stroke="#9ca3af" label={{ value: '% Correct', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
-            <Tooltip content={<CustomBarTooltip color="#10b981" />} cursor={{ fill: 'rgba(71, 85, 105, 0.1)' }} />
-            <Bar dataKey="accuracy" fill="#10b981" radius={[8, 8, 0, 0]} />
+            <Tooltip content={(props) => {
+              if (props.active && props.payload && props.payload.length) {
+                const accuracy = props.payload[0].payload.accuracy;
+                let color = '#ef4444'; // Red
+                if (accuracy >= 85) color = '#22c55e'; // Green
+                else if (accuracy >= 70) color = '#eab308'; // Yellow
+                return <CustomBarTooltip {...props} color={color} />;
+              }
+              return null;
+            }} cursor={{ fill: 'rgba(71, 85, 105, 0.1)' }} />
+            <Bar dataKey="accuracy" radius={[8, 8, 0, 0]}>
+              {accuracyByDifficulty.map((entry, index) => {
+                const accuracy = entry.accuracy;
+                let fill = '#ef4444'; // Red for low accuracy
+                if (accuracy >= 85) fill = '#22c55e'; // Green for excellent
+                else if (accuracy >= 70) fill = '#eab308'; // Yellow for good
+                return <Cell key={`cell-${index}`} fill={fill} />;
+              })}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
