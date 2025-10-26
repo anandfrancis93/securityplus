@@ -11,6 +11,18 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Set CSS variable for actual viewport height (fixes mobile browser address bar issue)
+  useEffect(() => {
+    const setVH = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    setVH();
+    window.addEventListener('resize', setVH);
+    return () => window.removeEventListener('resize', setVH);
+  }, []);
+
   // Redirect to home if already authenticated
   useEffect(() => {
     if (!authLoading && user) {
@@ -45,32 +57,32 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="h-screen bg-black font-mono overflow-hidden flex flex-col">
-      <div className="relative flex items-center justify-center px-4 sm:px-6 lg:px-8 py-4 sm:py-8 flex-1">
-        <div className="max-w-2xl w-full">
+    <div className="bg-black font-mono overflow-hidden flex flex-col" style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
+      <div className="relative flex items-center justify-center px-4 sm:px-6 lg:px-8 py-3 sm:py-8 flex-1 overflow-auto">
+        <div className="max-w-2xl w-full my-auto">
           {/* Logo/Title Section */}
-          <div className="text-center mb-3 sm:mb-8 md:mb-12">
-            <h1 className="text-2xl sm:text-6xl md:text-7xl font-bold mb-1 sm:mb-3 md:mb-4 text-white tracking-tight">
+          <div className="text-center mb-2.5 sm:mb-8 md:mb-12">
+            <h1 className="text-3xl sm:text-6xl md:text-7xl font-bold mb-1 sm:mb-3 md:mb-4 text-white tracking-tight leading-tight">
               Learning Hub
             </h1>
-            <p className="text-zinc-500 text-[10px] sm:text-lg md:text-xl font-mono">
+            <p className="text-zinc-500 text-xs sm:text-lg md:text-xl font-mono">
               Master your skills with adaptive learning
             </p>
           </div>
 
           {/* Login Card */}
           <div className="bg-zinc-950 rounded-md p-4 sm:p-12 md:p-16 border border-zinc-800">
-            <div className="mb-4 sm:mb-8">
-              <h2 className="text-lg sm:text-4xl md:text-5xl font-bold text-white mb-1.5 sm:mb-4 text-center">
+            <div className="mb-3.5 sm:mb-8">
+              <h2 className="text-xl sm:text-4xl md:text-5xl font-bold text-white mb-1.5 sm:mb-4 text-center leading-tight">
                 Welcome
               </h2>
-              <p className="text-zinc-400 text-center text-[10px] leading-tight sm:text-lg md:text-xl">
+              <p className="text-zinc-400 text-center text-xs leading-snug sm:text-lg md:text-xl">
                 Sign in with your Google account to save your progress and sync across devices
               </p>
             </div>
 
             {error && (
-              <div className="bg-red-900/20 border border-red-800 text-red-400 rounded-md p-2 text-[10px] sm:text-sm mb-3 sm:mb-6">
+              <div className="bg-red-900/20 border border-red-800 text-red-400 rounded-md p-2 text-xs sm:text-sm mb-3 sm:mb-6">
                 {error}
               </div>
             )}
@@ -78,9 +90,9 @@ export default function LoginPage() {
             <button
               onClick={handleGoogleSignIn}
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:bg-blue-300 disabled:cursor-not-allowed text-white py-2 sm:py-4 px-3 sm:px-6 rounded-md font-medium text-xs sm:text-lg transition-all duration-150 flex items-center justify-center gap-2 sm:gap-3 border border-blue-600"
+              className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:bg-blue-300 disabled:cursor-not-allowed text-white py-2.5 sm:py-4 px-3 sm:px-6 rounded-md font-medium text-sm sm:text-lg transition-all duration-150 flex items-center justify-center gap-2 sm:gap-3 border border-blue-600"
             >
-              <svg className="w-3.5 h-3.5 sm:w-5 sm:h-5" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -101,7 +113,7 @@ export default function LoginPage() {
               {loading ? 'Signing in...' : 'Continue with Google'}
             </button>
 
-            <p className="text-zinc-600 text-[9px] sm:text-sm md:text-base text-center mt-2 sm:mt-6">
+            <p className="text-zinc-600 text-[11px] sm:text-sm md:text-base text-center mt-2.5 sm:mt-6 leading-tight">
               By signing in, you agree to our Terms of Service and Privacy Policy
             </p>
           </div>
