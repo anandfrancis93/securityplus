@@ -43,6 +43,8 @@ export interface UserProgress {
   estimatedAbility?: number; // IRT ability estimate (theta)
   notificationsEnabled?: boolean; // Whether flashcard notifications are enabled
   topicPerformance?: { [topicName: string]: TopicPerformance }; // Cross-session topic tracking
+  cachedQuiz?: CachedQuiz | null; // Pre-generated quiz ready to use
+  quizMetadata?: QuizGenerationMetadata; // Metadata for question generation and tracking
 }
 
 export interface QuizSession {
@@ -105,4 +107,41 @@ export interface FlashcardDeck {
   flashcardIds: string[];
   createdAt: number;
   lastStudied?: number;
+}
+
+// Question Caching and Spaced Repetition Types
+export interface QuestionHistory {
+  questionId: string;
+  metadata?: {
+    primaryTopic: string;
+    scenario: string;
+    keyConcept: string;
+  };
+  firstAskedQuiz: number; // Quiz number when first asked
+  lastAskedQuiz: number; // Quiz number when last asked
+  timesAsked: number;
+  correctHistory: boolean[]; // Track if user got it right each time
+  lastAskedDate: number; // Timestamp
+}
+
+export interface TopicCoverageStatus {
+  topicName: string;
+  domain: string;
+  firstCoveredQuiz: number | null; // Quiz number when first covered, null if never
+  timesCovered: number;
+  lastCoveredQuiz: number | null;
+}
+
+export interface CachedQuiz {
+  questions: Question[];
+  generatedAt: number;
+  generatedForAbility: number; // Ability level at time of generation
+  generatedAfterQuiz: number; // Quiz number after which this was generated
+}
+
+export interface QuizGenerationMetadata {
+  totalQuizzesCompleted: number;
+  allTopicsCoveredOnce: boolean; // Phase 1 complete flag
+  questionHistory: { [questionId: string]: QuestionHistory };
+  topicCoverage: { [topicName: string]: TopicCoverageStatus };
 }
