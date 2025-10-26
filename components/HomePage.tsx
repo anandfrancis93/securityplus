@@ -45,7 +45,10 @@ export default function HomePage() {
         return (
           <svg className={`${baseClasses} ${colorClass}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
             <circle cx="12" cy="12" r="10" strokeLinecap="round" />
-            <path strokeLinecap="round" d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+            {/* Horizontal line through center */}
+            <path strokeLinecap="round" d="M2 12h20" />
+            {/* Vertical ellipse - stops short of poles to avoid pointy intersections */}
+            <ellipse cx="12" cy="12" rx="4" ry="10" strokeLinecap="round" />
           </svg>
         );
       case 'maths':
