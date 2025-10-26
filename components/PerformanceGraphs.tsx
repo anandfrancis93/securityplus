@@ -29,9 +29,24 @@ const CustomBarTooltip = ({ active, payload, label, color }: any) => {
     return (
       <div className="bg-black border border-gray-800 rounded-2xl p-4 shadow-xl shadow-black/50">
         <p className="text-slate-200 font-medium mb-2">{label}</p>
-        <p className="text-sm" style={{ color: color || '#3b82f6' }}>
+        <p className="text-sm mb-3" style={{ color: color || '#3b82f6' }}>
           Accuracy: {payload[0].value}% ({payload[0].payload.questions} questions)
         </p>
+        <div className="border-t border-gray-800 pt-3 space-y-1">
+          <p className="text-xs text-slate-400">Performance Ranges:</p>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded" style={{ backgroundColor: '#ef4444' }}></div>
+            <span className="text-xs text-slate-300">&lt; 70% (Low)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded" style={{ backgroundColor: '#eab308' }}></div>
+            <span className="text-xs text-slate-300">70-84% (Good)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded" style={{ backgroundColor: '#22c55e' }}></div>
+            <span className="text-xs text-slate-300">≥ 85% (Excellent)</span>
+          </div>
+        </div>
       </div>
     );
   }
