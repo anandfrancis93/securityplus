@@ -47,30 +47,30 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-black font-mono">
       <div className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full">
+        <div className="max-w-2xl w-full">
           {/* Logo/Title Section */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold mb-3 text-white tracking-tight">
+          <div className="text-center mb-12">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-4 text-white tracking-tight">
               Learning Hub
             </h1>
-            <p className="text-zinc-500 text-sm font-mono">
+            <p className="text-zinc-500 text-lg sm:text-xl font-mono">
               Master your skills with adaptive learning
             </p>
           </div>
 
           {/* Login Card */}
-          <div className="bg-zinc-950 rounded-md p-6 sm:p-8 border border-zinc-800">
-            <div className="mb-6">
-              <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 text-center">
+          <div className="bg-zinc-950 rounded-md p-10 sm:p-12 md:p-16 border border-zinc-800">
+            <div className="mb-8">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 text-center">
                 Welcome
               </h2>
-              <p className="text-zinc-400 text-center text-xs sm:text-sm">
+              <p className="text-zinc-400 text-center text-base sm:text-lg md:text-xl">
                 Sign in with your Google account to save your progress and sync across devices
               </p>
             </div>
 
             {error && (
-              <div className="bg-red-900/20 border border-red-800 text-red-400 rounded-md p-3 text-xs mb-4">
+              <div className="bg-red-900/20 border border-red-800 text-red-400 rounded-md p-4 text-sm mb-6">
                 {error}
               </div>
             )}
@@ -78,7 +78,7 @@ export default function LoginPage() {
             <button
               onClick={handleGoogleSignIn}
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:bg-blue-300 disabled:cursor-not-allowed text-white py-3 px-4 rounded-md font-medium transition-all duration-150 flex items-center justify-center gap-3 border border-blue-600"
+              className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:bg-blue-300 disabled:cursor-not-allowed text-white py-4 px-6 rounded-md font-medium text-lg transition-all duration-150 flex items-center justify-center gap-3 border border-blue-600"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path
@@ -101,7 +101,7 @@ export default function LoginPage() {
               {loading ? 'Signing in...' : 'Continue with Google'}
             </button>
 
-            <p className="text-zinc-600 text-xs text-center mt-4">
+            <p className="text-zinc-600 text-sm sm:text-base text-center mt-6">
               By signing in, you agree to our Terms of Service and Privacy Policy
             </p>
           </div>
