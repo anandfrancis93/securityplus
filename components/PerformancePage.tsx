@@ -215,9 +215,9 @@ export default function PerformancePage() {
             <div className="relative group cursor-help inline-block">
               <div className={`text-7xl md:text-8xl font-bold mb-4 transition-all duration-300 ${
                 totalAnswered === 0 ? 'text-slate-400' :
-                isGoodPerformance ? 'text-green-400' :
-                isNeedsWork ? 'text-red-400' :
-                'text-yellow-400'
+                isGoodPerformance ? 'text-cyan-400' :
+                isNeedsWork ? 'text-rose-400' :
+                'text-amber-400'
               }`}>
                 {predictedScore}
               </div>
@@ -225,13 +225,13 @@ export default function PerformancePage() {
               <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 bg-slate-900/95 backdrop-blur-xl border border-violet-500/30 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
                 <div className="space-y-1 text-sm text-slate-300">
                   <div>
-                    <span className="text-green-400 font-medium">Green:</span> 750 - 900
+                    <span className="text-cyan-400 font-medium">Cyan:</span> 750 - 900
                   </div>
                   <div>
-                    <span className="text-yellow-400 font-medium">Yellow:</span> 600 - 749
+                    <span className="text-amber-400 font-medium">Amber:</span> 600 - 749
                   </div>
                   <div>
-                    <span className="text-red-400 font-medium">Red:</span> 100 - 599
+                    <span className="text-rose-400 font-medium">Rose:</span> 100 - 599
                   </div>
                 </div>
                 <p className="text-xs text-slate-400 mt-3 pt-2 border-t border-violet-500/30">Color is based on your Ability Level from IRT analysis, which correlates with predicted exam score.</p>
@@ -241,9 +241,9 @@ export default function PerformancePage() {
             <div className="mt-6">
               {totalAnswered > 0 ? (
                 <div className={`inline-block px-8 py-3 rounded-full text-base md:text-lg font-medium transition-all duration-300 ${
-                  isGoodPerformance ? 'bg-green-900/30 text-green-400 border-2 border-green-500/30' :
-                  isNeedsWork ? 'bg-red-900/30 text-red-400 border-2 border-red-500/30' :
-                  'bg-yellow-900/30 text-yellow-400 border-2 border-yellow-500/30'
+                  isGoodPerformance ? 'bg-cyan-900/30 text-cyan-400 border-2 border-cyan-500/50' :
+                  isNeedsWork ? 'bg-rose-900/30 text-rose-400 border-2 border-rose-500/50' :
+                  'bg-amber-900/30 text-amber-400 border-2 border-amber-500/50'
                 }`}>
                   {isGoodPerformance ? 'On track to pass' :
                    isNeedsWork ? 'Needs significant improvement' :
@@ -261,9 +261,9 @@ export default function PerformancePage() {
               {totalAnswered > 0 && (
                 <div
                   className={`h-4 rounded-full transition-all duration-500 ${
-                    isGoodPerformance ? 'bg-gradient-to-r from-green-500 to-green-400' :
-                    isNeedsWork ? 'bg-gradient-to-r from-red-500 to-red-400' :
-                    'bg-gradient-to-r from-yellow-500 to-yellow-400'
+                    isGoodPerformance ? 'bg-gradient-to-r from-cyan-500 to-cyan-400' :
+                    isNeedsWork ? 'bg-gradient-to-r from-rose-500 to-rose-400' :
+                    'bg-gradient-to-r from-amber-500 to-amber-400'
                   }`}
                   style={{ width: `${Math.min(((predictedScore - 100) / 800) * 100, 100)}%` }}
                 ></div>
@@ -295,9 +295,9 @@ export default function PerformancePage() {
                 style={{ paddingLeft: `${((predictedScore - 100) / 800) * 100}%` }}
               >
                 <div className={`inline-block px-3 py-1 rounded-full text-sm font-medium transition-all duration-300 ${
-                  isGoodPerformance ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
-                  isNeedsWork ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
-                  'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                  isGoodPerformance ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/50' :
+                  isNeedsWork ? 'bg-rose-500/20 text-rose-400 border border-rose-500/50' :
+                  'bg-amber-500/20 text-amber-400 border border-amber-500/50'
                 }`}>
                   {predictedScore}
                 </div>
@@ -308,17 +308,17 @@ export default function PerformancePage() {
 
         {/* Phase 1: Insufficient Data Warning */}
         {totalAnswered > 0 && !hasSufficientData(totalAnswered) && (
-          <div className="bg-yellow-900/20 backdrop-blur-xl border-2 border-yellow-500/30 rounded-[28px] p-6 md:p-8 mb-8 shadow-xl transition-all duration-300">
+          <div className="bg-amber-900/20 backdrop-blur-xl border-2 border-amber-500/50 rounded-[28px] p-6 md:p-8 mb-8 shadow-xl transition-all duration-300">
             <div className="flex items-start gap-4">
-              <svg className="w-6 h-6 text-yellow-400 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+              <svg className="w-6 h-6 text-amber-400 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
               <div>
-                <p className="text-yellow-400 font-semibold mb-2 tracking-tight text-lg">Preliminary Estimates</p>
-                <p className="text-yellow-300/90 text-base leading-relaxed">
+                <p className="text-amber-400 font-semibold mb-2 tracking-tight text-lg">Preliminary Estimates</p>
+                <p className="text-amber-300/90 text-base leading-relaxed">
                   Answer at least 15 questions for reliable IRT analysis. Your current estimates are capped and may not reflect true ability.
                 </p>
-                <p className="text-yellow-400/70 text-sm mt-3">
+                <p className="text-amber-400/70 text-sm mt-3">
                   Progress: {totalAnswered}/15 questions
                 </p>
               </div>
@@ -336,18 +336,18 @@ export default function PerformancePage() {
             <div className="text-slate-400 text-base md:text-lg mb-2 tracking-tight">Correct Answers</div>
             <div className={`text-4xl md:text-5xl font-bold transition-all duration-300 ${
               totalAnswered === 0 ? 'text-slate-400' :
-              isGoodPerformance ? 'text-green-400' :
-              isNeedsWork ? 'text-red-400' :
-              'text-yellow-400'
+              isGoodPerformance ? 'text-cyan-400' :
+              isNeedsWork ? 'text-rose-400' :
+              'text-amber-400'
             }`}>{correctAnswers}</div>
           </div>
           <div className="bg-gradient-to-br from-violet-500/10 via-purple-500/10 to-fuchsia-500/10 backdrop-blur-xl rounded-[28px] p-8 border-2 border-violet-500/30 shadow-xl hover:shadow-2xl hover:shadow-violet-500/20 transition-all duration-300">
             <div className="text-slate-400 text-base md:text-lg mb-2 tracking-tight">Accuracy</div>
             <div className={`text-4xl md:text-5xl font-bold transition-all duration-300 ${
               totalAnswered === 0 ? 'text-slate-400' :
-              isGoodPerformance ? 'text-green-400' :
-              isNeedsWork ? 'text-red-400' :
-              'text-yellow-400'
+              isGoodPerformance ? 'text-cyan-400' :
+              isNeedsWork ? 'text-rose-400' :
+              'text-amber-400'
             }`}>{accuracy}%</div>
           </div>
         </div>
@@ -398,9 +398,9 @@ export default function PerformancePage() {
                       </div>
                     </div>
                     <div className={`text-4xl md:text-5xl font-bold transition-all duration-300 ${
-                      estimatedAbility >= 1.0 ? 'text-green-400' :
-                      estimatedAbility >= -1.0 ? 'text-yellow-400' :
-                      'text-red-400'
+                      estimatedAbility >= 1.0 ? 'text-cyan-400' :
+                      estimatedAbility >= -1.0 ? 'text-amber-400' :
+                      'text-rose-400'
                     }`}>
                       {estimatedAbility.toFixed(2)}
                     </div>
@@ -409,9 +409,9 @@ export default function PerformancePage() {
                     <div className="bg-slate-700/50 rounded-full h-3 backdrop-blur">
                       <div
                         className={`h-3 rounded-full transition-all duration-500 ${
-                          estimatedAbility >= 1.0 ? 'bg-gradient-to-r from-green-500 to-green-400' :
-                          estimatedAbility >= -1.0 ? 'bg-gradient-to-r from-yellow-500 to-yellow-400' :
-                          'bg-gradient-to-r from-red-500 to-red-400'
+                          estimatedAbility >= 1.0 ? 'bg-gradient-to-r from-cyan-500 to-cyan-400' :
+                          estimatedAbility >= -1.0 ? 'bg-gradient-to-r from-amber-500 to-amber-400' :
+                          'bg-gradient-to-r from-rose-500 to-rose-400'
                         }`}
                         style={{ width: `${((estimatedAbility + 3) / 6) * 100}%` }}
                       ></div>
@@ -428,7 +428,7 @@ export default function PerformancePage() {
                   <div className="text-base text-slate-300 leading-relaxed">
                     {estimatedAbility >= 1.5 ? (
                       <>
-                        <p className="text-green-400 font-semibold mb-4 flex items-center gap-2 text-lg">
+                        <p className="text-cyan-400 font-semibold mb-4 flex items-center gap-2 text-lg">
                           Excellent Performance!
                         </p>
                         <ul className="space-y-3 text-sm">
@@ -448,7 +448,7 @@ export default function PerformancePage() {
                       </>
                     ) : estimatedAbility >= 1.0 ? (
                       <>
-                        <p className="text-green-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg">
+                        <p className="text-cyan-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg">
                           Good Performance
                         </p>
                         <ul className="space-y-3 text-sm">
@@ -468,60 +468,60 @@ export default function PerformancePage() {
                       </>
                     ) : estimatedAbility >= 0 ? (
                       <>
-                        <p className="text-yellow-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg">
+                        <p className="text-amber-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg">
                           Average Performance
                         </p>
                         <ul className="space-y-3 text-sm">
                           <li className="flex items-start gap-3">
-                            <span className="text-yellow-400 mt-1">▸</span>
+                            <span className="text-amber-400 mt-1">▸</span>
                             <span>Moderate understanding shown</span>
                           </li>
                           <li className="flex items-start gap-3">
-                            <span className="text-yellow-400 mt-1">▸</span>
+                            <span className="text-amber-400 mt-1">▸</span>
                             <span>Focus on multi-concept questions</span>
                           </li>
                           <li className="flex items-start gap-3">
-                            <span className="text-yellow-400 mt-1">▸</span>
+                            <span className="text-amber-400 mt-1">▸</span>
                             <span>Review explanations carefully</span>
                           </li>
                         </ul>
                       </>
                     ) : estimatedAbility >= -1 ? (
                       <>
-                        <p className="text-yellow-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg">
+                        <p className="text-amber-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg">
                           Below Average
                         </p>
                         <ul className="space-y-3 text-sm">
                           <li className="flex items-start gap-3">
-                            <span className="text-yellow-400 mt-1">▸</span>
+                            <span className="text-amber-400 mt-1">▸</span>
                             <span>Struggling with harder questions</span>
                           </li>
                           <li className="flex items-start gap-3">
-                            <span className="text-yellow-400 mt-1">▸</span>
+                            <span className="text-amber-400 mt-1">▸</span>
                             <span>Review fundamental concepts</span>
                           </li>
                           <li className="flex items-start gap-3">
-                            <span className="text-yellow-400 mt-1">▸</span>
+                            <span className="text-amber-400 mt-1">▸</span>
                             <span>Focus on understanding, not memorizing</span>
                           </li>
                         </ul>
                       </>
                     ) : (
                       <>
-                        <p className="text-red-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg">
+                        <p className="text-rose-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg">
                           Needs Improvement
                         </p>
                         <ul className="space-y-3 text-sm">
                           <li className="flex items-start gap-3">
-                            <span className="text-red-400 mt-1">▸</span>
+                            <span className="text-rose-400 mt-1">▸</span>
                             <span>More practice needed</span>
                           </li>
                           <li className="flex items-start gap-3">
-                            <span className="text-red-400 mt-1">▸</span>
+                            <span className="text-rose-400 mt-1">▸</span>
                             <span>Start with easier questions</span>
                           </li>
                           <li className="flex items-start gap-3">
-                            <span className="text-red-400 mt-1">▸</span>
+                            <span className="text-rose-400 mt-1">▸</span>
                             <span>Build foundational knowledge first</span>
                           </li>
                         </ul>
@@ -616,7 +616,7 @@ export default function PerformancePage() {
                             <div>
                               <span className="text-slate-300">{quiz.questions.length} questions</span>
                               {isIncomplete && (
-                                <span className="ml-3 text-sm px-3 py-1 rounded-full bg-yellow-700/30 text-yellow-400 border border-yellow-500/30">
+                                <span className="ml-3 text-sm px-3 py-1 rounded-full bg-amber-700/30 text-amber-400 border border-amber-500/50">
                                   Incomplete
                                 </span>
                               )}

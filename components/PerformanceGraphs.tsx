@@ -469,8 +469,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
             <XAxis dataKey="difficulty" stroke="#94a3b8" />
             <YAxis domain={[0, 100]} stroke="#94a3b8" label={{ value: '% Correct', angle: -90, position: 'insideLeft', fill: '#94a3b8' }} />
-            <Tooltip content={<CustomBarTooltip color="#10b981" />} cursor={{ fill: 'rgba(139, 92, 246, 0.1)' }} />
-            <Bar dataKey="accuracy" fill="#10b981" radius={[8, 8, 0, 0]} />
+            <Tooltip content={<CustomBarTooltip color="#22d3ee" />} cursor={{ fill: 'rgba(139, 92, 246, 0.1)' }} />
+            <Bar dataKey="accuracy" fill="#22d3ee" radius={[8, 8, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
         <p className="text-slate-400 text-base md:text-lg mt-4">Performance breakdown by question difficulty</p>
@@ -569,10 +569,10 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                                 topic.count === 0
                                   ? 'text-slate-500'
                                   : topic.accuracy >= 80
-                                  ? 'text-emerald-400'
+                                  ? 'text-cyan-400'
                                   : topic.accuracy >= 60
-                                  ? 'text-yellow-400'
-                                  : 'text-red-400'
+                                  ? 'text-amber-400'
+                                  : 'text-rose-400'
                               }`}>
                                 {topic.count > 0 ? `${topic.accuracy}%` : '-'}
                               </td>
