@@ -26,9 +26,9 @@ interface PerformanceGraphsProps {
 const CustomBarTooltip = ({ active, payload, label, color }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-indigo-950 border border-violet-500/30 rounded-2xl p-4 shadow-2xl backdrop-blur-xl">
+      <div className="bg-gray-800 border border-gray-700 rounded-2xl p-4 shadow-2xl backdrop-blur-xl">
         <p className="text-slate-200 font-medium mb-2">{label}</p>
-        <p className="text-sm" style={{ color: color || '#a78bfa' }}>
+        <p className="text-sm" style={{ color: color || '#3b82f6' }}>
           Accuracy: {payload[0].value}% ({payload[0].payload.questions} questions)
         </p>
       </div>
@@ -40,7 +40,7 @@ const CustomBarTooltip = ({ active, payload, label, color }: any) => {
 export default function PerformanceGraphs({ userProgress }: PerformanceGraphsProps) {
   if (!userProgress || userProgress.totalQuestions === 0) {
     return (
-      <div className="bg-gradient-to-br from-violet-500/10 via-purple-500/10 to-fuchsia-500/10 backdrop-blur-xl rounded-[28px] p-8 md:p-10 border border-violet-500/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] text-center">
+      <div className="bg-slate-800/90 backdrop-blur-xl rounded-[28px] p-8 md:p-10 border border-slate-700 shadow-[0_8px_32px_rgba(0,0,0,0.4)] text-center">
         <p className="text-slate-400 text-base md:text-lg">Take quizzes to see your progress charts</p>
       </div>
     );
@@ -412,8 +412,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     <div className="space-y-8">
       {/* Phase 1 Warning if insufficient data */}
       {!hasSufficientQuestions && (
-        <div className="bg-violet-900/20 border border-violet-500/30 rounded-[28px] p-6 md:p-8 backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
-          <p className="text-violet-300 text-base md:text-lg">
+        <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-[28px] p-6 md:p-8 backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+          <p className="text-yellow-300 text-base md:text-lg">
             <strong className="font-bold">Preliminary Estimates:</strong> Answer at least 15 questions for reliable IRT analysis.
             Current progress: {userProgress.totalQuestions}/15 questions
           </p>
@@ -421,56 +421,56 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       )}
 
       {/* Graph 1: Ability Level Over Time */}
-      <div className="bg-gradient-to-br from-violet-500/10 via-purple-500/10 to-fuchsia-500/10 backdrop-blur-xl rounded-[28px] p-8 md:p-10 border border-violet-500/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-300 hover:border-violet-500/30">
+      <div className="bg-slate-800/90 backdrop-blur-xl rounded-[28px] p-8 md:p-10 border border-slate-700 shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-300 hover:border-slate-600">
         <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight">Ability Level Over Time</h3>
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={abilityOverTime}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-            <XAxis dataKey="quiz" stroke="#94a3b8" />
-            <YAxis domain={[-3, 3]} stroke="#94a3b8" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+            <XAxis dataKey="quiz" stroke="#9ca3af" />
+            <YAxis domain={[-3, 3]} stroke="#9ca3af" />
             <Tooltip
-              contentStyle={{ backgroundColor: '#1e1b4b', border: '1px solid rgba(139, 92, 246, 0.3)', borderRadius: '16px', backdropFilter: 'blur(12px)' }}
+              contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '16px', backdropFilter: 'blur(12px)' }}
               labelStyle={{ color: '#F3F4F6' }}
-              itemStyle={{ color: '#a78bfa' }}
+              itemStyle={{ color: '#3b82f6' }}
             />
-            <ReferenceLine y={0} stroke="#64748b" strokeDasharray="3 3" label={{ value: 'Average', fill: '#94a3b8' }} />
-            <ReferenceLine y={1} stroke="#a78bfa" strokeDasharray="3 3" label={{ value: 'Target', fill: '#a78bfa' }} />
-            <Line type="monotone" dataKey="ability" stroke="#a78bfa" strokeWidth={3} dot={{ fill: '#a78bfa', r: 5 }} />
+            <ReferenceLine y={0} stroke="#6b7280" strokeDasharray="3 3" label={{ value: 'Average', fill: '#9ca3af' }} />
+            <ReferenceLine y={1} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Target', fill: '#10b981' }} />
+            <Line type="monotone" dataKey="ability" stroke="#3b82f6" strokeWidth={3} dot={{ fill: '#3b82f6', r: 5 }} />
           </LineChart>
         </ResponsiveContainer>
         <p className="text-slate-400 text-base md:text-lg mt-4">Your ability estimate (θ) ranges from -3 (beginner) to +3 (expert)</p>
       </div>
 
       {/* Graph 2: Predicted Score Over Time */}
-      <div className="bg-gradient-to-br from-violet-500/10 via-purple-500/10 to-fuchsia-500/10 backdrop-blur-xl rounded-[28px] p-8 md:p-10 border border-violet-500/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-300 hover:border-violet-500/30">
+      <div className="bg-slate-800/90 backdrop-blur-xl rounded-[28px] p-8 md:p-10 border border-slate-700 shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-300 hover:border-slate-600">
         <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight">Predicted Score Over Time</h3>
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={scoreOverTime}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-            <XAxis dataKey="quiz" stroke="#94a3b8" />
-            <YAxis domain={[100, 900]} stroke="#94a3b8" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+            <XAxis dataKey="quiz" stroke="#9ca3af" />
+            <YAxis domain={[100, 900]} stroke="#9ca3af" />
             <Tooltip
-              contentStyle={{ backgroundColor: '#1e1b4b', border: '1px solid rgba(139, 92, 246, 0.3)', borderRadius: '16px', backdropFilter: 'blur(12px)' }}
+              contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '16px', backdropFilter: 'blur(12px)' }}
               labelStyle={{ color: '#F3F4F6' }}
-              itemStyle={{ color: '#22d3ee' }}
+              itemStyle={{ color: '#10b981' }}
             />
-            <ReferenceLine y={750} stroke="#a78bfa" strokeDasharray="3 3" label={{ value: 'Passing', fill: '#a78bfa', position: 'right' }} />
-            <Line type="monotone" dataKey="score" stroke="#22d3ee" strokeWidth={3} dot={{ fill: '#22d3ee', r: 5 }} />
+            <ReferenceLine y={750} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Passing', fill: '#10b981', position: 'right' }} />
+            <Line type="monotone" dataKey="score" stroke="#10b981" strokeWidth={3} dot={{ fill: '#10b981', r: 5 }} />
           </LineChart>
         </ResponsiveContainer>
         <p className="text-slate-400 text-base md:text-lg mt-4">Predicted Security+ exam score (750 required to pass)</p>
       </div>
 
       {/* Graph 3: Accuracy by Difficulty */}
-      <div className="bg-gradient-to-br from-violet-500/10 via-purple-500/10 to-fuchsia-500/10 backdrop-blur-xl rounded-[28px] p-8 md:p-10 border border-violet-500/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-300 hover:border-violet-500/30">
+      <div className="bg-slate-800/90 backdrop-blur-xl rounded-[28px] p-8 md:p-10 border border-slate-700 shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-300 hover:border-slate-600">
         <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight">Accuracy by Difficulty Level</h3>
         <ResponsiveContainer width="100%" height={350}>
           <BarChart data={accuracyByDifficulty}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-            <XAxis dataKey="difficulty" stroke="#94a3b8" />
-            <YAxis domain={[0, 100]} stroke="#94a3b8" label={{ value: '% Correct', angle: -90, position: 'insideLeft', fill: '#94a3b8' }} />
-            <Tooltip content={<CustomBarTooltip color="#22d3ee" />} cursor={{ fill: 'rgba(139, 92, 246, 0.1)' }} />
-            <Bar dataKey="accuracy" fill="#22d3ee" radius={[8, 8, 0, 0]} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+            <XAxis dataKey="difficulty" stroke="#9ca3af" />
+            <YAxis domain={[0, 100]} stroke="#9ca3af" label={{ value: '% Correct', angle: -90, position: 'insideLeft', fill: '#9ca3af' }} />
+            <Tooltip content={<CustomBarTooltip color="#10b981" />} cursor={{ fill: 'rgba(71, 85, 105, 0.1)' }} />
+            <Bar dataKey="accuracy" fill="#10b981" radius={[8, 8, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
         <p className="text-slate-400 text-base md:text-lg mt-4">Performance breakdown by question difficulty</p>
@@ -478,15 +478,15 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
       {/* Graph 4: Topic Performance by Domain */}
       {domainPerformance.length > 0 && (
-        <div className="bg-gradient-to-br from-violet-500/10 via-purple-500/10 to-fuchsia-500/10 backdrop-blur-xl rounded-[28px] p-8 md:p-10 border border-violet-500/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-300 hover:border-violet-500/30">
+        <div className="bg-slate-800/90 backdrop-blur-xl rounded-[28px] p-8 md:p-10 border border-slate-700 shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-300 hover:border-slate-600">
           <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight">Performance by SY0-701 Domain</h3>
           <ResponsiveContainer width="100%" height={350}>
             <BarChart data={domainPerformance} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-              <XAxis type="number" domain={[0, 100]} stroke="#94a3b8" label={{ value: '% Correct', position: 'insideBottom', offset: -5, fill: '#94a3b8' }} />
-              <YAxis type="category" dataKey="domain" stroke="#94a3b8" width={200} />
-              <Tooltip content={<CustomBarTooltip color="#a78bfa" />} cursor={{ fill: 'rgba(139, 92, 246, 0.1)' }} />
-              <Bar dataKey="accuracy" fill="#a78bfa" radius={[0, 8, 8, 0]} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+              <XAxis type="number" domain={[0, 100]} stroke="#9ca3af" label={{ value: '% Correct', position: 'insideBottom', offset: -5, fill: '#9ca3af' }} />
+              <YAxis type="category" dataKey="domain" stroke="#9ca3af" width={200} />
+              <Tooltip content={<CustomBarTooltip color="#3b82f6" />} cursor={{ fill: 'rgba(71, 85, 105, 0.1)' }} />
+              <Bar dataKey="accuracy" fill="#3b82f6" radius={[0, 8, 8, 0]} />
             </BarChart>
           </ResponsiveContainer>
           <p className="text-slate-400 text-base md:text-lg mt-4">Coverage across the 5 Security+ SY0-701 domains</p>
@@ -494,26 +494,26 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       )}
 
       {/* Graph 5: Questions Answered Over Time */}
-      <div className="bg-gradient-to-br from-violet-500/10 via-purple-500/10 to-fuchsia-500/10 backdrop-blur-xl rounded-[28px] p-8 md:p-10 border border-violet-500/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-300 hover:border-violet-500/30">
+      <div className="bg-slate-800/90 backdrop-blur-xl rounded-[28px] p-8 md:p-10 border border-slate-700 shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-300 hover:border-slate-600">
         <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight">Study Volume Over Time</h3>
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={questionsOverTime}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
-            <XAxis dataKey="quiz" stroke="#94a3b8" />
-            <YAxis stroke="#94a3b8" label={{ value: 'Total Questions', angle: -90, position: 'insideLeft', fill: '#94a3b8' }} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+            <XAxis dataKey="quiz" stroke="#9ca3af" />
+            <YAxis stroke="#9ca3af" label={{ value: 'Total Questions', angle: -90, position: 'insideLeft', fill: '#9ca3af' }} />
             <Tooltip
-              contentStyle={{ backgroundColor: '#1e1b4b', border: '1px solid rgba(139, 92, 246, 0.3)', borderRadius: '16px', backdropFilter: 'blur(12px)' }}
+              contentStyle={{ backgroundColor: '#1f2937', border: '1px solid #374151', borderRadius: '16px', backdropFilter: 'blur(12px)' }}
               labelStyle={{ color: '#F3F4F6' }}
-              itemStyle={{ color: '#c084fc' }}
+              itemStyle={{ color: '#06b6d4' }}
             />
-            <Line type="monotone" dataKey="total" stroke="#c084fc" strokeWidth={3} dot={{ fill: '#c084fc', r: 5 }} />
+            <Line type="monotone" dataKey="total" stroke="#06b6d4" strokeWidth={3} dot={{ fill: '#06b6d4', r: 5 }} />
           </LineChart>
         </ResponsiveContainer>
         <p className="text-slate-400 text-base md:text-lg mt-4">Cumulative questions answered across all quiz sessions</p>
       </div>
 
       {/* Topic Coverage Tables by Domain */}
-      <div className="bg-gradient-to-br from-violet-500/10 via-purple-500/10 to-fuchsia-500/10 backdrop-blur-xl rounded-[28px] p-8 md:p-10 border border-violet-500/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+      <div className="bg-slate-800/90 backdrop-blur-xl rounded-[28px] p-8 md:p-10 border border-slate-700 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
         <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight">Topic Coverage by Domain</h3>
         <p className="text-slate-400 text-base md:text-lg mb-8">All Security+ SY0-701 topics organized by domain, showing coverage frequency</p>
 
@@ -533,7 +533,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               return (
                 <div key={domain} className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xl md:text-2xl font-semibold text-violet-400 tracking-tight">
+                    <h4 className="text-xl md:text-2xl font-semibold text-blue-400 tracking-tight">
                       {domainNum} {domainName}
                     </h4>
                     <span className="text-sm md:text-base text-slate-400">
@@ -541,27 +541,27 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                     </span>
                   </div>
 
-                  <div className="border border-violet-500/20 rounded-[20px] overflow-hidden bg-gradient-to-br from-violet-500/5 via-purple-500/5 to-fuchsia-500/5 backdrop-blur-xl">
+                  <div className="border border-slate-700 rounded-[20px] overflow-hidden bg-slate-900/50 backdrop-blur-xl">
                     <div className="max-h-96 overflow-y-auto">
                       <table className="w-full">
-                        <thead className="bg-violet-900/30 backdrop-blur-sm sticky top-0">
+                        <thead className="bg-slate-900/60 backdrop-blur-sm sticky top-0">
                           <tr>
                             <th className="text-left px-4 py-3 text-sm md:text-base font-semibold text-slate-300 w-3/5">Topic</th>
                             <th className="text-center px-4 py-3 text-sm md:text-base font-semibold text-slate-300 w-1/5">Times Covered</th>
                             <th className="text-center px-4 py-3 text-sm md:text-base font-semibold text-slate-300 w-1/5">Accuracy</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-violet-500/10">
+                        <tbody className="divide-y divide-slate-700/50">
                           {topics.map((topic, index) => (
                             <tr
                               key={index}
                               className={`${
-                                topic.count > 0 ? 'bg-violet-900/10' : 'bg-transparent'
-                              } hover:bg-violet-900/20 transition-all duration-200`}
+                                topic.count > 0 ? 'bg-slate-800/30' : 'bg-transparent'
+                              } hover:bg-slate-700/30 transition-all duration-200`}
                             >
                               <td className="px-4 py-2 text-sm md:text-base text-slate-300">{topic.topicName}</td>
                               <td className={`px-4 py-2 text-sm md:text-base text-center font-medium ${
-                                topic.count === 0 ? 'text-slate-500' : 'text-violet-400'
+                                topic.count === 0 ? 'text-slate-500' : 'text-blue-400'
                               }`}>
                                 {topic.count}
                               </td>
@@ -569,10 +569,10 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                                 topic.count === 0
                                   ? 'text-slate-500'
                                   : topic.accuracy >= 80
-                                  ? 'text-cyan-400'
+                                  ? 'text-emerald-400'
                                   : topic.accuracy >= 60
-                                  ? 'text-amber-400'
-                                  : 'text-rose-400'
+                                  ? 'text-yellow-400'
+                                  : 'text-red-400'
                               }`}>
                                 {topic.count > 0 ? `${topic.accuracy}%` : '-'}
                               </td>
