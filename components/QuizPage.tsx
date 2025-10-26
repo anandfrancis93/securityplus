@@ -630,7 +630,7 @@ export default function QuizPage() {
                       : 'border-zinc-700 hover:border-zinc-600 bg-zinc-950 hover:bg-zinc-900'
                   } ${showExplanation ? 'cursor-default' : 'cursor-pointer'} focus:outline-none focus:ring-2 focus:ring-zinc-700`}
                 >
-                  <div className="flex flex-wrap items-start gap-x-3 gap-y-2">
+                  <div className="flex items-start gap-3">
                     {/* Checkbox or Radio indicator */}
                     {currentQuestion.questionType === 'multiple' ? (
                       <div className={`w-7 h-7 rounded-md border-2 flex items-center justify-center transition-all duration-150 shrink-0 ${
@@ -648,9 +648,11 @@ export default function QuizPage() {
                     <span className="font-bold text-xl text-zinc-400 shrink-0">
                       {String.fromCharCode(65 + index)}.
                     </span>
-                    <span className="text-zinc-100 text-lg md:text-xl leading-relaxed w-full">{option}</span>
-                    {showCorrect && <span className="ml-auto text-green-400 text-2xl shrink-0">✓</span>}
-                    {showIncorrect && <span className="ml-auto text-red-400 text-2xl shrink-0">✗</span>}
+                    <div className="flex-1 flex items-start">
+                      <span className="text-zinc-100 text-lg md:text-xl leading-relaxed">{option}</span>
+                      {showCorrect && <span className="ml-2 text-green-400 text-2xl shrink-0">✓</span>}
+                      {showIncorrect && <span className="ml-2 text-red-400 text-2xl shrink-0">✗</span>}
+                    </div>
                   </div>
                 </button>
               );
