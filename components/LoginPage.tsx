@@ -34,7 +34,7 @@ export default function LoginPage() {
   if (authLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-slate-300 text-xl">Loading...</div>
+        <div className="text-zinc-300 text-sm font-mono">Loading...</div>
       </div>
     );
   }
@@ -45,35 +45,32 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black">
-      {/* Background gradient effect */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-900/10 via-transparent to-transparent pointer-events-none" />
-
+    <div className="min-h-screen bg-black font-mono">
       <div className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full">
           {/* Logo/Title Section */}
-          <div className="text-center mb-12">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-4 bg-gradient-to-br from-white via-violet-100 to-violet-200 bg-clip-text text-transparent tracking-tight leading-tight pb-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl sm:text-4xl font-bold mb-3 text-white tracking-tight">
               Learning Hub
             </h1>
-            <p className="text-slate-400 text-lg md:text-xl font-light tracking-wide animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+            <p className="text-zinc-500 text-sm font-mono">
               Master your skills with adaptive learning
             </p>
           </div>
 
           {/* Login Card */}
-          <div className="bg-gradient-to-br from-violet-500/20 via-purple-500/20 to-fuchsia-500/20 backdrop-blur-sm rounded-[28px] p-8 sm:p-10 border-2 border-violet-500/30 shadow-2xl shadow-violet-500/50 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
+          <div className="bg-zinc-950 rounded-md p-6 sm:p-8 border border-zinc-800">
             <div className="mb-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 tracking-tight text-center">
+              <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 text-center">
                 Welcome
               </h2>
-              <p className="text-slate-300 text-center text-sm sm:text-base">
+              <p className="text-zinc-400 text-center text-xs sm:text-sm">
                 Sign in with your Google account to save your progress and sync across devices
               </p>
             </div>
 
             {error && (
-              <div className="bg-red-500/20 border border-red-500 text-red-400 rounded-2xl p-4 text-sm mb-6 animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="bg-red-900/20 border border-red-800 text-red-400 rounded-md p-3 text-xs mb-4">
                 {error}
               </div>
             )}
@@ -81,7 +78,7 @@ export default function LoginPage() {
             <button
               onClick={handleGoogleSignIn}
               disabled={loading}
-              className="w-full bg-white hover:bg-gray-100 active:bg-gray-200 disabled:bg-gray-300 disabled:cursor-not-allowed text-gray-900 py-4 px-6 rounded-2xl font-medium transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full bg-white hover:bg-zinc-100 active:bg-zinc-200 disabled:bg-zinc-300 disabled:cursor-not-allowed text-zinc-900 py-3 px-4 rounded-md font-medium transition-all duration-150 flex items-center justify-center gap-3 border border-zinc-200"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path
@@ -104,7 +101,7 @@ export default function LoginPage() {
               {loading ? 'Signing in...' : 'Continue with Google'}
             </button>
 
-            <p className="text-slate-500 text-xs text-center mt-6">
+            <p className="text-zinc-600 text-xs text-center mt-4">
               By signing in, you agree to our Terms of Service and Privacy Policy
             </p>
           </div>
