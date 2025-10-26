@@ -53,7 +53,7 @@ export default function LoginPage() {
         <div className="max-w-md w-full">
           {/* Logo/Title Section */}
           <div className="text-center mb-12">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-4 bg-gradient-to-br from-white via-violet-100 to-violet-200 bg-clip-text text-transparent tracking-tight leading-none animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-4 bg-gradient-to-br from-white via-violet-100 to-violet-200 bg-clip-text text-transparent tracking-tight leading-tight pb-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
               Learning Hub
             </h1>
             <p className="text-slate-400 text-lg md:text-xl font-light tracking-wide animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
