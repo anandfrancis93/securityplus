@@ -630,9 +630,9 @@ export default function QuizPage() {
                       : 'border-zinc-700 hover:border-zinc-600 bg-zinc-950 hover:bg-zinc-900'
                   } ${showExplanation ? 'cursor-default' : 'cursor-pointer'} focus:outline-none focus:ring-2 focus:ring-zinc-700`}
                 >
-                  <div className="flex items-start gap-5">
+                  <div className="flex items-center gap-5">
                     {/* Checkbox or Radio indicator */}
-                    <div className="flex items-center mt-1">
+                    <div className="flex items-center">
                       {currentQuestion.questionType === 'multiple' ? (
                         <div className={`w-7 h-7 rounded-md border-2 flex items-center justify-center transition-all duration-150 ${
                           isSelected ? 'bg-zinc-700 border-zinc-600' : 'border-zinc-600'
