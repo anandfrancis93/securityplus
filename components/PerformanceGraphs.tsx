@@ -454,8 +454,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             <XAxis dataKey="difficulty" stroke="#94a3b8" />
             <YAxis domain={[0, 100]} stroke="#94a3b8" label={{ value: '% Correct', angle: -90, position: 'insideLeft', fill: '#94a3b8' }} />
             <Tooltip
-              contentStyle={{ backgroundColor: '#1e1b4b', border: '1px solid rgba(139, 92, 246, 0.3)', borderRadius: '16px', backdropFilter: 'blur(12px)' }}
+              contentStyle={{ backgroundColor: '#1e1b4b', border: '1px solid rgba(139, 92, 246, 0.3)', borderRadius: '16px' }}
               labelStyle={{ color: '#F3F4F6' }}
+              itemStyle={{ color: '#10b981' }}
               formatter={(value: any, name: string, props: any) => {
                 if (name === 'accuracy') {
                   return [`${value}% (${props.payload.questions} questions)`, 'Accuracy'];
@@ -479,8 +480,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               <XAxis type="number" domain={[0, 100]} stroke="#94a3b8" label={{ value: '% Correct', position: 'insideBottom', offset: -5, fill: '#94a3b8' }} />
               <YAxis type="category" dataKey="domain" stroke="#94a3b8" width={200} />
               <Tooltip
-                contentStyle={{ backgroundColor: '#1e1b4b', border: '1px solid rgba(139, 92, 246, 0.3)', borderRadius: '16px', backdropFilter: 'blur(12px)' }}
+                contentStyle={{ backgroundColor: '#1e1b4b', border: '1px solid rgba(139, 92, 246, 0.3)', borderRadius: '16px' }}
                 labelStyle={{ color: '#F3F4F6' }}
+                itemStyle={{ color: '#a78bfa' }}
                 formatter={(value: any, name: string, props: any) => {
                   if (name === 'accuracy') {
                     return [`${value}% (${props.payload.questions} questions)`, 'Accuracy'];
