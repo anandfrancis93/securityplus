@@ -13,6 +13,7 @@ import {
   ResponsiveContainer,
   ReferenceLine,
   Legend,
+  TooltipProps,
 } from 'recharts';
 import { UserProgress } from '@/lib/types';
 import { hasSufficientData } from '@/lib/irt';
@@ -20,6 +21,21 @@ import { hasSufficientData } from '@/lib/irt';
 interface PerformanceGraphsProps {
   userProgress: UserProgress | null;
 }
+
+// Custom tooltip component for bar charts
+const CustomBarTooltip = ({ active, payload, label, color }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-indigo-950 border border-violet-500/30 rounded-2xl p-4 shadow-2xl backdrop-blur-xl">
+        <p className="text-slate-200 font-medium mb-2">{label}</p>
+        <p className="text-sm" style={{ color: color || '#a78bfa' }}>
+          Accuracy: {payload[0].value}% ({payload[0].payload.questions} questions)
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
 
 export default function PerformanceGraphs({ userProgress }: PerformanceGraphsProps) {
   if (!userProgress || userProgress.totalQuestions === 0) {
@@ -453,17 +469,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
             <XAxis dataKey="difficulty" stroke="#94a3b8" />
             <YAxis domain={[0, 100]} stroke="#94a3b8" label={{ value: '% Correct', angle: -90, position: 'insideLeft', fill: '#94a3b8' }} />
-            <Tooltip
-              contentStyle={{ backgroundColor: '#1e1b4b', border: '1px solid rgba(139, 92, 246, 0.3)', borderRadius: '16px' }}
-              labelStyle={{ color: '#F3F4F6' }}
-              itemStyle={{ color: '#10b981' }}
-              formatter={(value: any, name: string, props: any) => {
-                if (name === 'accuracy') {
-                  return [`${value}% (${props.payload.questions} questions)`, 'Accuracy'];
-                }
-                return [value, name];
-              }}
-            />
+            <Tooltip content={<CustomBarTooltip color="#10b981" />} cursor={{ fill: 'rgba(139, 92, 246, 0.1)' }} />
             <Bar dataKey="accuracy" fill="#10b981" radius={[8, 8, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
@@ -479,17 +485,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
               <XAxis type="number" domain={[0, 100]} stroke="#94a3b8" label={{ value: '% Correct', position: 'insideBottom', offset: -5, fill: '#94a3b8' }} />
               <YAxis type="category" dataKey="domain" stroke="#94a3b8" width={200} />
-              <Tooltip
-                contentStyle={{ backgroundColor: '#1e1b4b', border: '1px solid rgba(139, 92, 246, 0.3)', borderRadius: '16px' }}
-                labelStyle={{ color: '#F3F4F6' }}
-                itemStyle={{ color: '#a78bfa' }}
-                formatter={(value: any, name: string, props: any) => {
-                  if (name === 'accuracy') {
-                    return [`${value}% (${props.payload.questions} questions)`, 'Accuracy'];
-                  }
-                  return [value, name];
-                }}
-              />
+              <Tooltip content={<CustomBarTooltip color="#a78bfa" />} cursor={{ fill: 'rgba(139, 92, 246, 0.1)' }} />
               <Bar dataKey="accuracy" fill="#a78bfa" radius={[0, 8, 8, 0]} />
             </BarChart>
           </ResponsiveContainer>
