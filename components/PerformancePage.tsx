@@ -317,7 +317,7 @@ export default function PerformancePage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-8">
           <div className="bg-black rounded-md p-8 border border-zinc-800 hover:border-zinc-700 transition-all duration-150">
             <div className="text-zinc-400 text-base md:text-lg mb-2 tracking-tight font-mono">Questions Attempted</div>
-            <div className={`text-4xl md:text-5xl font-bold transition-all duration-150 font-mono ${totalAnswered === 0 ? 'text-zinc-400' : 'text-blue-400'}`}>{totalAnswered}</div>
+            <div className={`text-4xl md:text-5xl font-bold transition-all duration-150 font-mono ${totalAnswered === 0 ? 'text-zinc-400' : 'text-white'}`}>{totalAnswered}</div>
           </div>
           <div className="bg-black rounded-md p-8 border border-zinc-800 hover:border-zinc-700 transition-all duration-150">
             <div className="text-zinc-400 text-base md:text-lg mb-2 tracking-tight font-mono">Correct Answers</div>
