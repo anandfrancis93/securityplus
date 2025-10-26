@@ -187,17 +187,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     };
   }).sort((a, b) => a.domainNum.localeCompare(b.domainNum));
 
-  // Graph 5: Questions Answered Over Time (Cumulative)
-  let cumulative = 0;
-  const questionsOverTime = userProgress.quizHistory.map((quiz, index) => {
-    cumulative += quiz.questions.length;
-    return {
-      quiz: `Quiz ${index + 1}`,
-      total: cumulative,
-      date: new Date(quiz.endedAt || quiz.startedAt).toLocaleDateString(),
-    };
-  });
-
   const hasSufficientQuestions = hasSufficientData(userProgress.totalQuestions);
 
   // All Security+ SY0-701 Topics organized by domain (ONLY actual topics, no headings/groupings)
@@ -564,24 +553,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           </ResponsiveContainer>
         </div>
       )}
-
-      {/* Graph 5: Questions Answered Over Time */}
-      <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
-        <h3 className="text-2xl md:text-3xl font-medium text-white mb-6 tracking-tight font-mono">Study Volume Over Time</h3>
-        <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={questionsOverTime}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-            <XAxis dataKey="quiz" stroke="#9ca3af" tick={false} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#9ca3af' }} />
-            <YAxis stroke="#9ca3af" label={{ value: 'Total Questions', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
-            <Tooltip
-              contentStyle={{ backgroundColor: '#000000', border: '1px solid #1f2937', borderRadius: '16px' }}
-              labelStyle={{ color: '#F3F4F6' }}
-              itemStyle={{ color: '#06b6d4' }}
-            />
-            <Line type="monotone" dataKey="total" stroke="#06b6d4" strokeWidth={3} dot={{ fill: '#06b6d4', r: 5 }} />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
 
       {/* Topic Coverage Tables by Domain */}
       <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 shadow-xl shadow-black/50">
