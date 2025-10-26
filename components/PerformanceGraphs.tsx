@@ -402,14 +402,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           count: topicPerf.questionsAnswered,
           accuracy: Math.round(topicPerf.accuracy)
         };
-      } else {
-        // Topic exists in user data but not in our master list - add it
-        topicCoverageData[domain].push({
-          topicName: topicPerf.topicName,
-          count: topicPerf.questionsAnswered,
-          accuracy: Math.round(topicPerf.accuracy)
-        });
       }
+      // Ignore topics not in official list (AI-created topics)
     }
   });
 
