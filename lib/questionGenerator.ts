@@ -291,6 +291,13 @@ IMPORTANT REQUIREMENTS:
 5. Explain why each option is correct or wrong (provide 4 explanations)
 6. Tag with relevant topic areas
 
+CRITICAL - TOPIC TAGGING:
+- ONLY use topic names that EXACTLY match those in the Security+ topics list above
+- Do NOT create custom topic names or paraphrase the topics
+- Use the precise wording from the list (e.g., "Public key infrastructure (PKI)", not "PKI basics")
+- Select 2-3 specific topics that the question tests
+- In metadata.primaryTopic, use the most central topic from the official list
+
 CRITICAL - ANSWER LENGTH RANDOMIZATION:
 - VARY the length of ALL answer options
 - Make some INCORRECT answers LONGER than correct answers
