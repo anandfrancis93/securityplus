@@ -467,7 +467,20 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               itemStyle={{ color: '#10b981' }}
             />
             <ReferenceLine y={750} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Passing', fill: '#10b981', position: 'right' }} />
-            <Line type="monotone" dataKey="score" stroke="#10b981" strokeWidth={3} dot={{ fill: '#10b981', r: 5 }} />
+            <Line
+              type="monotone"
+              dataKey="score"
+              stroke="#ffffff"
+              strokeWidth={3}
+              dot={(props: any) => {
+                const { cx, cy, payload } = props;
+                const score = payload.score;
+                let fill = '#ef4444'; // Red for below passing
+                if (score >= 800) fill = '#22c55e'; // Green for excellent
+                else if (score >= 750) fill = '#eab308'; // Yellow for passing
+                return <circle cx={cx} cy={cy} r={5} fill={fill} />;
+              }}
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>
