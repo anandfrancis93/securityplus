@@ -1,5 +1,5 @@
 'use client';
-// Trigger redeploy
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useApp } from './AppProvider';
 import { useRouter } from 'next/navigation';
