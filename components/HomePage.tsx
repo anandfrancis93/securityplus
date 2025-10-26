@@ -68,13 +68,19 @@ export default function HomePage() {
       case 'physics':
         return (
           <svg className={`${baseClasses} ${colorClass}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-            <circle cx="12" cy="12" r="2" fill="currentColor" />
-            <circle cx="12" cy="12" r="8" strokeLinecap="round" />
-            <path strokeLinecap="round" d="M12 4v4M12 16v4M4 12h4M16 12h4" />
-            <circle cx="12" cy="4" r="1.5" fill="currentColor" />
-            <circle cx="12" cy="20" r="1.5" fill="currentColor" />
-            <circle cx="4" cy="12" r="1.5" fill="currentColor" />
-            <circle cx="20" cy="12" r="1.5" fill="currentColor" />
+            {/* Atom with nucleus and electron orbits */}
+            {/* Nucleus */}
+            <circle cx="12" cy="12" r="2.5" fill="currentColor" />
+            {/* Electron orbit 1 - horizontal */}
+            <ellipse cx="12" cy="12" rx="9" ry="4" strokeLinecap="round" />
+            {/* Electron orbit 2 - diagonal */}
+            <ellipse cx="12" cy="12" rx="9" ry="4" strokeLinecap="round" transform="rotate(60 12 12)" />
+            {/* Electron orbit 3 - diagonal opposite */}
+            <ellipse cx="12" cy="12" rx="9" ry="4" strokeLinecap="round" transform="rotate(-60 12 12)" />
+            {/* Electrons on orbits */}
+            <circle cx="21" cy="12" r="1.5" fill="currentColor" />
+            <circle cx="7.5" cy="16" r="1.5" fill="currentColor" />
+            <circle cx="16.5" cy="8" r="1.5" fill="currentColor" />
           </svg>
         );
       case 'english':
