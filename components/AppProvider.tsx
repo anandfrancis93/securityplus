@@ -122,12 +122,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
           await loadUserProgress(effectiveId);
           setLoading(false);
         } else {
-          // No user signed in - show auth modal
+          // No user signed in - don't show modal, let route handle it
           setUser(null);
           setAuthUserId(null);
           setUserId(null);
           setLoading(false);
-          setIsAuthModalOpen(true);
         }
       });
 
@@ -335,7 +334,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setAuthUserId(null);
       setUserProgress(null);
       setCurrentQuiz(null);
-      setIsAuthModalOpen(true);
+      // Redirect will be handled by the route's useEffect hook
     } catch (error) {
       console.error('Error signing out:', error);
       throw error;

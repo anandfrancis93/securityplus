@@ -1,15 +1,22 @@
 'use client';
-// Trigger deployment
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useApp } from './AppProvider';
 
 export default function HomePage() {
   const router = useRouter();
-  const { user, handleSignOut } = useApp();
+  const { user, loading, handleSignOut } = useApp();
   const [menuOpen, setMenuOpen] = useState(false);
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/');
+    }
+  }, [user, loading, router]);
 
   // Close menu when clicking outside
   useEffect(() => {
