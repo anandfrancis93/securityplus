@@ -471,7 +471,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             <Bar dataKey="accuracy" fill="#10b981" radius={[8, 8, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
-        <p className="text-slate-400 text-base md:text-lg mt-4">Performance breakdown by question difficulty</p>
       </div>
 
       {/* Graph 4: Topic Performance by Domain */}
