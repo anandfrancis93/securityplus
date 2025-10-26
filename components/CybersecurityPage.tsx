@@ -75,6 +75,7 @@ export default function CybersecurityPage() {
       description: 'Test your knowledge with AI-generated questions',
       onClick: () => router.push('/cybersecurity/quiz'),
       disabled: false,
+      clickable: true,
       icon: (
         <svg className="w-20 h-20 md:w-24 md:h-24 text-violet-400 transition-opacity duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -87,6 +88,7 @@ export default function CybersecurityPage() {
       description: 'Learn with spaced repetition',
       onClick: () => setSelectedCard('flashcards'),
       disabled: false,
+      clickable: true,
       badge: dueFlashcardsCount > 0 ? `${dueFlashcardsCount} due` : null,
       icon: (
         <svg className="w-20 h-20 md:w-24 md:h-24 text-cyan-400 transition-opacity duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -97,9 +99,10 @@ export default function CybersecurityPage() {
     {
       id: 'pbq',
       name: 'Performance-Based Questions',
-      description: 'Hands-on scenarios',
+      description: 'Hands-on scenario simulations',
       onClick: () => {},
-      disabled: true,
+      disabled: false,
+      clickable: false,
       icon: (
         <svg className="w-20 h-20 md:w-24 md:h-24 text-emerald-400 transition-opacity duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -109,9 +112,10 @@ export default function CybersecurityPage() {
     {
       id: 'simulate-exam',
       name: 'Simulate Exam',
-      description: '90-minute timed exam',
+      description: 'Full-length 90-minute practice exam',
       onClick: () => {},
-      disabled: true,
+      disabled: false,
+      clickable: false,
       icon: (
         <svg className="w-20 h-20 md:w-24 md:h-24 text-amber-400 transition-opacity duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -231,16 +235,18 @@ export default function CybersecurityPage() {
             <button
               key={card.id}
               id={card.id}
-              onClick={() => !card.disabled && card.onClick()}
+              onClick={() => card.clickable && card.onClick()}
               disabled={card.disabled}
-              onMouseEnter={() => !card.disabled && setHoveredCard(card.id)}
+              onMouseEnter={() => card.clickable && setHoveredCard(card.id)}
               onMouseLeave={() => setHoveredCard(null)}
               className={`relative bg-zinc-950 backdrop-blur-sm rounded-md p-10 md:p-12 border transition-all duration-150
                        ${card.disabled
                          ? 'border-zinc-900 opacity-40 cursor-not-allowed'
-                         : hoveredCard === card.id
-                           ? 'border-zinc-700 bg-zinc-900/50'
-                           : 'border-zinc-800 hover:border-zinc-700'
+                         : card.clickable
+                           ? hoveredCard === card.id
+                             ? 'border-zinc-700 bg-zinc-900/50'
+                             : 'border-zinc-800 hover:border-zinc-700'
+                           : 'border-zinc-800 cursor-default'
                        }
                        focus:outline-none focus:ring-1 focus:ring-zinc-700`}
             >
@@ -279,7 +285,7 @@ export default function CybersecurityPage() {
               )}
 
               {/* Active Indicator Arrow */}
-              {!card.disabled && hoveredCard === card.id && (
+              {card.clickable && hoveredCard === card.id && (
                 <div className="absolute bottom-4 right-4 text-zinc-600">
                   <svg
                     className="w-5 h-5"
