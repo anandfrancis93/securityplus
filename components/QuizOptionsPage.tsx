@@ -41,7 +41,7 @@ export default function QuizOptionsPage() {
       description: 'Take 10 AI-generated synthesis questions',
       onClick: () => router.push('/cybersecurity/quiz/start'),
       icon: (
-        <svg className="w-16 h-16 md:w-20 md:h-20 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+        <svg className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
       ),
@@ -52,7 +52,7 @@ export default function QuizOptionsPage() {
       description: 'View your scores, IRT analysis, and history',
       onClick: () => router.push('/cybersecurity/performance'),
       icon: (
-        <svg className="w-16 h-16 md:w-20 md:h-20 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+        <svg className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
         </svg>
       ),
@@ -60,12 +60,12 @@ export default function QuizOptionsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-black font-mono">
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl">
+    <div className="min-h-screen bg-black font-mono flex flex-col">
+      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 md:py-8 max-w-7xl flex-1 flex flex-col">
         {/* Header */}
-        <header className="mb-8 md:mb-12">
+        <header className="mb-4 sm:mb-6 md:mb-8">
           {/* Navigation Buttons */}
-          <div className="flex justify-between items-center mb-8">
+          <div className="flex justify-between items-center mb-4 sm:mb-6 md:mb-8">
             <div className="relative">
               <button
                 id="back-to-cybersecurity"
@@ -155,17 +155,17 @@ export default function QuizOptionsPage() {
 
           {/* Hero Section */}
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-3xl sm:text-4xl font-bold mb-3 text-white font-mono tracking-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 text-white font-mono tracking-tight">
               Quiz
             </h1>
-            <p className="text-zinc-500 text-sm font-mono tracking-tight">
+            <p className="text-zinc-500 text-xs sm:text-sm font-mono tracking-tight">
               Choose an option
             </p>
           </div>
         </header>
 
         {/* Options Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 pb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6 pb-4 sm:pb-6 md:pb-8 flex-1 content-start">
           {options.map((option) => (
             <button
               key={option.id}
@@ -173,7 +173,7 @@ export default function QuizOptionsPage() {
               onClick={option.onClick}
               onMouseEnter={() => setHoveredCard(option.id)}
               onMouseLeave={() => setHoveredCard(null)}
-              className={`relative bg-zinc-950 rounded-md p-8 md:p-10 border transition-all duration-150
+              className={`relative bg-zinc-950 rounded-md p-6 sm:p-8 md:p-10 border transition-all duration-150
                        ${hoveredCard === option.id
                          ? 'border-zinc-700 bg-zinc-900/50'
                          : 'border-zinc-800 hover:border-zinc-700'
@@ -181,17 +181,17 @@ export default function QuizOptionsPage() {
                        focus:outline-none focus:ring-1 focus:ring-zinc-700`}
             >
               {/* Icon */}
-              <div className="flex justify-center items-center mb-6">
+              <div className="flex justify-center items-center mb-4 sm:mb-5 md:mb-6">
                 {option.icon}
               </div>
 
               {/* Option Name */}
-              <h2 className="text-2xl md:text-3xl font-bold mb-3 text-white font-mono tracking-tight text-center">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3 text-white font-mono tracking-tight text-center">
                 {option.name}
               </h2>
 
               {/* Description */}
-              <p className="text-zinc-500 text-sm md:text-base font-mono text-center">
+              <p className="text-zinc-500 text-xs sm:text-sm md:text-base font-mono text-center">
                 {option.description}
               </p>
 
