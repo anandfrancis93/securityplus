@@ -5,11 +5,18 @@ import { useApp } from './AppProvider';
 import { useRouter } from 'next/navigation';
 
 export default function QuizOptionsPage() {
-  const { user, handleSignOut } = useApp();
+  const { user, loading, handleSignOut } = useApp();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/');
+    }
+  }, [user, loading, router]);
 
   // Close menu when clicking outside
   useEffect(() => {

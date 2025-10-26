@@ -13,6 +13,13 @@ export default function PerformancePage() {
   const router = useRouter();
   const [irtExpanded, setIrtExpanded] = useState(false);
   const [recentQuizzesExpanded, setRecentQuizzesExpanded] = useState(false);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/');
+    }
+  }, [user, loading, router]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [selectedQuizForReview, setSelectedQuizForReview] = useState<QuizSession | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);

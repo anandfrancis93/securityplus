@@ -15,8 +15,15 @@ import { getDueFlashcards, calculateNextReview, getDeckStats } from '@/lib/space
 import { Flashcard, FlashcardReview } from '@/lib/types';
 
 export default function StudyPage() {
-  const { userId, user, handleSignOut } = useApp();
+  const { userId, user, loading: authLoading, handleSignOut } = useApp();
   const router = useRouter();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/');
+    }
+  }, [user, authLoading, router]);
   const [dueCardIds, setDueCardIds] = useState<string[]>([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [currentCard, setCurrentCard] = useState<Flashcard | null>(null);

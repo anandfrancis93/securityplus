@@ -10,12 +10,19 @@ import { getDueFlashcards, getDeckStats } from '@/lib/spacedRepetition';
 import { Flashcard, FlashcardReview } from '@/lib/types';
 
 export default function FlashcardsPage() {
-  const { userId } = useApp();
+  const { userId, user, loading: authLoading } = useApp();
   const router = useRouter();
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [reviews, setReviews] = useState<FlashcardReview[]>([]);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/');
+    }
+  }, [user, authLoading, router]);
 
   // Manual mode states
   const [manualTerm, setManualTerm] = useState('');

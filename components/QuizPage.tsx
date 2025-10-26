@@ -7,7 +7,7 @@ import { Question } from '@/lib/types';
 import { getDomainFromTopics } from '@/lib/domainDetection';
 
 export default function QuizPage() {
-  const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, user, handleSignOut } = useApp();
+  const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, user, loading: authLoading, handleSignOut } = useApp();
   const router = useRouter();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -18,6 +18,13 @@ export default function QuizPage() {
   const [generatingNext, setGeneratingNext] = useState(false);
   const [totalQuestions] = useState(10);
   const [showCelebration, setShowCelebration] = useState(false);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/');
+    }
+  }, [user, authLoading, router]);
   const [quizStats, setQuizStats] = useState<{ total: number; correct: number; accuracy: number } | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');

@@ -7,12 +7,19 @@ import { getUserFlashcards, getUserReviews } from '@/lib/flashcardDb';
 import { getDueFlashcards } from '@/lib/spacedRepetition';
 
 export default function CybersecurityPage() {
-  const { user, handleSignOut, userId } = useApp();
+  const { user, loading, handleSignOut, userId } = useApp();
   const router = useRouter();
   const [selectedCard, setSelectedCard] = useState<'quiz' | 'flashcards' | null>(null);
   const [dueFlashcardsCount, setDueFlashcardsCount] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/');
+    }
+  }, [user, loading, router]);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Close menu when clicking outside

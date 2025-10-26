@@ -15,7 +15,7 @@ import { getDueFlashcards, calculateNextReview } from '@/lib/spacedRepetition';
 import { Flashcard, FlashcardReview } from '@/lib/types';
 
 export default function StudyPage() {
-  const { userId } = useApp();
+  const { userId, user, loading: authLoading } = useApp();
   const router = useRouter();
   const [dueCardIds, setDueCardIds] = useState<string[]>([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -23,6 +23,13 @@ export default function StudyPage() {
   const [isFlipped, setIsFlipped] = useState(false);
   const [loading, setLoading] = useState(true);
   const [answering, setAnswering] = useState(false);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/');
+    }
+  }, [user, authLoading, router]);
 
   useEffect(() => {
     if (userId) {

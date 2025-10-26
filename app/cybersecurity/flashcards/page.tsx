@@ -12,8 +12,15 @@ import { Flashcard, FlashcardReview } from '@/lib/types';
 import NotificationSettings from '@/components/NotificationSettings';
 
 export default function FlashcardsPage() {
-  const { userId, user, handleSignOut } = useApp();
+  const { userId, user, loading: authLoading, handleSignOut } = useApp();
   const router = useRouter();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/');
+    }
+  }, [user, authLoading, router]);
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [reviews, setReviews] = useState<FlashcardReview[]>([]);
   const [loading, setLoading] = useState(true);
