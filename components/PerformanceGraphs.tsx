@@ -486,7 +486,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               <Bar dataKey="accuracy" fill="#3b82f6" radius={[0, 8, 8, 0]} />
             </BarChart>
           </ResponsiveContainer>
-          <p className="text-slate-400 text-base md:text-lg mt-4">Coverage across the 5 Security+ SY0-701 domains</p>
         </div>
       )}
 
@@ -506,7 +505,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             <Line type="monotone" dataKey="total" stroke="#06b6d4" strokeWidth={3} dot={{ fill: '#06b6d4', r: 5 }} />
           </LineChart>
         </ResponsiveContainer>
-        <p className="text-slate-400 text-base md:text-lg mt-4">Cumulative questions answered across all quiz sessions</p>
       </div>
 
       {/* Topic Coverage Tables by Domain */}
