@@ -68,13 +68,11 @@ export default function HomePage() {
       case 'physics':
         return (
           <svg className={`${baseClasses} ${colorClass}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-            {/* Clean wave pattern representing wave physics */}
+            {/* Lightning bolt - represents energy/electricity */}
             <path strokeLinecap="round" strokeLinejoin="round"
-                  d="M3 12c0-3 1.5-4.5 3-4.5s3 1.5 3 4.5-1.5 4.5-3 4.5-3-1.5-3-4.5z" />
-            <path strokeLinecap="round" strokeLinejoin="round"
-                  d="M9 12c0-3 1.5-4.5 3-4.5s3 1.5 3 4.5-1.5 4.5-3 4.5-3-1.5-3-4.5z" />
-            <path strokeLinecap="round" strokeLinejoin="round"
-                  d="M15 12c0-3 1.5-4.5 3-4.5s3 1.5 3 4.5-1.5 4.5-3 4.5-3-1.5-3-4.5z" />
+                  d="M13 2L3 14h8l-1 8 10-12h-8l1-8z"
+                  fill="currentColor"
+                  stroke="none" />
           </svg>
         );
       case 'english':
