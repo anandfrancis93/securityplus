@@ -36,7 +36,7 @@ export default function HomePage() {
 
   // SVG Icon Components
   const getSubjectIcon = (subjectId: string) => {
-    const baseClasses = "w-12 h-12 md:w-14 md:h-14 transition-opacity duration-150";
+    const baseClasses = "w-20 h-20 md:w-24 md:h-24 transition-opacity duration-200";
 
     switch (subjectId) {
       case 'cybersecurity':
@@ -140,9 +140,9 @@ export default function HomePage() {
     <div className="min-h-screen bg-black">
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl">
         {/* Header */}
-        <header className="mb-8 md:mb-12">
+        <header className="mb-16 md:mb-20">
           {/* Menu Button */}
-          <div className="flex justify-end items-center mb-8 relative">
+          <div className="flex justify-end items-center mb-12 relative">
             <div className="relative" ref={menuRef}>
               <button
                 id="menu"
@@ -168,7 +168,7 @@ export default function HomePage() {
                   {/* User Name Section */}
                   <div className="px-4 py-3 border-b border-zinc-800">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-md bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center">
                         <svg
                           className="w-4 h-4 text-zinc-400"
                           fill="none"
@@ -212,17 +212,17 @@ export default function HomePage() {
 
           {/* Hero Section */}
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-3xl sm:text-4xl font-bold mb-3 text-white font-mono tracking-tight">
+            <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold mb-6 text-white font-mono tracking-tighter">
               Learning Hub
             </h1>
-            <p className="text-zinc-500 text-sm font-mono tracking-tight">
+            <p className="text-zinc-500 text-base md:text-lg font-mono tracking-tight">
               Select a subject to begin your learning journey
             </p>
           </div>
         </header>
 
         {/* Subject Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pb-12">
           {subjects.map((subject) => (
             <button
               key={subject.id}
@@ -231,7 +231,7 @@ export default function HomePage() {
               disabled={subject.disabled}
               onMouseEnter={() => subject.clickable && setHoveredCard(subject.id)}
               onMouseLeave={() => setHoveredCard(null)}
-              className={`relative bg-zinc-950 backdrop-blur-sm rounded-md p-6 border transition-all duration-150
+              className={`relative bg-zinc-950 backdrop-blur-sm rounded-md p-8 border transition-all duration-150
                        ${subject.disabled
                          ? 'border-zinc-900 opacity-40 cursor-not-allowed'
                          : subject.clickable
@@ -243,17 +243,17 @@ export default function HomePage() {
                        focus:outline-none focus:ring-1 focus:ring-zinc-700`}
             >
               {/* Icon */}
-              <div className={`flex justify-center items-center mb-4 ${subject.disabled ? 'opacity-30' : ''}`}>
+              <div className={`flex justify-center items-center mb-6 ${subject.disabled ? 'opacity-30' : ''}`}>
                 {getSubjectIcon(subject.id)}
               </div>
 
               {/* Subject Name */}
-              <h2 className="text-lg font-bold mb-2 text-white font-mono tracking-tight">
+              <h2 className="text-xl md:text-2xl font-bold mb-3 text-white font-mono tracking-tight">
                 {subject.name}
               </h2>
 
               {/* Description */}
-              <p className="text-zinc-500 text-xs font-mono min-h-[2.5rem]">
+              <p className="text-zinc-500 text-sm md:text-base font-mono min-h-[3rem]">
                 {subject.description}
               </p>
 
