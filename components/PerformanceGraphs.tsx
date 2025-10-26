@@ -421,7 +421,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       )}
 
       {/* Graph 1: Ability Level Over Time */}
-      <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-800 hover:border-gray-700 shadow-xl shadow-black/50 transition-all duration-300">
+      <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
         <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight">Ability Level Over Time</h3>
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={abilityOverTime}>
@@ -442,7 +442,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       </div>
 
       {/* Graph 2: Predicted Score Over Time */}
-      <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-800 hover:border-gray-700 shadow-xl shadow-black/50 transition-all duration-300">
+      <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
         <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight">Predicted Score Over Time</h3>
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={scoreOverTime}>
@@ -462,7 +462,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       </div>
 
       {/* Graph 3: Accuracy by Difficulty */}
-      <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-800 hover:border-gray-700 shadow-xl shadow-black/50 transition-all duration-300">
+      <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
         <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight">Accuracy by Difficulty Level</h3>
         <ResponsiveContainer width="100%" height={350}>
           <BarChart data={accuracyByDifficulty}>
@@ -478,7 +478,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
       {/* Graph 4: Topic Performance by Domain */}
       {domainPerformance.length > 0 && (
-        <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-800 hover:border-gray-700 shadow-xl shadow-black/50 transition-all duration-300">
+        <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
           <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight">Performance by SY0-701 Domain</h3>
           <ResponsiveContainer width="100%" height={350}>
             <BarChart data={domainPerformance} layout="vertical">
@@ -494,7 +494,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       )}
 
       {/* Graph 5: Questions Answered Over Time */}
-      <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-800 hover:border-gray-700 shadow-xl shadow-black/50 transition-all duration-300">
+      <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
         <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight">Study Volume Over Time</h3>
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={questionsOverTime}>
@@ -513,7 +513,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       </div>
 
       {/* Topic Coverage Tables by Domain */}
-      <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-800 shadow-xl shadow-black/50">
+      <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 shadow-xl shadow-black/50">
         <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 tracking-tight">Topic Coverage by Domain</h3>
         <p className="text-slate-400 text-base md:text-lg mb-8">All Security+ SY0-701 topics organized by domain, showing coverage frequency</p>
 

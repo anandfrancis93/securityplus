@@ -196,7 +196,7 @@ export default function PerformancePage() {
         </header>
 
         {/* Predicted Score Card */}
-        <div className="bg-black rounded-[28px] p-10 md:p-12 mb-8 border border-gray-800 shadow-xl shadow-black/50">
+        <div className="bg-black rounded-[28px] p-10 md:p-12 mb-8 border border-gray-700 shadow-xl shadow-black/50">
           {/* Tooltip animation for Predicted Score */}
           <style jsx global>{`
             @keyframes tooltipFade {
@@ -326,11 +326,11 @@ export default function PerformancePage() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-8">
-          <div className="bg-black rounded-[28px] p-8 border border-gray-800 hover:border-gray-700 shadow-xl shadow-black/50 transition-all duration-300">
+          <div className="bg-black rounded-[28px] p-8 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
             <div className="text-slate-400 text-base md:text-lg mb-2 tracking-tight">Questions Attempted</div>
             <div className={`text-4xl md:text-5xl font-bold transition-all duration-300 ${totalAnswered === 0 ? 'text-slate-400' : 'text-blue-400'}`}>{totalAnswered}</div>
           </div>
-          <div className="bg-black rounded-[28px] p-8 border border-gray-800 hover:border-gray-700 shadow-xl shadow-black/50 transition-all duration-300">
+          <div className="bg-black rounded-[28px] p-8 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
             <div className="text-slate-400 text-base md:text-lg mb-2 tracking-tight">Correct Answers</div>
             <div className={`text-4xl md:text-5xl font-bold transition-all duration-300 ${
               totalAnswered === 0 ? 'text-slate-400' :
@@ -339,7 +339,7 @@ export default function PerformancePage() {
               'text-yellow-400'
             }`}>{correctAnswers}</div>
           </div>
-          <div className="bg-black rounded-[28px] p-8 border border-gray-800 hover:border-gray-700 shadow-xl shadow-black/50 transition-all duration-300">
+          <div className="bg-black rounded-[28px] p-8 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
             <div className="text-slate-400 text-base md:text-lg mb-2 tracking-tight">Accuracy</div>
             <div className={`text-4xl md:text-5xl font-bold transition-all duration-300 ${
               totalAnswered === 0 ? 'text-slate-400' :
@@ -352,7 +352,7 @@ export default function PerformancePage() {
 
         {/* IRT Score Analysis - Collapsible (Cognitive Load) */}
         {totalAnswered > 0 && (
-          <div className="bg-black border border-gray-800 rounded-[28px] p-8 md:p-10 mb-8 shadow-xl shadow-black/50 transition-all duration-300">
+          <div className="bg-black border border-gray-700 rounded-[28px] p-8 md:p-10 mb-8 shadow-xl shadow-black/50 transition-all duration-300">
             <div className="flex items-center justify-between">
               <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight">IRT Performance Analysis</h3>
               <button
@@ -551,7 +551,7 @@ export default function PerformancePage() {
 
         {/* Recent Activity - Collapsible (Hick's Law) */}
         {userProgress && userProgress.quizHistory.length > 0 && (
-          <div className="mt-12 bg-black rounded-[28px] p-8 md:p-10 border border-gray-800 shadow-xl shadow-black/50 transition-all duration-300">
+          <div className="mt-12 bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 shadow-xl shadow-black/50 transition-all duration-300">
             <div className="flex items-center justify-between">
               <h3 className="text-2xl md:text-3xl font-bold tracking-tight">Recent Quizzes ({userProgress.quizHistory.length})</h3>
               <button
@@ -603,7 +603,7 @@ export default function PerformancePage() {
                       key={quiz.id}
                       id={`quiz-review-${quiz.id}`}
                       onClick={() => setSelectedQuizForReview(quiz)}
-                      className="w-full bg-black hover:bg-gray-900/50 rounded-[28px] p-6 border border-gray-800 hover:border-gray-700 shadow-xl shadow-black/50 transition-all duration-300 cursor-pointer text-left"
+                      className="w-full bg-black hover:bg-gray-900/50 rounded-[28px] p-6 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300 cursor-pointer text-left"
                     >
                       <div className="flex justify-between items-center">
                         <div>
