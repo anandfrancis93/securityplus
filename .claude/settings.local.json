@@ -11,7 +11,9 @@
       "WebFetch(domain:m3.material.io)",
       "mcp__ide__getDiagnostics",
       "Bash(dir \"C:\\Users\\anand\\securityplus\\app\\cybersecurity\\quiz\")",
-      "Bash(move:*)"
+      "Bash(move:*)",
+      "WebFetch(domain:vercel.com)",
+      "Bash(git revert:*)"
     ],
     "deny": [],
     "ask": []
