@@ -54,10 +54,10 @@ export default function PerformancePage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-black">
+      <div className="flex items-center justify-center min-h-screen bg-black font-mono">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-slate-400">Loading...</p>
+          <p className="mt-4 text-zinc-400 font-mono">Loading...</p>
         </div>
       </div>
     );
@@ -73,28 +73,25 @@ export default function PerformancePage() {
   const isNeedsWork = estimatedAbility < -1.0;
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-black font-mono">
 
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl">
-        {/* Header - MD3 Top App Bar Pattern */}
+        {/* Header */}
         <header className="mb-16 md:mb-20">
-          {/* Navigation Buttons - MD3 Icon Button with State Layer */}
+          {/* Navigation Buttons */}
           <div className="flex justify-between items-center mb-12">
             <div className="relative">
               <button
                 id="back-to-quiz"
                 onClick={() => router.push('/cybersecurity/quiz')}
-                className="relative group p-3 rounded-full transition-all duration-300 ease-out
+                className="relative group p-3 rounded-md transition-all duration-150 ease-out
                          hover:bg-blue-500/10 active:bg-blue-500/20
                          focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                 title="Back to Quiz"
                 aria-label="Back to Quiz"
               >
-                {/* State Layer */}
-                <span className="absolute inset-0 rounded-full bg-blue-400/0 group-hover:bg-blue-400/10 transition-colors duration-300" />
-
                 <svg
-                  className="w-6 h-6 text-slate-300 group-hover:text-blue-300 transition-colors duration-300 relative z-10"
+                  className="w-6 h-6 text-zinc-300 group-hover:text-blue-300 transition-colors duration-150 relative z-10"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -111,17 +108,14 @@ export default function PerformancePage() {
               <button
                 id="menu-performance"
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="relative group p-3 rounded-full transition-all duration-300 ease-out
-                         hover:bg-slate-700/50 active:bg-slate-700/70
-                         focus:outline-none focus:ring-2 focus:ring-slate-600/50"
+                className="relative group p-3 rounded-md transition-all duration-150 ease-out
+                         hover:bg-zinc-900 active:bg-zinc-900
+                         focus:outline-none focus:ring-2 focus:ring-zinc-600/50"
                 title="Menu"
                 aria-label="Open menu"
               >
-                {/* State Layer */}
-                <span className="absolute inset-0 rounded-full bg-slate-400/0 group-hover:bg-slate-400/10 transition-colors duration-300" />
-
                 <svg
-                  className="w-6 h-6 text-slate-300 group-hover:text-slate-100 transition-colors duration-300 relative z-10"
+                  className="w-6 h-6 text-zinc-300 group-hover:text-zinc-100 transition-colors duration-150 relative z-10"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -133,18 +127,17 @@ export default function PerformancePage() {
                 </svg>
               </button>
 
-              {/* Dropdown Menu - MD3 Menu Pattern with Elevation 2 */}
+              {/* Dropdown Menu */}
               {menuOpen && user && !user?.isAnonymous && (
                 <div
                   className="absolute right-0 top-full mt-3 bg-black
-                           border border-gray-800 rounded-3xl overflow-hidden
-                           shadow-xl shadow-black/50
-                           min-w-[240px] z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+                           border border-zinc-800 rounded-md overflow-hidden
+                           min-w-[240px] z-50 transition-opacity duration-150"
                 >
-                  {/* User Name Section - MD3 List Item */}
-                  <div className="px-5 py-4 border-b border-gray-800 bg-black">
+                  {/* User Name Section */}
+                  <div className="px-5 py-4 border-b border-zinc-800 bg-black">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-full bg-blue-500/20">
+                      <div className="p-2 rounded-md bg-blue-500/20">
                         <svg
                           className="w-5 h-5 text-blue-400"
                           fill="none"
@@ -155,11 +148,11 @@ export default function PerformancePage() {
                           <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                       </div>
-                      <span className="text-sm font-medium text-slate-200">{user?.displayName || 'User'}</span>
+                      <span className="text-sm font-medium text-zinc-200 font-mono">{user?.displayName || 'User'}</span>
                     </div>
                   </div>
 
-                  {/* Sign Out Button - MD3 List Item with State Layer */}
+                  {/* Sign Out Button */}
                   <button
                     id="sign-out-performance"
                     onClick={async () => {
@@ -168,11 +161,11 @@ export default function PerformancePage() {
                         setMenuOpen(false);
                       }
                     }}
-                    className="w-full px-5 py-4 text-sm text-left text-slate-200
-                             hover:bg-gray-900/50 active:bg-gray-900/70
-                             transition-colors duration-200 flex items-center gap-3 group"
+                    className="w-full px-5 py-4 text-sm text-left text-zinc-200 font-mono
+                             hover:bg-zinc-900 active:bg-zinc-900
+                             transition-colors duration-150 flex items-center gap-3 group"
                   >
-                    <div className="p-2 rounded-full bg-red-500/20 group-hover:bg-red-500/30 transition-colors duration-200">
+                    <div className="p-2 rounded-md bg-red-500/20 group-hover:bg-red-500/30 transition-colors duration-150">
                       <svg
                         className="w-4 h-4 text-red-400"
                         fill="none"
@@ -190,36 +183,25 @@ export default function PerformancePage() {
             </div>
           </div>
 
-          {/* Hero Section - Neutral Typography */}
+          {/* Hero Section */}
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold mb-6 bg-gradient-to-br from-white via-slate-100 to-slate-200 bg-clip-text text-transparent
-                         tracking-tight leading-none animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold mb-6 text-white
+                         tracking-tight leading-none">
               Performance
             </h1>
-            <p className="text-slate-400 text-lg md:text-xl font-light tracking-wide animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+            <p className="text-zinc-400 text-lg md:text-xl font-light tracking-wide font-mono">
               Track your progress and improvement
             </p>
           </div>
         </header>
 
         {/* Predicted Score Card */}
-        <div className="bg-black rounded-[28px] p-10 md:p-12 mb-8 border border-gray-700 shadow-xl shadow-black/50">
-          {/* Tooltip animation for Predicted Score */}
-          <style jsx global>{`
-            @keyframes tooltipFade {
-              0% { opacity: 0; }
-              26.3% { opacity: 0; }
-              30.3% { opacity: 1; }
-              96.1% { opacity: 1; }
-              100% { opacity: 0; }
-            }
-          `}</style>
-
+        <div className="bg-black rounded-md p-10 md:p-12 mb-8 border border-zinc-800">
           <div className="text-center mb-6">
-            <h2 className="text-2xl md:text-3xl text-slate-300 mb-4 tracking-tight font-medium">Predicted Score</h2>
+            <h2 className="text-2xl md:text-3xl text-zinc-300 mb-4 tracking-tight font-medium font-mono">Predicted Score</h2>
             <div className="relative group cursor-help inline-block">
-              <div className={`text-7xl md:text-8xl font-bold mb-4 transition-all duration-300 ${
-                totalAnswered === 0 ? 'text-slate-400' :
+              <div className={`text-7xl md:text-8xl font-bold mb-4 transition-all duration-150 font-mono ${
+                totalAnswered === 0 ? 'text-zinc-400' :
                 isGoodPerformance ? 'text-emerald-400' :
                 isNeedsWork ? 'text-red-400' :
                 'text-yellow-400'
@@ -227,8 +209,8 @@ export default function PerformancePage() {
                 {predictedScore}
               </div>
               {/* Hover tooltip */}
-              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 bg-black border border-gray-800 rounded-3xl p-3 shadow-xl shadow-black/50 z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                <div className="space-y-1 text-sm text-slate-300">
+              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 bg-black border border-zinc-800 rounded-md p-3 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+                <div className="space-y-1 text-sm text-zinc-300 font-mono">
                   <div>
                     <span className="text-emerald-400 font-medium">Green:</span> 750 - 900
                   </div>
@@ -239,13 +221,13 @@ export default function PerformancePage() {
                     <span className="text-red-400 font-medium">Red:</span> 100 - 599
                   </div>
                 </div>
-                <p className="text-xs text-slate-400 mt-3 pt-2 border-t border-slate-700">Color is based on your Ability Level from IRT analysis, which correlates with predicted exam score.</p>
+                <p className="text-xs text-zinc-400 mt-3 pt-2 border-t border-zinc-700 font-mono">Color is based on your Ability Level from IRT analysis, which correlates with predicted exam score.</p>
               </div>
             </div>
-            <div className="text-lg md:text-xl text-slate-500">out of 900</div>
+            <div className="text-lg md:text-xl text-zinc-500 font-mono">out of 900</div>
             <div className="mt-6">
               {totalAnswered > 0 ? (
-                <div className={`inline-block px-8 py-3 rounded-full text-base md:text-lg font-medium transition-all duration-300 ${
+                <div className={`inline-block px-8 py-3 rounded-md text-base md:text-lg font-medium transition-all duration-150 font-mono ${
                   isGoodPerformance ? 'bg-black text-emerald-400 border border-emerald-500/50' :
                   isNeedsWork ? 'bg-black text-red-400 border border-red-500/50' :
                   'bg-black text-yellow-400 border border-yellow-500/50'
@@ -255,20 +237,20 @@ export default function PerformancePage() {
                    'More practice needed'}
                 </div>
               ) : (
-                <div className="text-slate-500 text-lg">Start answering questions to see your prediction</div>
+                <div className="text-zinc-500 text-lg font-mono">Start answering questions to see your prediction</div>
               )}
             </div>
           </div>
 
           <div className="mt-8">
-            <div className="w-full bg-gray-900 rounded-full h-4 relative overflow-hidden border border-gray-800">
+            <div className="w-full bg-zinc-900 rounded-md h-4 relative overflow-hidden border border-zinc-800">
               {/* Progress bar fill - only show if totalAnswered > 0 */}
               {totalAnswered > 0 && (
                 <div
-                  className={`h-4 rounded-full transition-all duration-500 ${
-                    isGoodPerformance ? 'bg-gradient-to-r from-emerald-500 to-emerald-400' :
-                    isNeedsWork ? 'bg-gradient-to-r from-red-500 to-red-400' :
-                    'bg-gradient-to-r from-yellow-500 to-yellow-400'
+                  className={`h-4 rounded-md transition-all duration-150 ${
+                    isGoodPerformance ? 'bg-emerald-500' :
+                    isNeedsWork ? 'bg-red-500' :
+                    'bg-yellow-500'
                   }`}
                   style={{ width: `${Math.min(((predictedScore - 100) / 800) * 100, 100)}%` }}
                 ></div>
@@ -282,7 +264,7 @@ export default function PerformancePage() {
             </div>
 
             {/* Scale labels */}
-            <div className="flex justify-between text-sm text-slate-400 mt-2 relative">
+            <div className="flex justify-between text-sm text-zinc-400 mt-2 relative font-mono">
               <span>100</span>
               <span
                 className="absolute text-white font-medium"
@@ -299,7 +281,7 @@ export default function PerformancePage() {
                 className="relative mt-2"
                 style={{ paddingLeft: `${((predictedScore - 100) / 800) * 100}%` }}
               >
-                <div className={`inline-block px-3 py-1 rounded-full text-sm font-medium transition-all duration-300 ${
+                <div className={`inline-block px-3 py-1 rounded-md text-sm font-medium transition-all duration-150 font-mono ${
                   isGoodPerformance ? 'bg-black text-emerald-400 border border-emerald-500/50' :
                   isNeedsWork ? 'bg-black text-red-400 border border-red-500/50' :
                   'bg-black text-yellow-400 border border-yellow-500/50'
@@ -313,17 +295,17 @@ export default function PerformancePage() {
 
         {/* Phase 1: Insufficient Data Warning */}
         {totalAnswered > 0 && !hasSufficientData(totalAnswered) && (
-          <div className="bg-black border border-yellow-500/30 rounded-[28px] p-6 md:p-8 mb-8 shadow-xl shadow-black/50 transition-all duration-300">
+          <div className="bg-black border border-yellow-500/30 rounded-md p-6 md:p-8 mb-8 transition-all duration-150">
             <div className="flex items-start gap-4">
               <svg className="w-6 h-6 text-yellow-400 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
               <div>
-                <p className="text-yellow-400 font-semibold mb-2 tracking-tight text-lg">Preliminary Estimates</p>
-                <p className="text-yellow-300/90 text-base leading-relaxed">
+                <p className="text-yellow-400 font-semibold mb-2 tracking-tight text-lg font-mono">Preliminary Estimates</p>
+                <p className="text-yellow-300/90 text-base leading-relaxed font-mono">
                   Answer at least 15 questions for reliable IRT analysis. Your current estimates are capped and may not reflect true ability.
                 </p>
-                <p className="text-yellow-400/70 text-sm mt-3">
+                <p className="text-yellow-400/70 text-sm mt-3 font-mono">
                   Progress: {totalAnswered}/15 questions
                 </p>
               </div>
@@ -333,23 +315,23 @@ export default function PerformancePage() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-8">
-          <div className="bg-black rounded-[28px] p-8 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
-            <div className="text-slate-400 text-base md:text-lg mb-2 tracking-tight">Questions Attempted</div>
-            <div className={`text-4xl md:text-5xl font-bold transition-all duration-300 ${totalAnswered === 0 ? 'text-slate-400' : 'text-blue-400'}`}>{totalAnswered}</div>
+          <div className="bg-black rounded-md p-8 border border-zinc-800 hover:border-zinc-700 transition-all duration-150">
+            <div className="text-zinc-400 text-base md:text-lg mb-2 tracking-tight font-mono">Questions Attempted</div>
+            <div className={`text-4xl md:text-5xl font-bold transition-all duration-150 font-mono ${totalAnswered === 0 ? 'text-zinc-400' : 'text-blue-400'}`}>{totalAnswered}</div>
           </div>
-          <div className="bg-black rounded-[28px] p-8 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
-            <div className="text-slate-400 text-base md:text-lg mb-2 tracking-tight">Correct Answers</div>
-            <div className={`text-4xl md:text-5xl font-bold transition-all duration-300 ${
-              totalAnswered === 0 ? 'text-slate-400' :
+          <div className="bg-black rounded-md p-8 border border-zinc-800 hover:border-zinc-700 transition-all duration-150">
+            <div className="text-zinc-400 text-base md:text-lg mb-2 tracking-tight font-mono">Correct Answers</div>
+            <div className={`text-4xl md:text-5xl font-bold transition-all duration-150 font-mono ${
+              totalAnswered === 0 ? 'text-zinc-400' :
               isGoodPerformance ? 'text-emerald-400' :
               isNeedsWork ? 'text-red-400' :
               'text-yellow-400'
             }`}>{correctAnswers}</div>
           </div>
-          <div className="bg-black rounded-[28px] p-8 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
-            <div className="text-slate-400 text-base md:text-lg mb-2 tracking-tight">Accuracy</div>
-            <div className={`text-4xl md:text-5xl font-bold transition-all duration-300 ${
-              totalAnswered === 0 ? 'text-slate-400' :
+          <div className="bg-black rounded-md p-8 border border-zinc-800 hover:border-zinc-700 transition-all duration-150">
+            <div className="text-zinc-400 text-base md:text-lg mb-2 tracking-tight font-mono">Accuracy</div>
+            <div className={`text-4xl md:text-5xl font-bold transition-all duration-150 font-mono ${
+              totalAnswered === 0 ? 'text-zinc-400' :
               isGoodPerformance ? 'text-emerald-400' :
               isNeedsWork ? 'text-red-400' :
               'text-yellow-400'
@@ -357,19 +339,19 @@ export default function PerformancePage() {
           </div>
         </div>
 
-        {/* IRT Score Analysis - Collapsible (Cognitive Load) */}
+        {/* IRT Score Analysis - Collapsible */}
         {totalAnswered > 0 && (
-          <div className="bg-black border border-gray-700 rounded-[28px] p-8 md:p-10 mb-8 shadow-xl shadow-black/50 transition-all duration-300">
+          <div className="bg-black border border-zinc-800 rounded-md p-8 md:p-10 mb-8 transition-all duration-150">
             <div className="flex items-center justify-between">
-              <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight">IRT Performance Analysis</h3>
+              <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight font-mono">IRT Performance Analysis</h3>
               <button
                 id="toggle-irt"
                 onClick={() => setIrtExpanded(!irtExpanded)}
-                className="p-3 hover:bg-white/5 active:bg-white/10 rounded-full transition-all duration-300"
+                className="p-3 hover:bg-white/5 active:bg-white/10 rounded-md transition-all duration-150"
                 aria-label="Toggle IRT Performance Analysis"
               >
                 <svg
-                  className={`w-6 h-6 text-slate-400 transition-transform duration-300 ${irtExpanded ? 'rotate-180' : ''}`}
+                  className={`w-6 h-6 text-zinc-400 transition-transform duration-150 ${irtExpanded ? 'rotate-180' : ''}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -382,27 +364,16 @@ export default function PerformancePage() {
 
             {irtExpanded ? (
               <>
-                {/* Global tooltip animation */}
-                <style jsx global>{`
-                  @keyframes tooltipFade {
-                    0% { opacity: 0; }
-                    26.3% { opacity: 0; }
-                    30.3% { opacity: 1; }
-                    96.1% { opacity: 1; }
-                    100% { opacity: 0; }
-                  }
-                `}</style>
-
-                <div className="bg-black rounded-[28px] p-6 mb-6 mt-6 border border-gray-800">
+                <div className="bg-black rounded-md p-6 mb-6 mt-6 border border-zinc-800">
                   <div className="flex items-center justify-between mb-3">
                     <div className="relative group cursor-help">
-                      <h4 className="text-base md:text-lg font-medium text-slate-300 tracking-tight">Ability Level (-3 to 3)</h4>
+                      <h4 className="text-base md:text-lg font-medium text-zinc-300 tracking-tight font-mono">Ability Level (-3 to 3)</h4>
                       {/* Hover tooltip */}
-                      <div className="absolute bottom-full left-0 mb-2 w-64 bg-black border border-gray-800 rounded-3xl p-3 shadow-xl shadow-black/50 z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                        <p className="text-sm text-slate-300 leading-relaxed">Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
+                      <div className="absolute bottom-full left-0 mb-2 w-64 bg-black border border-zinc-800 rounded-md p-3 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+                        <p className="text-sm text-zinc-300 leading-relaxed font-mono">Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
                       </div>
                     </div>
-                    <div className={`text-4xl md:text-5xl font-bold transition-all duration-300 ${
+                    <div className={`text-4xl md:text-5xl font-bold transition-all duration-150 font-mono ${
                       estimatedAbility >= 1.0 ? 'text-emerald-400' :
                       estimatedAbility >= -1.0 ? 'text-yellow-400' :
                       'text-red-400'
@@ -411,17 +382,17 @@ export default function PerformancePage() {
                     </div>
                   </div>
                   <div className="mt-4">
-                    <div className="bg-gray-900 rounded-full h-3 border border-gray-800">
+                    <div className="bg-zinc-900 rounded-md h-3 border border-zinc-800">
                       <div
-                        className={`h-3 rounded-full transition-all duration-500 ${
-                          estimatedAbility >= 1.0 ? 'bg-gradient-to-r from-emerald-500 to-emerald-400' :
-                          estimatedAbility >= -1.0 ? 'bg-gradient-to-r from-yellow-500 to-yellow-400' :
-                          'bg-gradient-to-r from-red-500 to-red-400'
+                        className={`h-3 rounded-md transition-all duration-150 ${
+                          estimatedAbility >= 1.0 ? 'bg-emerald-500' :
+                          estimatedAbility >= -1.0 ? 'bg-yellow-500' :
+                          'bg-red-500'
                         }`}
                         style={{ width: `${((estimatedAbility + 3) / 6) * 100}%` }}
                       ></div>
                     </div>
-                    <div className="flex justify-between text-sm text-slate-500 mt-2">
+                    <div className="flex justify-between text-sm text-zinc-500 mt-2 font-mono">
                       <span>Beginner</span>
                       <span>Average</span>
                       <span>Expert</span>
@@ -429,11 +400,11 @@ export default function PerformancePage() {
                   </div>
                 </div>
 
-                <div className="bg-black rounded-[28px] p-6 border border-gray-800">
-                  <div className="text-base text-slate-300 leading-relaxed">
+                <div className="bg-black rounded-md p-6 border border-zinc-800">
+                  <div className="text-base text-zinc-300 leading-relaxed font-mono">
                     {estimatedAbility >= 1.5 ? (
                       <>
-                        <p className="text-emerald-400 font-semibold mb-4 flex items-center gap-2 text-lg">
+                        <p className="text-emerald-400 font-semibold mb-4 flex items-center gap-2 text-lg font-mono">
                           Excellent Performance!
                         </p>
                         <ul className="space-y-3 text-sm">
@@ -453,7 +424,7 @@ export default function PerformancePage() {
                       </>
                     ) : estimatedAbility >= 1.0 ? (
                       <>
-                        <p className="text-emerald-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg">
+                        <p className="text-emerald-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg font-mono">
                           Good Performance
                         </p>
                         <ul className="space-y-3 text-sm">
@@ -473,7 +444,7 @@ export default function PerformancePage() {
                       </>
                     ) : estimatedAbility >= 0 ? (
                       <>
-                        <p className="text-yellow-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg">
+                        <p className="text-yellow-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg font-mono">
                           Average Performance
                         </p>
                         <ul className="space-y-3 text-sm">
@@ -493,7 +464,7 @@ export default function PerformancePage() {
                       </>
                     ) : estimatedAbility >= -1 ? (
                       <>
-                        <p className="text-yellow-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg">
+                        <p className="text-yellow-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg font-mono">
                           Below Average
                         </p>
                         <ul className="space-y-3 text-sm">
@@ -513,7 +484,7 @@ export default function PerformancePage() {
                       </>
                     ) : (
                       <>
-                        <p className="text-red-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg">
+                        <p className="text-red-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg font-mono">
                           Needs Improvement
                         </p>
                         <ul className="space-y-3 text-sm">
@@ -533,7 +504,7 @@ export default function PerformancePage() {
                       </>
                     )}
                     {isGoodPerformance && (
-                      <p className="text-sm text-slate-400 mt-4 pt-4 border-t border-slate-700">
+                      <p className="text-sm text-zinc-400 mt-4 pt-4 border-t border-zinc-700 font-mono">
                         This level suggests likely exam success
                       </p>
                     )}
@@ -541,7 +512,7 @@ export default function PerformancePage() {
                 </div>
               </>
             ) : (
-              <div className="mt-6 text-base text-slate-400">
+              <div className="mt-6 text-base text-zinc-400 font-mono">
                 Click to view detailed IRT analysis
               </div>
             )}
@@ -551,24 +522,24 @@ export default function PerformancePage() {
         {/* Performance Graphs Section */}
         {userProgress && userProgress.quizHistory.length > 0 && (
           <div className="mt-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 tracking-tight">Progress Charts</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 tracking-tight font-mono">Progress Charts</h2>
             <PerformanceGraphs userProgress={userProgress} />
           </div>
         )}
 
-        {/* Recent Activity - Collapsible (Hick's Law) */}
+        {/* Recent Activity - Collapsible */}
         {userProgress && userProgress.quizHistory.length > 0 && (
-          <div className="mt-12 bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 shadow-xl shadow-black/50 transition-all duration-300">
+          <div className="mt-12 bg-black rounded-md p-8 md:p-10 border border-zinc-800 transition-all duration-150">
             <div className="flex items-center justify-between">
-              <h3 className="text-2xl md:text-3xl font-bold tracking-tight">Recent Quizzes ({userProgress.quizHistory.length})</h3>
+              <h3 className="text-2xl md:text-3xl font-bold tracking-tight font-mono">Recent Quizzes ({userProgress.quizHistory.length})</h3>
               <button
                 id="toggle-recent-quizzes"
                 onClick={() => setRecentQuizzesExpanded(!recentQuizzesExpanded)}
-                className="p-3 hover:bg-white/5 active:bg-white/10 rounded-full transition-all duration-300"
+                className="p-3 hover:bg-white/5 active:bg-white/10 rounded-md transition-all duration-150"
                 aria-label="Toggle Recent Quizzes"
               >
                 <svg
-                  className={`w-6 h-6 text-slate-400 transition-transform duration-300 ${recentQuizzesExpanded ? 'rotate-180' : ''}`}
+                  className={`w-6 h-6 text-zinc-400 transition-transform duration-150 ${recentQuizzesExpanded ? 'rotate-180' : ''}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -610,32 +581,32 @@ export default function PerformancePage() {
                       key={quiz.id}
                       id={`quiz-review-${quiz.id}`}
                       onClick={() => setSelectedQuizForReview(quiz)}
-                      className="w-full bg-black hover:bg-gray-900/50 rounded-[28px] p-6 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300 cursor-pointer text-left"
+                      className="w-full bg-black hover:bg-zinc-900 rounded-md p-6 border border-zinc-800 hover:border-zinc-700 transition-all duration-150 cursor-pointer text-left"
                     >
                       <div className="flex justify-between items-center">
                         <div>
-                          <div className="text-base text-slate-400">
+                          <div className="text-base text-zinc-400 font-mono">
                             {formattedDate} • {formattedTime}
                           </div>
                           <div className="text-base mt-2 space-y-2">
                             <div>
-                              <span className="text-slate-300">{quiz.questions.length} questions</span>
+                              <span className="text-zinc-300 font-mono">{quiz.questions.length} questions</span>
                               {isIncomplete && (
-                                <span className="ml-3 text-sm px-3 py-1 rounded-full bg-black text-yellow-400 border border-yellow-500/50">
+                                <span className="ml-3 text-sm px-3 py-1 rounded-md bg-black text-yellow-400 border border-yellow-500/50 font-mono">
                                   Incomplete
                                 </span>
                               )}
                             </div>
-                            <div className="text-slate-400">
+                            <div className="text-zinc-400 font-mono">
                               Time: {timeDisplay}
                             </div>
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="text-3xl md:text-4xl font-bold text-blue-400">
+                          <div className="text-3xl md:text-4xl font-bold text-blue-400 font-mono">
                             {quiz.score}/{quiz.questions.length}
                           </div>
-                          <div className="text-base text-slate-400">
+                          <div className="text-base text-zinc-400 font-mono">
                             {((quiz.score / quiz.questions.length) * 100).toFixed(0)}%
                           </div>
                         </div>
@@ -645,20 +616,20 @@ export default function PerformancePage() {
                 })}
               </div>
             ) : (
-              <div className="mt-6 text-base text-slate-400">
+              <div className="mt-6 text-base text-zinc-400 font-mono">
                 Click to view your last 5 quizzes
               </div>
             )}
           </div>
         )}
 
-        {/* Reset Progress - Destructive Action at End (Serial Position Effect) */}
+        {/* Reset Progress - Destructive Action */}
         {totalAnswered > 0 && (
           <div className="mt-12 text-center pb-12">
             <button
               id="reset-progress"
               onClick={handleResetProgress}
-              className="bg-black hover:bg-gray-900/50 active:bg-gray-900/70 text-red-400 border border-red-500/30 hover:border-red-500 font-semibold py-3 px-8 rounded-full text-base transition-all duration-300"
+              className="bg-black hover:bg-zinc-900 active:bg-zinc-900 text-red-400 border border-red-500/30 hover:border-red-500 font-semibold py-3 px-8 rounded-md text-base transition-all duration-150 font-mono"
             >
               Reset Progress
             </button>
