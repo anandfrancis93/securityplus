@@ -80,10 +80,10 @@ export default function CybersecurityPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-black">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-400">Loading...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-violet-500 mx-auto"></div>
+          <p className="mt-4 text-slate-400">Loading...</p>
         </div>
       </div>
     );
@@ -103,7 +103,7 @@ export default function CybersecurityPage() {
     // If no option selected, show the two choices
     if (quizOption === null) {
       return (
-        <div className="min-h-screen bg-gray-900 text-white">
+        <div className="min-h-screen bg-black text-white">
           <div className="container mx-auto px-4 py-8 max-w-4xl">
             {/* Header */}
             <div className="mb-8">
@@ -111,7 +111,7 @@ export default function CybersecurityPage() {
                 <button
                   id="back-to-cybersecurity"
                   onClick={() => setSelectedCard(null)}
-                  className="text-gray-400 hover:text-white transition-colors p-2"
+                  className="text-slate-400 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 p-2 rounded-full"
                   title="Back to Cybersecurity"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,7 +123,7 @@ export default function CybersecurityPage() {
                   <button
                     id="menu"
                     onClick={() => setMenuOpen(!menuOpen)}
-                    className="text-gray-400 hover:text-white transition-colors p-2"
+                    className="text-slate-400 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 p-2 rounded-full"
                     title="Menu"
                   >
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,10 +132,10 @@ export default function CybersecurityPage() {
                   </button>
 
                   {menuOpen && user && !user?.isAnonymous && (
-                    <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
-                      <div className="px-4 py-2 text-sm text-white border-b border-gray-700">
+                    <div className="absolute right-0 top-full mt-2 bg-slate-800/95 backdrop-blur-xl border border-violet-500/30 rounded-3xl shadow-2xl py-2 min-w-[200px] z-50">
+                      <div className="px-4 py-2 text-sm text-white border-b border-violet-500/30">
                         <div className="flex items-center gap-2">
-                          <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                           </svg>
                           <span>{user?.displayName || 'User'}</span>
@@ -149,7 +149,7 @@ export default function CybersecurityPage() {
                             setMenuOpen(false);
                           }
                         }}
-                        className="w-full px-4 py-2 text-sm text-left text-white hover:bg-gray-700 transition-colors flex items-center gap-2"
+                        className="w-full px-4 py-2 text-sm text-left text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 flex items-center gap-2"
                       >
                         <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -161,8 +161,8 @@ export default function CybersecurityPage() {
                 </div>
               </div>
 
-              <h1 className="text-3xl font-bold mb-2 text-white">Quiz</h1>
-              <p className="text-gray-400">Choose an option</p>
+              <h1 className="text-4xl font-bold mb-2 text-white tracking-tight">Quiz</h1>
+              <p className="text-slate-400 text-base">Choose an option</p>
             </div>
 
             {/* Two Options */}
@@ -171,13 +171,16 @@ export default function CybersecurityPage() {
               <button
                 id="start-new-quiz"
                 onClick={handleStartQuiz}
-                className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-white cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
-                style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+                className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-8 border border-violet-500/30 hover:border-violet-500 hover:shadow-2xl hover:shadow-violet-500/20 cursor-pointer min-h-[250px] touch-manipulation hover:scale-105 active:scale-100 transition-all duration-500"
               >
                 <div className="text-center">
-                  <div className="text-6xl mb-4">🚀</div>
-                  <h2 className="text-2xl font-bold mb-2 text-white">Start New Quiz</h2>
-                  <p className="text-gray-400 text-sm">Take 10 AI-generated synthesis questions</p>
+                  <div className="mb-4">
+                    <svg className="w-16 h-16 mx-auto text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <h2 className="text-2xl font-bold mb-2 text-white tracking-tight">Start New Quiz</h2>
+                  <p className="text-slate-400 text-sm leading-relaxed">Take 10 AI-generated synthesis questions</p>
                 </div>
               </button>
 
@@ -185,13 +188,16 @@ export default function CybersecurityPage() {
               <button
                 id="performance"
                 onClick={() => setQuizOption('performance')}
-                className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-white cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
-                style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+                className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-8 border border-violet-500/30 hover:border-violet-500 hover:shadow-2xl hover:shadow-violet-500/20 cursor-pointer min-h-[250px] touch-manipulation hover:scale-105 active:scale-100 transition-all duration-500"
               >
                 <div className="text-center">
-                  <div className="text-6xl mb-4">📊</div>
-                  <h2 className="text-2xl font-bold mb-2 text-white">Performance</h2>
-                  <p className="text-gray-400 text-sm">View your scores, IRT analysis, and history</p>
+                  <div className="mb-4">
+                    <svg className="w-16 h-16 mx-auto text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                  </div>
+                  <h2 className="text-2xl font-bold mb-2 text-white tracking-tight">Performance</h2>
+                  <p className="text-slate-400 text-sm leading-relaxed">View your scores, IRT analysis, and history</p>
                 </div>
               </button>
             </div>
@@ -203,7 +209,7 @@ export default function CybersecurityPage() {
     // Performance option selected
     if (quizOption === 'performance') {
       return (
-      <div className="min-h-screen bg-gray-900 text-white">
+      <div className="min-h-screen bg-black text-white">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           {/* Header */}
           <div className="mb-8">
@@ -211,7 +217,7 @@ export default function CybersecurityPage() {
               <button
                 id="back-to-quiz"
                 onClick={() => setQuizOption(null)}
-                className="text-gray-400 hover:text-white transition-colors p-2"
+                className="text-slate-400 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 p-2 rounded-full"
                 title="Back to Quiz"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -223,7 +229,7 @@ export default function CybersecurityPage() {
                 <button
                   id="menu-performance"
                   onClick={() => setMenuOpen(!menuOpen)}
-                  className="text-gray-400 hover:text-white transition-colors p-2"
+                  className="text-slate-400 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 p-2 rounded-full"
                   title="Menu"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -232,10 +238,10 @@ export default function CybersecurityPage() {
                 </button>
 
                 {menuOpen && user && !user?.isAnonymous && (
-                  <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
-                    <div className="px-4 py-2 text-sm text-white border-b border-gray-700">
+                  <div className="absolute right-0 top-full mt-2 bg-slate-800/95 backdrop-blur-xl border border-violet-500/30 rounded-3xl shadow-2xl py-2 min-w-[200px] z-50">
+                    <div className="px-4 py-2 text-sm text-white border-b border-violet-500/30">
                       <div className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                         <span>{user?.displayName || 'User'}</span>
@@ -249,7 +255,7 @@ export default function CybersecurityPage() {
                           setMenuOpen(false);
                         }
                       }}
-                      className="w-full px-4 py-2 text-sm text-left text-white hover:bg-gray-700 transition-colors flex items-center gap-2"
+                      className="w-full px-4 py-2 text-sm text-left text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 flex items-center gap-2"
                     >
                       <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -261,12 +267,12 @@ export default function CybersecurityPage() {
               </div>
             </div>
 
-            <h1 className="text-3xl font-bold mb-2 text-white">Performance</h1>
-            <p className="text-gray-400">Track your progress and improvement</p>
+            <h1 className="text-4xl font-bold mb-2 text-white tracking-tight">Performance</h1>
+            <p className="text-slate-400 text-base">Track your progress and improvement</p>
           </div>
 
           {/* Predicted Score Card */}
-          <div className="bg-gray-800 rounded-lg p-8 mb-8 border border-gray-700 shadow-xl">
+          <div className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-8 mb-8 border border-violet-500/30 shadow-2xl shadow-violet-500/10">
             {/* Tooltip animation for Predicted Score */}
             <style jsx global>{`
               @keyframes tooltipFade {
@@ -279,10 +285,10 @@ export default function CybersecurityPage() {
             `}</style>
 
             <div className="text-center mb-6">
-              <h2 className="text-xl text-gray-400 mb-2">Predicted Score</h2>
+              <h2 className="text-xl text-slate-400 mb-2 tracking-tight">Predicted Score</h2>
               <div className="relative group cursor-help inline-block">
-                <div className={`text-6xl font-bold mb-2 ${
-                  totalAnswered === 0 ? 'text-gray-400' :
+                <div className={`text-6xl font-bold mb-2 transition-all duration-300 ${
+                  totalAnswered === 0 ? 'text-slate-400' :
                   isGoodPerformance ? 'text-green-400' :
                   isNeedsWork ? 'text-red-400' :
                   'text-yellow-400'
@@ -290,8 +296,8 @@ export default function CybersecurityPage() {
                   {predictedScore}
                 </div>
                 {/* Hover tooltip */}
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                  <div className="space-y-1 text-sm text-gray-300">
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 bg-slate-900/95 backdrop-blur-xl border border-violet-500/30 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
+                  <div className="space-y-1 text-sm text-slate-300">
                     <div>
                       <span className="text-green-400 font-medium">Green:</span> 750 - 900
                     </div>
@@ -302,36 +308,36 @@ export default function CybersecurityPage() {
                       <span className="text-red-400 font-medium">Red:</span> 100 - 599
                     </div>
                   </div>
-                  <p className="text-xs text-gray-400 mt-3 pt-2 border-t border-gray-700">Color is based on your Ability Level from IRT analysis, which correlates with predicted exam score.</p>
+                  <p className="text-xs text-slate-400 mt-3 pt-2 border-t border-violet-500/30">Color is based on your Ability Level from IRT analysis, which correlates with predicted exam score.</p>
                 </div>
               </div>
-              <div className="text-sm text-gray-500">out of 900</div>
+              <div className="text-sm text-slate-500">out of 900</div>
               <div className="mt-4">
                 {totalAnswered > 0 ? (
-                  <div className={`inline-block px-4 py-2 rounded-full ${
-                    isGoodPerformance ? 'bg-green-900/30 text-green-400' :
-                    isNeedsWork ? 'bg-red-900/30 text-red-400' :
-                    'bg-yellow-900/30 text-yellow-400'
+                  <div className={`inline-block px-6 py-2 rounded-full transition-all duration-300 ${
+                    isGoodPerformance ? 'bg-green-900/30 text-green-400 border border-green-500/30' :
+                    isNeedsWork ? 'bg-red-900/30 text-red-400 border border-red-500/30' :
+                    'bg-yellow-900/30 text-yellow-400 border border-yellow-500/30'
                   }`}>
-                    {isGoodPerformance ? '✓ On track to pass' :
-                     isNeedsWork ? '✗ Needs significant improvement' :
-                     '⚠ More practice needed'}
+                    {isGoodPerformance ? 'On track to pass' :
+                     isNeedsWork ? 'Needs significant improvement' :
+                     'More practice needed'}
                   </div>
                 ) : (
-                  <div className="text-gray-500">Start answering questions to see your prediction</div>
+                  <div className="text-slate-500">Start answering questions to see your prediction</div>
                 )}
               </div>
             </div>
 
             <div className="mt-6">
-              <div className="w-full bg-gray-700 rounded-full h-3 relative overflow-hidden">
+              <div className="w-full bg-slate-700/50 rounded-full h-3 relative overflow-hidden backdrop-blur">
                 {/* Progress bar fill - only show if totalAnswered > 0 */}
                 {totalAnswered > 0 && (
                   <div
                     className={`h-3 rounded-full transition-all duration-500 ${
-                      isGoodPerformance ? 'bg-green-500' :
-                      isNeedsWork ? 'bg-red-500' :
-                      'bg-yellow-500'
+                      isGoodPerformance ? 'bg-gradient-to-r from-green-500 to-green-400' :
+                      isNeedsWork ? 'bg-gradient-to-r from-red-500 to-red-400' :
+                      'bg-gradient-to-r from-yellow-500 to-yellow-400'
                     }`}
                     style={{ width: `${Math.min(((predictedScore - 100) / 800) * 100, 100)}%` }}
                   ></div>
@@ -345,7 +351,7 @@ export default function CybersecurityPage() {
               </div>
 
               {/* Scale labels */}
-              <div className="flex justify-between text-xs text-gray-400 mt-1 relative">
+              <div className="flex justify-between text-xs text-slate-400 mt-1 relative">
                 <span>100</span>
                 <span
                   className="absolute text-white font-medium"
@@ -362,10 +368,10 @@ export default function CybersecurityPage() {
                   className="relative -mt-1"
                   style={{ paddingLeft: `${((predictedScore - 100) / 800) * 100}%` }}
                 >
-                  <div className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${
-                    isGoodPerformance ? 'bg-green-500/20 text-green-400' :
-                    isNeedsWork ? 'bg-red-500/20 text-red-400' :
-                    'bg-yellow-500/20 text-yellow-400'
+                  <div className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium transition-all duration-300 ${
+                    isGoodPerformance ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
+                    isNeedsWork ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
+                    'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
                   }`}>
                     {predictedScore}
                   </div>
@@ -376,14 +382,14 @@ export default function CybersecurityPage() {
 
           {/* Phase 1: Insufficient Data Warning */}
           {totalAnswered > 0 && !hasSufficientData(totalAnswered) && (
-            <div className="bg-yellow-900/20 border border-yellow-700/50 rounded-lg p-4 mb-8">
+            <div className="bg-yellow-900/20 backdrop-blur-xl border border-yellow-500/30 rounded-[28px] p-4 mb-8 shadow-lg transition-all duration-300">
               <div className="flex items-start gap-3">
                 <svg className="w-5 h-5 text-yellow-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
                 <div>
-                  <p className="text-yellow-400 font-medium mb-1">Preliminary Estimates</p>
-                  <p className="text-yellow-300/90 text-sm">
+                  <p className="text-yellow-400 font-medium mb-1 tracking-tight">Preliminary Estimates</p>
+                  <p className="text-yellow-300/90 text-sm leading-relaxed">
                     Answer at least 15 questions for reliable IRT analysis. Your current estimates are capped and may not reflect true ability.
                   </p>
                   <p className="text-yellow-400/70 text-xs mt-2">
@@ -396,23 +402,23 @@ export default function CybersecurityPage() {
 
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <div className="text-gray-400 text-sm mb-1">Questions Attempted</div>
-              <div className={`text-3xl font-bold ${totalAnswered === 0 ? 'text-gray-400' : 'text-blue-400'}`}>{totalAnswered}</div>
+            <div className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-6 border border-violet-500/30 shadow-lg hover:shadow-xl hover:shadow-violet-500/10 transition-all duration-300">
+              <div className="text-slate-400 text-sm mb-1 tracking-tight">Questions Attempted</div>
+              <div className={`text-3xl font-bold transition-all duration-300 ${totalAnswered === 0 ? 'text-slate-400' : 'text-violet-400'}`}>{totalAnswered}</div>
             </div>
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <div className="text-gray-400 text-sm mb-1">Correct Answers</div>
-              <div className={`text-3xl font-bold ${
-                totalAnswered === 0 ? 'text-gray-400' :
+            <div className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-6 border border-violet-500/30 shadow-lg hover:shadow-xl hover:shadow-violet-500/10 transition-all duration-300">
+              <div className="text-slate-400 text-sm mb-1 tracking-tight">Correct Answers</div>
+              <div className={`text-3xl font-bold transition-all duration-300 ${
+                totalAnswered === 0 ? 'text-slate-400' :
                 isGoodPerformance ? 'text-green-400' :
                 isNeedsWork ? 'text-red-400' :
                 'text-yellow-400'
               }`}>{correctAnswers}</div>
             </div>
-            <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <div className="text-gray-400 text-sm mb-1">Accuracy</div>
-              <div className={`text-3xl font-bold ${
-                totalAnswered === 0 ? 'text-gray-400' :
+            <div className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-6 border border-violet-500/30 shadow-lg hover:shadow-xl hover:shadow-violet-500/10 transition-all duration-300">
+              <div className="text-slate-400 text-sm mb-1 tracking-tight">Accuracy</div>
+              <div className={`text-3xl font-bold transition-all duration-300 ${
+                totalAnswered === 0 ? 'text-slate-400' :
                 isGoodPerformance ? 'text-green-400' :
                 isNeedsWork ? 'text-red-400' :
                 'text-yellow-400'
@@ -422,17 +428,17 @@ export default function CybersecurityPage() {
 
           {/* IRT Score Analysis - Collapsible (Cognitive Load) */}
           {totalAnswered > 0 && (
-            <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 mb-8">
+            <div className="bg-slate-800/95 backdrop-blur-xl border border-violet-500/30 rounded-[28px] p-6 mb-8 shadow-lg transition-all duration-300">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-bold text-white">IRT Performance Analysis</h3>
+                <h3 className="text-lg font-bold text-white tracking-tight">IRT Performance Analysis</h3>
                 <button
                   id="toggle-irt"
                   onClick={() => setIrtExpanded(!irtExpanded)}
-                  className="p-2 hover:opacity-80 transition-opacity"
+                  className="p-2 hover:bg-white/5 active:bg-white/10 rounded-full transition-all duration-300"
                   aria-label="Toggle IRT Performance Analysis"
                 >
                   <svg
-                    className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${irtExpanded ? 'rotate-180' : ''}`}
+                    className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${irtExpanded ? 'rotate-180' : ''}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -455,16 +461,16 @@ export default function CybersecurityPage() {
                     }
                   `}</style>
 
-                  <div className="bg-gray-800/50 rounded-lg p-4 mb-4 mt-4">
+                  <div className="bg-slate-900/50 backdrop-blur rounded-[28px] p-4 mb-4 mt-4 border border-violet-500/20">
                     <div className="flex items-center justify-between mb-2">
                       <div className="relative group cursor-help">
-                        <h4 className="text-sm font-medium text-gray-300">Ability Level (-3 to 3)</h4>
+                        <h4 className="text-sm font-medium text-slate-300 tracking-tight">Ability Level (-3 to 3)</h4>
                         {/* Hover tooltip */}
-                        <div className="absolute bottom-full left-0 mb-2 w-64 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                          <p className="text-sm text-gray-300">Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
+                        <div className="absolute bottom-full left-0 mb-2 w-64 bg-slate-900/95 backdrop-blur-xl border border-violet-500/30 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
+                          <p className="text-sm text-slate-300 leading-relaxed">Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
                         </div>
                       </div>
-                      <div className={`text-3xl font-bold ${
+                      <div className={`text-3xl font-bold transition-all duration-300 ${
                         estimatedAbility >= 1.0 ? 'text-green-400' :
                         estimatedAbility >= -1.0 ? 'text-yellow-400' :
                         'text-red-400'
@@ -473,17 +479,17 @@ export default function CybersecurityPage() {
                       </div>
                     </div>
                     <div className="mt-3">
-                      <div className="bg-gray-700 rounded-full h-2">
+                      <div className="bg-slate-700/50 rounded-full h-2 backdrop-blur">
                         <div
                           className={`h-2 rounded-full transition-all duration-500 ${
-                            estimatedAbility >= 1.0 ? 'bg-gradient-to-r from-green-500 to-green-600' :
-                            estimatedAbility >= -1.0 ? 'bg-gradient-to-r from-yellow-500 to-yellow-600' :
-                            'bg-gradient-to-r from-red-500 to-red-600'
+                            estimatedAbility >= 1.0 ? 'bg-gradient-to-r from-green-500 to-green-400' :
+                            estimatedAbility >= -1.0 ? 'bg-gradient-to-r from-yellow-500 to-yellow-400' :
+                            'bg-gradient-to-r from-red-500 to-red-400'
                           }`}
                           style={{ width: `${((estimatedAbility + 3) / 6) * 100}%` }}
                         ></div>
                       </div>
-                      <div className="flex justify-between text-xs text-gray-500 mt-1">
+                      <div className="flex justify-between text-xs text-slate-500 mt-1">
                         <span>Beginner</span>
                         <span>Average</span>
                         <span>Expert</span>
@@ -491,8 +497,8 @@ export default function CybersecurityPage() {
                     </div>
                   </div>
 
-                  <div className="bg-gray-800/50 rounded-lg p-4">
-                    <div className="text-sm text-gray-300">
+                  <div className="bg-slate-900/50 backdrop-blur rounded-[28px] p-4 border border-violet-500/20">
+                    <div className="text-sm text-slate-300 leading-relaxed">
                       {estimatedAbility >= 1.5 ? (
                         <>
                           <p className="text-green-400 font-medium mb-3 flex items-center gap-2">
@@ -500,42 +506,42 @@ export default function CybersecurityPage() {
                           </p>
                           <ul className="space-y-2 text-xs">
                             <li className="flex items-start gap-2">
-                              <span className="text-blue-400 mt-0.5">▸</span>
+                              <span className="text-violet-400 mt-0.5">▸</span>
                               <span>Strong mastery across Security+ topics</span>
                             </li>
                             <li className="flex items-start gap-2">
-                              <span className="text-blue-400 mt-0.5">▸</span>
+                              <span className="text-violet-400 mt-0.5">▸</span>
                               <span>Handling harder synthesis questions well</span>
                             </li>
                             <li className="flex items-start gap-2">
-                              <span className="text-blue-400 mt-0.5">▸</span>
+                              <span className="text-violet-400 mt-0.5">▸</span>
                               <span>Deep understanding demonstrated</span>
                             </li>
                           </ul>
                         </>
                       ) : estimatedAbility >= 1.0 ? (
                         <>
-                          <p className="text-green-400 font-medium mb-3 flex items-center gap-2">
-                            <span className="text-2xl">✓</span> Good Performance
+                          <p className="text-green-400 font-medium mb-3 flex items-center gap-2 tracking-tight">
+                            Good Performance
                           </p>
                           <ul className="space-y-2 text-xs">
                             <li className="flex items-start gap-2">
-                              <span className="text-blue-400 mt-0.5">▸</span>
+                              <span className="text-violet-400 mt-0.5">▸</span>
                               <span>On track to pass the exam</span>
                             </li>
                             <li className="flex items-start gap-2">
-                              <span className="text-blue-400 mt-0.5">▸</span>
+                              <span className="text-violet-400 mt-0.5">▸</span>
                               <span>Handling medium-hard questions effectively</span>
                             </li>
                             <li className="flex items-start gap-2">
-                              <span className="text-blue-400 mt-0.5">▸</span>
+                              <span className="text-violet-400 mt-0.5">▸</span>
                               <span>Continue practicing to solidify knowledge</span>
                             </li>
                           </ul>
                         </>
                       ) : estimatedAbility >= 0 ? (
                         <>
-                          <p className="text-yellow-400 font-medium mb-3 flex items-center gap-2">
+                          <p className="text-yellow-400 font-medium mb-3 flex items-center gap-2 tracking-tight">
                             Average Performance
                           </p>
                           <ul className="space-y-2 text-xs">
@@ -555,7 +561,7 @@ export default function CybersecurityPage() {
                         </>
                       ) : estimatedAbility >= -1 ? (
                         <>
-                          <p className="text-yellow-400 font-medium mb-3 flex items-center gap-2">
+                          <p className="text-yellow-400 font-medium mb-3 flex items-center gap-2 tracking-tight">
                             Below Average
                           </p>
                           <ul className="space-y-2 text-xs">
@@ -575,8 +581,8 @@ export default function CybersecurityPage() {
                         </>
                       ) : (
                         <>
-                          <p className="text-red-400 font-medium mb-3 flex items-center gap-2">
-                            <span className="text-2xl">⚠</span> Needs Improvement
+                          <p className="text-red-400 font-medium mb-3 flex items-center gap-2 tracking-tight">
+                            Needs Improvement
                           </p>
                           <ul className="space-y-2 text-xs">
                             <li className="flex items-start gap-2">
@@ -595,7 +601,7 @@ export default function CybersecurityPage() {
                         </>
                       )}
                       {isGoodPerformance && (
-                        <p className="text-xs text-gray-400 mt-3 pt-3 border-t border-gray-700">
+                        <p className="text-xs text-slate-400 mt-3 pt-3 border-t border-violet-500/30">
                           This level suggests likely exam success
                         </p>
                       )}
@@ -603,7 +609,7 @@ export default function CybersecurityPage() {
                   </div>
                 </>
               ) : (
-                <div className="mt-4 text-sm text-gray-400">
+                <div className="mt-4 text-sm text-slate-400">
                   Click to view detailed IRT analysis
                 </div>
               )}
@@ -613,24 +619,24 @@ export default function CybersecurityPage() {
           {/* Performance Graphs Section */}
           {userProgress && userProgress.quizHistory.length > 0 && (
             <div className="mt-12">
-              <h2 className="text-2xl font-bold text-white mb-6">Progress Charts</h2>
+              <h2 className="text-2xl font-bold text-white mb-6 tracking-tight">Progress Charts</h2>
               <PerformanceGraphs userProgress={userProgress} />
             </div>
           )}
 
           {/* Recent Activity - Collapsible (Hick's Law) */}
           {userProgress && userProgress.quizHistory.length > 0 && (
-            <div className="mt-12 bg-gray-800 rounded-lg p-6 border border-gray-700">
+            <div className="mt-12 bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-6 border border-violet-500/30 shadow-lg transition-all duration-300">
               <div className="flex items-center justify-between">
-                <h3 className="text-xl font-bold">Recent Quizzes ({userProgress.quizHistory.length})</h3>
+                <h3 className="text-xl font-bold tracking-tight">Recent Quizzes ({userProgress.quizHistory.length})</h3>
                 <button
                   id="toggle-recent-quizzes"
                   onClick={() => setRecentQuizzesExpanded(!recentQuizzesExpanded)}
-                  className="p-2 hover:opacity-80 transition-opacity"
+                  className="p-2 hover:bg-white/5 active:bg-white/10 rounded-full transition-all duration-300"
                   aria-label="Toggle Recent Quizzes"
                 >
                   <svg
-                    className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${recentQuizzesExpanded ? 'rotate-180' : ''}`}
+                    className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${recentQuizzesExpanded ? 'rotate-180' : ''}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -671,32 +677,32 @@ export default function CybersecurityPage() {
                         key={quiz.id}
                         id={`quiz-review-${quiz.id}`}
                         onClick={() => setSelectedQuizForReview(quiz)}
-                        className="w-full bg-gray-700/50 hover:bg-gray-700 rounded-lg p-4 border border-gray-600 hover:border-blue-500 transition-all cursor-pointer text-left"
+                        className="w-full bg-slate-700/50 hover:bg-slate-700/70 rounded-[28px] p-4 border border-violet-500/30 hover:border-violet-500 hover:shadow-lg hover:shadow-violet-500/10 transition-all duration-300 cursor-pointer text-left"
                       >
                         <div className="flex justify-between items-center">
                           <div>
-                            <div className="text-sm text-gray-400">
+                            <div className="text-sm text-slate-400">
                               {formattedDate} • {formattedTime}
                             </div>
                             <div className="text-sm mt-1 space-y-1">
                               <div>
-                                <span className="text-gray-300">{quiz.questions.length} questions</span>
+                                <span className="text-slate-300">{quiz.questions.length} questions</span>
                                 {isIncomplete && (
-                                  <span className="ml-2 text-xs px-2 py-0.5 rounded bg-yellow-700/30 text-yellow-400">
+                                  <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-yellow-700/30 text-yellow-400 border border-yellow-500/30">
                                     Incomplete
                                   </span>
                                 )}
                               </div>
-                              <div className="text-gray-400">
+                              <div className="text-slate-400">
                                 Time: {timeDisplay}
                               </div>
                             </div>
                           </div>
                           <div className="text-right">
-                            <div className="text-2xl font-bold text-blue-400">
+                            <div className="text-2xl font-bold text-violet-400">
                               {quiz.score}/{quiz.questions.length}
                             </div>
-                            <div className="text-sm text-gray-400">
+                            <div className="text-sm text-slate-400">
                               {((quiz.score / quiz.questions.length) * 100).toFixed(0)}%
                             </div>
                           </div>
@@ -706,7 +712,7 @@ export default function CybersecurityPage() {
                   })}
                 </div>
               ) : (
-                <div className="mt-4 text-sm text-gray-400">
+                <div className="mt-4 text-sm text-slate-400">
                   Click to view your last 5 quizzes
                 </div>
               )}
@@ -719,7 +725,7 @@ export default function CybersecurityPage() {
               <button
                 id="reset-progress"
                 onClick={handleResetProgress}
-                className="bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-600/50 font-medium py-2 px-6 rounded-lg text-sm transition-all"
+                className="bg-red-600/20 hover:bg-red-600/30 active:bg-red-600/40 text-red-400 border border-red-500/30 hover:border-red-500 font-medium py-2 px-6 rounded-full text-sm transition-all duration-300"
               >
                 Reset Progress
               </button>
@@ -746,7 +752,7 @@ export default function CybersecurityPage() {
 
   // Main homepage with three simple cards
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-black text-white">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
         <div className="mb-12">
@@ -754,7 +760,7 @@ export default function CybersecurityPage() {
             <button
               id="back-to-home"
               onClick={() => router.push('/')}
-              className="text-gray-400 hover:text-white transition-colors p-2"
+              className="text-slate-400 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 p-2 rounded-full"
               title="Back to subjects"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -766,7 +772,7 @@ export default function CybersecurityPage() {
               <button
                 id="menu-cybersecurity"
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="text-gray-400 hover:text-white transition-colors p-2"
+                className="text-slate-400 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 p-2 rounded-full"
                 title="Menu"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -776,11 +782,11 @@ export default function CybersecurityPage() {
 
               {/* Dropdown Menu */}
               {menuOpen && user && !user?.isAnonymous && (
-                <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
+                <div className="absolute right-0 top-full mt-2 bg-slate-800/95 backdrop-blur-xl border border-violet-500/30 rounded-3xl shadow-2xl py-2 min-w-[200px] z-50">
                   {/* User Name */}
-                  <div className="px-4 py-2 text-sm text-white border-b border-gray-700">
+                  <div className="px-4 py-2 text-sm text-white border-b border-violet-500/30">
                     <div className="flex items-center gap-2">
-                      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
                       <span>{user?.displayName || 'User'}</span>
@@ -796,7 +802,7 @@ export default function CybersecurityPage() {
                         setMenuOpen(false);
                       }
                     }}
-                    className="w-full px-4 py-2 text-sm text-left text-white hover:bg-gray-700 transition-colors flex items-center gap-2"
+                    className="w-full px-4 py-2 text-sm text-left text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 flex items-center gap-2"
                   >
                     <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -808,10 +814,10 @@ export default function CybersecurityPage() {
             </div>
           </div>
           <div className="text-center">
-            <h1 className="text-4xl font-bold mb-2 text-white">
+            <h1 className="text-5xl font-bold mb-2 text-white tracking-tight">
               Cybersecurity
             </h1>
-            <p className="text-gray-400 text-lg">Choose your study method</p>
+            <p className="text-slate-400 text-lg">Choose your study method</p>
           </div>
         </div>
 
@@ -821,13 +827,16 @@ export default function CybersecurityPage() {
           <button
             id="quiz"
             onClick={() => setSelectedCard('quiz')}
-            className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-white cursor-pointer min-h-[200px] touch-manipulation relative hover:-translate-y-2 active:translate-y-0"
-            style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+            className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-8 border border-violet-500/30 hover:border-violet-500 hover:shadow-2xl hover:shadow-violet-500/20 cursor-pointer min-h-[200px] touch-manipulation relative hover:scale-105 active:scale-100 transition-all duration-500"
           >
             <div className="text-center">
-              <div className="text-6xl mb-4">📝</div>
-              <h2 className="text-2xl font-bold mb-2 text-white">Quiz</h2>
-              <p className="text-gray-400 text-sm">Test your knowledge with AI-generated questions</p>
+              <div className="mb-4">
+                <svg className="w-16 h-16 mx-auto text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold mb-2 text-white tracking-tight">Quiz</h2>
+              <p className="text-slate-400 text-sm leading-relaxed">Test your knowledge with AI-generated questions</p>
             </div>
           </button>
 
@@ -835,41 +844,52 @@ export default function CybersecurityPage() {
           <button
             id="flashcards"
             onClick={() => setSelectedCard('flashcards')}
-            className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-white cursor-pointer relative min-h-[200px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
-            style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+            className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-8 border border-violet-500/30 hover:border-violet-500 hover:shadow-2xl hover:shadow-violet-500/20 cursor-pointer relative min-h-[200px] touch-manipulation hover:scale-105 active:scale-100 transition-all duration-500"
           >
             <div className="text-center">
-              <div className="text-6xl mb-4">📚</div>
-              <h2 className="text-2xl font-bold mb-2 text-white">Flashcards</h2>
-              <p className="text-gray-400 text-sm">Learn with spaced repetition</p>
+              <div className="mb-4">
+                <svg className="w-16 h-16 mx-auto text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold mb-2 text-white tracking-tight">Flashcards</h2>
+              <p className="text-slate-400 text-sm leading-relaxed">Learn with spaced repetition</p>
             </div>
           </button>
 
           {/* PBQ Card (Coming Soon) */}
-          <div className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 opacity-60 cursor-not-allowed shadow-lg relative min-h-[200px]">
+          <div className="bg-slate-800/60 backdrop-blur-xl rounded-[28px] p-8 border border-slate-600/30 opacity-60 cursor-not-allowed shadow-lg relative min-h-[200px]">
             <div className="absolute top-4 right-4">
-              <span className="bg-gray-700 text-gray-400 text-xs px-3 py-1 rounded-full">
+              <span className="bg-slate-700/50 text-slate-400 text-xs px-3 py-1 rounded-full border border-slate-600/30">
                 Coming Soon
               </span>
             </div>
             <div className="text-center">
-              <div className="text-6xl mb-4">🖥️</div>
-              <h2 className="text-2xl font-bold mb-2 text-gray-400">Performance-Based Questions</h2>
-              <p className="text-gray-500 text-sm">Hands-on scenarios</p>
+              <div className="mb-4">
+                <svg className="w-16 h-16 mx-auto text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold mb-2 text-slate-400 tracking-tight">Performance-Based Questions</h2>
+              <p className="text-slate-500 text-sm leading-relaxed">Hands-on scenarios</p>
             </div>
           </div>
 
           {/* Simulate Exam Card (Coming Soon) */}
-          <div className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 opacity-60 cursor-not-allowed shadow-lg relative min-h-[200px]">
+          <div className="bg-slate-800/60 backdrop-blur-xl rounded-[28px] p-8 border border-slate-600/30 opacity-60 cursor-not-allowed shadow-lg relative min-h-[200px]">
             <div className="absolute top-4 right-4">
-              <span className="bg-gray-700 text-gray-400 text-xs px-3 py-1 rounded-full">
+              <span className="bg-slate-700/50 text-slate-400 text-xs px-3 py-1 rounded-full border border-slate-600/30">
                 Coming Soon
               </span>
             </div>
             <div className="text-center">
-              <div className="text-6xl mb-4">⏱️</div>
-              <h2 className="text-2xl font-bold mb-2 text-gray-400">Simulate Exam</h2>
-              <p className="text-gray-500 text-sm">90-minute timed exam</p>
+              <div className="mb-4">
+                <svg className="w-16 h-16 mx-auto text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold mb-2 text-slate-400 tracking-tight">Simulate Exam</h2>
+              <p className="text-slate-500 text-sm leading-relaxed">90-minute timed exam</p>
             </div>
           </div>
         </div>

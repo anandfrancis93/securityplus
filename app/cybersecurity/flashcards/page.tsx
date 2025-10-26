@@ -326,10 +326,10 @@ export default function FlashcardsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-900">
+      <div className="flex items-center justify-center min-h-screen bg-black">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-400">Loading flashcards...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-violet-500 mx-auto"></div>
+          <p className="mt-4 text-slate-300">Loading flashcards...</p>
         </div>
       </div>
     );
@@ -366,8 +366,10 @@ export default function FlashcardsPage() {
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.75)',
-              zIndex: 999998
+              backgroundColor: 'rgba(0, 0, 0, 0.85)',
+              backdropFilter: 'blur(8px)',
+              zIndex: 999998,
+              transition: 'opacity 300ms cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           />
 
@@ -377,41 +379,47 @@ export default function FlashcardsPage() {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            backgroundColor: '#18181b',
+            backgroundColor: 'rgba(30, 41, 59, 0.95)',
             color: 'white',
-            padding: '24px',
-            borderRadius: '12px',
+            padding: '32px',
+            borderRadius: '28px',
             width: '90%',
             maxWidth: '600px',
             maxHeight: '90vh',
             overflowY: 'auto',
             zIndex: 999999,
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-            border: '1px solid #27272a'
+            boxShadow: '0 24px 48px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(148, 163, 184, 0.1)',
+            backdropFilter: 'blur(16px)',
+            border: '1px solid rgba(148, 163, 184, 0.2)',
+            transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
           }}>
             {/* Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h2 style={{ fontSize: '24px', fontWeight: 'bold', margin: 0 }}>Edit Flashcard</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <h2 style={{ fontSize: '28px', fontWeight: '600', margin: 0, letterSpacing: '-0.02em', color: '#e2e8f0' }}>Edit Flashcard</h2>
               <button
                 onClick={handleCancelEdit}
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: '#9ca3af',
-                  fontSize: '24px',
+                  color: '#cbd5e1',
+                  fontSize: '28px',
                   cursor: 'pointer',
-                  padding: '0',
-                  lineHeight: '1'
+                  padding: '8px',
+                  lineHeight: '1',
+                  borderRadius: '50%',
+                  transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
                 ×
               </button>
             </div>
 
             {/* Form */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', color: '#d1d5db' }}>
+                <label style={{ display: 'block', marginBottom: '10px', fontSize: '14px', fontWeight: '500', color: '#cbd5e1', letterSpacing: '0.01em' }}>
                   Term / Question *
                 </label>
                 <input
@@ -422,25 +430,34 @@ export default function FlashcardsPage() {
                   disabled={generating}
                   style={{
                     width: '100%',
-                    padding: '12px',
-                    fontSize: '14px',
-                    borderRadius: '8px',
-                    border: '1px solid #3f3f46',
-                    backgroundColor: '#27272a',
-                    color: 'white',
+                    padding: '14px 16px',
+                    fontSize: '15px',
+                    borderRadius: '24px',
+                    border: '2px solid rgba(148, 163, 184, 0.2)',
+                    backgroundColor: 'rgba(15, 23, 42, 0.6)',
+                    color: '#e2e8f0',
                     outline: 'none',
-                    boxSizing: 'border-box'
+                    boxSizing: 'border-box',
+                    transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.5)';
+                    e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.8)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(148, 163, 184, 0.2)';
+                    e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.6)';
                   }}
                 />
                 {editTerm.length > 0 && editTerm.length < 2 && (
-                  <span style={{ color: '#fbbf24', fontSize: '12px', marginTop: '4px', display: 'block' }}>
+                  <span style={{ color: '#fbbf24', fontSize: '13px', marginTop: '6px', display: 'block' }}>
                     Term must be at least 2 characters
                   </span>
                 )}
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', color: '#d1d5db' }}>
+                <label style={{ display: 'block', marginBottom: '10px', fontSize: '14px', fontWeight: '500', color: '#cbd5e1', letterSpacing: '0.01em' }}>
                   Definition / Answer *
                 </label>
                 <textarea
@@ -451,26 +468,35 @@ export default function FlashcardsPage() {
                   disabled={generating}
                   style={{
                     width: '100%',
-                    padding: '12px',
-                    fontSize: '14px',
-                    borderRadius: '8px',
-                    border: '1px solid #3f3f46',
-                    backgroundColor: '#27272a',
-                    color: 'white',
+                    padding: '14px 16px',
+                    fontSize: '15px',
+                    borderRadius: '24px',
+                    border: '2px solid rgba(148, 163, 184, 0.2)',
+                    backgroundColor: 'rgba(15, 23, 42, 0.6)',
+                    color: '#e2e8f0',
                     outline: 'none',
                     resize: 'vertical',
-                    boxSizing: 'border-box'
+                    boxSizing: 'border-box',
+                    transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.5)';
+                    e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.8)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(148, 163, 184, 0.2)';
+                    e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.6)';
                   }}
                 />
                 {editDefinition.length > 0 && editDefinition.length < 10 && (
-                  <span style={{ color: '#fbbf24', fontSize: '12px', marginTop: '4px', display: 'block' }}>
+                  <span style={{ color: '#fbbf24', fontSize: '13px', marginTop: '6px', display: 'block' }}>
                     Definition must be at least 10 characters
                   </span>
                 )}
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', color: '#d1d5db' }}>
+                <label style={{ display: 'block', marginBottom: '10px', fontSize: '14px', fontWeight: '500', color: '#cbd5e1', letterSpacing: '0.01em' }}>
                   Security+ Domain
                 </label>
                 <select
@@ -479,15 +505,24 @@ export default function FlashcardsPage() {
                   disabled={generating}
                   style={{
                     width: '100%',
-                    padding: '12px',
-                    fontSize: '14px',
-                    borderRadius: '8px',
-                    border: '1px solid #3f3f46',
-                    backgroundColor: '#27272a',
-                    color: 'white',
+                    padding: '14px 16px',
+                    fontSize: '15px',
+                    borderRadius: '24px',
+                    border: '2px solid rgba(148, 163, 184, 0.2)',
+                    backgroundColor: 'rgba(15, 23, 42, 0.6)',
+                    color: '#e2e8f0',
                     outline: 'none',
                     cursor: 'pointer',
-                    boxSizing: 'border-box'
+                    boxSizing: 'border-box',
+                    transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.5)';
+                    e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.8)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(148, 163, 184, 0.2)';
+                    e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.6)';
                   }}
                 >
                   <option value="General Security Concepts">General Security Concepts</option>
@@ -499,22 +534,28 @@ export default function FlashcardsPage() {
               </div>
 
               {/* Buttons */}
-              <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
+              <div style={{ display: 'flex', gap: '16px', marginTop: '16px' }}>
                 <button
                   onClick={handleCancelEdit}
                   disabled={generating}
                   style={{
                     flex: 1,
-                    padding: '12px 24px',
-                    backgroundColor: '#3f3f46',
-                    color: 'white',
+                    padding: '14px 28px',
+                    backgroundColor: 'rgba(71, 85, 105, 0.4)',
+                    color: '#cbd5e1',
                     border: 'none',
-                    borderRadius: '8px',
-                    fontSize: '14px',
-                    fontWeight: '500',
+                    borderRadius: '9999px',
+                    fontSize: '15px',
+                    fontWeight: '600',
                     cursor: generating ? 'not-allowed' : 'pointer',
-                    opacity: generating ? 0.6 : 1
+                    opacity: generating ? 0.6 : 1,
+                    transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                    letterSpacing: '0.01em'
                   }}
+                  onMouseEnter={(e) => !generating && (e.currentTarget.style.backgroundColor = 'rgba(71, 85, 105, 0.6)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(71, 85, 105, 0.4)')}
+                  onMouseDown={(e) => !generating && (e.currentTarget.style.backgroundColor = 'rgba(71, 85, 105, 0.7)')}
+                  onMouseUp={(e) => !generating && (e.currentTarget.style.backgroundColor = 'rgba(71, 85, 105, 0.6)')}
                 >
                   Cancel
                 </button>
@@ -523,15 +564,22 @@ export default function FlashcardsPage() {
                   disabled={generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10}
                   style={{
                     flex: 1,
-                    padding: '12px 24px',
-                    backgroundColor: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? '#3f3f46' : '#2563eb',
-                    color: 'white',
+                    padding: '14px 28px',
+                    backgroundColor: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? 'rgba(71, 85, 105, 0.4)' : 'rgba(139, 92, 246, 0.9)',
+                    color: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? '#64748b' : 'white',
                     border: 'none',
-                    borderRadius: '8px',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    cursor: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? 'not-allowed' : 'pointer'
+                    borderRadius: '9999px',
+                    fontSize: '15px',
+                    fontWeight: '600',
+                    cursor: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? 'not-allowed' : 'pointer',
+                    transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                    letterSpacing: '0.01em',
+                    boxShadow: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? 'none' : '0 4px 12px rgba(139, 92, 246, 0.3)'
                   }}
+                  onMouseEnter={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = 'rgba(124, 58, 237, 0.9)')}
+                  onMouseLeave={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = 'rgba(139, 92, 246, 0.9)')}
+                  onMouseDown={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = 'rgba(109, 40, 217, 0.9)')}
+                  onMouseUp={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = 'rgba(124, 58, 237, 0.9)')}
                 >
                   {generating ? 'Saving...' : 'Save Changes'}
                 </button>
@@ -548,14 +596,14 @@ export default function FlashcardsPage() {
     return (
       <>
         <DebugOverlay />
-        <div className="min-h-screen bg-gray-900 text-white">
+        <div className="min-h-screen bg-black text-white">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           {/* Header */}
           <div className="mb-8">
             <div className="flex justify-between items-center mb-6">
               <button
                 onClick={() => router.push('/cybersecurity')}
-                className="text-gray-400 hover:text-white transition-colors p-2"
+                className="text-slate-400 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 p-2 rounded-full"
                 title="Back to Cybersecurity"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -566,7 +614,7 @@ export default function FlashcardsPage() {
               <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setMenuOpen(!menuOpen)}
-                  className="text-gray-400 hover:text-white transition-colors p-2"
+                  className="text-slate-400 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 p-2 rounded-full"
                   title="Menu"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -575,10 +623,10 @@ export default function FlashcardsPage() {
                 </button>
 
                 {menuOpen && user && !user?.isAnonymous && (
-                  <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
-                    <div className="px-4 py-2 text-sm text-white border-b border-gray-700">
+                  <div className="absolute right-0 top-full mt-2 bg-slate-800/95 backdrop-blur-xl border border-slate-700/50 rounded-3xl shadow-2xl py-2 min-w-[200px] z-50">
+                    <div className="px-4 py-2 text-sm text-slate-200 border-b border-slate-700/50">
                       <div className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                         <span>{user?.displayName || 'User'}</span>
@@ -591,7 +639,7 @@ export default function FlashcardsPage() {
                           setMenuOpen(false);
                         }
                       }}
-                      className="w-full px-4 py-2 text-sm text-left text-white hover:bg-gray-700 transition-colors flex items-center gap-2"
+                      className="w-full px-4 py-2 text-sm text-left text-slate-200 hover:bg-white/5 active:bg-white/10 transition-all duration-300 flex items-center gap-2"
                     >
                       <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -602,8 +650,8 @@ export default function FlashcardsPage() {
                 )}
               </div>
             </div>
-            <h1 className="text-3xl font-bold mb-2 text-white">Flashcards</h1>
-            <p className="text-gray-400">Choose an option</p>
+            <h1 className="text-4xl font-bold mb-2 text-slate-100 tracking-tight">Flashcards</h1>
+            <p className="text-slate-400 text-base">Choose an option</p>
           </div>
 
           {/* Four Options */}
@@ -612,13 +660,12 @@ export default function FlashcardsPage() {
             <button
               id="study"
               onClick={handleStartStudy}
-              className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-white cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
-              style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+              className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-8 border border-slate-700/50 hover:border-violet-500/50 hover:bg-white/5 active:bg-white/10 cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 hover:shadow-2xl active:translate-y-0 transition-all duration-500"
             >
               <div className="text-center">
                 <div className="text-6xl mb-4">📖</div>
-                <h2 className="text-2xl font-bold mb-2 text-white">Study</h2>
-                <p className="text-gray-400 text-sm">Review with spaced repetition and interleaving</p>
+                <h2 className="text-2xl font-semibold mb-2 text-slate-100 tracking-tight">Study</h2>
+                <p className="text-slate-400 text-sm leading-relaxed">Review with spaced repetition and interleaving</p>
               </div>
             </button>
 
@@ -626,13 +673,12 @@ export default function FlashcardsPage() {
             <button
               id="create"
               onClick={() => setSelectedOption('create')}
-              className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-white cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
-              style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+              className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-8 border border-slate-700/50 hover:border-violet-500/50 hover:bg-white/5 active:bg-white/10 cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 hover:shadow-2xl active:translate-y-0 transition-all duration-500"
             >
               <div className="text-center">
                 <div className="text-6xl mb-4">✍️</div>
-                <h2 className="text-2xl font-bold mb-2 text-white">Create</h2>
-                <p className="text-gray-400 text-sm">Make new flashcards for your study</p>
+                <h2 className="text-2xl font-semibold mb-2 text-slate-100 tracking-tight">Create</h2>
+                <p className="text-slate-400 text-sm leading-relaxed">Make new flashcards for your study</p>
               </div>
             </button>
 
@@ -640,14 +686,13 @@ export default function FlashcardsPage() {
             <button
               id="search"
               onClick={() => setSelectedOption('search')}
-              className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-white cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
-              style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+              className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-8 border border-slate-700/50 hover:border-violet-500/50 hover:bg-white/5 active:bg-white/10 cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 hover:shadow-2xl active:translate-y-0 transition-all duration-500"
             >
               <div className="text-center">
                 <div className="text-6xl mb-4">🔍</div>
-                <h2 className="text-2xl font-bold mb-2 text-white">Search</h2>
-                <p className="text-gray-400 text-sm">Find and manage your flashcards</p>
-                <p className="text-gray-500 text-sm mt-3">{flashcards.length} total cards</p>
+                <h2 className="text-2xl font-semibold mb-2 text-slate-100 tracking-tight">Search</h2>
+                <p className="text-slate-400 text-sm leading-relaxed">Find and manage your flashcards</p>
+                <p className="text-slate-500 text-sm mt-3">{flashcards.length} total cards</p>
               </div>
             </button>
 
@@ -655,13 +700,12 @@ export default function FlashcardsPage() {
             <button
               id="flashcard-performance"
               onClick={() => setSelectedOption('performance')}
-              className="bg-gray-800 rounded-xl p-8 border-2 border-gray-700 hover:border-white cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 active:translate-y-0"
-              style={{ transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+              className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-8 border border-slate-700/50 hover:border-violet-500/50 hover:bg-white/5 active:bg-white/10 cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 hover:shadow-2xl active:translate-y-0 transition-all duration-500"
             >
               <div className="text-center">
                 <div className="text-6xl mb-4">📊</div>
-                <h2 className="text-2xl font-bold mb-2 text-white">Performance</h2>
-                <p className="text-gray-400 text-sm">View your progress and statistics</p>
+                <h2 className="text-2xl font-semibold mb-2 text-slate-100 tracking-tight">Performance</h2>
+                <p className="text-slate-400 text-sm leading-relaxed">View your progress and statistics</p>
               </div>
             </button>
           </div>
@@ -693,14 +737,14 @@ export default function FlashcardsPage() {
             100% { opacity: 0; }
           }
         `}</style>
-        <div className="min-h-screen bg-gray-900 text-white">
+        <div className="min-h-screen bg-black text-white">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           {/* Header */}
           <div className="mb-8">
             <div className="flex justify-between items-center mb-6">
               <button
                 onClick={() => setSelectedOption(null)}
-                className="text-gray-400 hover:text-white transition-colors p-2"
+                className="text-slate-400 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 p-2 rounded-full"
                 title="Back to Flashcards"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -711,7 +755,7 @@ export default function FlashcardsPage() {
               <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setMenuOpen(!menuOpen)}
-                  className="text-gray-400 hover:text-white transition-colors p-2"
+                  className="text-slate-400 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 p-2 rounded-full"
                   title="Menu"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -720,10 +764,10 @@ export default function FlashcardsPage() {
                 </button>
 
                 {menuOpen && user && !user?.isAnonymous && (
-                  <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
-                    <div className="px-4 py-2 text-sm text-white border-b border-gray-700">
+                  <div className="absolute right-0 top-full mt-2 bg-slate-800/95 backdrop-blur-xl border border-slate-700/50 rounded-3xl shadow-2xl py-2 min-w-[200px] z-50">
+                    <div className="px-4 py-2 text-sm text-slate-200 border-b border-slate-700/50">
                       <div className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                         <span>{user?.displayName || 'User'}</span>
@@ -736,7 +780,7 @@ export default function FlashcardsPage() {
                           setMenuOpen(false);
                         }
                       }}
-                      className="w-full px-4 py-2 text-sm text-left text-white hover:bg-gray-700 transition-colors flex items-center gap-2"
+                      className="w-full px-4 py-2 text-sm text-left text-slate-200 hover:bg-white/5 active:bg-white/10 transition-all duration-300 flex items-center gap-2"
                     >
                       <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -747,66 +791,66 @@ export default function FlashcardsPage() {
                 )}
               </div>
             </div>
-            <h1 className="text-3xl font-bold mb-2 text-white">Performance</h1>
-            <p className="text-gray-400">View your progress and statistics</p>
+            <h1 className="text-4xl font-bold mb-2 text-slate-100 tracking-tight">Performance</h1>
+            <p className="text-slate-400 text-base">View your progress and statistics</p>
           </div>
 
           {/* Stats */}
           {flashcards.length > 0 && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 relative group cursor-help">
+              <div className="bg-slate-800/95 backdrop-blur-xl rounded-3xl p-5 border border-slate-700/50 relative group cursor-help hover:border-violet-500/30 hover:bg-white/5 transition-all duration-300 hover:shadow-xl">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-lg">📚</span>
-                  <div className="text-gray-400 text-xs">Total</div>
+                  <div className="text-slate-400 text-xs font-medium tracking-wide">Total</div>
                 </div>
-                <div className="text-2xl font-bold text-blue-400">{stats.total}</div>
+                <div className="text-3xl font-bold text-violet-400">{stats.total}</div>
                 {/* Hover tooltip */}
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                  <p className="text-sm text-gray-300">The total number of flashcards in your deck.</p>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
+                  <p className="text-sm text-slate-300 leading-relaxed">The total number of flashcards in your deck.</p>
                 </div>
               </div>
-              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 relative group cursor-help">
+              <div className="bg-slate-800/95 backdrop-blur-xl rounded-3xl p-5 border border-slate-700/50 relative group cursor-help hover:border-violet-500/30 hover:bg-white/5 transition-all duration-300 hover:shadow-xl">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-lg">🌱</span>
-                  <div className="text-gray-400 text-xs">Learning</div>
+                  <div className="text-slate-400 text-xs font-medium tracking-wide">Learning</div>
                 </div>
-                <div className="text-2xl font-bold text-yellow-400">{stats.learning}</div>
+                <div className="text-3xl font-bold text-yellow-400">{stats.learning}</div>
                 {stats.learning > 0 && (
-                  <div className="text-xs text-gray-500 mt-1">New cards</div>
+                  <div className="text-xs text-slate-500 mt-1 font-medium">New cards</div>
                 )}
                 {/* Hover tooltip */}
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                  <p className="text-sm text-gray-300">Cards you&apos;ve attempted but got wrong or rated as &quot;Again&quot;. These cards have 0 successful repetitions and need daily practice.</p>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
+                  <p className="text-sm text-slate-300 leading-relaxed">Cards you&apos;ve attempted but got wrong or rated as &quot;Again&quot;. These cards have 0 successful repetitions and need daily practice.</p>
                 </div>
               </div>
-              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 relative group cursor-help">
+              <div className="bg-slate-800/95 backdrop-blur-xl rounded-3xl p-5 border border-slate-700/50 relative group cursor-help hover:border-violet-500/30 hover:bg-white/5 transition-all duration-300 hover:shadow-xl">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-lg">🔄</span>
-                  <div className="text-gray-400 text-xs">Review</div>
+                  <div className="text-slate-400 text-xs font-medium tracking-wide">Review</div>
                 </div>
-                <div className="text-2xl font-bold text-yellow-400">{stats.review}</div>
+                <div className="text-3xl font-bold text-yellow-400">{stats.review}</div>
                 {stats.review > 0 && (
-                  <div className="text-xs text-gray-500 mt-1">In progress</div>
+                  <div className="text-xs text-slate-500 mt-1 font-medium">In progress</div>
                 )}
                 {/* Hover tooltip */}
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                  <p className="text-sm text-gray-300">Cards you&apos;re actively learning and have reviewed correctly 1-2 times. These cards are in progress but not yet mastered.</p>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
+                  <p className="text-sm text-slate-300 leading-relaxed">Cards you&apos;re actively learning and have reviewed correctly 1-2 times. These cards are in progress but not yet mastered.</p>
                 </div>
               </div>
-              <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 relative group cursor-help">
+              <div className="bg-slate-800/95 backdrop-blur-xl rounded-3xl p-5 border border-slate-700/50 relative group cursor-help hover:border-violet-500/30 hover:bg-white/5 transition-all duration-300 hover:shadow-xl">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-lg">⭐</span>
-                  <div className="text-gray-400 text-xs">Mastered</div>
+                  <div className="text-slate-400 text-xs font-medium tracking-wide">Mastered</div>
                 </div>
-                <div className="text-2xl font-bold text-blue-400">{stats.mastered}</div>
+                <div className="text-3xl font-bold text-violet-400">{stats.mastered}</div>
                 {stats.mastered > 0 && (
-                  <div className="text-xs text-gray-500 mt-1">
+                  <div className="text-xs text-slate-500 mt-1 font-medium">
                     {Math.round((stats.mastered / stats.total) * 100)}% complete
                   </div>
                 )}
                 {/* Hover tooltip */}
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                  <p className="text-sm text-gray-300">Cards you&apos;ve successfully reviewed 3 or more times. These cards are well-learned and appear less frequently to maintain long-term retention.</p>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
+                  <p className="text-sm text-slate-300 leading-relaxed">Cards you&apos;ve successfully reviewed 3 or more times. These cards are well-learned and appear less frequently to maintain long-term retention.</p>
                 </div>
               </div>
             </div>
@@ -818,7 +862,7 @@ export default function FlashcardsPage() {
               <button
                 id="reset-flashcard-progress"
                 onClick={handleResetProgress}
-                className="bg-yellow-600/20 hover:bg-yellow-600/30 text-yellow-400 border border-yellow-600/50 font-medium py-2 px-6 rounded-lg transition-all min-h-[44px]"
+                className="bg-yellow-600/20 hover:bg-yellow-600/30 active:bg-yellow-600/40 text-yellow-400 border border-yellow-600/50 font-semibold py-3 px-8 rounded-full transition-all duration-300 min-h-[44px] hover:shadow-lg hover:shadow-yellow-600/10"
               >
                 Reset Progress
               </button>
@@ -828,8 +872,8 @@ export default function FlashcardsPage() {
           {flashcards.length === 0 && (
             <div className="text-center py-12">
               <div className="text-6xl mb-4">📊</div>
-              <p className="text-gray-400 text-lg">No flashcards yet</p>
-              <p className="text-gray-500 text-sm mt-2">
+              <p className="text-slate-300 text-lg font-medium">No flashcards yet</p>
+              <p className="text-slate-500 text-sm mt-2">
                 Create your first flashcard to start tracking performance
               </p>
             </div>
@@ -845,14 +889,14 @@ export default function FlashcardsPage() {
     return (
       <>
         <DebugOverlay />
-        <div className="fixed inset-0 bg-gray-900 text-white overflow-hidden flex flex-col">
+        <div className="fixed inset-0 bg-black text-white overflow-hidden flex flex-col">
         <div className="container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0" style={{ overscrollBehavior: 'none' }}>
           {/* Header */}
           <div className="mb-4 flex-shrink-0">
             <div className="flex justify-between items-center mb-3">
               <button
                 onClick={() => setSelectedOption(null)}
-                className="text-gray-400 hover:text-white transition-colors p-2"
+                className="text-slate-400 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 p-2 rounded-full"
                 title="Back to Flashcards"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -863,7 +907,7 @@ export default function FlashcardsPage() {
               <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setMenuOpen(!menuOpen)}
-                  className="text-gray-400 hover:text-white transition-colors p-2"
+                  className="text-slate-400 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 p-2 rounded-full"
                   title="Menu"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -872,10 +916,10 @@ export default function FlashcardsPage() {
                 </button>
 
                 {menuOpen && user && !user?.isAnonymous && (
-                  <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
-                    <div className="px-4 py-2 text-sm text-white border-b border-gray-700">
+                  <div className="absolute right-0 top-full mt-2 bg-slate-800/95 backdrop-blur-xl border border-slate-700/50 rounded-3xl shadow-2xl py-2 min-w-[200px] z-50">
+                    <div className="px-4 py-2 text-sm text-slate-200 border-b border-slate-700/50">
                       <div className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                         <span>{user?.displayName || 'User'}</span>
@@ -888,7 +932,7 @@ export default function FlashcardsPage() {
                           setMenuOpen(false);
                         }
                       }}
-                      className="w-full px-4 py-2 text-sm text-left text-white hover:bg-gray-700 transition-colors flex items-center gap-2"
+                      className="w-full px-4 py-2 text-sm text-left text-slate-200 hover:bg-white/5 active:bg-white/10 transition-all duration-300 flex items-center gap-2"
                     >
                       <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -899,21 +943,21 @@ export default function FlashcardsPage() {
                 )}
               </div>
             </div>
-            <h1 className="text-3xl font-bold mb-2 text-white">Create Flashcard</h1>
-            <p className="text-gray-400">Make a new flashcard for your study</p>
+            <h1 className="text-4xl font-bold mb-2 text-slate-100 tracking-tight">Create Flashcard</h1>
+            <p className="text-slate-400 text-base">Make a new flashcard for your study</p>
           </div>
 
           {/* Flashcard Creation Form - Scrollable */}
           <div className="flex-1 overflow-y-auto" style={{ overscrollBehavior: 'contain' }}>
-        <div className="bg-gray-800 rounded-lg p-4 mb-4 border border-gray-700">
-          <h2 className="text-xl font-bold mb-4">✍️ Create Flashcard</h2>
-            <p className="text-gray-400 text-sm mb-4">
+        <div className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-6 mb-4 border border-slate-700/50 shadow-2xl">
+          <h2 className="text-2xl font-semibold mb-3 tracking-tight text-slate-100">✍️ Create Flashcard</h2>
+            <p className="text-slate-400 text-sm mb-6 leading-relaxed">
               Enter a term/question and its definition to create a single flashcard.
             </p>
 
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-slate-300 mb-2 tracking-wide">
                   Term / Question
                 </label>
                 <input
@@ -925,16 +969,16 @@ export default function FlashcardsPage() {
                     if (manualTermError) setManualTermError('');
                   }}
                   placeholder="e.g., What is Zero Trust?"
-                  className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-white focus:outline-none"
+                  className="w-full bg-slate-900/60 text-slate-100 rounded-3xl p-4 border-2 border-slate-700/50 focus:border-violet-500/50 focus:outline-none focus:bg-slate-900/80 transition-all duration-300"
                   disabled={generating}
                 />
                 {manualTermError && (
-                  <p className="text-red-400 text-sm mt-1">{manualTermError}</p>
+                  <p className="text-red-400 text-sm mt-2 ml-4">{manualTermError}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-slate-300 mb-2 tracking-wide">
                   Definition / Answer
                 </label>
                 <textarea
@@ -945,23 +989,23 @@ export default function FlashcardsPage() {
                     if (manualDefinitionError) setManualDefinitionError('');
                   }}
                   placeholder="Enter the definition or answer here..."
-                  className="w-full h-32 bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-white focus:outline-none resize-vertical"
+                  className="w-full h-32 bg-slate-900/60 text-slate-100 rounded-3xl p-4 border-2 border-slate-700/50 focus:border-violet-500/50 focus:outline-none focus:bg-slate-900/80 resize-vertical transition-all duration-300"
                   disabled={generating}
                 />
                 {manualDefinitionError && (
-                  <p className="text-red-400 text-sm mt-1">{manualDefinitionError}</p>
+                  <p className="text-red-400 text-sm mt-2 ml-4">{manualDefinitionError}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-slate-300 mb-2 tracking-wide">
                   Security+ Domain
                 </label>
                 <select
                   id="domain-dropdown"
                   value={manualDomain}
                   onChange={(e) => setManualDomain(e.target.value)}
-                  className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-white focus:outline-none"
+                  className="w-full bg-slate-900/60 text-slate-100 rounded-3xl p-4 border-2 border-slate-700/50 focus:border-violet-500/50 focus:outline-none focus:bg-slate-900/80 transition-all duration-300"
                   disabled={generating}
                 >
                   <option value="General Security Concepts">General Security Concepts</option>
@@ -973,7 +1017,7 @@ export default function FlashcardsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-slate-300 mb-2 tracking-wide">
                   Image (Optional)
                 </label>
                 {manualImagePreview ? (
@@ -981,11 +1025,11 @@ export default function FlashcardsPage() {
                     <img
                       src={manualImagePreview}
                       alt="Preview"
-                      className="w-full max-h-48 object-contain rounded-lg border border-gray-600 bg-gray-900"
+                      className="w-full max-h-48 object-contain rounded-3xl border-2 border-slate-700/50 bg-black/40"
                     />
                     <button
                       onClick={handleRemoveManualImage}
-                      className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-all"
+                      className="absolute top-3 right-3 bg-red-600/90 hover:bg-red-700 active:bg-red-800 text-white p-2 rounded-full transition-all duration-300 shadow-lg"
                       disabled={generating}
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -999,19 +1043,19 @@ export default function FlashcardsPage() {
                     type="file"
                     accept="image/*"
                     onChange={handleManualImageChange}
-                    className="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:border-white focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:cursor-pointer"
+                    className="w-full bg-slate-900/60 text-slate-100 rounded-3xl p-4 border-2 border-slate-700/50 focus:border-violet-500/50 focus:outline-none transition-all duration-300 file:mr-4 file:py-2 file:px-5 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-600 file:text-white hover:file:bg-violet-700 file:cursor-pointer file:transition-all file:duration-300"
                     disabled={generating}
                   />
                 )}
-                <p className="text-xs text-gray-500 mt-1">Max 5MB, JPG/PNG/GIF/WebP</p>
+                <p className="text-xs text-slate-500 mt-2 ml-4">Max 5MB, JPG/PNG/GIF/WebP</p>
               </div>
 
-              <div className="flex items-center justify-end">
+              <div className="flex items-center justify-end pt-2">
                 <button
                   id="create-flashcard"
                   onClick={handleManualCreate}
                   disabled={generating}
-                  className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium transition-all"
+                  className="bg-violet-600 hover:bg-violet-700 active:bg-violet-800 disabled:bg-slate-700 disabled:cursor-not-allowed text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-violet-600/30 disabled:shadow-none"
                 >
                   {generating ? 'Creating...' : 'Create Flashcard'}
                 </button>
@@ -1029,14 +1073,14 @@ export default function FlashcardsPage() {
   return (
     <>
       <DebugOverlay />
-      <div className="fixed inset-0 bg-gray-900 text-white overflow-hidden flex flex-col">
+      <div className="fixed inset-0 bg-black text-white overflow-hidden flex flex-col">
       <div className="container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0" style={{ overscrollBehavior: 'none' }}>
         {/* Header */}
         <div className="mb-4 flex-shrink-0">
           <div className="flex justify-between items-center mb-3">
             <button
               onClick={() => setSelectedOption(null)}
-              className="text-gray-400 hover:text-white transition-colors p-2"
+              className="text-slate-400 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 p-2 rounded-full"
               title="Back to Flashcards"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1047,7 +1091,7 @@ export default function FlashcardsPage() {
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="text-gray-400 hover:text-white transition-colors p-2"
+                className="text-slate-400 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 p-2 rounded-full"
                 title="Menu"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1056,10 +1100,10 @@ export default function FlashcardsPage() {
               </button>
 
               {menuOpen && user && !user?.isAnonymous && (
-                <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
-                  <div className="px-4 py-2 text-sm text-white border-b border-gray-700">
+                <div className="absolute right-0 top-full mt-2 bg-slate-800/95 backdrop-blur-xl border border-slate-700/50 rounded-3xl shadow-2xl py-2 min-w-[200px] z-50">
+                  <div className="px-4 py-2 text-sm text-slate-200 border-b border-slate-700/50">
                     <div className="flex items-center gap-2">
-                      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
                       <span>{user?.displayName || 'User'}</span>
@@ -1072,7 +1116,7 @@ export default function FlashcardsPage() {
                         setMenuOpen(false);
                       }
                     }}
-                    className="w-full px-4 py-2 text-sm text-left text-white hover:bg-gray-700 transition-colors flex items-center gap-2"
+                    className="w-full px-4 py-2 text-sm text-left text-slate-200 hover:bg-white/5 active:bg-white/10 transition-all duration-300 flex items-center gap-2"
                   >
                     <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -1083,21 +1127,21 @@ export default function FlashcardsPage() {
               )}
             </div>
           </div>
-          <h1 className="text-3xl font-bold mb-2 text-white">Search Flashcards</h1>
-          <p className="text-gray-400">Find and manage your flashcards</p>
+          <h1 className="text-4xl font-bold mb-2 text-slate-100 tracking-tight">Search Flashcards</h1>
+          <p className="text-slate-400 text-base">Find and manage your flashcards</p>
         </div>
 
         {/* Flashcard List */}
         {flashcards.length > 0 && (
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 flex-1 flex flex-col overflow-hidden mb-4">
-              <div className="flex items-center justify-between mb-3 flex-shrink-0">
-                <h3 className="text-lg font-bold">
+          <div className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-5 border border-slate-700/50 flex-1 flex flex-col overflow-hidden mb-4 shadow-2xl">
+              <div className="flex items-center justify-between mb-4 flex-shrink-0">
+                <h3 className="text-xl font-semibold text-slate-100 tracking-tight">
                   Your Flashcards ({filteredFlashcards.length}{filteredFlashcards.length !== flashcards.length && ` of ${flashcards.length}`})
                 </h3>
               </div>
 
               {/* Search Input */}
-              <div className="mb-3 flex-shrink-0">
+              <div className="mb-4 flex-shrink-0">
                 <div className="relative">
                   <input
                     id="search-input"
@@ -1105,10 +1149,10 @@ export default function FlashcardsPage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search by term, definition, domain, or source..."
-                    className="w-full bg-gray-700 text-white rounded-lg pl-10 pr-10 py-3 border border-gray-600 focus:border-white focus:outline-none"
+                    className="w-full bg-slate-900/60 text-slate-100 rounded-full pl-12 pr-12 py-4 border-2 border-slate-700/50 focus:border-violet-500/50 focus:outline-none focus:bg-slate-900/80 transition-all duration-300"
                   />
                   <svg
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -1123,7 +1167,7 @@ export default function FlashcardsPage() {
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery('')}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-white hover:bg-white/10 active:bg-white/15 rounded-full p-1 transition-all duration-300"
                       title="Clear search"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1136,25 +1180,25 @@ export default function FlashcardsPage() {
 
               <div className="space-y-2 flex-1 overflow-y-auto" style={{ overscrollBehavior: 'contain' }}>
                 {filteredFlashcards.length === 0 ? (
-                  <div className="text-center py-8 text-gray-400">
+                  <div className="text-center py-8 text-slate-400">
                     {searchQuery ? 'No flashcards match your search.' : 'No flashcards yet.'}
                   </div>
                 ) : (
                   filteredFlashcards.map((card) => (
                   <div
                     key={card.id}
-                    className="bg-gray-700/50 rounded-lg p-3 hover:bg-gray-700 transition-all group"
+                    className="bg-slate-900/40 rounded-3xl p-4 hover:bg-white/5 active:bg-white/10 transition-all duration-300 group border border-transparent hover:border-slate-700/50"
                   >
-                    <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
-                        <div className="font-medium text-sm">{card.term}</div>
-                        <div className="text-xs text-gray-400 mt-1 line-clamp-2">
+                        <div className="font-semibold text-sm text-slate-200">{card.term}</div>
+                        <div className="text-xs text-slate-400 mt-1.5 line-clamp-2 leading-relaxed">
                           {card.definition}
                         </div>
-                        <div className="text-xs text-gray-500 mt-1 flex items-center gap-2">
+                        <div className="text-xs text-slate-500 mt-2 flex items-center gap-2">
                           <span>From: {card.sourceFile}</span>
                           {card.domain && (
-                            <span className="text-blue-400">• {card.domain}</span>
+                            <span className="text-violet-400">• {card.domain}</span>
                           )}
                         </div>
                       </div>
@@ -1166,7 +1210,7 @@ export default function FlashcardsPage() {
                             console.log('Button clicked!', card.term);
                             handleEditFlashcard(card);
                           }}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-blue-400 hover:text-blue-300 p-1"
+                          className="opacity-0 group-hover:opacity-100 transition-all duration-300 flex-shrink-0 text-violet-400 hover:text-violet-300 hover:bg-white/5 active:bg-white/10 p-2 rounded-full"
                           title="Edit flashcard"
                         >
                           <svg
@@ -1190,7 +1234,7 @@ export default function FlashcardsPage() {
                             console.log('Delete button clicked!', card.id);
                             handleDeleteFlashcard(card.id);
                           }}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-red-400 hover:text-red-300 p-1"
+                          className="opacity-0 group-hover:opacity-100 transition-all duration-300 flex-shrink-0 text-red-400 hover:text-red-300 hover:bg-white/5 active:bg-white/10 p-2 rounded-full"
                           title="Delete flashcard"
                         >
                           <svg
@@ -1219,8 +1263,8 @@ export default function FlashcardsPage() {
         {flashcards.length === 0 && (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">📚</div>
-            <p className="text-gray-400 text-lg">No flashcards yet</p>
-            <p className="text-gray-500 text-sm mt-2">
+            <p className="text-slate-300 text-lg font-medium">No flashcards yet</p>
+            <p className="text-slate-500 text-sm mt-2">
               Create flashcards to start searching
             </p>
           </div>
@@ -1235,14 +1279,14 @@ export default function FlashcardsPage() {
     <>
       <DebugOverlay />
 
-      <div className="fixed inset-0 bg-gray-900 text-white overflow-hidden flex flex-col">
+      <div className="fixed inset-0 bg-black text-white overflow-hidden flex flex-col">
       <div className="container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0" style={{ overscrollBehavior: 'none' }}>
         {/* Header */}
         <div className="mb-4 flex-shrink-0">
           <div className="flex justify-between items-center mb-3">
             <button
               onClick={() => setSelectedOption(null)}
-              className="text-gray-400 hover:text-white transition-colors p-2"
+              className="text-slate-400 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 p-2 rounded-full"
               title="Back to Flashcards"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1253,7 +1297,7 @@ export default function FlashcardsPage() {
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="text-gray-400 hover:text-white transition-colors p-2"
+                className="text-slate-400 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 p-2 rounded-full"
                 title="Menu"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1262,10 +1306,10 @@ export default function FlashcardsPage() {
               </button>
 
               {menuOpen && user && !user?.isAnonymous && (
-                <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
-                  <div className="px-4 py-2 text-sm text-white border-b border-gray-700">
+                <div className="absolute right-0 top-full mt-2 bg-slate-800/95 backdrop-blur-xl border border-slate-700/50 rounded-3xl shadow-2xl py-2 min-w-[200px] z-50">
+                  <div className="px-4 py-2 text-sm text-slate-200 border-b border-slate-700/50">
                     <div className="flex items-center gap-2">
-                      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
                       <span>{user?.displayName || 'User'}</span>
@@ -1278,7 +1322,7 @@ export default function FlashcardsPage() {
                         setMenuOpen(false);
                       }
                     }}
-                    className="w-full px-4 py-2 text-sm text-left text-white hover:bg-gray-700 transition-colors flex items-center gap-2"
+                    className="w-full px-4 py-2 text-sm text-left text-slate-200 hover:bg-white/5 active:bg-white/10 transition-all duration-300 flex items-center gap-2"
                   >
                     <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -1289,21 +1333,21 @@ export default function FlashcardsPage() {
               )}
             </div>
           </div>
-          <h1 className="text-3xl font-bold mb-2 text-white">Search Flashcards</h1>
-          <p className="text-gray-400">Find and manage your flashcards</p>
+          <h1 className="text-4xl font-bold mb-2 text-slate-100 tracking-tight">Search Flashcards</h1>
+          <p className="text-slate-400 text-base">Find and manage your flashcards</p>
         </div>
 
         {/* Flashcard List */}
         {flashcards.length > 0 && (
-          <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 flex-1 flex flex-col overflow-hidden mb-4">
-              <div className="flex items-center justify-between mb-3 flex-shrink-0">
-                <h3 className="text-lg font-bold">
+          <div className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-5 border border-slate-700/50 flex-1 flex flex-col overflow-hidden mb-4 shadow-2xl">
+              <div className="flex items-center justify-between mb-4 flex-shrink-0">
+                <h3 className="text-xl font-semibold text-slate-100 tracking-tight">
                   Your Flashcards ({filteredFlashcards.length}{filteredFlashcards.length !== flashcards.length && ` of ${flashcards.length}`})
                 </h3>
               </div>
 
               {/* Search Input */}
-              <div className="mb-3 flex-shrink-0">
+              <div className="mb-4 flex-shrink-0">
                 <div className="relative">
                   <input
                     id="search-input"
@@ -1311,10 +1355,10 @@ export default function FlashcardsPage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search by term, definition, domain, or source..."
-                    className="w-full bg-gray-700 text-white rounded-lg pl-10 pr-10 py-3 border border-gray-600 focus:border-white focus:outline-none"
+                    className="w-full bg-slate-900/60 text-slate-100 rounded-full pl-12 pr-12 py-4 border-2 border-slate-700/50 focus:border-violet-500/50 focus:outline-none focus:bg-slate-900/80 transition-all duration-300"
                   />
                   <svg
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -1329,7 +1373,7 @@ export default function FlashcardsPage() {
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery('')}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-white hover:bg-white/10 active:bg-white/15 rounded-full p-1 transition-all duration-300"
                       title="Clear search"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1342,25 +1386,25 @@ export default function FlashcardsPage() {
 
               <div className="space-y-2 flex-1 overflow-y-auto" style={{ overscrollBehavior: 'contain' }}>
                 {filteredFlashcards.length === 0 ? (
-                  <div className="text-center py-8 text-gray-400">
+                  <div className="text-center py-8 text-slate-400">
                     {searchQuery ? 'No flashcards match your search.' : 'No flashcards yet.'}
                   </div>
                 ) : (
                   filteredFlashcards.map((card) => (
                   <div
                     key={card.id}
-                    className="bg-gray-700/50 rounded-lg p-3 hover:bg-gray-700 transition-all group"
+                    className="bg-slate-900/40 rounded-3xl p-4 hover:bg-white/5 active:bg-white/10 transition-all duration-300 group border border-transparent hover:border-slate-700/50"
                   >
-                    <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
-                        <div className="font-medium text-sm">{card.term}</div>
-                        <div className="text-xs text-gray-400 mt-1 line-clamp-2">
+                        <div className="font-semibold text-sm text-slate-200">{card.term}</div>
+                        <div className="text-xs text-slate-400 mt-1.5 line-clamp-2 leading-relaxed">
                           {card.definition}
                         </div>
-                        <div className="text-xs text-gray-500 mt-1 flex items-center gap-2">
+                        <div className="text-xs text-slate-500 mt-2 flex items-center gap-2">
                           <span>From: {card.sourceFile}</span>
                           {card.domain && (
-                            <span className="text-blue-400">• {card.domain}</span>
+                            <span className="text-violet-400">• {card.domain}</span>
                           )}
                         </div>
                       </div>
@@ -1372,7 +1416,7 @@ export default function FlashcardsPage() {
                             console.log('Button clicked!', card.term);
                             handleEditFlashcard(card);
                           }}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-blue-400 hover:text-blue-300 p-1"
+                          className="opacity-0 group-hover:opacity-100 transition-all duration-300 flex-shrink-0 text-violet-400 hover:text-violet-300 hover:bg-white/5 active:bg-white/10 p-2 rounded-full"
                           title="Edit flashcard"
                         >
                           <svg
@@ -1396,7 +1440,7 @@ export default function FlashcardsPage() {
                             console.log('Delete button clicked!', card.id);
                             handleDeleteFlashcard(card.id);
                           }}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 text-red-400 hover:text-red-300 p-1"
+                          className="opacity-0 group-hover:opacity-100 transition-all duration-300 flex-shrink-0 text-red-400 hover:text-red-300 hover:bg-white/5 active:bg-white/10 p-2 rounded-full"
                           title="Delete flashcard"
                         >
                           <svg
@@ -1425,8 +1469,8 @@ export default function FlashcardsPage() {
         {flashcards.length === 0 && (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">📚</div>
-            <p className="text-gray-400 text-lg">No flashcards yet</p>
-            <p className="text-gray-500 text-sm mt-2">
+            <p className="text-slate-300 text-lg font-medium">No flashcards yet</p>
+            <p className="text-slate-500 text-sm mt-2">
               Create flashcards to start searching
             </p>
           </div>

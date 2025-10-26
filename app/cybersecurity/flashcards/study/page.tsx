@@ -125,10 +125,10 @@ export default function StudyPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-900">
+      <div className="flex items-center justify-center min-h-screen bg-black">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-400">Loading flashcards...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-violet-500 mx-auto"></div>
+          <p className="mt-4 text-slate-300 text-base tracking-wide">Loading flashcards...</p>
         </div>
       </div>
     );
@@ -136,14 +136,14 @@ export default function StudyPage() {
 
   if (dueCardIds.length === 0 || !currentCard) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-900">
+      <div className="flex items-center justify-center min-h-screen bg-black">
         <div className="text-center">
-          <div className="text-6xl mb-4">✅</div>
-          <h2 className="text-2xl font-bold text-white mb-4">All Done!</h2>
-          <p className="text-gray-400 mb-8">No flashcards due right now.</p>
+          <div className="text-6xl mb-6">✅</div>
+          <h2 className="text-3xl font-bold text-white mb-4 tracking-tight">All Done!</h2>
+          <p className="text-slate-300 mb-8 text-base tracking-wide">No flashcards due right now.</p>
           <button
             onClick={() => router.push('/cybersecurity/flashcards')}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium"
+            className="bg-violet-600 hover:bg-violet-700 hover:bg-white/5 active:bg-white/10 text-white px-8 py-4 rounded-full font-medium text-base tracking-wide transition-all duration-500 shadow-lg hover:shadow-violet-500/50"
           >
             Back to Flashcards
           </button>
@@ -167,14 +167,14 @@ export default function StudyPage() {
         }
       `}</style>
 
-      <div className="min-h-screen bg-gray-900 text-white">
+      <div className="min-h-screen bg-black text-white">
         <div className="container mx-auto px-4 py-8 max-w-3xl">
           {/* Header */}
         <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex justify-between items-center mb-6">
             <button
               onClick={() => router.push('/cybersecurity/flashcards')}
-              className="text-gray-400 hover:text-white transition-colors p-2"
+              className="text-slate-300 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-500 p-3 rounded-full"
               title="Back to Flashcards"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,14 +182,14 @@ export default function StudyPage() {
               </svg>
             </button>
 
-            <p className="text-gray-400 text-sm">
+            <p className="text-slate-300 text-sm tracking-wide font-medium">
               Card {currentCardIndex + 1} of {dueCardIds.length}
             </p>
 
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="text-gray-400 hover:text-white transition-colors p-2"
+                className="text-slate-300 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-500 p-3 rounded-full"
                 title="Menu"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -198,13 +198,13 @@ export default function StudyPage() {
               </button>
 
               {menuOpen && user && !user?.isAnonymous && (
-                <div className="absolute right-0 top-full mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 min-w-[200px] z-50">
-                  <div className="px-4 py-2 text-sm text-white border-b border-gray-700">
+                <div className="absolute right-0 top-full mt-2 bg-slate-800/95 backdrop-blur border border-slate-700 rounded-3xl shadow-2xl py-3 min-w-[200px] z-50">
+                  <div className="px-4 py-3 text-sm text-white border-b border-slate-700">
                     <div className="flex items-center gap-2">
-                      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
-                      <span>{user?.displayName || 'User'}</span>
+                      <span className="tracking-wide">{user?.displayName || 'User'}</span>
                     </div>
                   </div>
                   <button
@@ -214,12 +214,12 @@ export default function StudyPage() {
                         setMenuOpen(false);
                       }
                     }}
-                    className="w-full px-4 py-2 text-sm text-left text-white hover:bg-gray-700 transition-colors flex items-center gap-2"
+                    className="w-full px-4 py-3 text-sm text-left text-white hover:bg-white/5 active:bg-white/10 transition-all duration-500 flex items-center gap-2"
                   >
                     <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
-                    Sign Out
+                    <span className="tracking-wide">Sign Out</span>
                   </button>
                 </div>
               )}
@@ -227,9 +227,9 @@ export default function StudyPage() {
           </div>
 
           {/* Progress Bar */}
-          <div className="w-full bg-gray-700 rounded-full h-2">
+          <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
             <div
-              className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+              className="bg-violet-500 h-2 rounded-full transition-all duration-500 shadow-lg shadow-violet-500/50"
               style={{ width: `${progress}%` }}
             ></div>
           </div>
@@ -239,8 +239,8 @@ export default function StudyPage() {
         <div className="mb-8" style={{ perspective: '1000px' }}>
           <div
             id="flip-card"
-            className={`relative bg-gray-800 rounded-xl p-4 sm:p-8 border-2 border-gray-700 cursor-pointer transition-all duration-500 ease-in-out ${
-              isFlipped ? 'bg-blue-900/20 border-blue-500/30' : ''
+            className={`relative bg-slate-800/95 backdrop-blur rounded-[28px] p-6 sm:p-10 border-2 cursor-pointer transition-all duration-500 ease-in-out shadow-2xl ${
+              isFlipped ? 'bg-violet-900/20 border-violet-500/40 shadow-violet-500/20' : 'border-slate-700 shadow-slate-900/50'
             }`}
             style={{
               minHeight: '400px',
@@ -258,12 +258,12 @@ export default function StudyPage() {
             >
               {!isFlipped ? (
                 <div className="text-center w-full">
-                  <h2 className="text-2xl sm:text-3xl font-bold mb-4 px-2">{currentCard.term}</h2>
-                  <p className="text-gray-400 text-sm mt-8">Click to reveal definition</p>
+                  <h2 className="text-2xl sm:text-3xl font-bold mb-4 px-2 tracking-tight leading-tight">{currentCard.term}</h2>
+                  <p className="text-slate-400 text-sm mt-8 tracking-wide">Click to reveal definition</p>
                 </div>
               ) : (
                 <div className="text-left w-full">
-                  <p className="text-lg sm:text-xl leading-relaxed mb-6 whitespace-pre-wrap px-2">{currentCard.definition}</p>
+                  <p className="text-lg sm:text-xl leading-relaxed mb-6 whitespace-pre-wrap px-2 text-slate-200 tracking-wide">{currentCard.definition}</p>
                   {currentCard.imageUrl && (
                     <div className="mt-6">
                       <img
@@ -273,15 +273,15 @@ export default function StudyPage() {
                           e.stopPropagation();
                           setImageEnlarged(true);
                         }}
-                        className="max-w-full max-h-64 mx-auto rounded-lg border border-gray-600 cursor-pointer hover:border-blue-500 transition-all"
+                        className="max-w-full max-h-64 mx-auto rounded-3xl border-2 border-slate-600 cursor-pointer hover:border-violet-500 transition-all duration-500 shadow-lg hover:shadow-violet-500/50"
                         title="Click to enlarge"
                       />
-                      <p className="text-xs text-gray-500 mt-2 text-center">Click image to enlarge</p>
+                      <p className="text-xs text-slate-400 mt-2 text-center tracking-wide">Click image to enlarge</p>
                     </div>
                   )}
                   {currentCard.context && (
-                    <div className="mt-6 pt-6 border-t border-gray-700">
-                      <p className="text-sm text-gray-400 italic whitespace-pre-wrap">{currentCard.context}</p>
+                    <div className="mt-6 pt-6 border-t border-slate-700">
+                      <p className="text-sm text-slate-300 italic whitespace-pre-wrap tracking-wide">{currentCard.context}</p>
                     </div>
                   )}
                 </div>
@@ -290,7 +290,7 @@ export default function StudyPage() {
 
             {!isFlipped && (
               <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-                <div className="flex items-center gap-2 text-gray-500">
+                <div className="flex items-center gap-2 text-slate-400">
                   <svg
                     className="w-5 h-5"
                     fill="none"
@@ -304,7 +304,7 @@ export default function StudyPage() {
                       d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                     />
                   </svg>
-                  <span className="text-sm">Flip</span>
+                  <span className="text-sm tracking-wide font-medium">Flip</span>
                 </div>
               </div>
             )}
@@ -320,15 +320,14 @@ export default function StudyPage() {
                 id="again"
                 onClick={() => handleAnswer('again')}
                 disabled={answering}
-                className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation border-2 border-transparent hover:border-white active:translate-y-0"
-                style={{ transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+                className="w-full bg-red-600 hover:bg-red-700 hover:bg-white/5 active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-5 px-4 rounded-full font-medium min-h-[56px] touch-manipulation border-2 border-transparent hover:border-red-400 active:translate-y-0 shadow-lg hover:shadow-red-500/50 transition-all duration-500"
               >
-                <div className="text-lg font-bold">Again</div>
-                <div className="text-xs opacity-75">1 day</div>
+                <div className="text-lg font-bold tracking-wide">Again</div>
+                <div className="text-xs opacity-75 tracking-wide">1 day</div>
               </button>
               {/* Hover tooltip */}
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                <p className="text-sm text-gray-300">Couldn&apos;t remember or got it wrong. Card will be reviewed in 1 day.</p>
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
+                <p className="text-sm text-slate-200 tracking-wide">Couldn&apos;t remember or got it wrong. Card will be reviewed in 1 day.</p>
               </div>
             </div>
 
@@ -338,15 +337,14 @@ export default function StudyPage() {
                 id="hard"
                 onClick={() => handleAnswer('hard')}
                 disabled={answering}
-                className="w-full bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation border-2 border-transparent hover:border-white active:translate-y-0"
-                style={{ transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+                className="w-full bg-yellow-600 hover:bg-yellow-700 hover:bg-white/5 active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-5 px-4 rounded-full font-medium min-h-[56px] touch-manipulation border-2 border-transparent hover:border-yellow-400 active:translate-y-0 shadow-lg hover:shadow-yellow-500/50 transition-all duration-500"
               >
-                <div className="text-lg font-bold">Hard</div>
-                <div className="text-xs opacity-75">1 day</div>
+                <div className="text-lg font-bold tracking-wide">Hard</div>
+                <div className="text-xs opacity-75 tracking-wide">1 day</div>
               </button>
               {/* Hover tooltip */}
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                <p className="text-sm text-gray-300">Difficult to recall, needed time. Card will be reviewed in 1 day.</p>
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
+                <p className="text-sm text-slate-200 tracking-wide">Difficult to recall, needed time. Card will be reviewed in 1 day.</p>
               </div>
             </div>
 
@@ -356,15 +354,14 @@ export default function StudyPage() {
                 id="good"
                 onClick={() => handleAnswer('good')}
                 disabled={answering}
-                className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation border-2 border-transparent hover:border-white active:translate-y-0"
-                style={{ transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+                className="w-full bg-green-600 hover:bg-green-700 hover:bg-white/5 active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-5 px-4 rounded-full font-medium min-h-[56px] touch-manipulation border-2 border-transparent hover:border-green-400 active:translate-y-0 shadow-lg hover:shadow-green-500/50 transition-all duration-500"
               >
-                <div className="text-lg font-bold">Good</div>
-                <div className="text-xs opacity-75">3 days</div>
+                <div className="text-lg font-bold tracking-wide">Good</div>
+                <div className="text-xs opacity-75 tracking-wide">3 days</div>
               </button>
               {/* Hover tooltip */}
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                <p className="text-sm text-gray-300">Recalled with some effort. Card will be reviewed in 3 days.</p>
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
+                <p className="text-sm text-slate-200 tracking-wide">Recalled with some effort. Card will be reviewed in 3 days.</p>
               </div>
             </div>
 
@@ -374,15 +371,14 @@ export default function StudyPage() {
                 id="easy"
                 onClick={() => handleAnswer('easy')}
                 disabled={answering}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-5 px-4 rounded-lg font-medium min-h-[56px] touch-manipulation border-2 border-transparent hover:border-white active:translate-y-0"
-                style={{ transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+                className="w-full bg-blue-600 hover:bg-blue-700 hover:bg-white/5 active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-5 px-4 rounded-full font-medium min-h-[56px] touch-manipulation border-2 border-transparent hover:border-blue-400 active:translate-y-0 shadow-lg hover:shadow-blue-500/50 transition-all duration-500"
               >
-                <div className="text-lg font-bold">Easy</div>
-                <div className="text-xs opacity-75">7 days</div>
+                <div className="text-lg font-bold tracking-wide">Easy</div>
+                <div className="text-xs opacity-75 tracking-wide">7 days</div>
               </button>
               {/* Hover tooltip */}
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                <p className="text-sm text-gray-300">Instant recall, confident. Card will be reviewed in 7 days.</p>
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
+                <p className="text-sm text-slate-200 tracking-wide">Instant recall, confident. Card will be reviewed in 7 days.</p>
               </div>
             </div>
           </div>
@@ -391,42 +387,42 @@ export default function StudyPage() {
         {/* Stats - Always Visible at Bottom */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8">
           {/* Total */}
-          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700 relative group cursor-help">
-            <div className="text-gray-400 text-xs mb-1">Total</div>
-            <div className="text-xl font-bold text-blue-400">{stats.total}</div>
+          <div className="bg-slate-800/95 backdrop-blur rounded-3xl p-4 border border-slate-700 relative group cursor-help transition-all duration-500 hover:bg-white/5 shadow-lg hover:shadow-violet-500/20">
+            <div className="text-slate-400 text-xs mb-1 tracking-wide font-medium">Total</div>
+            <div className="text-2xl font-bold text-violet-400 tracking-tight">{stats.total}</div>
             {/* Hover tooltip */}
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-              <p className="text-sm text-gray-300">The total number of flashcards in your deck.</p>
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
+              <p className="text-sm text-slate-200 tracking-wide">The total number of flashcards in your deck.</p>
             </div>
           </div>
 
           {/* Learning */}
-          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700 relative group cursor-help">
-            <div className="text-gray-400 text-xs mb-1">Learning</div>
-            <div className="text-xl font-bold text-yellow-400">{stats.learning}</div>
+          <div className="bg-slate-800/95 backdrop-blur rounded-3xl p-4 border border-slate-700 relative group cursor-help transition-all duration-500 hover:bg-white/5 shadow-lg hover:shadow-yellow-500/20">
+            <div className="text-slate-400 text-xs mb-1 tracking-wide font-medium">Learning</div>
+            <div className="text-2xl font-bold text-yellow-400 tracking-tight">{stats.learning}</div>
             {/* Hover tooltip */}
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-              <p className="text-sm text-gray-300">Cards you&apos;ve attempted but got wrong or rated as &quot;Again&quot;. These cards have 0 successful repetitions and need daily practice.</p>
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
+              <p className="text-sm text-slate-200 tracking-wide">Cards you&apos;ve attempted but got wrong or rated as &quot;Again&quot;. These cards have 0 successful repetitions and need daily practice.</p>
             </div>
           </div>
 
           {/* Review */}
-          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700 relative group cursor-help">
-            <div className="text-gray-400 text-xs mb-1">Review</div>
-            <div className="text-xl font-bold text-yellow-400">{stats.review}</div>
+          <div className="bg-slate-800/95 backdrop-blur rounded-3xl p-4 border border-slate-700 relative group cursor-help transition-all duration-500 hover:bg-white/5 shadow-lg hover:shadow-yellow-500/20">
+            <div className="text-slate-400 text-xs mb-1 tracking-wide font-medium">Review</div>
+            <div className="text-2xl font-bold text-yellow-400 tracking-tight">{stats.review}</div>
             {/* Hover tooltip */}
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-              <p className="text-sm text-gray-300">Cards you&apos;re actively learning and have reviewed correctly 1-2 times. These cards are in progress but not yet mastered.</p>
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
+              <p className="text-sm text-slate-200 tracking-wide">Cards you&apos;re actively learning and have reviewed correctly 1-2 times. These cards are in progress but not yet mastered.</p>
             </div>
           </div>
 
           {/* Mastered */}
-          <div className="bg-gray-800 rounded-lg p-3 border border-gray-700 relative group cursor-help">
-            <div className="text-gray-400 text-xs mb-1">Mastered</div>
-            <div className="text-xl font-bold text-blue-400">{stats.mastered}</div>
+          <div className="bg-slate-800/95 backdrop-blur rounded-3xl p-4 border border-slate-700 relative group cursor-help transition-all duration-500 hover:bg-white/5 shadow-lg hover:shadow-violet-500/20">
+            <div className="text-slate-400 text-xs mb-1 tracking-wide font-medium">Mastered</div>
+            <div className="text-2xl font-bold text-violet-400 tracking-tight">{stats.mastered}</div>
             {/* Hover tooltip */}
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-gray-900 border border-gray-600 rounded-lg p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-              <p className="text-sm text-gray-300">Cards you&apos;ve successfully reviewed 3 or more times. These cards are well-learned and appear less frequently to maintain long-term retention.</p>
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
+              <p className="text-sm text-slate-200 tracking-wide">Cards you&apos;ve successfully reviewed 3 or more times. These cards are well-learned and appear less frequently to maintain long-term retention.</p>
             </div>
           </div>
         </div>
@@ -436,20 +432,20 @@ export default function StudyPage() {
       {/* Image Lightbox */}
       {imageEnlarged && currentCard?.imageUrl && (
         <div
-          className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/95 backdrop-blur-sm flex items-center justify-center z-50 p-4"
           onClick={() => setImageEnlarged(false)}
         >
           <div className="relative max-w-7xl max-h-full">
             <button
               onClick={() => setImageEnlarged(false)}
-              className="absolute top-4 right-4 bg-red-600 hover:bg-red-700 text-white p-3 rounded-full transition-all z-10"
+              className="absolute top-4 right-4 bg-red-600 hover:bg-red-700 hover:bg-white/5 active:bg-white/10 text-white p-4 rounded-full transition-all duration-500 z-10 shadow-lg hover:shadow-red-500/50"
               title="Close"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            <div className="bg-white p-4 rounded-lg">
+            <div className="bg-white p-6 rounded-3xl shadow-2xl">
               <img
                 src={currentCard.imageUrl}
                 alt="Enlarged flashcard visual"
