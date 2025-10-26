@@ -60,9 +60,9 @@ export default function HomePage() {
             {/* Multiply sign */}
             <path strokeLinecap="round" strokeLinejoin="round" d="M6.5 14.5l2 2M8.5 14.5l-2 2" />
             {/* Divide sign */}
-            <circle cx="15.5" cy="13.5" r="0.6" fill="currentColor" />
+            <circle cx="15.5" cy="13.5" r="0.4" fill="currentColor" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M14 15.5h3" />
-            <circle cx="15.5" cy="17.5" r="0.6" fill="currentColor" />
+            <circle cx="15.5" cy="17.5" r="0.4" fill="currentColor" />
           </svg>
         );
       case 'physics':
