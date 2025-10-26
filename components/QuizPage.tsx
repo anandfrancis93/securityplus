@@ -630,27 +630,29 @@ export default function QuizPage() {
                       : 'border-zinc-700 hover:border-zinc-600 bg-zinc-950 hover:bg-zinc-900'
                   } ${showExplanation ? 'cursor-default' : 'cursor-pointer'} focus:outline-none focus:ring-2 focus:ring-zinc-700`}
                 >
-                  <div className="flex items-start gap-3 flex-wrap">
-                    {/* Checkbox or Radio indicator */}
-                    {currentQuestion.questionType === 'multiple' ? (
-                      <div className={`w-7 h-7 rounded-md border-2 flex items-center justify-center transition-all duration-150 shrink-0 ${
-                        isSelected ? 'bg-zinc-700 border-zinc-600' : 'border-zinc-600'
-                      }`}>
-                        {isSelected && <span className="text-white text-base font-bold">✓</span>}
-                      </div>
-                    ) : (
-                      <div className={`w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-150 shrink-0 ${
-                        isSelected ? 'border-zinc-600' : 'border-zinc-600'
-                      }`}>
-                        {isSelected && <div className="w-4 h-4 rounded-full bg-zinc-700"></div>}
-                      </div>
-                    )}
-                    <span className="font-bold text-xl text-zinc-400 shrink-0">
-                      {String.fromCharCode(65 + index)}.
-                    </span>
-                    <span className="text-zinc-100 text-lg md:text-xl leading-relaxed" style={{ flexBasis: 'calc(100% - 5rem)' }}>{option}</span>
-                    {showCorrect && <span className="text-green-400 text-2xl shrink-0 basis-full text-right">✓</span>}
-                    {showIncorrect && <span className="text-red-400 text-2xl shrink-0 basis-full text-right">✗</span>}
+                  <div>
+                    <div className="inline-flex items-center gap-3 mr-3">
+                      {/* Checkbox or Radio indicator */}
+                      {currentQuestion.questionType === 'multiple' ? (
+                        <div className={`w-7 h-7 rounded-md border-2 flex items-center justify-center transition-all duration-150 shrink-0 ${
+                          isSelected ? 'bg-zinc-700 border-zinc-600' : 'border-zinc-600'
+                        }`}>
+                          {isSelected && <span className="text-white text-base font-bold">✓</span>}
+                        </div>
+                      ) : (
+                        <div className={`w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-150 shrink-0 ${
+                          isSelected ? 'border-zinc-600' : 'border-zinc-600'
+                        }`}>
+                          {isSelected && <div className="w-4 h-4 rounded-full bg-zinc-700"></div>}
+                        </div>
+                      )}
+                      <span className="font-bold text-xl text-zinc-400">
+                        {String.fromCharCode(65 + index)}.
+                      </span>
+                    </div>
+                    <span className="text-zinc-100 text-lg md:text-xl leading-relaxed inline">{option}</span>
+                    {showCorrect && <span className="ml-2 text-green-400 text-2xl">✓</span>}
+                    {showIncorrect && <span className="ml-2 text-red-400 text-2xl">✗</span>}
                   </div>
                 </button>
               );
