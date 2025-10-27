@@ -25,7 +25,9 @@ const ALL_SECURITY_PLUS_TOPICS: { [domain: string]: string[] } = {
     'Policy-driven access control (Zero Trust)', 'Policy Administrator (Zero Trust)', 'Policy Engine (Zero Trust)',
     'Data Plane (Zero Trust)', 'Implicit trust zones (Zero Trust)', 'Subject/System (Zero Trust)',
     'Policy Enforcement Point (Zero Trust)',
-    'Bollards', 'Access control vestibule', 'Fencing', 'Video surveillance', 'Security guard', 'Access badge', 'Lighting',
+    'Bollards (physical security)', 'Access control vestibule (physical security)', 'Fencing (physical security)',
+    'Video surveillance (physical security)', 'Security guard (physical security)', 'Access badge (physical security)',
+    'Lighting (physical security)',
     'Infrared sensor', 'Pressure sensor', 'Microwave sensor', 'Ultrasonic sensor',
     'Honeypot', 'Honeynet', 'Honeyfile', 'Honeytoken',
     // From 1.3 - Change Management

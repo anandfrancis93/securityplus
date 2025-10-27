@@ -202,8 +202,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       'Zero Trust', 'Control Plane (Zero Trust)', 'Adaptive identity (Zero Trust)', 'Threat scope reduction (Zero Trust)',
       'Policy-driven access control (Zero Trust)', 'Policy Administrator (Zero Trust)', 'Policy Engine (Zero Trust)',
       'Data Plane (Zero Trust)', 'Implicit trust zones (Zero Trust)', 'Subject/System (Zero Trust)', 'Policy Enforcement Point (Zero Trust)',
-      'Bollards', 'Access control vestibule', 'Fencing', 'Video surveillance', 'Security guard', 'Access badge',
-      'Lighting (physical security)', 'Physical security sensors',
+      'Bollards (physical security)', 'Access control vestibule (physical security)', 'Fencing (physical security)',
+      'Video surveillance (physical security)', 'Security guard (physical security)', 'Access badge (physical security)',
+      'Lighting (physical security)',
       'Infrared sensor', 'Pressure sensor', 'Microwave sensor', 'Ultrasonic sensor',
       'Honeypot', 'Honeynet', 'Honeyfile', 'Honeytoken',
       // From 1.3 - Change Management
