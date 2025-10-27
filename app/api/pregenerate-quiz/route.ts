@@ -2,16 +2,29 @@ import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebaseAdmin';
 import { UserProgress, CachedQuiz } from '@/lib/types';
 import { pregenerateQuiz, initializeQuizMetadata, updateMetadataAfterQuiz } from '@/lib/quizPregeneration';
+import { authenticateAndAuthorize } from '@/lib/apiAuth';
+import { PregenerateQuizSchema, safeValidateRequestBody } from '@/lib/apiValidation';
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId, completedQuestions } = await request.json();
+    // Parse request body
+    const body = await request.json();
 
-    if (!userId) {
+    // SECURITY: Validate input
+    const validation = safeValidateRequestBody(PregenerateQuizSchema, body);
+    if (!validation.success) {
       return NextResponse.json(
-        { error: 'User ID is required' },
+        { error: 'Invalid request', details: validation.error },
         { status: 400 }
       );
+    }
+
+    const { userId, completedQuestions } = validation.data;
+
+    // SECURITY: Authenticate and authorize request
+    const authResult = await authenticateAndAuthorize(request, { userId });
+    if (authResult instanceof NextResponse) {
+      return authResult; // Return error response
     }
 
     console.log(`Pre-generating quiz for user: ${userId}`);

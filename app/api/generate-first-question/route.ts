@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateSynthesisQuestion } from '@/lib/questionGenerator';
+import { authenticateRequest } from '@/lib/apiAuth';
+import { GenerateQuestionsSchema, safeValidateRequestBody } from '@/lib/apiValidation';
 
 // Shuffle array using Fisher-Yates algorithm
 function shuffleArray<T>(array: T[]): T[] {
@@ -13,7 +15,23 @@ function shuffleArray<T>(array: T[]): T[] {
 
 export async function POST(request: NextRequest) {
   try {
-    const { excludeTopics = [] } = await request.json();
+    // SECURITY: Authenticate request
+    const authResult = await authenticateRequest(request);
+    if (authResult instanceof NextResponse) {
+      return authResult;
+    }
+
+    // Parse and validate request body
+    const body = await request.json();
+    const validation = safeValidateRequestBody(GenerateQuestionsSchema, body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: 'Invalid request', details: validation.error },
+        { status: 400 }
+      );
+    }
+
+    const { excludeTopics = [] } = validation.data;
 
     // Define question types (difficulty is derived from category)
     const questionTypes: Array<'single' | 'multiple'> = [

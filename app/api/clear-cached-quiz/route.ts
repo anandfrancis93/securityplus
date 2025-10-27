@@ -1,15 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebaseAdmin';
+import { authenticateAndAuthorize } from '@/lib/apiAuth';
+import { ClearCachedQuizSchema, safeValidateRequestBody } from '@/lib/apiValidation';
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await request.json();
+    // Parse request body
+    const body = await request.json();
 
-    if (!userId) {
+    // SECURITY: Validate input
+    const validation = safeValidateRequestBody(ClearCachedQuizSchema, body);
+    if (!validation.success) {
       return NextResponse.json(
-        { error: 'User ID is required' },
+        { error: 'Invalid request', details: validation.error },
         { status: 400 }
       );
+    }
+
+    const { userId } = validation.data;
+
+    // SECURITY: Authenticate and authorize request
+    const authResult = await authenticateAndAuthorize(request, { userId });
+    if (authResult instanceof NextResponse) {
+      return authResult; // Return error response
     }
 
     // Clear cached quiz from Firebase
@@ -20,11 +33,17 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error('Error clearing cached quiz:', error);
+    console.error('[ERROR] Failed to clear cached quiz:', error);
+
+    // Don't expose internal errors in production
+    const errorMessage = process.env.NODE_ENV === 'development'
+      ? error?.message
+      : 'An error occurred while clearing the quiz cache';
+
     return NextResponse.json(
       {
         error: 'Failed to clear cached quiz',
-        details: error?.message || 'Unknown error'
+        details: errorMessage
       },
       { status: 500 }
     );

@@ -1,13 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateQuestionWithTopics, selectQuestionType } from '@/lib/questionGenerator';
 import { selectQuestionCategory, selectTopicsForQuestion } from '@/lib/quizPregeneration';
+import { authenticateRequest } from '@/lib/apiAuth';
+import { GenerateSingleQuestionSchema, safeValidateRequestBody } from '@/lib/apiValidation';
 
 export async function POST(request: NextRequest) {
   try {
+    // SECURITY: Authenticate request
+    const authResult = await authenticateRequest(request);
+    if (authResult instanceof NextResponse) {
+      return authResult;
+    }
+
+    // Parse and validate request body
+    const body = await request.json();
+    const validation = safeValidateRequestBody(GenerateSingleQuestionSchema, body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: 'Invalid request', details: validation.error },
+        { status: 400 }
+      );
+    }
+
     const {
       excludeTopics = [],
       questionNumber = 1,
-    } = await request.json();
+    } = validation.data;
 
     // Select question type (single or multiple choice)
     const questionType = selectQuestionType();

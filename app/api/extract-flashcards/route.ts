@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
+import { authenticateRequest } from '@/lib/apiAuth';
+import { ExtractFlashcardsSchema, safeValidateRequestBody } from '@/lib/apiValidation';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -73,14 +75,26 @@ export async function POST(request: NextRequest) {
   try {
     console.log('Starting flashcard extraction...');
 
+    // SECURITY: Authenticate request
+    const authResult = await authenticateRequest(request);
+    if (authResult instanceof NextResponse) {
+      return authResult;
+    }
+
     // Parse JSON body
     const body = await request.json();
-    const { text, fileName = 'Manual Entry' } = body;
 
-    if (!text) {
-      console.error('No text provided');
-      return NextResponse.json({ error: 'No text provided' }, { status: 400 });
+    // SECURITY: Validate input (basic validation, text can be large)
+    if (!body.text || typeof body.text !== 'string') {
+      console.error('Invalid or missing text');
+      return NextResponse.json({ error: 'Invalid request: text field required' }, { status: 400 });
     }
+
+    if (body.text.length > 100000) {
+      return NextResponse.json({ error: 'Text too large (max 100KB)' }, { status: 400 });
+    }
+
+    const { text, fileName = 'Manual Entry' } = body;
 
     console.log(`Processing text input, length: ${text.length} characters`);
 
