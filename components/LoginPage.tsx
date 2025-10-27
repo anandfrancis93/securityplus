@@ -7,7 +7,7 @@ import { useApp } from './AppProvider';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { user, loading: authLoading } = useApp();
+  const { user, loading: authLoading, liquidGlass } = useApp();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -45,8 +45,14 @@ export default function LoginPage() {
   // Show loading state while checking auth
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="text-zinc-300 text-sm">Loading...</div>
+      <div className={`min-h-screen text-white flex items-center justify-center ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
+        {liquidGlass && (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          </div>
+        )}
+        <div className="relative text-zinc-300 text-sm">Loading...</div>
       </div>
     );
   }
@@ -57,7 +63,14 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="bg-black text-white overflow-hidden flex flex-col" style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
+    <div className={`text-white overflow-hidden flex flex-col relative ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`} style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
+      {liquidGlass && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        </div>
+      )}
       <div className="relative flex items-center justify-center px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 overflow-auto">
         <div className="max-w-2xl w-full my-auto">
           {/* Logo/Title Section */}
@@ -71,8 +84,11 @@ export default function LoginPage() {
           </div>
 
           {/* Login Card */}
-          <div className="bg-zinc-950 rounded-md p-6 sm:p-12 md:p-16 border border-zinc-800">
-            <div className="mb-6 sm:mb-8">
+          <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-zinc-950 rounded-md'} p-6 sm:p-12 md:p-16 border ${liquidGlass ? 'border-white/10' : 'border-zinc-800'} ${liquidGlass ? 'shadow-2xl' : ''}`}>
+            {liquidGlass && (
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+            )}
+            <div className="relative mb-6 sm:mb-8">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 sm:mb-4 text-center leading-tight">
                 Welcome
               </h2>
@@ -82,7 +98,7 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <div className="bg-red-900/20 border border-red-800 text-red-400 rounded-md p-3 text-sm sm:text-sm mb-4 sm:mb-6">
+              <div className={`relative bg-red-900/20 border border-red-800 text-red-400 ${liquidGlass ? 'rounded-3xl backdrop-blur-xl' : 'rounded-md'} p-3 text-sm sm:text-sm mb-4 sm:mb-6`}>
                 {error}
               </div>
             )}
@@ -90,7 +106,7 @@ export default function LoginPage() {
             <button
               onClick={handleGoogleSignIn}
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:bg-blue-300 disabled:cursor-not-allowed text-white py-3.5 sm:py-4 px-4 sm:px-6 rounded-md font-medium text-base sm:text-lg transition-all duration-150 flex items-center justify-center gap-2 sm:gap-3 border border-blue-600"
+              className={`relative w-full ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl rounded-3xl border-white/20' : 'bg-blue-600 hover:bg-blue-700 rounded-md border-blue-600'} active:bg-blue-800 disabled:bg-blue-300 disabled:cursor-not-allowed text-white py-3.5 sm:py-4 px-4 sm:px-6 font-medium text-base sm:text-lg ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-150'} flex items-center justify-center gap-2 sm:gap-3 border ${liquidGlass ? 'shadow-xl' : ''}`}
             >
               <svg className="w-5 h-5 sm:w-5 sm:h-5" viewBox="0 0 24 24">
                 <path

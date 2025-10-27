@@ -15,7 +15,7 @@ import { getDueFlashcards, calculateNextReview, getDeckStats } from '@/lib/space
 import { Flashcard, FlashcardReview } from '@/lib/types';
 
 export default function StudyPage() {
-  const { userId, user, loading: authLoading, handleSignOut } = useApp();
+  const { userId, user, loading: authLoading, handleSignOut, liquidGlass } = useApp();
   const router = useRouter();
 
   // Redirect to login if not authenticated
@@ -132,9 +132,15 @@ export default function StudyPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-black">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-violet-500 mx-auto"></div>
+      <div className={`flex items-center justify-center min-h-screen ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
+        {liquidGlass && (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          </div>
+        )}
+        <div className="relative text-center">
+          <div className={`animate-spin rounded-full h-16 w-16 border-4 ${liquidGlass ? 'border-white/10 border-t-white/40' : 'border-transparent border-b-2 border-b-violet-500'} mx-auto`}></div>
           <p className="mt-4 text-slate-300 text-base tracking-wide">Loading flashcards...</p>
         </div>
       </div>
@@ -143,14 +149,21 @@ export default function StudyPage() {
 
   if (dueCardIds.length === 0 || !currentCard) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-black">
-        <div className="text-center">
+      <div className={`flex items-center justify-center min-h-screen ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
+        {liquidGlass && (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+            <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+          </div>
+        )}
+        <div className="relative text-center">
           <div className="text-6xl mb-6">✅</div>
           <h2 className="text-3xl font-bold text-white mb-4 tracking-tight">All Done!</h2>
           <p className="text-slate-300 mb-8 text-base tracking-wide">No flashcards due right now.</p>
           <button
             onClick={() => router.push('/cybersecurity/flashcards')}
-            className="bg-violet-600 hover:bg-violet-700 hover:bg-white/5 active:bg-white/10 text-white px-8 py-4 rounded-full font-medium text-base tracking-wide transition-all duration-500 shadow-lg hover:shadow-violet-500/50"
+            className={`${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl rounded-3xl' : 'bg-violet-600 hover:bg-violet-700 rounded-full'} text-white px-8 py-4 font-medium text-base tracking-wide ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-300'} shadow-lg ${liquidGlass ? 'border border-white/20' : 'hover:shadow-violet-500/50'}`}
           >
             Back to Flashcards
           </button>
@@ -174,8 +187,15 @@ export default function StudyPage() {
         }
       `}</style>
 
-      <div className="min-h-screen bg-black text-white">
-        <div className="container mx-auto px-4 py-8 max-w-3xl">
+      <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
+        {liquidGlass && (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+            <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+          </div>
+        )}
+        <div className="relative container mx-auto px-4 py-8 max-w-3xl">
           {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-6">
@@ -234,9 +254,9 @@ export default function StudyPage() {
           </div>
 
           {/* Progress Bar */}
-          <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+          <div className={`w-full ${liquidGlass ? 'bg-white/5 rounded-3xl' : 'bg-slate-800 rounded-full'} h-2 overflow-hidden border ${liquidGlass ? 'border-white/10' : 'border-transparent'}`}>
             <div
-              className="bg-violet-500 h-2 rounded-full transition-all duration-500 shadow-lg shadow-violet-500/50"
+              className={`bg-violet-500 h-2 ${liquidGlass ? 'rounded-3xl' : 'rounded-full'} transition-all duration-500 shadow-lg shadow-violet-500/50`}
               style={{ width: `${progress}%` }}
             ></div>
           </div>
@@ -246,8 +266,14 @@ export default function StudyPage() {
         <div className="mb-8" style={{ perspective: '1000px' }}>
           <div
             id="flip-card"
-            className={`relative bg-slate-800/95 backdrop-blur rounded-[28px] p-6 sm:p-10 border-2 cursor-pointer transition-all duration-500 ease-in-out shadow-2xl ${
-              isFlipped ? 'bg-violet-900/20 border-violet-500/40 shadow-violet-500/20' : 'border-slate-700 shadow-slate-900/50'
+            className={`relative ${liquidGlass ? 'bg-white/5' : 'bg-slate-800/95'} backdrop-blur-2xl ${liquidGlass ? 'rounded-3xl' : 'rounded-[28px]'} p-6 sm:p-10 border-2 cursor-pointer transition-all duration-500 ease-in-out shadow-2xl ${
+              isFlipped
+                ? liquidGlass
+                  ? 'bg-white/10 border-white/30 shadow-violet-500/30'
+                  : 'bg-violet-900/20 border-violet-500/40 shadow-violet-500/20'
+                : liquidGlass
+                  ? 'border-white/10 shadow-black/50'
+                  : 'border-slate-700 shadow-slate-900/50'
             }`}
             style={{
               minHeight: '400px',

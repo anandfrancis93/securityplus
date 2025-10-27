@@ -73,37 +73,55 @@ export default function QuizOptionsPage() {
               onClick={option.onClick}
               onMouseEnter={() => setHoveredCard(option.id)}
               onMouseLeave={() => setHoveredCard(null)}
-              className={`relative bg-zinc-950 rounded-md p-10 sm:p-12 md:p-16 border transition-all duration-150
+              className={`relative group ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-zinc-950 rounded-md'} p-10 sm:p-12 md:p-16 border transform
+                       ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-150'}
                        ${hoveredCard === option.id
-                         ? 'border-zinc-700 bg-zinc-900/50'
-                         : 'border-zinc-800 hover:border-zinc-700'
+                         ? liquidGlass
+                           ? `border-white/20 bg-white/10 scale-105 shadow-2xl ${option.glowColor}`
+                           : 'border-zinc-700 bg-zinc-900/50'
+                         : liquidGlass
+                           ? 'border-white/10 hover:border-white/20'
+                           : 'border-zinc-800 hover:border-zinc-700'
                        }
-                       focus:outline-none focus:ring-1 focus:ring-zinc-700`}
+                       ${liquidGlass ? 'focus:outline-none focus:ring-2 focus:ring-white/30' : 'focus:outline-none focus:ring-1 focus:ring-zinc-700'}`}
             >
-              {/* Icon */}
-              <div className="flex justify-center items-center mb-6 sm:mb-8 md:mb-10">
-                {option.icon}
+              {/* Gradient overlay on hover (Liquid Glass only) */}
+              {liquidGlass && hoveredCard === option.id && (
+                <div className={`absolute inset-0 bg-gradient-to-br ${option.gradient} rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+              )}
+
+              {/* Light reflection (Liquid Glass only) */}
+              {liquidGlass && (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+              )}
+
+              {/* Content */}
+              <div className="relative">
+                {/* Icon */}
+                <div className="flex justify-center items-center mb-6 sm:mb-8 md:mb-10">
+                  {option.icon}
+                </div>
+
+                {/* Option Name */}
+                <h2 className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-white tracking-tight text-center ${liquidGlass ? '' : 'font-mono'}`}>
+                  {option.name}
+                </h2>
+
+                {/* Description */}
+                <p className={`text-sm sm:text-base md:text-lg text-center ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
+                  {option.description}
+                </p>
               </div>
-
-              {/* Option Name */}
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-white font-mono tracking-tight text-center">
-                {option.name}
-              </h2>
-
-              {/* Description */}
-              <p className="text-zinc-500 text-sm sm:text-base md:text-lg font-mono text-center">
-                {option.description}
-              </p>
 
               {/* Active Indicator Arrow */}
               {hoveredCard === option.id && (
-                <div className="absolute bottom-4 right-4 text-zinc-600">
+                <div className={`absolute bottom-4 right-4 ${liquidGlass ? 'text-white/80 animate-pulse' : 'text-zinc-600'}`}>
                   <svg
-                    className="w-5 h-5"
+                    className={`${liquidGlass ? 'w-6 h-6 drop-shadow-[0_0_8px_currentColor]' : 'w-5 h-5'}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
-                    strokeWidth={1.5}
+                    strokeWidth={liquidGlass ? 2 : 1.5}
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
