@@ -34,9 +34,9 @@ export default function HomePage() {
     }
   }, [menuOpen]);
 
-  // SVG Icon Components
-  const getSubjectIcon = (subjectId: string) => {
-    const baseClasses = "w-20 h-20 md:w-24 md:h-24 transition-opacity duration-200";
+  // SVG Icon Components with Glow
+  const getSubjectIcon = (subjectId: string, isHovered: boolean) => {
+    const baseClasses = `w-20 h-20 md:w-24 md:h-24 transition-all duration-500 ${isHovered ? 'scale-110 drop-shadow-[0_0_15px_currentColor]' : ''}`;
 
     switch (subjectId) {
       case 'cybersecurity':
@@ -101,6 +101,8 @@ export default function HomePage() {
       path: '/cybersecurity',
       disabled: false,
       clickable: true,
+      gradient: 'from-violet-500/20 to-purple-500/20',
+      glowColor: 'shadow-violet-500/50',
     },
     {
       id: 'networking',
@@ -109,6 +111,8 @@ export default function HomePage() {
       path: '/networking',
       disabled: false,
       clickable: false,
+      gradient: 'from-cyan-500/20 to-blue-500/20',
+      glowColor: 'shadow-cyan-500/50',
     },
     {
       id: 'maths',
@@ -117,6 +121,8 @@ export default function HomePage() {
       path: '/maths',
       disabled: false,
       clickable: false,
+      gradient: 'from-emerald-500/20 to-teal-500/20',
+      glowColor: 'shadow-emerald-500/50',
     },
     {
       id: 'physics',
@@ -125,6 +131,8 @@ export default function HomePage() {
       path: '/physics',
       disabled: false,
       clickable: false,
+      gradient: 'from-rose-500/20 to-pink-500/20',
+      glowColor: 'shadow-rose-500/50',
     },
     {
       id: 'english',
@@ -133,26 +141,35 @@ export default function HomePage() {
       path: '/english',
       disabled: false,
       clickable: false,
+      gradient: 'from-amber-500/20 to-orange-500/20',
+      glowColor: 'shadow-amber-500/50',
     },
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black text-white relative overflow-hidden">
+      {/* Animated Background Gradients */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+      </div>
+
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl">
         {/* Header */}
         <header className="mb-16 md:mb-20">
-          {/* Menu Button */}
+          {/* Menu Button - Liquid Glass */}
           <div className="flex justify-end items-center mb-12 relative">
             <div className="relative" ref={menuRef}>
               <button
                 id="menu"
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="p-2 border border-zinc-800 rounded-md hover:bg-zinc-900 transition-colors duration-150 focus:outline-none focus:ring-1 focus:ring-zinc-700"
+                className="p-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl hover:bg-white/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/20 shadow-lg hover:shadow-white/10"
                 title="Menu"
                 aria-label="Open menu"
               >
                 <svg
-                  className="w-5 h-5 text-zinc-400"
+                  className="w-5 h-5 text-zinc-300"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -162,15 +179,15 @@ export default function HomePage() {
                 </svg>
               </button>
 
-              {/* Dropdown Menu */}
+              {/* Dropdown Menu - Liquid Glass */}
               {menuOpen && user && !user?.isAnonymous && (
-                <div className="absolute right-0 top-full mt-2 bg-black/95 backdrop-blur-xl border border-zinc-800 rounded-md overflow-hidden min-w-[200px] z-50">
+                <div className="absolute right-0 top-full mt-2 bg-black/40 backdrop-blur-2xl border border-white/10 rounded-2xl overflow-hidden min-w-[220px] z-50 shadow-2xl shadow-black/50">
                   {/* User Name Section */}
-                  <div className="px-4 py-3 border-b border-zinc-800">
+                  <div className="px-4 py-3 border-b border-white/10 bg-white/5">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-violet-500/20 to-purple-500/20 border border-white/20 flex items-center justify-center backdrop-blur-xl">
                         <svg
-                          className="w-4 h-4 text-zinc-400"
+                          className="w-5 h-5 text-violet-300"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -179,7 +196,7 @@ export default function HomePage() {
                           <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                       </div>
-                      <span className="text-sm text-zinc-300 font-mono">{user?.displayName || 'User'}</span>
+                      <span className="text-sm text-white font-medium">{user?.displayName || 'User'}</span>
                     </div>
                   </div>
 
@@ -192,10 +209,10 @@ export default function HomePage() {
                         setMenuOpen(false);
                       }
                     }}
-                    className="w-full px-4 py-3 text-sm text-left text-zinc-300 hover:bg-zinc-900 transition-colors duration-150 flex items-center gap-3"
+                    className="w-full px-4 py-3 text-sm text-left text-zinc-200 hover:bg-white/10 transition-all duration-300 flex items-center gap-3"
                   >
                     <svg
-                      className="w-4 h-4 text-zinc-500"
+                      className="w-4 h-4 text-zinc-400"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -203,26 +220,36 @@ export default function HomePage() {
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
-                    <span className="font-mono">Sign Out</span>
+                    <span>Sign Out</span>
                   </button>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Hero Section */}
+          {/* Hero Section - Frosted Glass Card */}
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold mb-6 text-white font-mono tracking-tighter">
-              Learning Hub
-            </h1>
-            <p className="text-zinc-500 text-base md:text-lg font-mono tracking-tight">
-              Select a subject to begin your learning journey
-            </p>
+            <div className="relative">
+              {/* Glow effect behind title */}
+              <div className="absolute inset-0 bg-gradient-to-r from-violet-500/20 via-cyan-500/20 to-emerald-500/20 blur-3xl" />
+
+              <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-12 shadow-2xl">
+                {/* Light reflection overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />
+
+                <h1 className="relative text-6xl sm:text-7xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-white via-zinc-100 to-white bg-clip-text text-transparent tracking-tight">
+                  Learning Hub
+                </h1>
+                <p className="relative text-zinc-400 text-base md:text-lg tracking-wide">
+                  Select a subject to begin your learning journey
+                </p>
+              </div>
+            </div>
           </div>
         </header>
 
-        {/* Subject Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pb-12">
+        {/* Subject Cards Grid - Glass Morphism */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 pb-12">
           {subjects.map((subject) => (
             <button
               key={subject.id}
@@ -231,51 +258,62 @@ export default function HomePage() {
               disabled={subject.disabled}
               onMouseEnter={() => subject.clickable && setHoveredCard(subject.id)}
               onMouseLeave={() => setHoveredCard(null)}
-              className={`relative bg-zinc-950 backdrop-blur-sm rounded-md p-8 border transition-all duration-150
+              className={`group relative bg-white/5 backdrop-blur-2xl rounded-3xl p-8 border transition-all duration-500 transform
                        ${subject.disabled
-                         ? 'border-zinc-900 opacity-40 cursor-not-allowed'
+                         ? 'border-white/5 opacity-40 cursor-not-allowed'
                          : subject.clickable
                            ? hoveredCard === subject.id
-                             ? 'border-zinc-700 bg-zinc-900/50'
-                             : 'border-zinc-800 hover:border-zinc-700'
-                           : 'border-zinc-800 cursor-default'
+                             ? `border-white/20 bg-white/10 scale-105 shadow-2xl ${subject.glowColor}`
+                             : 'border-white/10 hover:border-white/20'
+                           : 'border-white/10 cursor-default'
                        }
-                       focus:outline-none focus:ring-1 focus:ring-zinc-700`}
+                       focus:outline-none focus:ring-2 focus:ring-white/30`}
             >
-              {/* Icon */}
-              <div className={`flex justify-center items-center mb-6 ${subject.disabled ? 'opacity-30' : ''}`}>
-                {getSubjectIcon(subject.id)}
+              {/* Gradient overlay on hover */}
+              {hoveredCard === subject.id && subject.clickable && (
+                <div className={`absolute inset-0 bg-gradient-to-br ${subject.gradient} rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+              )}
+
+              {/* Light reflection */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+
+              {/* Content */}
+              <div className="relative">
+                {/* Icon */}
+                <div className={`flex justify-center items-center mb-6 ${subject.disabled ? 'opacity-30' : ''}`}>
+                  {getSubjectIcon(subject.id, hoveredCard === subject.id && subject.clickable)}
+                </div>
+
+                {/* Subject Name */}
+                <h2 className="text-xl md:text-2xl font-bold mb-3 text-white tracking-tight">
+                  {subject.name}
+                </h2>
+
+                {/* Description */}
+                <p className="text-zinc-400 text-sm md:text-base min-h-[3rem]">
+                  {subject.description}
+                </p>
               </div>
-
-              {/* Subject Name */}
-              <h2 className="text-xl md:text-2xl font-bold mb-3 text-white font-mono tracking-tight">
-                {subject.name}
-              </h2>
-
-              {/* Description */}
-              <p className="text-zinc-500 text-sm md:text-base font-mono min-h-[3rem]">
-                {subject.description}
-              </p>
 
               {/* Coming Soon Badge */}
               {subject.disabled && (
                 <div className="absolute top-4 right-4">
-                  <span className="inline-flex items-center gap-2 bg-zinc-900 text-zinc-500 text-xs font-mono px-3 py-1.5 rounded-md border border-zinc-800">
-                    <span className="w-1 h-1 rounded-full bg-zinc-600" />
+                  <span className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-xl text-zinc-400 text-xs font-medium px-3 py-1.5 rounded-full border border-white/20">
+                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-500 animate-pulse" />
                     Coming Soon
                   </span>
                 </div>
               )}
 
-              {/* Active Indicator Arrow */}
+              {/* Active Indicator Arrow with Glow */}
               {subject.clickable && hoveredCard === subject.id && (
-                <div className="absolute bottom-4 right-4 text-zinc-600">
+                <div className="absolute bottom-6 right-6 text-white/80 animate-pulse">
                   <svg
-                    className="w-5 h-5"
+                    className="w-6 h-6 drop-shadow-[0_0_8px_currentColor]"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
-                    strokeWidth={1.5}
+                    strokeWidth={2}
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
