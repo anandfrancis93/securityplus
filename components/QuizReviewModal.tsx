@@ -4,6 +4,21 @@ import { QuizSession, QuestionAttempt } from '@/lib/types';
 import { useEffect, useState } from 'react';
 import { getDomainFromTopics, getDomainsFromTopics } from '@/lib/domainDetection';
 
+// Helper function to infer question category from topics if not stored
+function inferQuestionCategory(topics: string[]): 'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics' {
+  if (!topics || topics.length === 0) return 'single-domain-single-topic';
+
+  const domains = getDomainsFromTopics(topics);
+
+  if (domains.length > 1) {
+    return 'multiple-domains-multiple-topics';
+  } else if (topics.length > 1) {
+    return 'single-domain-multiple-topics';
+  } else {
+    return 'single-domain-single-topic';
+  }
+}
+
 interface QuizReviewModalProps {
   quiz: QuizSession;
   onClose: () => void;
@@ -340,16 +355,17 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
                       </div>
 
                       {/* Question Type */}
-                      {question.questionCategory && (
-                        <div className="flex items-center gap-4 flex-wrap">
-                          <span className="text-lg text-gray-200 font-bold">Type:</span>
-                          <span className="px-5 py-3 rounded-md text-base bg-gray-800 text-gray-300 border-2 border-gray-600 font-medium">
-                            {question.questionCategory === 'single-domain-single-topic' ? 'Single Domain, Single Topic' :
-                             question.questionCategory === 'single-domain-multiple-topics' ? 'Single Domain, Multiple Topics' :
-                             'Multiple Domains, Multiple Topics'}
-                          </span>
-                        </div>
-                      )}
+                      <div className="flex items-center gap-4 flex-wrap">
+                        <span className="text-lg text-gray-200 font-bold">Type:</span>
+                        <span className="px-5 py-3 rounded-md text-base bg-gray-800 text-gray-300 border-2 border-gray-600 font-medium">
+                          {(() => {
+                            const category = question.questionCategory || inferQuestionCategory(question.topics);
+                            return category === 'single-domain-single-topic' ? 'Single Domain, Single Topic' :
+                                   category === 'single-domain-multiple-topics' ? 'Single Domain, Multiple Topics' :
+                                   'Multiple Domains, Multiple Topics';
+                          })()}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
