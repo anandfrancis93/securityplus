@@ -248,9 +248,57 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setCurrentQuiz(null);
       await refreshProgress();
       console.log('Progress refreshed successfully');
+
+      // Trigger pre-generation of next quiz in background
+      triggerPregenerateQuiz(finalQuiz);
     } catch (error) {
       console.error('Error in endQuiz:', error);
       throw error;
+    }
+  };
+
+  const triggerPregenerateQuiz = async (completedQuiz: QuizSession) => {
+    if (!userId) return;
+
+    try {
+      console.log('Triggering pre-generation for next quiz...');
+
+      // Prepare completed questions data for metadata update
+      const completedQuestions = completedQuiz.questions.map(attempt => ({
+        questionId: attempt.questionId,
+        question: attempt.question,
+        isCorrect: attempt.isCorrect,
+      }));
+
+      // Call pre-generation API (non-blocking)
+      fetch('/api/pregenerate-quiz', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId,
+          completedQuestions,
+        }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            console.log('✅ Next quiz pre-generated successfully:', {
+              questionsCount: data.questionsCount,
+              generationTime: `${data.generationTimeMs}ms`,
+              phase: data.phase,
+              totalQuizzesCompleted: data.totalQuizzesCompleted,
+            });
+          } else {
+            console.error('Pre-generation failed:', data.error);
+          }
+        })
+        .catch(error => {
+          console.error('Error triggering pre-generation:', error);
+          // Don't throw - this is a background operation
+        });
+    } catch (error) {
+      console.error('Error in triggerPregenerateQuiz:', error);
+      // Don't throw - this is a background operation
     }
   };
 

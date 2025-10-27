@@ -67,9 +67,40 @@ export default function QuizPage() {
       startNewQuiz();
     }
 
-    // Generate first question only
+    // Check if there's a cached quiz available
+    if (userProgress?.cachedQuiz && userProgress.cachedQuiz.questions.length === totalQuestions) {
+      console.log('✅ Using pre-generated cached quiz!');
+      console.log(`  Phase: ${userProgress.quizMetadata?.allTopicsCoveredOnce ? 2 : 1}`);
+      console.log(`  Generated ${(Date.now() - userProgress.cachedQuiz.generatedAt) / 1000}s ago`);
+      setQuestions(userProgress.cachedQuiz.questions);
+      setLoading(false);
+
+      // Clear cached quiz after using it (will be regenerated after quiz completion)
+      clearCachedQuiz();
+      return;
+    }
+
+    // No cached quiz - generate first question only
+    console.log('No cached quiz found, generating questions on-demand');
     await generateNextQuestion();
     // The useEffect will automatically start generating Q2 in the background
+  };
+
+  const clearCachedQuiz = async () => {
+    if (!user?.uid) return;
+
+    try {
+      // Clear cached quiz from Firebase
+      await fetch('/api/clear-cached-quiz', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.uid }),
+      });
+      console.log('Cached quiz cleared from Firebase');
+    } catch (error) {
+      console.error('Error clearing cached quiz:', error);
+      // Non-critical error, don't throw
+    }
   };
 
   const generateNextQuestion = async () => {
