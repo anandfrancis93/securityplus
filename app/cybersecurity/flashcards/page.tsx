@@ -680,9 +680,12 @@ export default function FlashcardsPage() {
             <button
               id="study"
               onClick={handleStartStudy}
-              className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-8 border border-slate-700/50 hover:border-violet-500/50 hover:bg-white/5 active:bg-white/10 cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 hover:shadow-2xl active:translate-y-0 transition-all duration-500"
+              className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-slate-800/95 backdrop-blur-xl rounded-[28px]'} p-8 border ${liquidGlass ? 'border-white/10 hover:border-white/20' : 'border-slate-700/50 hover:border-violet-500/50'} ${liquidGlass ? 'hover:bg-white/10' : 'hover:bg-white/5'} active:bg-white/10 cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 ${liquidGlass ? 'hover:shadow-2xl hover:shadow-violet-500/20' : 'hover:shadow-2xl'} active:translate-y-0 transition-all duration-500`}
             >
-              <div className="text-center">
+              {liquidGlass && (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+              )}
+              <div className="relative text-center">
                 <div className="text-6xl mb-4">📖</div>
                 <h2 className="text-2xl font-semibold mb-2 text-slate-100 tracking-tight">Study</h2>
                 <p className="text-slate-400 text-sm leading-relaxed">Review with spaced repetition and interleaving</p>
@@ -693,9 +696,12 @@ export default function FlashcardsPage() {
             <button
               id="create"
               onClick={() => setSelectedOption('create')}
-              className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-8 border border-slate-700/50 hover:border-violet-500/50 hover:bg-white/5 active:bg-white/10 cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 hover:shadow-2xl active:translate-y-0 transition-all duration-500"
+              className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-slate-800/95 backdrop-blur-xl rounded-[28px]'} p-8 border ${liquidGlass ? 'border-white/10 hover:border-white/20' : 'border-slate-700/50 hover:border-violet-500/50'} ${liquidGlass ? 'hover:bg-white/10' : 'hover:bg-white/5'} active:bg-white/10 cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 ${liquidGlass ? 'hover:shadow-2xl hover:shadow-cyan-500/20' : 'hover:shadow-2xl'} active:translate-y-0 transition-all duration-500`}
             >
-              <div className="text-center">
+              {liquidGlass && (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+              )}
+              <div className="relative text-center">
                 <div className="text-6xl mb-4">✍️</div>
                 <h2 className="text-2xl font-semibold mb-2 text-slate-100 tracking-tight">Create</h2>
                 <p className="text-slate-400 text-sm leading-relaxed">Make new flashcards for your study</p>
@@ -706,9 +712,12 @@ export default function FlashcardsPage() {
             <button
               id="search"
               onClick={() => setSelectedOption('search')}
-              className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-8 border border-slate-700/50 hover:border-violet-500/50 hover:bg-white/5 active:bg-white/10 cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 hover:shadow-2xl active:translate-y-0 transition-all duration-500"
+              className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-slate-800/95 backdrop-blur-xl rounded-[28px]'} p-8 border ${liquidGlass ? 'border-white/10 hover:border-white/20' : 'border-slate-700/50 hover:border-violet-500/50'} ${liquidGlass ? 'hover:bg-white/10' : 'hover:bg-white/5'} active:bg-white/10 cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 ${liquidGlass ? 'hover:shadow-2xl hover:shadow-emerald-500/20' : 'hover:shadow-2xl'} active:translate-y-0 transition-all duration-500`}
             >
-              <div className="text-center">
+              {liquidGlass && (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+              )}
+              <div className="relative text-center">
                 <div className="text-6xl mb-4">🔍</div>
                 <h2 className="text-2xl font-semibold mb-2 text-slate-100 tracking-tight">Search</h2>
                 <p className="text-slate-400 text-sm leading-relaxed">Find and manage your flashcards</p>
@@ -720,9 +729,12 @@ export default function FlashcardsPage() {
             <button
               id="flashcard-performance"
               onClick={() => setSelectedOption('performance')}
-              className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-8 border border-slate-700/50 hover:border-violet-500/50 hover:bg-white/5 active:bg-white/10 cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 hover:shadow-2xl active:translate-y-0 transition-all duration-500"
+              className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-slate-800/95 backdrop-blur-xl rounded-[28px]'} p-8 border ${liquidGlass ? 'border-white/10 hover:border-white/20' : 'border-slate-700/50 hover:border-violet-500/50'} ${liquidGlass ? 'hover:bg-white/10' : 'hover:bg-white/5'} active:bg-white/10 cursor-pointer min-h-[250px] touch-manipulation hover:-translate-y-2 ${liquidGlass ? 'hover:shadow-2xl hover:shadow-amber-500/20' : 'hover:shadow-2xl'} active:translate-y-0 transition-all duration-500`}
             >
-              <div className="text-center">
+              {liquidGlass && (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+              )}
+              <div className="relative text-center">
                 <div className="text-6xl mb-4">📊</div>
                 <h2 className="text-2xl font-semibold mb-2 text-slate-100 tracking-tight">Performance</h2>
                 <p className="text-slate-400 text-sm leading-relaxed">View your progress and statistics</p>
