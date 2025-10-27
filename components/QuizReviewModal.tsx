@@ -215,16 +215,16 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
                 {/* Explanation Section - matches QuizPage */}
                 <div className="space-y-4">
                   <div
-                    className={`rounded-lg p-6 border-2 ${
+                    className={`rounded-lg p-10 border-2 ${
                       attempt.isCorrect
-                        ? 'border-green-500 bg-green-900/20'
+                        ? 'bg-gray-900 border-green-500'
                         : isPartiallyCorrect
-                        ? 'border-yellow-500 bg-yellow-900/20'
-                        : 'border-red-500 bg-red-900/20'
+                        ? 'bg-gray-900 border-yellow-500'
+                        : 'bg-gray-900 border-red-500'
                     }`}
                   >
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className={`text-xl font-bold ${
+                    <div className="flex items-center justify-between mb-8">
+                      <h3 className={`text-3xl font-bold ${
                         attempt.isCorrect
                           ? 'text-green-400'
                           : isPartiallyCorrect
@@ -233,54 +233,54 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
                       }`}>
                         {attempt.isCorrect ? '✓ Correct!' : isPartiallyCorrect ? '◐ Partially Correct' : '✗ Incorrect'}
                       </h3>
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                      <span className={`px-5 py-3 rounded-md text-base font-bold ${
                         question.difficulty === 'easy'
-                          ? 'bg-green-700/30 text-green-300'
+                          ? 'bg-green-950 text-green-300 border-2 border-green-500'
                           : question.difficulty === 'medium'
-                          ? 'bg-yellow-700/30 text-yellow-300'
-                          : 'bg-red-700/30 text-red-300'
+                          ? 'bg-yellow-950 text-yellow-300 border-2 border-yellow-500'
+                          : 'bg-red-950 text-red-300 border-2 border-red-500'
                       }`}>
                         {question.difficulty.charAt(0).toUpperCase() + question.difficulty.slice(1)}
                       </span>
                     </div>
-                    <div className="mb-4">
-                      <p className="font-medium text-gray-300 mb-2">
+                    <div className="mb-8">
+                      <p className="font-bold text-gray-200 mb-4 text-xl">
                         {question.questionType === 'multiple' ? 'Correct Answers:' : 'Correct Answer:'}
                       </p>
                       {question.questionType === 'multiple' && Array.isArray(question.correctAnswer) ? (
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                           {question.correctAnswer.map((answerIndex) => (
-                            <p key={answerIndex} className="text-white">
+                            <p key={answerIndex} className="text-white text-lg leading-relaxed">
                               {String.fromCharCode(65 + answerIndex)}. {question.options[answerIndex]}
                             </p>
                           ))}
                         </div>
                       ) : (
-                        <p className="text-white">
+                        <p className="text-white text-lg leading-relaxed">
                           {String.fromCharCode(65 + (question.correctAnswer as number))}. {question.options[question.correctAnswer as number]}
                         </p>
                       )}
                     </div>
                     <div>
-                      <p className="font-medium text-gray-300 mb-2">Explanation:</p>
-                      <p className="text-gray-100 leading-relaxed">{question.explanation}</p>
+                      <p className="font-bold text-gray-200 mb-4 text-xl">Explanation:</p>
+                      <p className="text-gray-100 text-lg leading-relaxed">{question.explanation}</p>
                     </div>
                   </div>
 
                   {/* Why Other Answers Are Wrong */}
                   {question.incorrectExplanations && question.incorrectExplanations.length > 0 && (
-                    <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-                      <h4 className="font-bold text-gray-300 mb-3">Why Other Answers Are Incorrect:</h4>
-                      <div className="space-y-3">
+                    <div className="bg-gray-900 rounded-lg p-10 border-2 border-gray-700">
+                      <h4 className="font-bold text-gray-100 mb-6 text-2xl">Why Other Answers Are Incorrect:</h4>
+                      <div className="space-y-5">
                         {question.incorrectExplanations.map((explanation, idx) => {
                           if (correctAnswers.includes(idx)) return null;
 
                           return (
-                            <div key={idx} className="text-sm">
+                            <div key={idx} className="text-lg">
                               <span className="font-bold text-gray-400">
                                 {String.fromCharCode(65 + idx)}.
                               </span>
-                              <span className="text-gray-300 ml-2">{explanation}</span>
+                              <span className="text-gray-200 ml-4 leading-relaxed">{explanation}</span>
                             </div>
                           );
                         })}
@@ -289,18 +289,18 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
                   )}
 
                   {/* Domain, Topics, Difficulty, and Type */}
-                  <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-                    <div className="space-y-4">
+                  <div className="bg-gray-900 rounded-lg p-10 border-2 border-gray-700">
+                    <div className="space-y-6">
                       {/* Domain(s) */}
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-sm text-gray-400 font-semibold">
+                      <div className="flex items-center gap-4 flex-wrap">
+                        <span className="text-lg text-gray-200 font-bold">
                           {getDomainsFromTopics(question.topics).length > 1 ? 'Domains:' : 'Domain:'}
                         </span>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-3">
                           {getDomainsFromTopics(question.topics).map((domain, idx) => (
                             <span
                               key={idx}
-                              className="px-3 py-1 rounded-full text-sm bg-gray-700 text-gray-300 font-semibold"
+                              className="px-5 py-3 rounded-md text-base bg-gray-800 text-gray-300 border-2 border-gray-600 font-bold"
                             >
                               {domain}
                             </span>
@@ -310,15 +310,15 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
 
                       {/* Topics */}
                       {question.topics && question.topics.length > 0 && (
-                        <div className="flex items-start gap-2 flex-wrap">
-                          <span className="text-sm text-gray-400 font-semibold">
+                        <div className="flex items-start gap-4 flex-wrap">
+                          <span className="text-lg text-gray-200 font-bold">
                             {question.topics.length > 1 ? 'Topics:' : 'Topic:'}
                           </span>
-                          <div className="flex flex-wrap gap-2">
+                          <div className="flex flex-wrap gap-3">
                             {question.topics.map((topic, idx) => (
                               <span
                                 key={idx}
-                                className="px-3 py-1 rounded-full text-sm bg-gray-700 text-gray-300"
+                                className="px-5 py-3 rounded-md text-base bg-gray-800 text-gray-200 border-2 border-gray-600 font-medium"
                               >
                                 {topic}
                               </span>
@@ -328,12 +328,12 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
                       )}
 
                       {/* Difficulty */}
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-400 font-semibold">Difficulty:</span>
-                        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                          question.difficulty === 'easy' ? 'bg-green-900 text-green-200' :
-                          question.difficulty === 'medium' ? 'bg-yellow-900 text-yellow-200' :
-                          'bg-red-900 text-red-200'
+                      <div className="flex items-center gap-4 flex-wrap">
+                        <span className="text-lg text-gray-200 font-bold">Difficulty:</span>
+                        <span className={`px-5 py-3 rounded-md text-base border-2 font-bold ${
+                          question.difficulty === 'easy' ? 'bg-green-900 text-green-200 border-green-700' :
+                          question.difficulty === 'medium' ? 'bg-yellow-900 text-yellow-200 border-yellow-700' :
+                          'bg-red-900 text-red-200 border-red-700'
                         }`}>
                           {question.difficulty.toUpperCase()}
                         </span>
@@ -341,9 +341,9 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
 
                       {/* Question Type */}
                       {question.questionCategory && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-gray-400 font-semibold">Type:</span>
-                          <span className="px-3 py-1 rounded-full text-sm bg-gray-700 text-gray-300">
+                        <div className="flex items-center gap-4 flex-wrap">
+                          <span className="text-lg text-gray-200 font-bold">Type:</span>
+                          <span className="px-5 py-3 rounded-md text-base bg-gray-800 text-gray-300 border-2 border-gray-600 font-medium">
                             {question.questionCategory === 'single-domain-single-topic' ? 'Single Domain, Single Topic' :
                              question.questionCategory === 'single-domain-multiple-topics' ? 'Single Domain, Multiple Topics' :
                              'Multiple Domains, Multiple Topics'}
