@@ -59,6 +59,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
   const [isPredictedScoreGraphOpen, setIsPredictedScoreGraphOpen] = useState(false);
   const [isAccuracyByDifficultyOpen, setIsAccuracyByDifficultyOpen] = useState(false);
   const [isPerformanceByDomainOpen, setIsPerformanceByDomainOpen] = useState(false);
+  const [isTopicCoverageOpen, setIsTopicCoverageOpen] = useState(false);
 
   if (!userProgress || userProgress.totalQuestions === 0) {
     return (
@@ -436,10 +437,24 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       )}
 
       {/* Topic Coverage Tables by Domain */}
-      <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 shadow-xl shadow-black/50">
-        <h3 className="text-2xl md:text-3xl font-medium text-white mb-6 tracking-tight font-mono">Topic Coverage by Domain</h3>
-
-        <div className="space-y-6">
+      <div className="bg-black rounded-[28px] border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
+        <button
+          onClick={() => setIsTopicCoverageOpen(!isTopicCoverageOpen)}
+          className="w-full p-8 md:p-10 flex items-center justify-between text-left"
+        >
+          <h3 className="text-2xl md:text-3xl font-medium text-white tracking-tight font-mono">Topic Coverage by Domain</h3>
+          <svg
+            className={`w-6 h-6 text-white transition-transform duration-300 ${isTopicCoverageOpen ? 'rotate-180' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        {isTopicCoverageOpen && (
+          <div className="px-8 md:px-10 pb-8 md:pb-10">
+            <div className="space-y-6">
           {Object.entries(topicCoverageData)
             .sort(([domainA], [domainB]) => {
               const numA = domainA.split(' ')[0];
@@ -510,7 +525,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 </div>
               );
             })}
-        </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
