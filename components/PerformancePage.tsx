@@ -200,8 +200,12 @@ export default function PerformancePage() {
   const handleResetProgress = async () => {
     if (confirm('Are you sure you want to reset your quiz progress? This cannot be undone.')) {
       try {
+        console.log('Reset progress button clicked');
         await resetProgress();
+        console.log('Reset progress completed successfully');
         alert('Progress reset successfully!');
+        // Force a page reload to ensure UI updates
+        window.location.reload();
       } catch (error) {
         console.error('Error resetting progress:', error);
         alert('Failed to reset progress. Please try again.');

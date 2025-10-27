@@ -408,8 +408,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
 
     try {
+      console.log('Starting progress reset for user:', userId);
       await resetUserProgress(userId);
+      console.log('Database reset complete, refreshing progress...');
       await refreshProgress();
+
+      // Explicitly reset predicted score to 0
+      setPredictedScore(0);
+
+      console.log('Progress reset complete');
     } catch (error) {
       console.error('Error resetting progress:', error);
       throw error;
