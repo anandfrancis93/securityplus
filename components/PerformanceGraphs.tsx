@@ -422,6 +422,14 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                               </td>
                             </tr>
                           ))}
+                          <tr className="bg-gray-900 border-t-2 border-gray-700">
+                            <td className="px-4 py-3 text-sm md:text-base font-bold text-white">
+                              Total Coverage
+                            </td>
+                            <td colSpan={2} className="px-4 py-3 text-sm md:text-base text-center font-bold text-blue-400">
+                              {totalCovered} of {totalTopics} topics covered
+                            </td>
+                          </tr>
                         </tbody>
                       </table>
                     </div>
