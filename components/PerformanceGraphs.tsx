@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   LineChart,
   Line,
@@ -55,6 +55,11 @@ const CustomBarTooltip = ({ active, payload, label, color }: any) => {
 };
 
 export default function PerformanceGraphs({ userProgress }: PerformanceGraphsProps) {
+  const [isAbilityGraphOpen, setIsAbilityGraphOpen] = useState(false);
+  const [isPredictedScoreGraphOpen, setIsPredictedScoreGraphOpen] = useState(false);
+  const [isAccuracyByDifficultyOpen, setIsAccuracyByDifficultyOpen] = useState(false);
+  const [isPerformanceByDomainOpen, setIsPerformanceByDomainOpen] = useState(false);
+
   if (!userProgress || userProgress.totalQuestions === 0) {
     return (
       <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-800 shadow-xl shadow-black/50 text-center">
@@ -234,9 +239,24 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       )}
 
       {/* Graph 1: Ability Level Over Time */}
-      <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
-        <h3 className="text-2xl md:text-3xl font-medium text-white mb-6 tracking-tight font-mono">Ability Level Over Time</h3>
-        <ResponsiveContainer width="100%" height={400}>
+      <div className="bg-black rounded-[28px] border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
+        <button
+          onClick={() => setIsAbilityGraphOpen(!isAbilityGraphOpen)}
+          className="w-full p-8 md:p-10 flex items-center justify-between text-left"
+        >
+          <h3 className="text-2xl md:text-3xl font-medium text-white tracking-tight font-mono">Ability Level Over Time</h3>
+          <svg
+            className={`w-6 h-6 text-white transition-transform duration-300 ${isAbilityGraphOpen ? 'rotate-180' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        {isAbilityGraphOpen && (
+          <div className="px-8 md:px-10 pb-8 md:pb-10">
+            <ResponsiveContainer width="100%" height={400}>
           <LineChart data={abilityOverTime}>
             <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
             <XAxis dataKey="quiz" stroke="#9ca3af" tick={false} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#9ca3af' }} />
@@ -264,101 +284,154 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             />
           </LineChart>
         </ResponsiveContainer>
+          </div>
+        )}
       </div>
 
       {/* Graph 2: Predicted Score Over Time */}
-      <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
-        <h3 className="text-2xl md:text-3xl font-medium text-white mb-6 tracking-tight font-mono">Predicted Score Over Time</h3>
-        <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={scoreOverTime}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-            <XAxis dataKey="quiz" stroke="#9ca3af" tick={false} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#9ca3af' }} />
-            <YAxis domain={[100, 900]} stroke="#9ca3af" label={{ value: 'Exam Score', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
-            <Tooltip
-              contentStyle={{ backgroundColor: '#000000', border: '1px solid #1f2937', borderRadius: '16px' }}
-              labelStyle={{ color: '#F3F4F6' }}
-              itemStyle={{ color: '#10b981' }}
-            />
-            <ReferenceLine y={750} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Passing', fill: '#10b981', position: 'right' }} />
-            <Line
-              type="monotone"
-              dataKey="score"
-              stroke="#ffffff"
-              strokeWidth={3}
-              dot={(props: any) => {
-                const { cx, cy, payload } = props;
-                const score = payload.score;
-                let fill = '#ff0000'; // Red for below passing
-                if (score >= 800) fill = '#22c55e'; // Green for excellent
-                else if (score >= 750) fill = '#f5a623'; // Yellow for passing
-                return <circle cx={cx} cy={cy} r={5} fill={fill} />;
-              }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+      <div className="bg-black rounded-[28px] border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
+        <button
+          onClick={() => setIsPredictedScoreGraphOpen(!isPredictedScoreGraphOpen)}
+          className="w-full p-8 md:p-10 flex items-center justify-between text-left"
+        >
+          <h3 className="text-2xl md:text-3xl font-medium text-white tracking-tight font-mono">Predicted Score Over Time</h3>
+          <svg
+            className={`w-6 h-6 text-white transition-transform duration-300 ${isPredictedScoreGraphOpen ? 'rotate-180' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        {isPredictedScoreGraphOpen && (
+          <div className="px-8 md:px-10 pb-8 md:pb-10">
+            <ResponsiveContainer width="100%" height={400}>
+              <LineChart data={scoreOverTime}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
+                <XAxis dataKey="quiz" stroke="#9ca3af" tick={false} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#9ca3af' }} />
+                <YAxis domain={[100, 900]} stroke="#9ca3af" label={{ value: 'Exam Score', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#000000', border: '1px solid #1f2937', borderRadius: '16px' }}
+                  labelStyle={{ color: '#F3F4F6' }}
+                  itemStyle={{ color: '#10b981' }}
+                />
+                <ReferenceLine y={750} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Passing', fill: '#10b981', position: 'right' }} />
+                <Line
+                  type="monotone"
+                  dataKey="score"
+                  stroke="#ffffff"
+                  strokeWidth={3}
+                  dot={(props: any) => {
+                    const { cx, cy, payload } = props;
+                    const score = payload.score;
+                    let fill = '#ff0000'; // Red for below passing
+                    if (score >= 800) fill = '#22c55e'; // Green for excellent
+                    else if (score >= 750) fill = '#f5a623'; // Yellow for passing
+                    return <circle cx={cx} cy={cy} r={5} fill={fill} />;
+                  }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        )}
       </div>
 
       {/* Graph 3: Accuracy by Difficulty */}
-      <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
-        <h3 className="text-2xl md:text-3xl font-medium text-white mb-6 tracking-tight font-mono">Accuracy by Difficulty Level</h3>
-        <ResponsiveContainer width="100%" height={350}>
-          <BarChart data={accuracyByDifficulty}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-            <XAxis dataKey="difficulty" stroke="#9ca3af" tickLine={false} />
-            <YAxis domain={[0, 100]} stroke="#9ca3af" label={{ value: '% Correct', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
-            <Tooltip content={(props) => {
-              if (props.active && props.payload && props.payload.length) {
-                const accuracy = props.payload[0].payload.accuracy;
-                let color = '#ff0000'; // Red
-                if (accuracy >= 85) color = '#22c55e'; // Green
-                else if (accuracy >= 70) color = '#f5a623'; // Yellow
-                return <CustomBarTooltip {...props} color={color} />;
-              }
-              return null;
-            }} cursor={{ fill: 'rgba(71, 85, 105, 0.1)' }} />
-            <Bar dataKey="accuracy" radius={[8, 8, 0, 0]}>
-              {accuracyByDifficulty.map((entry, index) => {
-                const accuracy = entry.accuracy;
-                let fill = '#ff0000'; // Red for low accuracy
-                if (accuracy >= 85) fill = '#22c55e'; // Green for excellent
-                else if (accuracy >= 70) fill = '#f5a623'; // Yellow for good
-                return <Cell key={`cell-${index}`} fill={fill} />;
-              })}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+      <div className="bg-black rounded-[28px] border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
+        <button
+          onClick={() => setIsAccuracyByDifficultyOpen(!isAccuracyByDifficultyOpen)}
+          className="w-full p-8 md:p-10 flex items-center justify-between text-left"
+        >
+          <h3 className="text-2xl md:text-3xl font-medium text-white tracking-tight font-mono">Accuracy by Difficulty Level</h3>
+          <svg
+            className={`w-6 h-6 text-white transition-transform duration-300 ${isAccuracyByDifficultyOpen ? 'rotate-180' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        {isAccuracyByDifficultyOpen && (
+          <div className="px-8 md:px-10 pb-8 md:pb-10">
+            <ResponsiveContainer width="100%" height={350}>
+              <BarChart data={accuracyByDifficulty}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
+                <XAxis dataKey="difficulty" stroke="#9ca3af" tickLine={false} />
+                <YAxis domain={[0, 100]} stroke="#9ca3af" label={{ value: '% Correct', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
+                <Tooltip content={(props) => {
+                  if (props.active && props.payload && props.payload.length) {
+                    const accuracy = props.payload[0].payload.accuracy;
+                    let color = '#ff0000'; // Red
+                    if (accuracy >= 85) color = '#22c55e'; // Green
+                    else if (accuracy >= 70) color = '#f5a623'; // Yellow
+                    return <CustomBarTooltip {...props} color={color} />;
+                  }
+                  return null;
+                }} cursor={{ fill: 'rgba(71, 85, 105, 0.1)' }} />
+                <Bar dataKey="accuracy" radius={[8, 8, 0, 0]}>
+                  {accuracyByDifficulty.map((entry, index) => {
+                    const accuracy = entry.accuracy;
+                    let fill = '#ff0000'; // Red for low accuracy
+                    if (accuracy >= 85) fill = '#22c55e'; // Green for excellent
+                    else if (accuracy >= 70) fill = '#f5a623'; // Yellow for good
+                    return <Cell key={`cell-${index}`} fill={fill} />;
+                  })}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        )}
       </div>
 
       {/* Graph 4: Topic Performance by Domain */}
       {domainPerformance.length > 0 && (
-        <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
-          <h3 className="text-2xl md:text-3xl font-medium text-white mb-6 tracking-tight font-mono">Performance by SY0-701 Domain</h3>
-          <ResponsiveContainer width="100%" height={400}>
-            <BarChart data={domainPerformance} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-              <XAxis type="number" domain={[0, 100]} stroke="#9ca3af" label={{ value: '% Correct', position: 'insideBottom', offset: -5, fill: '#9ca3af' }} />
-              <YAxis type="category" dataKey="domain" stroke="#9ca3af" width={60} tick={false} label={{ value: 'Domains', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
-              <Tooltip content={(props) => {
-                if (props.active && props.payload && props.payload.length) {
-                  const accuracy = props.payload[0].payload.accuracy;
-                  let color = '#ff0000'; // Red
-                  if (accuracy >= 85) color = '#22c55e'; // Green
-                  else if (accuracy >= 70) color = '#f5a623'; // Yellow
-                  return <CustomBarTooltip {...props} color={color} />;
-                }
-                return null;
-              }} cursor={{ fill: 'rgba(71, 85, 105, 0.1)' }} />
-              <Bar dataKey="accuracy" radius={[0, 8, 8, 0]}>
-                {domainPerformance.map((entry, index) => {
-                  const accuracy = entry.accuracy;
-                  let fill = '#ff0000'; // Red for low accuracy
-                  if (accuracy >= 85) fill = '#22c55e'; // Green for excellent
-                  else if (accuracy >= 70) fill = '#f5a623'; // Yellow for good
-                  return <Cell key={`cell-${index}`} fill={fill} />;
-                })}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+        <div className="bg-black rounded-[28px] border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
+          <button
+            onClick={() => setIsPerformanceByDomainOpen(!isPerformanceByDomainOpen)}
+            className="w-full p-8 md:p-10 flex items-center justify-between text-left"
+          >
+            <h3 className="text-2xl md:text-3xl font-medium text-white tracking-tight font-mono">Performance by SY0-701 Domain</h3>
+            <svg
+              className={`w-6 h-6 text-white transition-transform duration-300 ${isPerformanceByDomainOpen ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          {isPerformanceByDomainOpen && (
+            <div className="px-8 md:px-10 pb-8 md:pb-10">
+              <ResponsiveContainer width="100%" height={400}>
+                <BarChart data={domainPerformance} layout="vertical">
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
+                  <XAxis type="number" domain={[0, 100]} stroke="#9ca3af" label={{ value: '% Correct', position: 'insideBottom', offset: -5, fill: '#9ca3af' }} />
+                  <YAxis type="category" dataKey="domain" stroke="#9ca3af" width={60} tick={false} label={{ value: 'Domains', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
+                  <Tooltip content={(props) => {
+                    if (props.active && props.payload && props.payload.length) {
+                      const accuracy = props.payload[0].payload.accuracy;
+                      let color = '#ff0000'; // Red
+                      if (accuracy >= 85) color = '#22c55e'; // Green
+                      else if (accuracy >= 70) color = '#f5a623'; // Yellow
+                      return <CustomBarTooltip {...props} color={color} />;
+                    }
+                    return null;
+                  }} cursor={{ fill: 'rgba(71, 85, 105, 0.1)' }} />
+                  <Bar dataKey="accuracy" radius={[0, 8, 8, 0]}>
+                    {domainPerformance.map((entry, index) => {
+                      const accuracy = entry.accuracy;
+                      let fill = '#ff0000'; // Red for low accuracy
+                      if (accuracy >= 85) fill = '#22c55e'; // Green for excellent
+                      else if (accuracy >= 70) fill = '#f5a623'; // Yellow for good
+                      return <Cell key={`cell-${index}`} fill={fill} />;
+                    })}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
         </div>
       )}
 
