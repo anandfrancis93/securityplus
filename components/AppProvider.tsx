@@ -222,9 +222,27 @@ export function AppProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    // Only save quiz if at least one question was answered
+    // Check if no questions were answered
     if (currentQuiz.questions.length === 0) {
-      console.log('Quiz ended without answering any questions - not saving');
+      console.log('Quiz ended without answering any questions - not saving quiz session');
+
+      // Still save unused questions to cache if available
+      if (unusedQuestions && unusedQuestions.length > 0) {
+        try {
+          const cachedQuiz: CachedQuiz = {
+            questions: unusedQuestions,
+            generatedAt: Date.now(),
+            generatedForAbility: userProgress?.estimatedAbility || 0,
+            generatedAfterQuiz: userProgress?.quizHistory?.length || 0
+          };
+
+          await saveUnusedQuestionsToCache(userId, cachedQuiz);
+          console.log(`✅ Saved ${unusedQuestions.length} unused questions to cache (quiz not started)`);
+        } catch (error) {
+          console.error('Error saving unused questions:', error);
+        }
+      }
+
       setCurrentQuiz(null);
       return;
     }
