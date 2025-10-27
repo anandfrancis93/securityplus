@@ -6,12 +6,19 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 
 ### Quiz Mode with Adaptive Testing
 - **AI-Generated Synthesis Questions**: Creates complex questions combining multiple security concepts using Claude 4.5 Sonnet
+- **AI-Based Topic Identification**: Uses semantic understanding to accurately identify which topics each question tests (no false positives from distractors)
+- **Deterministic Difficulty Classification**: Questions are automatically classified based on topic/domain complexity:
+  - **EASY (100 points)**: Single domain, single topic questions
+  - **MEDIUM (175 points)**: Single domain, multiple topics questions
+  - **HARD (325 points)**: Multiple domains, multiple topics questions
+- **Anti-Telltale Quality Controls**: Advanced quality measures prevent obvious answer giveaways:
+  - Length variation across all options (prevents length-based guessing)
+  - Plausible distractors from same domain (prevents obvious elimination)
+  - Keyword avoidance (prevents simple matching strategies)
+  - Balanced technical depth (all options equally professional)
+  - Subtle incorrectness (wrong answers are "close but not quite right")
 - **Instant Start with On-Demand Generation**: First question appears in ~10 seconds, remaining questions generate automatically in the background
 - **Progressive Loading**: Zero wait time between questions - next question is always ready when you click "Next"
-- **Pseudo-Adaptive Difficulty**: Questions dynamically adapt to your current ability level
-  - Low ability: 70% easy, 25% medium, 5% hard questions
-  - Average ability: 20% easy, 60% medium, 20% hard questions
-  - High ability: 10% easy, 30% medium, 60% hard questions
 - **Multiple-Response Questions**: Includes "select all that apply" questions with partial credit support (70% single-choice, 30% multiple-response)
 - **Item Response Theory (IRT) Scoring**: Advanced psychometric scoring system that weighs questions by difficulty
 - **Phase 1 IRT Reliability**: Requires 15 questions minimum for reliable ability estimates with capped predictions until threshold is met
@@ -78,17 +85,19 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
    - Subsequent questions generate automatically in the background
    - Each new question triggers generation of the next one
    - Zero wait time between questions for seamless experience
-3. **Pseudo-Adaptive Selection**:
-   - System calculates your current ability level (θ) after each answer
-   - Next question difficulty is selected based on your ability:
-     - Struggling: More easy/medium questions to build confidence
-     - Average: Balanced mix across all difficulties
-     - Excelling: More medium/hard questions for challenge
-4. **Question Types**: Claude AI generates unique synthesis questions from comprehensive SY0-701 exam objectives
-5. **Adaptive Scoring**: Each question is worth different points based on difficulty:
-   - Easy: 100 points
-   - Medium: 150 points
-   - Hard: 250 points
+3. **AI Question Generation**: Claude AI creates unique synthesis questions from comprehensive SY0-701 exam objectives
+4. **AI-Based Topic Identification**:
+   - After generation, AI analyzes the question to identify which topics it actually tests
+   - Uses semantic understanding with temperature=0 for consistency
+   - Considers only what's required to answer correctly (ignores distractors)
+   - Provides exact topic strings from the Security+ SY0-701 topic inventory
+5. **Deterministic Difficulty Classification**:
+   - System counts topics and domains from AI-identified topics
+   - Classification logic:
+     - 1 topic, 1 domain → **EASY** (100 points)
+     - Multiple topics, 1 domain → **MEDIUM** (175 points)
+     - Multiple topics, Multiple domains → **HARD** (325 points)
+   - No randomness - difficulty is purely based on question complexity
 6. **Partial Credit**: Multiple-response questions award proportional credit (e.g., 3/4 correct = 75% of points)
 7. **IRT Analysis**: System estimates your ability level (theta) using Maximum Likelihood Estimation with Phase 1 safeguards
 8. **Phase 1 Reliability**:
@@ -176,20 +185,20 @@ Questions are generated from the complete CompTIA Security+ SY0-701 exam objecti
 
 ### Question Types & Distribution
 
-**Difficulty Levels:**
-- **Easy** (100 points): Straightforward, testing 1-2 basic concepts
-- **Medium** (150 points): Applying 2-3 concepts with moderate complexity
-- **Hard** (250 points): Complex synthesis of 3+ concepts with nuanced scenarios
+**Difficulty Levels (Deterministic Classification):**
+- **EASY** (100 points): Single domain, single topic - Straightforward concept testing
+- **MEDIUM** (175 points): Single domain, multiple topics - Applying 2-3 related concepts
+- **HARD** (325 points): Multiple domains, multiple topics - Complex cross-domain synthesis
 
 **Question Types:**
 - **Single-Choice** (70%): Select one correct answer from four options
 - **Multiple-Response** (30%): Select all correct answers (2-3 correct out of 4 options)
 
-**Adaptive Distribution** (varies by ability):
-- System dynamically adjusts difficulty based on your performance
-- Higher ability → more challenging questions
-- Lower ability → more foundational questions
-- Ensures optimal learning zone
+**Question Classification:**
+- Difficulty is determined by AI-identified topics and domains, not pre-assigned
+- Questions are classified after generation based on actual complexity
+- System counts unique topics and domains to determine appropriate difficulty level
+- Ensures consistent and fair scoring across all questions
 
 ### Progress Tracking & IRT Scoring
 
@@ -222,9 +231,10 @@ Questions are generated from the complete CompTIA Security+ SY0-701 exam objecti
 ### Cross-Session Topic Tracking
 
 **Automatic Domain Mapping:**
-- System uses keyword matching to categorize topics into 5 SY0-701 domains
+- System uses authoritative topic-to-domain lookup from Security+ SY0-701 inventory
 - Tracks performance on every individual topic across all quiz sessions
 - Example: "Zero Trust" → automatically mapped to "1.0 General Security Concepts"
+- 400+ topics organized across 5 domains with precise categorization
 
 **Mastery Criteria:**
 - 80%+ accuracy on a topic
@@ -233,9 +243,9 @@ Questions are generated from the complete CompTIA Security+ SY0-701 exam objecti
 
 **Use Cases:**
 - Identify weak topics requiring more practice
-- See comprehensive exam coverage
+- See comprehensive exam coverage (all 400+ topics listed)
 - Track improvement on specific security concepts
-- Can exclude mastered topics from future quizzes (optional)
+- Topic tables show both covered and uncovered topics for complete visibility
 
 ### Flashcard System
 
@@ -309,18 +319,36 @@ Choose from predefined Security+ domains when creating flashcards:
 - Maximum Likelihood Estimation (MLE) for ability calculation
 - Newton-Raphson iterative convergence
 - Partial credit support for multiple-response questions
+- Three difficulty categories with calibrated IRT parameters:
+  - EASY: difficulty=-1.0, discrimination=1.0
+  - MEDIUM: difficulty=0.3, discrimination=1.8
+  - HARD: difficulty=2.2, discrimination=2.5
+
+**AI Question Quality System:**
+- **Claude 4.5 Sonnet** for question generation with temperature=0.8 (creative)
+- **AI Topic Identification** with temperature=0 (deterministic, ~99% consistent)
+- **Anti-Telltale Controls** built into generation prompts:
+  - Length variation requirements (15-60 words per option)
+  - Plausible distractor guidelines (same domain, common misconceptions)
+  - Keyword avoidance strategies (use synonyms, avoid exact question text)
+  - Balanced technical depth across all options
+  - Subtle incorrectness (contextually wrong, not obviously absurd)
+- **Deterministic Classification** logic maps topics/domains to difficulty
+- **Semantic Understanding** ensures accurate topic extraction (no false positives)
 
 **Data Visualization:**
 - Recharts library for responsive charts
 - Interactive tooltips with detailed statistics
 - Color-coded performance indicators (green/yellow/red)
 - Reference lines for targets and thresholds
+- Collapsible sections for better information density
 
 **Performance Optimization:**
 - Background question generation for zero wait time
 - Automatic pre-loading of next question
 - Efficient Firebase queries with proper indexing
 - Client-side calculation caching
+- Pre-generation system maintains 10-question cache
 
 ## License
 
