@@ -3,8 +3,8 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { auth, signOut } from '@/lib/firebase';
 import { User, onAuthStateChanged } from 'firebase/auth';
-import { getUserProgress, saveQuizSession, calculatePredictedScore, resetUserProgress } from '@/lib/db';
-import { UserProgress, QuizSession, Question, QuestionAttempt } from '@/lib/types';
+import { getUserProgress, saveQuizSession, calculatePredictedScore, resetUserProgress, saveUnusedQuestionsToCache } from '@/lib/db';
+import { UserProgress, QuizSession, Question, QuestionAttempt, CachedQuiz } from '@/lib/types';
 import {
   getEffectiveUserId,
   createPairingCode,
@@ -30,7 +30,7 @@ interface AppContextType {
   predictedScore: number;
   startNewQuiz: () => void;
   answerQuestion: (question: Question, answer: number | number[]) => void;
-  endQuiz: () => Promise<void>;
+  endQuiz: (unusedQuestions?: Question[]) => Promise<void>;
   refreshProgress: () => Promise<void>;
   resetProgress: () => Promise<void>;
   generatePairingCode: () => Promise<string>;
@@ -216,7 +216,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const endQuiz = async () => {
+  const endQuiz = async (unusedQuestions?: Question[]) => {
     if (!currentQuiz || !userId) {
       console.error('Cannot end quiz: missing currentQuiz or userId', { currentQuiz, userId });
       return;
@@ -233,7 +233,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       userId,
       quizId: currentQuiz.id,
       questionsAnswered: currentQuiz.questions.length,
-      score: currentQuiz.score
+      score: currentQuiz.score,
+      unusedQuestionsCount: unusedQuestions?.length || 0
     });
 
     const finalQuiz = {
@@ -245,12 +246,30 @@ export function AppProvider({ children }: { children: ReactNode }) {
     try {
       await saveQuizSession(userId, finalQuiz);
       console.log('Quiz session saved successfully');
+
+      // Save unused pre-generated questions to cache for next quiz
+      if (unusedQuestions && unusedQuestions.length > 0) {
+        const cachedQuiz: CachedQuiz = {
+          questions: unusedQuestions,
+          generatedAt: Date.now(),
+          generatedForAbility: userProgress?.estimatedAbility || 0,
+          generatedAfterQuiz: userProgress?.quizHistory?.length || 0
+        };
+
+        await saveUnusedQuestionsToCache(userId, cachedQuiz);
+        console.log(`✅ Saved ${unusedQuestions.length} unused questions to cache for next quiz`);
+      }
+
       setCurrentQuiz(null);
       await refreshProgress();
       console.log('Progress refreshed successfully');
 
-      // Trigger pre-generation of next quiz in background
-      triggerPregenerateQuiz(finalQuiz);
+      // Only trigger pre-generation if we didn't save unused questions
+      if (!unusedQuestions || unusedQuestions.length === 0) {
+        triggerPregenerateQuiz(finalQuiz);
+      } else {
+        console.log('Skipping pre-generation - using cached unused questions instead');
+      }
     } catch (error) {
       console.error('Error in endQuiz:', error);
       throw error;

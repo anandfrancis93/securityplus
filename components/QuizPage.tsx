@@ -68,16 +68,29 @@ export default function QuizPage() {
     }
 
     // Check if there's a cached quiz available
-    if (userProgress?.cachedQuiz && userProgress.cachedQuiz.questions.length === totalQuestions) {
-      console.log('✅ Using pre-generated cached quiz!');
-      console.log(`  Phase: ${userProgress.quizMetadata?.allTopicsCoveredOnce ? 2 : 1}`);
-      console.log(`  Generated ${(Date.now() - userProgress.cachedQuiz.generatedAt) / 1000}s ago`);
-      setQuestions(userProgress.cachedQuiz.questions);
-      setLoading(false);
+    if (userProgress?.cachedQuiz && userProgress.cachedQuiz.questions.length > 0) {
+      const cachedCount = userProgress.cachedQuiz.questions.length;
 
-      // Clear cached quiz after using it (will be regenerated after quiz completion)
-      clearCachedQuiz();
-      return;
+      if (cachedCount === totalQuestions) {
+        // Full cache - use all questions
+        console.log('✅ Using full pre-generated cached quiz (10 questions)!');
+        console.log(`  Phase: ${userProgress.quizMetadata?.allTopicsCoveredOnce ? 2 : 1}`);
+        console.log(`  Generated ${(Date.now() - userProgress.cachedQuiz.generatedAt) / 1000}s ago`);
+        setQuestions(userProgress.cachedQuiz.questions);
+        setLoading(false);
+        clearCachedQuiz();
+        return;
+      } else if (cachedCount < totalQuestions) {
+        // Partial cache - use what we have and generate the rest
+        console.log(`✅ Using partial cached quiz (${cachedCount} questions)!`);
+        console.log(`  Will generate ${totalQuestions - cachedCount} more questions`);
+        console.log(`  Generated ${(Date.now() - userProgress.cachedQuiz.generatedAt) / 1000}s ago`);
+        setQuestions(userProgress.cachedQuiz.questions);
+        setLoading(false);
+        clearCachedQuiz();
+        // The useEffect will automatically generate remaining questions in background
+        return;
+      }
     }
 
     // No cached quiz - generate first question only
@@ -236,7 +249,19 @@ export default function QuizPage() {
         console.error('currentQuiz is null or undefined!');
       }
 
-      await endQuiz();
+      // Collect unused pre-generated questions to save for next quiz
+      // Unused questions are those generated but not answered yet
+      // Use answered count (not currentQuestionIndex) in case user moved to next question without answering
+      const answeredCount = currentQuiz?.questions.length || 0;
+      const unusedQuestions = questions.slice(answeredCount);
+      console.log('Unused questions to cache:', {
+        totalGenerated: questions.length,
+        currentIndex: currentQuestionIndex,
+        answeredCount,
+        unusedCount: unusedQuestions.length
+      });
+
+      await endQuiz(unusedQuestions.length > 0 ? unusedQuestions : undefined);
       console.log('Quiz ended successfully, showing celebration...');
       setShowCelebration(true);
     } catch (error) {

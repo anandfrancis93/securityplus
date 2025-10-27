@@ -10,7 +10,7 @@ import {
   getDocs,
   serverTimestamp,
 } from 'firebase/firestore';
-import { UserProgress, QuizSession, Question, QuestionAttempt, TopicPerformance } from './types';
+import { UserProgress, QuizSession, Question, QuestionAttempt, TopicPerformance, CachedQuiz } from './types';
 import { estimateAbility, calculateIRTScore } from './irt';
 
 const USERS_COLLECTION = 'users';
@@ -213,6 +213,32 @@ export async function resetUserProgress(userId: string): Promise<void> {
     console.log('User progress reset successfully');
   } catch (error) {
     console.error('Error resetting user progress:', error);
+    throw error;
+  }
+}
+
+/**
+ * Save unused pre-generated questions to cache for next quiz
+ * This prevents wasting questions when quiz is ended early
+ */
+export async function saveUnusedQuestionsToCache(userId: string, cachedQuiz: CachedQuiz): Promise<void> {
+  try {
+    console.log('Saving unused questions to cache:', {
+      userId,
+      questionsCount: cachedQuiz.questions.length,
+      generatedForAbility: cachedQuiz.generatedForAbility,
+      generatedAfterQuiz: cachedQuiz.generatedAfterQuiz
+    });
+
+    const userRef = doc(db, USERS_COLLECTION, userId);
+    await updateDoc(userRef, {
+      cachedQuiz,
+      lastUpdated: Date.now(),
+    });
+
+    console.log('Unused questions cached successfully');
+  } catch (error) {
+    console.error('Error saving unused questions to cache:', error);
     throw error;
   }
 }
