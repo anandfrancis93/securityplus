@@ -60,6 +60,14 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
   const [isAccuracyByDifficultyOpen, setIsAccuracyByDifficultyOpen] = useState(false);
   const [isPerformanceByDomainOpen, setIsPerformanceByDomainOpen] = useState(false);
   const [isTopicCoverageOpen, setIsTopicCoverageOpen] = useState(false);
+  const [openDomainTables, setOpenDomainTables] = useState<{ [key: string]: boolean }>({});
+
+  const toggleDomainTable = (domain: string) => {
+    setOpenDomainTables(prev => ({
+      ...prev,
+      [domain]: !prev[domain]
+    }));
+  };
 
   if (!userProgress || userProgress.totalQuestions === 0) {
     return (
@@ -468,14 +476,26 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               const totalTopics = topics.length;
 
               return (
-                <div key={domain} className="space-y-4">
-                  <div className="flex items-center justify-between">
+                <div key={domain} className="border border-gray-800 rounded-[20px] bg-black">
+                  <button
+                    onClick={() => toggleDomainTable(domain)}
+                    className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-gray-900/50 transition-all duration-200"
+                  >
                     <h4 className="text-xl md:text-2xl font-semibold text-blue-400 tracking-tight">
                       <span className="mr-1">{domainNum}</span>{domainName}
                     </h4>
-                  </div>
+                    <svg
+                      className={`w-5 h-5 text-blue-400 transition-transform duration-300 ${openDomainTables[domain] ? 'rotate-180' : ''}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
 
-                  <div className="border border-gray-800 rounded-[20px] overflow-hidden bg-black">
+                  {openDomainTables[domain] && (
+                    <div className="border-t border-gray-800">
                     <div className="max-h-96 overflow-y-auto">
                       <table className="w-full">
                         <thead className="bg-black border-b border-gray-800 sticky top-0">
@@ -521,7 +541,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                         </tbody>
                       </table>
                     </div>
-                  </div>
+                    </div>
+                  )}
                 </div>
               );
             })}
