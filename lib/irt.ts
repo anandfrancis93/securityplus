@@ -11,36 +11,107 @@
 import { Question, QuestionAttempt, UserProgress } from './types';
 
 /**
- * IRT Difficulty Mappings
- * Maps difficulty labels to IRT difficulty parameters (b)
- * Range: -3 (very easy) to +3 (very hard)
+ * IRT Parameter Mappings by Difficulty and Question Category
+ *
+ * Question categories represent cognitive complexity:
+ * - Single-Domain-Single-Topic: Focused, straightforward (baseline)
+ * - Single-Domain-Multiple-Topics: Integration within one domain (moderate complexity)
+ * - Multiple-Domains-Multiple-Topics: Cross-domain synthesis (high complexity)
+ *
+ * Parameters:
+ * - Difficulty (b): -3 (very easy) to +3 (very hard)
+ * - Discrimination (a): 0.5 (poor) to 2.5 (excellent)
+ * - Points: Reward for correct answer
+ */
+
+type QuestionCategory = 'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics';
+
+interface IRTParams {
+  difficulty: number;
+  discrimination: number;
+  points: number;
+}
+
+export const IRT_CATEGORY_PARAMS: Record<QuestionCategory, Record<'easy' | 'medium' | 'hard', IRTParams>> = {
+  'single-domain-single-topic': {
+    easy: {
+      difficulty: -1.0,      // Below average difficulty
+      discrimination: 1.0,   // Moderate discrimination
+      points: 100,           // Base points
+    },
+    medium: {
+      difficulty: 0.0,       // Average difficulty
+      discrimination: 1.5,   // Good discrimination
+      points: 150,           // 50% more
+    },
+    hard: {
+      difficulty: 1.5,       // Above average difficulty
+      discrimination: 2.0,   // Excellent discrimination
+      points: 250,           // 150% more
+    },
+  },
+  'single-domain-multiple-topics': {
+    easy: {
+      difficulty: -0.5,      // Easier than medium, but harder than single-topic easy
+      discrimination: 1.3,   // Better discrimination than single-topic
+      points: 125,           // Bonus for multi-topic integration
+    },
+    medium: {
+      difficulty: 0.3,       // Slightly above baseline medium
+      discrimination: 1.8,   // Strong discrimination
+      points: 175,           // Reflects integration complexity
+    },
+    hard: {
+      difficulty: 1.8,       // More challenging than single-topic hard
+      discrimination: 2.2,   // Very strong discrimination
+      points: 275,           // Reward for complex integration
+    },
+  },
+  'multiple-domains-multiple-topics': {
+    easy: {
+      difficulty: 0.0,       // Baseline medium due to cross-domain complexity
+      discrimination: 1.5,   // Good discrimination even at "easy" level
+      points: 150,           // Higher baseline for synthesis
+    },
+    medium: {
+      difficulty: 0.7,       // Significantly above baseline
+      discrimination: 2.0,   // Excellent discrimination
+      points: 200,           // Substantial reward for synthesis
+    },
+    hard: {
+      difficulty: 2.2,       // Very challenging
+      discrimination: 2.5,   // Maximum discrimination - best ability indicator
+      points: 325,           // Maximum reward for complex synthesis
+    },
+  },
+};
+
+/**
+ * Legacy IRT Difficulty Mappings (for backward compatibility)
+ * Uses single-domain-single-topic as baseline
  */
 export const IRT_DIFFICULTY_MAP = {
-  easy: -1.0,    // Below average difficulty
-  medium: 0.0,   // Average difficulty
-  hard: 1.5,     // Above average difficulty
+  easy: -1.0,
+  medium: 0.0,
+  hard: 1.5,
 };
 
 /**
- * IRT Discrimination Mappings
- * Maps difficulty labels to discrimination parameters (a)
- * Range: 0.5 (poor) to 2.5 (excellent)
- * Higher values = question better differentiates between ability levels
+ * Legacy IRT Discrimination Mappings (for backward compatibility)
  */
 export const IRT_DISCRIMINATION_MAP = {
-  easy: 1.0,     // Moderate discrimination
-  medium: 1.5,   // Good discrimination
-  hard: 2.0,     // Excellent discrimination
+  easy: 1.0,
+  medium: 1.5,
+  hard: 2.0,
 };
 
 /**
- * Points awarded based on IRT difficulty
- * Harder questions worth more points
+ * Legacy Points Map (for backward compatibility)
  */
 export const IRT_POINTS_MAP = {
-  easy: 100,     // Base points for easy questions
-  medium: 150,   // 50% more for medium
-  hard: 250,     // 150% more for hard (synthesis often hard)
+  easy: 100,
+  medium: 150,
+  hard: 250,
 };
 
 /**
@@ -63,16 +134,22 @@ export function irtProbability(
 }
 
 /**
- * Calculate IRT parameters for a question
+ * Calculate IRT parameters for a question based on difficulty and category
  *
  * @param difficulty - Difficulty label (easy/medium/hard)
+ * @param category - Question category (single-domain-single-topic, etc.)
  * @returns IRT parameters (difficulty, discrimination, maxPoints)
  */
-export function calculateIRTParameters(difficulty: 'easy' | 'medium' | 'hard') {
+export function calculateIRTParameters(
+  difficulty: 'easy' | 'medium' | 'hard',
+  category: QuestionCategory = 'single-domain-single-topic'
+) {
+  const params = IRT_CATEGORY_PARAMS[category][difficulty];
+
   return {
-    irtDifficulty: IRT_DIFFICULTY_MAP[difficulty],
-    irtDiscrimination: IRT_DISCRIMINATION_MAP[difficulty],
-    maxPoints: IRT_POINTS_MAP[difficulty],
+    irtDifficulty: params.difficulty,
+    irtDiscrimination: params.discrimination,
+    maxPoints: params.points,
   };
 }
 

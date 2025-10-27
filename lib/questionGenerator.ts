@@ -379,14 +379,14 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
     // Only shuffle for single-choice questions
     const shuffledData = questionType === 'single' ? shuffleQuestionOptions(questionData) : questionData;
 
-    // Calculate IRT parameters based on difficulty
-    const irtParams = calculateIRTParameters(difficulty);
+    // Calculate IRT parameters based on difficulty and category
+    const irtParams = calculateIRTParameters(difficulty, questionCategory);
 
     const correctAnswerDisplay = Array.isArray(shuffledData.correctAnswer)
       ? `[${shuffledData.correctAnswer.join(', ')}]`
       : shuffledData.correctAnswer;
 
-    console.log(`Question generated: Type=${questionType}, Difficulty=${difficulty}, Correct=${correctAnswerDisplay}, Points=${irtParams.maxPoints}`);
+    console.log(`Question generated: Category=${questionCategory}, Type=${questionType}, Difficulty=${difficulty}, Correct=${correctAnswerDisplay}, IRT(b=${irtParams.irtDifficulty}, a=${irtParams.irtDiscrimination}), Points=${irtParams.maxPoints}`);
 
     return {
       id: `q_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
