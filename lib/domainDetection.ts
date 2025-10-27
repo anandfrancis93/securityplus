@@ -1,71 +1,25 @@
+import { ALL_SECURITY_PLUS_TOPICS } from './topicData';
+
 /**
  * Detects the Security+ SY0-701 domain based on question topics
- * Maps topics to one of the 5 main domains using keyword matching
+ * Looks up topics in the authoritative ALL_SECURITY_PLUS_TOPICS mapping
  */
 export function getDomainFromTopics(topics: string[]): string {
-  const domainKeywords = {
-    '1.0 General Security Concepts': [
-      'security control', 'technical', 'managerial', 'operational', 'physical',
-      'cia', 'confidentiality', 'integrity', 'availability', 'non-repudiation',
-      'authentication', 'authorization', 'accounting', 'aaa',
-      'zero trust', 'adaptive identity', 'policy', 'trust zone',
-      'bollard', 'vestibule', 'fencing', 'surveillance', 'guard', 'badge', 'lighting', 'sensor',
-      'honeypot', 'honeynet', 'honeyfile', 'honeytoken',
-      'change management', 'approval', 'backout', 'maintenance window',
-      'pki', 'encryption', 'cryptographic', 'tpm', 'hsm', 'hashing', 'salting',
-      'certificate', 'crl', 'ocsp', 'blockchain'
-    ],
-    '2.0 Threats, Vulnerabilities, and Mitigations': [
-      'threat actor', 'nation-state', 'hacktivist', 'insider threat', 'organized crime',
-      'phishing', 'vishing', 'smishing', 'social engineering', 'pretexting',
-      'vulnerability', 'buffer overflow', 'injection', 'xss', 'sqli', 'race condition',
-      'malware', 'ransomware', 'trojan', 'worm', 'spyware', 'virus', 'keylogger', 'rootkit',
-      'ddos', 'dns attack', 'brute force', 'password spray',
-      'mitigation', 'segmentation', 'patching', 'hardening', 'least privilege'
-    ],
-    '3.0 Security Architecture': [
-      'cloud', 'iaac', 'serverless', 'microservices', 'containerization',
-      'virtualization', 'iot', 'ics', 'scada', 'rtos', 'embedded',
-      'network infrastructure', 'sdn', 'air-gapped', 'segmentation',
-      'data protection', 'data classification', 'data at rest', 'data in transit',
-      'resilience', 'high availability', 'load balancing', 'clustering',
-      'backup', 'replication', 'snapshot', 'disaster recovery'
-    ],
-    '4.0 Security Operations': [
-      'baseline', 'hardening', 'mdm', 'byod', 'cope', 'cyod',
-      'wpa3', 'radius', 'wireless',
-      'asset management', 'inventory', 'disposal', 'sanitization',
-      'vulnerability scan', 'penetration test', 'cvss', 'cve',
-      'monitoring', 'siem', 'log', 'alert', 'dlp', 'netflow',
-      'firewall', 'ips', 'ids', 'web filter', 'dns filtering',
-      'identity', 'access management', 'provisioning', 'sso', 'ldap', 'oauth', 'saml',
-      'mfa', 'biometric', 'password', 'privileged access',
-      'automation', 'orchestration', 'api', 'ci/cd',
-      'incident response', 'forensics', 'chain of custody'
-    ],
-    '5.0 Security Program Management and Oversight': [
-      'governance', 'policy', 'aup', 'procedure', 'playbook',
-      'compliance', 'regulatory', 'audit', 'attestation',
-      'risk management', 'risk assessment', 'sle', 'ale', 'aro',
-      'third-party', 'vendor', 'sla', 'mou', 'msa', 'nda',
-      'privacy', 'gdpr', 'data subject', 'right to be forgotten',
-      'penetration testing', 'security awareness', 'training'
-    ]
-  };
+  if (!topics || topics.length === 0) {
+    return '1.0 General Security Concepts';
+  }
 
-  const topicsLower = topics.map(t => t.toLowerCase());
-
-  for (const [domain, keywords] of Object.entries(domainKeywords)) {
-    for (const topic of topicsLower) {
-      for (const keyword of keywords) {
-        if (topic.includes(keyword)) {
-          return domain;
-        }
+  // Look up each topic in ALL_SECURITY_PLUS_TOPICS to find its actual domain
+  for (const topic of topics) {
+    for (const [domain, domainTopics] of Object.entries(ALL_SECURITY_PLUS_TOPICS)) {
+      if (domainTopics.includes(topic)) {
+        return domain;
       }
     }
   }
 
-  // Default to most general domain if no match
+  // If no exact match found, default to most general domain
+  console.warn(`No domain found for topics: ${topics.join(', ')}`);
   return '1.0 General Security Concepts';
 }
 
@@ -76,11 +30,21 @@ export function getDomainFromTopics(topics: string[]): string {
 export function getDomainsFromTopics(topics: string[]): string[] {
   const domains = new Set<string>();
 
-  // Get domain for each topic individually
-  topics.forEach(topic => {
-    const domain = getDomainFromTopics([topic]);
-    domains.add(domain);
-  });
+  // Look up each topic individually
+  for (const topic of topics) {
+    for (const [domain, domainTopics] of Object.entries(ALL_SECURITY_PLUS_TOPICS)) {
+      if (domainTopics.includes(topic)) {
+        domains.add(domain);
+        break; // Found the domain for this topic, move to next topic
+      }
+    }
+  }
+
+  // If no domains found, return default
+  if (domains.size === 0) {
+    console.warn(`No domains found for topics: ${topics.join(', ')}`);
+    return ['1.0 General Security Concepts'];
+  }
 
   // Return sorted array of unique domains
   return Array.from(domains).sort();
