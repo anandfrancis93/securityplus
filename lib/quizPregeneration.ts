@@ -559,30 +559,28 @@ export function selectTopicsForQuestion(
     // Single domain, multiple topics: Select 2-4 topics from the same domain
     const topicCount = 2 + Math.floor(Math.random() * 3); // 2, 3, or 4 topics
 
-    if (priorityTopics.length >= topicCount) {
+    if (priorityTopics.length >= topicCount && metadata) {
       // Try to find topics from the same domain in priority list
-      if (metadata) {
-        const topicsByDomain = new Map<string, string[]>();
-        priorityTopics.forEach(topic => {
-          const coverage = metadata.topicCoverage[topic];
-          if (coverage) {
-            if (!topicsByDomain.has(coverage.domain)) {
-              topicsByDomain.set(coverage.domain, []);
-            }
-            topicsByDomain.get(coverage.domain)!.push(topic);
+      const topicsByDomain = new Map<string, string[]>();
+      priorityTopics.forEach(topic => {
+        const coverage = metadata.topicCoverage[topic];
+        if (coverage) {
+          if (!topicsByDomain.has(coverage.domain)) {
+            topicsByDomain.set(coverage.domain, []);
           }
-        });
+          topicsByDomain.get(coverage.domain)!.push(topic);
+        }
+      });
 
-        // Find a domain with enough topics
-        for (const [, topics] of topicsByDomain) {
-          if (topics.length >= topicCount) {
-            return topics.slice(0, topicCount);
-          }
+      // Find a domain with enough topics
+      for (const [, topics] of topicsByDomain) {
+        if (topics.length >= topicCount) {
+          return topics.slice(0, topicCount);
         }
       }
 
-      // Otherwise, just use priority topics (may span domains)
-      return priorityTopics.slice(0, topicCount);
+      // If no single domain has enough priority topics, fall through to random domain selection
+      // DO NOT mix domains for single-domain-multiple-topics category
     }
 
     // Select random domain and get topics from it

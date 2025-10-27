@@ -278,9 +278,25 @@ export async function generateQuestionWithTopics(
   }
 
   const difficultyGuidance = {
-    easy: 'The question should be straightforward, testing basic understanding or simple recall with clear, distinguishable answer options.',
-    medium: 'The question should require applying concepts in realistic scenarios with moderate complexity. Options should be plausible but distinguishable.',
-    hard: 'The question should be complex, requiring deep analysis and critical thinking. Incorrect options should be subtly wrong and require deep understanding to eliminate.'
+    easy: `EASY difficulty criteria:
+- Tests basic recall, definitions, or simple identification
+- No analysis or prioritization required - just know the answer
+- Clear, obvious correct answer once you know the concept
+- Incorrect options are clearly wrong to someone who studied
+- Example: "What port does HTTPS use?" or "What does CIA stand for in security?"`,
+    medium: `MEDIUM difficulty criteria:
+- Requires applying concepts to realistic scenarios
+- May involve choosing between 2-3 plausible options
+- Requires understanding HOW/WHY, not just WHAT
+- May ask "best practice" or "most appropriate" (but context makes answer clear)
+- Example: "Which authentication method is most appropriate for [specific scenario]?"`,
+    hard: `HARD difficulty criteria:
+- Requires deep analysis, synthesis, or prioritization
+- Must evaluate trade-offs or "MOST immediate/critical" decisions
+- Incorrect options are subtly wrong - require expert-level understanding
+- May combine multiple concepts or require security judgment
+- Tests critical thinking beyond memorization
+- Example: "Given [complex scenario], what is the MOST critical first step?" where multiple answers seem reasonable`
   };
 
   const categoryGuidance = {
@@ -309,18 +325,26 @@ You MUST create a question that tests these EXACT topics:
 ${topicStrings.map((t, i) => `${i + 1}. "${t}"`).join('\n')}
 
 CRITICAL REQUIREMENTS:
-1. Create a question based on the topics listed above
+1. Create a question that ONLY tests the topics listed above - do not introduce concepts from other domains
 2. Present a realistic Security+ exam scenario
 3. Include 4 answer options (A, B, C, D)
 4. Explain why the correct answer(s) are right
 5. Explain why each option is correct or wrong (provide 4 explanations)
+6. The difficulty rating in your response MUST match the requested difficulty: ${difficulty}
 
-CRITICAL - TOPIC TAGGING:
-- In the "topics" array, you MUST include the EXACT topic strings provided above
+CRITICAL - TOPIC TAGGING (VERY IMPORTANT):
+- In the "topics" array, you MUST include ONLY the EXACT topic strings provided above
 - Use these EXACT strings character-for-character: ${topicStrings.map(t => `"${t}"`).join(', ')}
 - Do NOT modify, paraphrase, or shorten these topic strings
 - Do NOT add additional topics beyond those provided
+- Do NOT introduce concepts from other Security+ domains not represented in the topic list
+- The question should ONLY test knowledge of the provided topics - nothing more
 - In metadata.primaryTopic, use the first topic from the list: "${topicStrings[0]}"
+
+CRITICAL - DIFFICULTY ACCURACY:
+- Your response MUST have "difficulty": "${difficulty}" in the JSON
+- Ensure the question actually matches the ${difficulty.toUpperCase()} criteria described above
+- Do not make an EASY question if ${difficulty} is hard, and vice versa
 
 CRITICAL - ANSWER LENGTH RANDOMIZATION:
 - VARY the length of ALL answer options
@@ -358,7 +382,16 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
       messages: [
         {
           role: "user",
-          content: `You are a CompTIA Security+ SY0-701 exam expert. Generate high-quality synthesis questions that test understanding across multiple security domains. Return only valid JSON, no markdown formatting.\n\n${prompt}`
+          content: `You are a CompTIA Security+ SY0-701 exam expert. Generate high-quality exam questions.
+
+CRITICAL RULES:
+1. ONLY test the exact topics provided - do not introduce unrelated domains
+2. Match the requested difficulty level precisely (easy = recall, medium = application, hard = analysis/prioritization)
+3. Use ONLY the exact topic strings provided in the "topics" array
+
+Return only valid JSON, no markdown formatting.
+
+${prompt}`
         }
       ]
     });
