@@ -4,7 +4,22 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useApp } from '@/components/AppProvider';
 import { QuizSession } from '@/lib/types';
-import { getDomainFromTopics } from '@/lib/domainDetection';
+import { getDomainFromTopics, getDomainsFromTopics } from '@/lib/domainDetection';
+
+// Helper function to infer question category from topics if not stored
+function inferQuestionCategory(topics: string[]): 'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics' {
+  if (!topics || topics.length === 0) return 'single-domain-single-topic';
+
+  const domains = getDomainsFromTopics(topics);
+
+  if (domains.length > 1) {
+    return 'multiple-domains-multiple-topics';
+  } else if (topics.length > 1) {
+    return 'single-domain-multiple-topics';
+  } else {
+    return 'single-domain-single-topic';
+  }
+}
 
 export default function QuizReviewPage() {
   const router = useRouter();
@@ -357,26 +372,37 @@ export default function QuizReviewPage() {
                     </div>
                   )}
 
-                  {/* Domain and Topics */}
-                  <div className="bg-zinc-950 rounded-md p-6 border border-zinc-800">
-                    <div className="space-y-4">
-                      {/* Domain */}
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-zinc-400 font-semibold font-mono">Domain:</span>
-                        <span className="px-3 py-1 rounded-md text-sm bg-zinc-900 text-zinc-300 border border-zinc-700 font-mono">
-                          {getDomainFromTopics(question.topics)}
+                  {/* Domain, Topics, Difficulty, and Type */}
+                  <div className="bg-zinc-950 rounded-md p-10 md:p-12 border-2 border-zinc-800">
+                    <div className="space-y-6">
+                      {/* Domain(s) */}
+                      <div className="flex items-center gap-4 flex-wrap">
+                        <span className="text-lg md:text-xl text-zinc-200 font-bold">
+                          {getDomainsFromTopics(question.topics).length > 1 ? 'Domains:' : 'Domain:'}
                         </span>
+                        <div className="flex flex-wrap gap-3">
+                          {getDomainsFromTopics(question.topics).map((domain, idx) => (
+                            <span
+                              key={idx}
+                              className="px-5 py-3 rounded-md text-base md:text-lg bg-zinc-900 text-zinc-300 border-2 border-zinc-700 font-bold"
+                            >
+                              {domain}
+                            </span>
+                          ))}
+                        </div>
                       </div>
 
                       {/* Topics */}
                       {question.topics && question.topics.length > 0 && (
-                        <div className="flex items-start gap-2 flex-wrap">
-                          <span className="text-sm text-zinc-400 font-semibold font-mono">Topics:</span>
-                          <div className="flex flex-wrap gap-2">
+                        <div className="flex items-start gap-4 flex-wrap">
+                          <span className="text-lg md:text-xl text-zinc-200 font-bold">
+                            {question.topics.length > 1 ? 'Topics:' : 'Topic:'}
+                          </span>
+                          <div className="flex flex-wrap gap-3">
                             {question.topics.map((topic, idx) => (
                               <span
                                 key={idx}
-                                className="px-3 py-1 rounded-md text-sm bg-zinc-900 text-zinc-300 border border-zinc-700 font-mono"
+                                className="px-5 py-3 rounded-md text-base md:text-lg bg-zinc-900 text-zinc-200 border-2 border-zinc-700 font-medium"
                               >
                                 {topic}
                               </span>
@@ -384,6 +410,31 @@ export default function QuizReviewPage() {
                           </div>
                         </div>
                       )}
+
+                      {/* Difficulty */}
+                      <div className="flex items-center gap-4 flex-wrap">
+                        <span className="text-lg md:text-xl text-zinc-200 font-bold">Difficulty:</span>
+                        <span className={`px-5 py-3 rounded-md text-base md:text-lg border-2 font-bold ${
+                          question.difficulty === 'easy' ? 'bg-green-900 text-green-200 border-green-700' :
+                          question.difficulty === 'medium' ? 'bg-yellow-900 text-yellow-200 border-yellow-700' :
+                          'bg-red-900 text-red-200 border-red-700'
+                        }`}>
+                          {question.difficulty.toUpperCase()}
+                        </span>
+                      </div>
+
+                      {/* Question Type */}
+                      <div className="flex items-center gap-4 flex-wrap">
+                        <span className="text-lg md:text-xl text-zinc-200 font-bold">Type:</span>
+                        <span className="px-5 py-3 rounded-md text-base md:text-lg bg-zinc-900 text-zinc-300 border-2 border-zinc-700 font-medium">
+                          {(() => {
+                            const category = question.questionCategory || inferQuestionCategory(question.topics);
+                            return category === 'single-domain-single-topic' ? 'Single Domain, Single Topic' :
+                                   category === 'single-domain-multiple-topics' ? 'Single Domain, Multiple Topics' :
+                                   'Multiple Domains, Multiple Topics';
+                          })()}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
