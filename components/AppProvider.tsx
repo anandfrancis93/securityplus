@@ -65,10 +65,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [userProgress]);
 
   // Background check: Ensure quiz cache always has 10 questions ready
+  // Runs on initial load and periodically every 10 minutes
   useEffect(() => {
-    if (!userId || !userProgress || isPregenerating) return;
+    if (!userId || !userProgress) return;
 
     const checkAndEnsureQuizCache = async () => {
+      if (isPregenerating) {
+        console.log('⏭️ Skipping cache check - pre-generation already in progress');
+        return;
+      }
+
       const cachedCount = userProgress.cachedQuiz?.questions?.length || 0;
 
       if (cachedCount < 10) {
@@ -107,11 +113,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
     };
 
-    // Run check after a short delay to avoid blocking initial load
-    const timeoutId = setTimeout(checkAndEnsureQuizCache, 2000);
+    // Run initial check after 2 seconds to avoid blocking initial load
+    const initialCheckTimeout = setTimeout(checkAndEnsureQuizCache, 2000);
 
-    return () => clearTimeout(timeoutId);
-  }, [userId, userProgress, isPregenerating]);
+    // Set up periodic check every 10 minutes
+    const periodicCheckInterval = setInterval(checkAndEnsureQuizCache, 10 * 60 * 1000);
+
+    return () => {
+      clearTimeout(initialCheckTimeout);
+      clearInterval(periodicCheckInterval);
+    };
+  }, [userId]); // Only re-run when userId changes (login/logout)
 
   // Initialize notifications and periodic checks
   useEffect(() => {
