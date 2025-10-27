@@ -198,18 +198,31 @@ export default function PerformancePage() {
   }, [menuOpen]);
 
   const handleResetProgress = async () => {
-    if (confirm('Are you sure you want to reset your quiz progress? This cannot be undone.')) {
+    console.log('[DEBUG] Reset button clicked');
+
+    const confirmed = confirm('Are you sure you want to reset your quiz progress? This cannot be undone.');
+    console.log('[DEBUG] User confirmed:', confirmed);
+
+    if (confirmed) {
       try {
-        console.log('Reset progress button clicked');
+        console.log('[DEBUG] Starting reset progress...');
+        console.log('[DEBUG] Current user ID:', user?.uid);
+        console.log('[DEBUG] Current progress:', userProgress);
+
         await resetProgress();
-        console.log('Reset progress completed successfully');
-        alert('Progress reset successfully!');
+
+        console.log('[DEBUG] Reset progress completed successfully');
+        alert('Progress reset successfully! The page will now reload.');
+
         // Force a page reload to ensure UI updates
+        console.log('[DEBUG] Reloading page...');
         window.location.reload();
       } catch (error) {
-        console.error('Error resetting progress:', error);
-        alert('Failed to reset progress. Please try again.');
+        console.error('[ERROR] Failed to reset progress:', error);
+        alert(`Failed to reset progress: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
+    } else {
+      console.log('[DEBUG] Reset cancelled by user');
     }
   };
 

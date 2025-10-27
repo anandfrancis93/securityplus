@@ -402,23 +402,31 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const resetProgress = async () => {
+    console.log('[DEBUG AppProvider] resetProgress called');
+    console.log('[DEBUG AppProvider] userId:', userId);
+    console.log('[DEBUG AppProvider] user:', user?.uid);
+    console.log('[DEBUG AppProvider] authUserId:', authUserId);
+
     if (!userId) {
-      console.error('Cannot reset progress: missing userId');
-      return;
+      console.error('[ERROR AppProvider] Cannot reset progress: missing userId');
+      throw new Error('User ID is missing');
     }
 
     try {
-      console.log('Starting progress reset for user:', userId);
+      console.log('[DEBUG AppProvider] Starting progress reset for user:', userId);
       await resetUserProgress(userId);
-      console.log('Database reset complete, refreshing progress...');
+      console.log('[DEBUG AppProvider] Database reset complete, refreshing progress...');
+
       await refreshProgress();
+      console.log('[DEBUG AppProvider] Progress refreshed');
 
       // Explicitly reset predicted score to 0
       setPredictedScore(0);
+      console.log('[DEBUG AppProvider] Predicted score reset to 0');
 
-      console.log('Progress reset complete');
+      console.log('[DEBUG AppProvider] Progress reset complete');
     } catch (error) {
-      console.error('Error resetting progress:', error);
+      console.error('[ERROR AppProvider] Error resetting progress:', error);
       throw error;
     }
   };

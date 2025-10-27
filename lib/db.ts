@@ -194,7 +194,7 @@ export async function calculatePredictedScore(progress: UserProgress): Promise<n
 
 export async function resetUserProgress(userId: string): Promise<void> {
   try {
-    console.log('Resetting progress for user:', userId);
+    console.log('[DEBUG db.ts] resetUserProgress called for user:', userId);
     const userRef = doc(db, USERS_COLLECTION, userId);
 
     const resetProgress: UserProgress = {
@@ -210,10 +210,13 @@ export async function resetUserProgress(userId: string): Promise<void> {
       // Do NOT preserve cachedQuiz or quizMetadata - complete reset
     };
 
+    console.log('[DEBUG db.ts] Reset data prepared:', resetProgress);
+    console.log('[DEBUG db.ts] Calling setDoc...');
     await setDoc(userRef, resetProgress);
-    console.log('User progress reset successfully (including cached questions)');
+    console.log('[DEBUG db.ts] setDoc completed successfully');
+    console.log('[DEBUG db.ts] User progress reset successfully (including cached questions)');
   } catch (error) {
-    console.error('Error resetting user progress:', error);
+    console.error('[ERROR db.ts] Error resetting user progress:', error);
     throw error;
   }
 }
