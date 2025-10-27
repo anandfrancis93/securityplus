@@ -162,6 +162,14 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
               userAnswers.some(ans => correctAnswers.includes(ans)) &&
               userAnswers.length > 0;
 
+            // Debug logging
+            console.log(`Question ${index + 1}:`, {
+              difficulty: question.difficulty,
+              questionCategory: question.questionCategory,
+              topics: question.topics,
+              inferredCategory: inferQuestionCategory(question.topics || [])
+            });
+
             return (
               <div key={attempt.questionId} className="space-y-4">
                 {/* Question Number Header */}
@@ -304,7 +312,8 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
                   )}
 
                   {/* Domain, Topics, Difficulty, and Type */}
-                  <div className="bg-gray-900 rounded-lg p-10 border-2 border-gray-700">
+                  <div className="bg-gray-900 rounded-lg p-10 border-2 border-blue-700">
+                    <h3 className="text-2xl font-bold text-blue-400 mb-6">Question Details</h3>
                     <div className="space-y-6">
                       {/* Domain(s) */}
                       <div className="flex items-center gap-4 flex-wrap">
@@ -341,6 +350,9 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
                           </div>
                         </div>
                       )}
+
+                      {/* Horizontal separator */}
+                      <div className="border-t-2 border-gray-700 my-4"></div>
 
                       {/* Difficulty */}
                       <div className="flex items-center gap-4 flex-wrap">
