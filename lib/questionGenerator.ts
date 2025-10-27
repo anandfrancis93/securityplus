@@ -69,7 +69,7 @@ function extractTopicKeywords(topic: string): string[] {
 
 /**
  * Check if a topic is mentioned in question text with sufficient presence
- * Requires the topic to appear in question stem, explanation, or multiple options
+ * Requires strong presence to avoid false positives from distractors
  */
 function isTopicPresent(
   topic: string,
@@ -78,30 +78,41 @@ function isTopicPresent(
   explanation: string
 ): boolean {
   const keywords = extractTopicKeywords(topic);
-  const allText = (questionText + ' ' + options.join(' ') + ' ' + explanation).toLowerCase();
+  const questionLower = questionText.toLowerCase();
+  const explanationLower = explanation.toLowerCase();
 
-  // Check if any keyword appears
-  const hasKeyword = keywords.some(keyword => allText.includes(keyword));
-  if (!hasKeyword) return false;
+  // Check if any keyword appears in question or explanation
+  const inQuestion = keywords.some(keyword => questionLower.includes(keyword));
+  const inExplanation = keywords.some(keyword => explanationLower.includes(keyword));
 
-  // Verify significant presence (not just passing mention)
+  if (!inQuestion && !inExplanation) return false;
+
+  // Calculate presence score
+  // Higher threshold to prevent false positives
   let presenceScore = 0;
 
   for (const keyword of keywords) {
-    if (questionText.toLowerCase().includes(keyword)) presenceScore += 2; // Question = strong signal
-    if (explanation.toLowerCase().includes(keyword)) presenceScore += 2;  // Explanation = strong signal
+    // Question presence = strong signal (concept is being tested)
+    if (questionLower.includes(keyword)) presenceScore += 3;
 
+    // Correct answer explanation = strong signal (concept is core to answer)
+    if (explanationLower.includes(keyword)) presenceScore += 3;
+
+    // Multiple options mention it = moderate signal
     const optionMatches = options.filter(opt => opt.toLowerCase().includes(keyword)).length;
-    if (optionMatches >= 2) presenceScore += 1; // Multiple options = moderate signal
+    if (optionMatches >= 2) presenceScore += 1;
   }
 
-  // Require score of at least 2 (e.g., appears in question OR explanation)
-  return presenceScore >= 2;
+  // Require score of at least 4 (e.g., in question AND explanation, or question with multiple options)
+  // This filters out topics only mentioned in passing or in incorrect answer distractors
+  return presenceScore >= 4;
 }
 
 /**
  * Analyze generated question and extract all Security+ topics actually tested
  * This provides deterministic tagging regardless of what topics were requested
+ * Note: Only scans question text, options, and correct answer explanation
+ * (incorrectExplanations are ignored as they contain distractor topics)
  */
 function analyzeQuestionForTopics(
   questionText: string,
@@ -110,18 +121,29 @@ function analyzeQuestionForTopics(
   incorrectExplanations: string[]
 ): string[] {
   const extractedTopics: string[] = [];
-  const allExplanations = explanation + ' ' + incorrectExplanations.join(' ');
 
+  // Only use correct answer explanation, not incorrect ones (they're distractors)
   // Scan all 400+ topics from authoritative list
   for (const [domain, topics] of Object.entries(ALL_SECURITY_PLUS_TOPICS)) {
     for (const topic of topics) {
-      if (isTopicPresent(topic, questionText, options, allExplanations)) {
+      if (isTopicPresent(topic, questionText, options, explanation)) {
         extractedTopics.push(topic);
       }
     }
   }
 
-  console.log(`Extracted ${extractedTopics.length} topics from generated question: ${extractedTopics.join(', ')}`);
+  // Sanity check: No question should test more than 8 topics
+  // If we extracted more, something went wrong (too many false positives)
+  if (extractedTopics.length > 8) {
+    console.warn(`⚠️ Extracted ${extractedTopics.length} topics (too many!) - likely false positives`);
+    console.warn(`   Topics: ${extractedTopics.join(', ')}`);
+    // Could implement scoring/ranking here, but for now just warn
+  }
+
+  console.log(`Extracted ${extractedTopics.length} topics from generated question`);
+  if (extractedTopics.length > 0) {
+    console.log(`   Topics: ${extractedTopics.join(', ')}`);
+  }
 
   return extractedTopics;
 }
