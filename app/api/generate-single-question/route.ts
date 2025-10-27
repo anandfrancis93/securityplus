@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { generateSynthesisQuestion, selectAdaptiveDifficulty, selectQuestionType } from '@/lib/questionGenerator';
+import { generateQuestionWithTopics, selectAdaptiveDifficulty, selectQuestionType } from '@/lib/questionGenerator';
+import { selectQuestionCategory, selectTopicsForQuestion } from '@/lib/quizPregeneration';
 
 export async function POST(request: NextRequest) {
   try {
@@ -39,10 +40,17 @@ export async function POST(request: NextRequest) {
       questionType = config.type;
     }
 
-    console.log(`Generating question ${questionNumber}: ${difficulty} ${questionType}-choice`);
+    // Select question category (single-domain-single-topic, single-domain-multiple-topics, multiple-domains-multiple-topics)
+    const questionCategory = selectQuestionCategory();
 
-    const question = await generateSynthesisQuestion(
-      excludeTopics,
+    // Select topics from our cleaned list based on category
+    const selectedTopics = selectTopicsForQuestion(questionCategory, []);
+
+    console.log(`Generating question ${questionNumber}: ${questionCategory}, ${difficulty} ${questionType}-choice, Topics: ${selectedTopics.join(', ')}`);
+
+    const question = await generateQuestionWithTopics(
+      selectedTopics,
+      questionCategory,
       difficulty,
       questionType
     );

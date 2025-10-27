@@ -9,7 +9,7 @@ import {
 import { generateQuestionWithTopics, generateSynthesisQuestion, selectAdaptiveDifficulty, selectQuestionType } from './questionGenerator';
 
 // All official Security+ SY0-701 topics organized by domain
-const ALL_SECURITY_PLUS_TOPICS: { [domain: string]: string[] } = {
+export const ALL_SECURITY_PLUS_TOPICS: { [domain: string]: string[] } = {
   '1.0 General Security Concepts': [
     // From 1.1 - Security Controls
     'Technical (control category)', 'Managerial (control category)', 'Operational (control category)', 'Physical (control category)',
@@ -494,7 +494,7 @@ export function isDuplicateQuestion(
 /**
  * Select random topics from a specific domain
  */
-function selectRandomTopicsFromDomain(domain: string, count: number): string[] {
+export function selectRandomTopicsFromDomain(domain: string, count: number): string[] {
   const topics = ALL_SECURITY_PLUS_TOPICS[domain];
   if (!topics || topics.length === 0) return [];
 
@@ -505,7 +505,7 @@ function selectRandomTopicsFromDomain(domain: string, count: number): string[] {
 /**
  * Select random topics from multiple domains for cross-domain questions
  */
-function selectCrossDomainTopics(count: number): string[] {
+export function selectCrossDomainTopics(count: number): string[] {
   const domains = Object.keys(ALL_SECURITY_PLUS_TOPICS);
   const selectedTopics: string[] = [];
 
@@ -527,7 +527,7 @@ function selectCrossDomainTopics(count: number): string[] {
  * Select question category based on distribution
  * 70% single-domain-single-topic, 25% single-domain-multiple-topics, 5% multiple-domains-multiple-topics
  */
-function selectQuestionCategory(): 'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics' {
+export function selectQuestionCategory(): 'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics' {
   const random = Math.random();
   if (random < 0.70) return 'single-domain-single-topic';
   if (random < 0.95) return 'single-domain-multiple-topics'; // 0.70 to 0.95 = 25%
@@ -540,7 +540,7 @@ function selectQuestionCategory(): 'single-domain-single-topic' | 'single-domain
  * @param priorityTopics - Topics to prioritize (e.g., uncovered topics)
  * @param metadata - Quiz generation metadata for domain-aware selection
  */
-function selectTopicsForQuestion(
+export function selectTopicsForQuestion(
   questionCategory: 'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics',
   priorityTopics: string[] = [],
   metadata?: QuizGenerationMetadata
