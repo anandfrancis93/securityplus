@@ -317,14 +317,43 @@ CRITICAL - TOPIC TAGGING (VERY IMPORTANT):
 - The question should ONLY test knowledge of the provided topics - nothing more
 - In metadata.primaryTopic, use the first topic from the list: "${topicStrings[0]}"
 
-CRITICAL - ANSWER LENGTH RANDOMIZATION:
-- VARY the length of ALL answer options
-- Make some INCORRECT answers LONGER than correct answers
-- Make some INCORRECT answers MORE DETAILED than correct answers
-- The correct answer should NOT always be the longest option
-- Some correct answers should be SHORT and concise
-- Some incorrect answers should be LONG and detailed but subtly wrong
-- This prevents guessing based on answer length
+CRITICAL - ANSWER QUALITY AND ANTI-TELLTALE MEASURES:
+
+1. LENGTH VARIATION (prevent length-based guessing):
+   - VARY the length of ALL answer options (15-60 words each)
+   - Make some INCORRECT answers LONGER than correct answers
+   - Make some INCORRECT answers MORE DETAILED than correct answers
+   - The correct answer should NOT always be the longest option
+   - Some correct answers should be SHORT and concise (15-25 words)
+   - Some incorrect answers should be LONG and detailed but subtly wrong (40-60 words)
+
+2. PLAUSIBLE DISTRACTORS (prevent obvious elimination):
+   - ALL incorrect options must be related to the same topic/domain as the question
+   - Wrong answers should be "close but not quite right" - not completely unrelated
+   - Use common misconceptions, partial solutions, or alternatives that seem reasonable
+   - Example: If testing IaC security, ALL options should involve IaC/cloud/security concepts
+   - DO NOT include options from completely different domains (e.g., physical security for a cloud question)
+
+3. AVOID KEYWORD MATCHING (prevent telegraphing):
+   - DO NOT repeat exact keywords from the question stem in the correct answer
+   - If question mentions "encryption", correct answer should rephrase as "cryptographic protection" or "secure data at rest"
+   - Use synonyms and paraphrasing to avoid obvious pattern matching
+   - Incorrect answers can use question keywords to make them seem more plausible
+
+4. BALANCED TECHNICAL DEPTH:
+   - All 4 options should have similar levels of technical specificity
+   - If one option mentions specific tools/protocols, others should too
+   - Mix implementation details and conceptual approaches evenly across options
+   - Don't make correct answer obviously more detailed/professional than others
+
+5. SUBTLE INCORRECTNESS:
+   - Wrong answers should be subtly wrong (wrong timing, wrong context, incomplete solution)
+   - Not obviously absurd or unrelated
+   - Examples of good subtle incorrectness:
+     * Right tool, wrong use case
+     * Right concept, wrong implementation order
+     * Partially correct but missing critical component
+     * Correct for different scenario but not this one
 
 Security+ Topics Reference (for context only):
 ${SECURITY_PLUS_TOPICS}
@@ -353,11 +382,16 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
       messages: [
         {
           role: "user",
-          content: `You are a CompTIA Security+ SY0-701 exam expert. Generate high-quality exam questions.
+          content: `You are a CompTIA Security+ SY0-701 exam expert. Generate high-quality exam questions that cannot be guessed through test-taking strategies.
 
-CRITICAL RULES:
+CRITICAL QUALITY RULES:
 1. ONLY test the exact topics provided - do not introduce unrelated domains
 2. Use ONLY the exact topic strings provided in the "topics" array
+3. ALL answer options must be plausible and related to the question topic
+4. VARY answer lengths - don't make correct answer always longest or shortest
+5. AVOID repeating keywords from question in correct answer - use synonyms
+6. Make incorrect answers subtly wrong, not obviously unrelated
+7. All options should have similar technical depth and specificity
 
 Return only valid JSON, no markdown formatting.
 
