@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateQuestionWithTopics, selectQuestionType } from '@/lib/questionGenerator';
 import { selectQuestionCategory, selectTopicsForQuestion } from '@/lib/quizPregeneration';
-import { authenticateRequest } from '@/lib/apiAuth';
+import { authenticateRequest, authenticateAndAuthorize } from '@/lib/apiAuth';
 import { GenerateSingleQuestionSchema, safeValidateRequestBody } from '@/lib/apiValidation';
+import { addQuestionToSession, sanitizeQuestionForClient } from '@/lib/quizStateManager';
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,9 +24,19 @@ export async function POST(request: NextRequest) {
     }
 
     const {
+      userId,
+      quizSessionId,
       excludeTopics = [],
       questionNumber = 1,
     } = validation.data;
+
+    // SECURITY: If userId provided, authenticate and authorize
+    if (userId) {
+      const authResult = await authenticateAndAuthorize(request, { userId });
+      if (authResult instanceof NextResponse) {
+        return authResult;
+      }
+    }
 
     // Select question type (single or multiple choice)
     const questionType = selectQuestionType();
@@ -47,7 +58,16 @@ export async function POST(request: NextRequest) {
 
     console.log(`Question ${questionNumber} generated successfully: ${question.difficulty} difficulty`);
 
-    return NextResponse.json({ question });
+    // If quizSessionId provided, add question to the session
+    if (quizSessionId && userId) {
+      await addQuestionToSession(userId, quizSessionId, question);
+      console.log(`Added question to quiz session ${quizSessionId}`);
+    }
+
+    // SECURITY: Sanitize question before returning (remove correct answer)
+    const sanitizedQuestion = sanitizeQuestionForClient(question);
+
+    return NextResponse.json({ question: sanitizedQuestion });
   } catch (error: any) {
     console.error(`Error generating question:`, error);
     console.error('Error details:', {

@@ -5,6 +5,7 @@ import { useApp } from './AppProvider';
 import { useRouter } from 'next/navigation';
 import { Question } from '@/lib/types';
 import { getDomainFromTopics, getDomainsFromTopics } from '@/lib/domainDetection';
+import { authenticatedPost } from '@/lib/apiClient';
 
 export default function QuizPage() {
   const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, user, loading: authLoading, handleSignOut } = useApp();
@@ -76,7 +77,8 @@ export default function QuizPage() {
         console.log('✅ Using full pre-generated cached quiz (10 questions)!');
         console.log(`  Phase: ${userProgress.quizMetadata?.allTopicsCoveredOnce ? 2 : 1}`);
         console.log(`  Generated ${(Date.now() - userProgress.cachedQuiz.generatedAt) / 1000}s ago`);
-        setQuestions(userProgress.cachedQuiz.questions);
+        // SECURITY: Questions are sanitized (no correctAnswer), cast to Question[]
+        setQuestions(userProgress.cachedQuiz.questions as Question[]);
         setLoading(false);
         clearCachedQuiz();
         return;
@@ -85,7 +87,8 @@ export default function QuizPage() {
         console.log(`✅ Using partial cached quiz (${cachedCount} questions)!`);
         console.log(`  Will generate ${totalQuestions - cachedCount} more questions`);
         console.log(`  Generated ${(Date.now() - userProgress.cachedQuiz.generatedAt) / 1000}s ago`);
-        setQuestions(userProgress.cachedQuiz.questions);
+        // SECURITY: Questions are sanitized (no correctAnswer), cast to Question[]
+        setQuestions(userProgress.cachedQuiz.questions as Question[]);
         setLoading(false);
         clearCachedQuiz();
         // The useEffect will automatically generate remaining questions in background
@@ -104,10 +107,8 @@ export default function QuizPage() {
 
     try {
       // Clear cached quiz from Firebase
-      await fetch('/api/clear-cached-quiz', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user.uid }),
+      await authenticatedPost('/api/clear-cached-quiz', {
+        userId: user.uid,
       });
       console.log('Cached quiz cleared from Firebase');
     } catch (error) {
@@ -131,30 +132,18 @@ export default function QuizPage() {
       const currentAbility = userProgress?.estimatedAbility || 0;
       const useAdaptive = true; // Enable pseudo-adaptive selection
 
-      const response = await fetch('/api/generate-single-question', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          excludeTopics: userProgress?.answeredQuestions || [],
-          questionNumber,
-          currentAbility,
-          useAdaptive,
-        }),
+      const data = await authenticatedPost('/api/generate-single-question', {
+        userId: user?.uid,
+        quizSessionId: userProgress?.cachedQuiz?.quizSessionId,
+        excludeTopics: userProgress?.answeredQuestions || [],
+        questionNumber,
+        currentAbility,
+        useAdaptive,
       });
 
-      const data = await response.json();
-
-      // Check for API errors
-      if (!response.ok) {
-        if (response.status === 429) {
-          setErrorMessage('Too many requests. Please wait a moment and try again.');
-        } else if (response.status === 500) {
-          setErrorMessage('Server error generating questions. This may be due to API limits or a temporary issue. Please try again in a few minutes.');
-        } else if (response.status === 401 || response.status === 403) {
-          setErrorMessage('Authentication error. Please contact support.');
-        } else {
-          setErrorMessage(`Failed to generate question: ${data.error || 'Unknown error'}. Please try again.`);
-        }
+      // Check for API errors (authenticatedPost will throw if there's an error, caught below)
+      if (data.error) {
+        setErrorMessage(`Failed to generate question: ${data.error}. Please try again.`);
         console.error('API error:', data);
         return;
       }
@@ -195,15 +184,15 @@ export default function QuizPage() {
     }
   };
 
-  const handleSubmitAnswer = () => {
+  const handleSubmitAnswer = async () => {
     const currentQuestion = questions[currentQuestionIndex];
 
     if (currentQuestion.questionType === 'multiple') {
       if (selectedAnswers.length === 0) return;
-      answerQuestion(currentQuestion, selectedAnswers);
+      await answerQuestion(currentQuestion, selectedAnswers);
     } else {
       if (selectedAnswer === null) return;
-      answerQuestion(currentQuestion, selectedAnswer);
+      await answerQuestion(currentQuestion, selectedAnswer);
     }
 
     setShowExplanation(true);

@@ -10,6 +10,8 @@ export const GenerateQuestionsSchema = z.object({
 });
 
 export const GenerateSingleQuestionSchema = z.object({
+  userId: FirebaseUidSchema.optional(),
+  quizSessionId: z.string().min(1).max(100).optional(),
   excludeTopics: z.array(z.string().max(300)).max(100).optional(),
   questionNumber: z.number().int().min(1).max(100).optional(),
 });
@@ -45,6 +47,18 @@ export const ValidatePairingCodeSchema = z.object({
 // Create pairing code schema
 export const CreatePairingCodeSchema = z.object({
   userId: FirebaseUidSchema,
+});
+
+// Answer verification schema
+export const VerifyAnswerSchema = z.object({
+  userId: FirebaseUidSchema,
+  quizSessionId: z.string().min(1).max(100),
+  questionId: z.string().min(1).max(100),
+  userAnswer: z.union([
+    z.number().int().min(0).max(3), // Single answer (0-3)
+    z.array(z.number().int().min(0).max(3)).min(1).max(4), // Multiple answers
+  ]),
+  questionNumber: z.number().int().min(1).max(100).optional(),
 });
 
 /**

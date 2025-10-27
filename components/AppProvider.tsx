@@ -5,6 +5,7 @@ import { auth, signOut } from '@/lib/firebase';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { getUserProgress, saveQuizSession, calculatePredictedScore, resetUserProgress, saveUnusedQuestionsToCache } from '@/lib/db';
 import { UserProgress, QuizSession, Question, QuestionAttempt, CachedQuiz } from '@/lib/types';
+import { authenticatedPost } from '@/lib/apiClient';
 import {
   getEffectiveUserId,
   createPairingCode,
@@ -83,16 +84,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setIsPregenerating(true);
         // Trigger pre-generation in background
         try {
-          const response = await fetch('/api/pregenerate-quiz', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              userId,
-              completedQuestions: [], // No completed questions, just fill the cache
-            }),
+          const data = await authenticatedPost('/api/pregenerate-quiz', {
+            userId,
+            completedQuestions: [], // No completed questions, just fill the cache
           });
 
-          const data = await response.json();
           if (data.success) {
             console.log('✅ Background pre-generation complete:', {
               questionsCount: data.questionsCount,
@@ -223,59 +219,57 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setCurrentQuiz(newQuiz);
   };
 
-  const answerQuestion = (question: Question, answer: number | number[]) => {
-    if (!currentQuiz) return;
-
-    const maxPoints = question.maxPoints || 100;
-    let pointsEarned = 0;
-    let isCorrect = false;
-
-    if (question.questionType === 'multiple' && Array.isArray(answer) && Array.isArray(question.correctAnswer)) {
-      // Multiple-response question with partial credit
-      pointsEarned = calculatePartialCredit(
-        answer,
-        question.correctAnswer,
-        question.options.length,
-        maxPoints
-      );
-
-      // Full credit only if all correct answers selected and no incorrect ones
-      isCorrect = pointsEarned === maxPoints;
-    } else {
-      // Single-choice question
-      const userAnswerIndex = Array.isArray(answer) ? answer[0] : answer;
-      isCorrect = userAnswerIndex === question.correctAnswer;
-      pointsEarned = isCorrect ? maxPoints : 0;
+  const answerQuestion = async (question: Question, answer: number | number[]) => {
+    if (!currentQuiz || !userId || !userProgress?.cachedQuiz?.quizSessionId) {
+      console.error('Cannot answer question: missing required data');
+      return;
     }
 
-    const attempt: QuestionAttempt = {
-      questionId: question.id,
-      question,
-      userAnswer: answer,
-      isCorrect,
-      pointsEarned,
-      maxPoints,
-      answeredAt: Date.now(),
-    };
+    try {
+      // SECURITY: Verify answer server-side
+      const verificationResult = await authenticatedPost('/api/verify-answer', {
+        userId,
+        quizSessionId: userProgress.cachedQuiz.quizSessionId,
+        questionId: question.id,
+        userAnswer: answer,
+        questionNumber: currentQuiz.questions.length + 1,
+      });
 
-    const updatedQuiz = {
-      ...currentQuiz,
-      questions: [...currentQuiz.questions, attempt],
-      score: currentQuiz.questions.filter(q => q.isCorrect).length + (isCorrect ? 1 : 0),
-      totalPoints: currentQuiz.totalPoints + pointsEarned,
-      maxPoints: currentQuiz.maxPoints + maxPoints,
-    };
+      const { isCorrect, pointsEarned, maxPoints } = verificationResult;
 
-    setCurrentQuiz(updatedQuiz);
+      const attempt: QuestionAttempt = {
+        questionId: question.id,
+        question,
+        userAnswer: answer,
+        isCorrect,
+        pointsEarned,
+        maxPoints,
+        answeredAt: Date.now(),
+      };
 
-    console.log('Question answered:', {
-      questionType: question.questionType,
-      difficulty: question.difficulty,
-      pointsEarned,
-      maxPoints,
-      isCorrect,
-      partialCredit: pointsEarned < maxPoints && pointsEarned > 0
-    });
+      const updatedQuiz = {
+        ...currentQuiz,
+        questions: [...currentQuiz.questions, attempt],
+        score: currentQuiz.questions.filter(q => q.isCorrect).length + (isCorrect ? 1 : 0),
+        totalPoints: currentQuiz.totalPoints + pointsEarned,
+        maxPoints: currentQuiz.maxPoints + maxPoints,
+      };
+
+      setCurrentQuiz(updatedQuiz);
+
+      console.log('Question answered (server-verified):', {
+        questionType: question.questionType,
+        difficulty: question.difficulty,
+        pointsEarned,
+        maxPoints,
+        isCorrect,
+        partialCredit: pointsEarned < maxPoints && pointsEarned > 0
+      });
+    } catch (error) {
+      console.error('Error verifying answer:', error);
+      // Handle error - show user feedback
+      alert('Failed to submit answer. Please try again.');
+    }
   };
 
   const endQuiz = async (unusedQuestions?: Question[]) => {
@@ -370,15 +364,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }));
 
       // Call pre-generation API (non-blocking)
-      fetch('/api/pregenerate-quiz', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId,
-          completedQuestions,
-        }),
+      authenticatedPost('/api/pregenerate-quiz', {
+        userId,
+        completedQuestions,
       })
-        .then(response => response.json())
         .then(data => {
           if (data.success) {
             console.log('✅ Next quiz pre-generated successfully:', {

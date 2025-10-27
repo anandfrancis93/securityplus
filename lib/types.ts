@@ -134,10 +134,11 @@ export interface TopicCoverageStatus {
 }
 
 export interface CachedQuiz {
-  questions: Question[];
+  questions: Partial<Question>[]; // SECURITY: Questions WITHOUT correctAnswer field
   generatedAt: number;
   generatedForAbility: number; // Ability level at time of generation
   generatedAfterQuiz: number; // Quiz number after which this was generated
+  quizSessionId?: string; // Server-side quiz session ID (contains full questions with correct answers)
 }
 
 export interface QuizGenerationMetadata {

@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebaseAdmin';
-import { UserProgress, CachedQuiz } from '@/lib/types';
+import { UserProgress, CachedQuiz, Question } from '@/lib/types';
 import { pregenerateQuiz, initializeQuizMetadata, updateMetadataAfterQuiz } from '@/lib/quizPregeneration';
 import { authenticateAndAuthorize } from '@/lib/apiAuth';
 import { PregenerateQuizSchema, safeValidateRequestBody } from '@/lib/apiValidation';
+import { createQuizSession, sanitizeQuestionsForClient } from '@/lib/quizStateManager';
 
 export async function POST(request: NextRequest) {
   try {
@@ -65,13 +66,28 @@ export async function POST(request: NextRequest) {
 
     console.log(`Quiz generated successfully in ${generationTime}ms with ${cachedQuiz.questions.length} questions`);
 
-    // Save cached quiz and updated metadata to Firebase
+    // SECURITY: Create server-side quiz session with full questions (including correct answers)
+    // Note: cachedQuiz.questions are full Question[] from pregenerateQuiz, cast to handle type
+    const fullQuestions = cachedQuiz.questions as Question[];
+    const quizSessionId = await createQuizSession(userId, fullQuestions);
+    console.log(`Created quiz session ${quizSessionId} with ${fullQuestions.length} questions`);
+
+    // SECURITY: Sanitize questions for client (remove correct answers)
+    const sanitizedQuestions = sanitizeQuestionsForClient(fullQuestions);
+
+    // Save cached quiz with sanitized questions and quiz session ID
+    const secureCache = {
+      ...cachedQuiz,
+      questions: sanitizedQuestions, // Questions WITHOUT correct answers
+      quizSessionId, // Reference to server-side quiz session
+    };
+
     await userRef.update({
-      cachedQuiz: cachedQuiz,
+      cachedQuiz: secureCache,
       quizMetadata: userProgress.quizMetadata,
     });
 
-    console.log('Cached quiz saved to Firebase');
+    console.log('Cached quiz saved to Firebase (without correct answers)');
 
     return NextResponse.json({
       success: true,
@@ -80,6 +96,7 @@ export async function POST(request: NextRequest) {
       generationTimeMs: generationTime,
       phase: userProgress.quizMetadata.allTopicsCoveredOnce ? 2 : 1,
       totalQuizzesCompleted: userProgress.quizMetadata.totalQuizzesCompleted,
+      quizSessionId, // Return session ID to client
     });
   } catch (error: any) {
     console.error('Error pre-generating quiz:', error);
