@@ -385,9 +385,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                     <h4 className="text-xl md:text-2xl font-semibold text-blue-400 tracking-tight">
                       <span className="mr-1">{domainNum}</span>{domainName}
                     </h4>
-                    <span className="text-sm md:text-base text-slate-400">
-                      {totalCovered} of {totalTopics} topics covered
-                    </span>
                   </div>
 
                   <div className="border border-gray-800 rounded-[20px] overflow-hidden bg-black">
