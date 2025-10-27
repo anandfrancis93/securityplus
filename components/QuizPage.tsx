@@ -9,7 +9,7 @@ import { authenticatedPost } from '@/lib/apiClient';
 import Header from './Header';
 
 export default function QuizPage() {
-  const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, user, loading: authLoading } = useApp();
+  const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, user, loading: authLoading, liquidGlass } = useApp();
   const router = useRouter();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -250,16 +250,23 @@ export default function QuizPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-white font-mono">
+      <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black font-mono'}`}>
+        {liquidGlass && (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          </div>
+        )}
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 max-w-7xl">
           <Header className="mb-8" />
 
           {/* Loading spinner */}
           <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
-            <div className="text-center animate-in fade-in slide-in-from-bottom-4 duration-150">
-              <div className="animate-spin rounded-md h-24 w-24 md:h-32 md:w-32 border-4 border-zinc-800 border-t-zinc-400 mx-auto"></div>
-              <p className="mt-8 text-zinc-200 text-2xl md:text-3xl font-bold">Generating first question...</p>
-              <p className="mt-3 text-zinc-400 text-lg md:text-xl">This will take about 10 seconds</p>
+            <div className={`text-center animate-in fade-in slide-in-from-bottom-4 duration-150 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-12 shadow-2xl' : ''}`}>
+              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />}
+              <div className={`animate-spin rounded-md h-24 w-24 md:h-32 md:w-32 border-4 ${liquidGlass ? 'border-white/10 border-t-white/40' : 'border-zinc-800 border-t-zinc-400'} mx-auto relative`}></div>
+              <p className={`mt-8 text-2xl md:text-3xl font-bold relative ${liquidGlass ? 'text-white' : 'text-zinc-200'}`}>Generating first question...</p>
+              <p className={`mt-3 text-lg md:text-xl relative ${liquidGlass ? 'text-zinc-400' : 'text-zinc-400'}`}>This will take about 10 seconds</p>
             </div>
           </div>
         </div>
@@ -269,17 +276,24 @@ export default function QuizPage() {
 
   if (questions.length === 0) {
     return (
-      <div className="min-h-screen bg-black text-white font-mono">
+      <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black font-mono'}`}>
+        {liquidGlass && (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-red-500/10 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          </div>
+        )}
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 max-w-7xl">
           <Header className="mb-8" />
 
           {/* Error message */}
           <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
             <div className="text-center max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-150">
-              <div className="bg-zinc-950 border-2 border-red-500 rounded-md p-10 md:p-12 mb-8">
-                <div className="text-red-400 text-7xl md:text-8xl mb-8">⚠️</div>
-                <h3 className="text-3xl md:text-4xl font-bold text-red-400 mb-6">Question Generation Failed</h3>
-                <p className="text-zinc-200 text-lg md:text-xl leading-relaxed">
+              <div className={`border-2 border-red-500 p-10 md:p-12 mb-8 relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-zinc-950 rounded-md'}`}>
+                {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />}
+                <div className="text-red-400 text-7xl md:text-8xl mb-8 relative">⚠️</div>
+                <h3 className="text-3xl md:text-4xl font-bold text-red-400 mb-6 relative">Question Generation Failed</h3>
+                <p className={`text-lg md:text-xl leading-relaxed relative ${liquidGlass ? 'text-zinc-200' : 'text-zinc-200'}`}>
                   {errorMessage || 'Failed to generate questions. Please try again.'}
                 </p>
               </div>
@@ -289,7 +303,7 @@ export default function QuizPage() {
                     setErrorMessage('');
                     router.push('/cybersecurity');
                   }}
-                  className="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 px-10 md:px-12 py-4 md:py-5 rounded-md font-bold text-lg md:text-xl transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-zinc-700"
+                  className={`px-10 md:px-12 py-4 md:py-5 font-bold text-lg md:text-xl ${liquidGlass ? 'bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/20 rounded-2xl text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/30' : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-md transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-zinc-700'}`}
                 >
                   Back to Cybersecurity
                 </button>
@@ -298,7 +312,7 @@ export default function QuizPage() {
                     setErrorMessage('');
                     window.location.reload();
                   }}
-                  className="bg-zinc-700 hover:bg-zinc-600 text-white px-10 md:px-12 py-4 md:py-5 rounded-md font-bold text-lg md:text-xl transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-zinc-700"
+                  className={`px-10 md:px-12 py-4 md:py-5 font-bold text-lg md:text-xl ${liquidGlass ? 'bg-white/5 hover:bg-white/15 backdrop-blur-xl border border-white/20 rounded-2xl text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/30' : 'bg-zinc-700 hover:bg-zinc-600 text-white rounded-md transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-zinc-700'}`}
                 >
                   Try Again
                 </button>
@@ -345,12 +359,22 @@ export default function QuizPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white font-mono">
+    <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black font-mono'}`}>
+      {/* Animated Background Gradients (Liquid Glass only) */}
+      {liquidGlass && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        </div>
+      )}
+
       {/* Celebration Modal */}
       {showCelebration && (
-        <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4 animate-in fade-in duration-150 overflow-y-auto">
-          <div className="bg-zinc-950 rounded-md p-6 sm:p-8 md:p-12 max-w-2xl w-full my-auto border-2 border-zinc-800 animate-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
-            <div className="text-center">
+        <div className={`fixed inset-0 flex items-center justify-center z-50 p-4 animate-in fade-in duration-150 overflow-y-auto ${liquidGlass ? 'bg-black/80 backdrop-blur-sm' : 'bg-black/90'}`}>
+          <div className={`p-6 sm:p-8 md:p-12 max-w-2xl w-full my-auto border-2 animate-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto relative ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border-white/20 rounded-3xl shadow-2xl' : 'bg-zinc-950 border-zinc-800 rounded-md'}`}>
+            {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />}
+            <div className="text-center relative">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 md:mb-8 text-white">
                 Quiz Complete!
               </h2>
@@ -363,16 +387,18 @@ export default function QuizPage() {
               </div>
 
               {isPassing ? (
-                <div className="bg-zinc-900 border-2 border-green-500 rounded-md p-4 sm:p-6 md:p-8 mb-6 md:mb-10">
-                  <p className="text-green-400 font-bold text-xl md:text-2xl mb-3 md:mb-4">Great Job!</p>
-                  <p className="text-zinc-200 text-base md:text-lg leading-relaxed">
+                <div className={`border-2 border-green-500 p-4 sm:p-6 md:p-8 mb-6 md:mb-10 relative ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-2xl' : 'bg-zinc-900 rounded-md'}`}>
+                  {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-transparent rounded-2xl" />}
+                  <p className="text-green-400 font-bold text-xl md:text-2xl mb-3 md:mb-4 relative">Great Job!</p>
+                  <p className="text-zinc-200 text-base md:text-lg leading-relaxed relative">
                     You&apos;re showing strong understanding of Security+ concepts. Keep up the excellent work!
                   </p>
                 </div>
               ) : (
-                <div className="bg-zinc-900 border-2 border-yellow-500 rounded-md p-4 sm:p-6 md:p-8 mb-6 md:mb-10">
-                  <p className="text-yellow-400 font-bold text-xl md:text-2xl mb-3 md:mb-4">Keep Practicing!</p>
-                  <p className="text-zinc-200 text-base md:text-lg leading-relaxed">
+                <div className={`border-2 border-yellow-500 p-4 sm:p-6 md:p-8 mb-6 md:mb-10 relative ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-2xl' : 'bg-zinc-900 rounded-md'}`}>
+                  {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-transparent rounded-2xl" />}
+                  <p className="text-yellow-400 font-bold text-xl md:text-2xl mb-3 md:mb-4 relative">Keep Practicing!</p>
+                  <p className="text-zinc-200 text-base md:text-lg leading-relaxed relative">
                     Review the explanations and try again. Each quiz helps you improve!
                   </p>
                 </div>
