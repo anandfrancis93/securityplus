@@ -479,37 +479,37 @@ export default function QuizPage() {
     <div className="min-h-screen bg-black text-white font-mono">
       {/* Celebration Modal */}
       {showCelebration && (
-        <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4 animate-in fade-in duration-150">
-          <div className="bg-zinc-950 rounded-md p-12 md:p-16 max-w-2xl w-full border-2 border-zinc-800 animate-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4 animate-in fade-in duration-150 overflow-y-auto">
+          <div className="bg-zinc-950 rounded-md p-6 sm:p-8 md:p-12 max-w-2xl w-full my-auto border-2 border-zinc-800 animate-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
             <div className="text-center">
-              <h2 className="text-5xl md:text-6xl font-bold mb-8 text-white">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 md:mb-8 text-white">
                 Quiz Complete!
               </h2>
 
-              <div className="mb-10">
-                <div className="text-8xl md:text-9xl font-bold mb-4 text-zinc-100">
+              <div className="mb-6 md:mb-10">
+                <div className="text-5xl sm:text-6xl md:text-7xl font-bold mb-3 md:mb-4 text-zinc-100">
                   {correctAnswers}/{totalAnswered}
                 </div>
-                <div className="text-3xl md:text-4xl text-zinc-200 font-bold">{accuracy}% Accuracy</div>
+                <div className="text-2xl sm:text-3xl md:text-4xl text-zinc-200 font-bold">{accuracy}% Accuracy</div>
               </div>
 
               {isPassing ? (
-                <div className="bg-zinc-900 border-2 border-green-500 rounded-md p-8 mb-10">
-                  <p className="text-green-400 font-bold text-2xl mb-4">Great Job!</p>
-                  <p className="text-zinc-200 text-lg leading-relaxed">
+                <div className="bg-zinc-900 border-2 border-green-500 rounded-md p-4 sm:p-6 md:p-8 mb-6 md:mb-10">
+                  <p className="text-green-400 font-bold text-xl md:text-2xl mb-3 md:mb-4">Great Job!</p>
+                  <p className="text-zinc-200 text-base md:text-lg leading-relaxed">
                     You&apos;re showing strong understanding of Security+ concepts. Keep up the excellent work!
                   </p>
                 </div>
               ) : (
-                <div className="bg-zinc-900 border-2 border-yellow-500 rounded-md p-8 mb-10">
-                  <p className="text-yellow-400 font-bold text-2xl mb-4">Keep Practicing!</p>
-                  <p className="text-zinc-200 text-lg leading-relaxed">
+                <div className="bg-zinc-900 border-2 border-yellow-500 rounded-md p-4 sm:p-6 md:p-8 mb-6 md:mb-10">
+                  <p className="text-yellow-400 font-bold text-xl md:text-2xl mb-3 md:mb-4">Keep Practicing!</p>
+                  <p className="text-zinc-200 text-base md:text-lg leading-relaxed">
                     Review the explanations and try again. Each quiz helps you improve!
                   </p>
                 </div>
               )}
 
-              <div className="space-y-4 mb-10 text-lg text-zinc-300">
+              <div className="space-y-2 sm:space-y-3 md:space-y-4 mb-6 md:mb-10 text-sm sm:text-base md:text-lg text-zinc-300">
                 <p>✓ Progress saved to your account</p>
                 <p>✓ IRT score updated</p>
                 <p>✓ Predicted exam score recalculated</p>
@@ -517,7 +517,7 @@ export default function QuizPage() {
 
               <button
                 onClick={handleCelebrationClose}
-                className="w-full bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-6 rounded-md text-xl transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-zinc-700"
+                className="w-full bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-4 sm:py-5 md:py-6 rounded-md text-lg sm:text-xl transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-zinc-700"
               >
                 Done
               </button>
