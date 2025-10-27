@@ -105,8 +105,22 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
         border: '1px solid #374151'
       }}>
       <div className="relative w-full bg-gray-900 rounded-xl shadow-2xl">
+        {/* DEPLOYMENT TEST BANNER - REMOVE AFTER CONFIRMING */}
+        <div style={{
+          backgroundColor: '#ff0000',
+          color: 'white',
+          padding: '16px',
+          textAlign: 'center',
+          fontSize: '20px',
+          fontWeight: 'bold',
+          borderTopLeftRadius: '12px',
+          borderTopRightRadius: '12px'
+        }}>
+          🚀 DEPLOYMENT TEST: Latest changes deployed successfully! (You should see Difficulty & Type below each question)
+        </div>
+
         {/* Header */}
-        <div className="sticky top-0 z-10 bg-gray-800 border-b border-gray-700 rounded-t-xl p-6">
+        <div className="sticky top-0 z-10 bg-gray-800 border-b border-gray-700 p-6">
           <div className="flex items-start justify-between">
             <div>
               <h2 className="text-2xl font-bold text-white mb-2">Quiz Review</h2>
