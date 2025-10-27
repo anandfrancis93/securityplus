@@ -173,8 +173,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
   });
 
   const domainPerformance = Object.entries(domainStats).map(([domain, stats]) => {
-    // Extract domain number (e.g., "1.0" from "1.0 General Security Concepts")
-    const domainNum = domain.split(' ')[0];
+    // Extract domain number (e.g., "1." from "1.0 General Security Concepts")
+    const domainNum = domain.split(' ')[0].replace('.0', '.');
     const domainName = domain.replace(/^\d+\.\d+\s+/, ''); // Remove "1.0 " prefix
 
     const totalQuestions = stats.questionIds.size;
@@ -376,7 +376,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             })
             .map(([domain, topics]) => {
               const domainName = domain.replace(/^\d+\.\d+\s+/, '');
-              const domainNum = domain.split(' ')[0];
+              const domainNum = domain.split(' ')[0].replace('.0', '.');
               const totalCovered = topics.filter(t => t.count > 0).length;
               const totalTopics = topics.length;
 
