@@ -52,6 +52,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [predictedScore, setPredictedScore] = useState(0);
   const [isPaired, setIsPaired] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isPregenerating, setIsPregenerating] = useState(false);
 
   useEffect(() => {
     initAuth();
@@ -62,6 +63,55 @@ export function AppProvider({ children }: { children: ReactNode }) {
       calculatePredictedScore(userProgress).then(setPredictedScore);
     }
   }, [userProgress]);
+
+  // Background check: Ensure quiz cache always has 10 questions ready
+  useEffect(() => {
+    if (!userId || !userProgress || isPregenerating) return;
+
+    const checkAndEnsureQuizCache = async () => {
+      const cachedCount = userProgress.cachedQuiz?.questions?.length || 0;
+
+      if (cachedCount < 10) {
+        console.log(`📋 Background check: Only ${cachedCount}/10 questions cached, triggering pre-generation...`);
+
+        setIsPregenerating(true);
+        // Trigger pre-generation in background
+        try {
+          const response = await fetch('/api/pregenerate-quiz', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId,
+              completedQuestions: [], // No completed questions, just fill the cache
+            }),
+          });
+
+          const data = await response.json();
+          if (data.success) {
+            console.log('✅ Background pre-generation complete:', {
+              questionsCount: data.questionsCount,
+              generationTime: `${data.generationTimeMs}ms`,
+            });
+            // Refresh progress to get the newly cached quiz
+            await refreshProgress();
+          } else {
+            console.error('Background pre-generation failed:', data.error);
+          }
+        } catch (error) {
+          console.error('Error in background pre-generation:', error);
+        } finally {
+          setIsPregenerating(false);
+        }
+      } else {
+        console.log(`✅ Quiz cache ready: ${cachedCount}/10 questions available`);
+      }
+    };
+
+    // Run check after a short delay to avoid blocking initial load
+    const timeoutId = setTimeout(checkAndEnsureQuizCache, 2000);
+
+    return () => clearTimeout(timeoutId);
+  }, [userId, userProgress, isPregenerating]);
 
   // Initialize notifications and periodic checks
   useEffect(() => {
