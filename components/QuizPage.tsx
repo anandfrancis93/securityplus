@@ -748,7 +748,7 @@ export default function QuizPage() {
                   : 'bg-zinc-950 border-red-500'
               }`}
             >
-              <div className="flex items-center justify-between mb-8">
+              <div className="mb-8">
                 <h3 className={`text-3xl md:text-4xl font-bold ${
                   isCorrect
                     ? 'text-green-400'
@@ -758,15 +758,6 @@ export default function QuizPage() {
                 }`}>
                   {isCorrect ? '✓ Correct!' : isPartiallyCorrect ? '◐ Partially Correct' : '✗ Incorrect'}
                 </h3>
-                <span className={`px-5 py-3 rounded-md text-base md:text-lg font-bold ${
-                  currentQuestion.difficulty === 'easy'
-                    ? 'bg-green-950 text-green-300 border-2 border-green-500'
-                    : currentQuestion.difficulty === 'medium'
-                    ? 'bg-yellow-950 text-yellow-300 border-2 border-yellow-500'
-                    : 'bg-red-950 text-red-300 border-2 border-red-500'
-                }`}>
-                  {currentQuestion.difficulty.charAt(0).toUpperCase() + currentQuestion.difficulty.slice(1)}
-                </span>
               </div>
               <div className="mb-8">
                 <p className="font-bold text-zinc-200 mb-4 text-xl md:text-2xl">
