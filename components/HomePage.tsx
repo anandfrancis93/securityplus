@@ -7,7 +7,7 @@ import Header from './Header';
 
 export default function HomePage() {
   const router = useRouter();
-  const { user, loading } = useApp();
+  const { user, loading, liquidGlass } = useApp();
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   // Redirect to login if not authenticated
@@ -19,7 +19,7 @@ export default function HomePage() {
 
   // SVG Icon Components with Glow
   const getSubjectIcon = (subjectId: string, isHovered: boolean) => {
-    const baseClasses = `w-20 h-20 md:w-24 md:h-24 transition-all duration-500 ${isHovered ? 'scale-110 drop-shadow-[0_0_15px_currentColor]' : ''}`;
+    const baseClasses = `w-20 h-20 md:w-24 md:h-24 transition-all duration-500 ${liquidGlass && isHovered ? 'scale-110 drop-shadow-[0_0_15px_currentColor]' : ''}`;
 
     switch (subjectId) {
       case 'cybersecurity':
@@ -130,41 +130,54 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-zinc-950 to-black text-white relative overflow-hidden">
-      {/* Animated Background Gradients */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-      </div>
+    <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
+      {/* Animated Background Gradients (Liquid Glass only) */}
+      {liquidGlass && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        </div>
+      )}
 
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl">
         {/* Header */}
         <header className="mb-16 md:mb-20">
           <Header className="mb-12" />
 
-          {/* Hero Section - Frosted Glass Card */}
+          {/* Hero Section */}
           <div className="text-center max-w-4xl mx-auto">
-            <div className="relative">
-              {/* Glow effect behind title */}
-              <div className="absolute inset-0 bg-gradient-to-r from-violet-500/20 via-cyan-500/20 to-emerald-500/20 blur-3xl" />
+            {liquidGlass ? (
+              <div className="relative">
+                {/* Glow effect behind title */}
+                <div className="absolute inset-0 bg-gradient-to-r from-violet-500/20 via-cyan-500/20 to-emerald-500/20 blur-3xl" />
 
-              <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-12 shadow-2xl">
-                {/* Light reflection overlay */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />
+                <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-12 shadow-2xl">
+                  {/* Light reflection overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />
 
-                <h1 className="relative text-6xl sm:text-7xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-white via-zinc-100 to-white bg-clip-text text-transparent tracking-tight">
+                  <h1 className="relative text-6xl sm:text-7xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-white via-zinc-100 to-white bg-clip-text text-transparent tracking-tight">
+                    Learning Hub
+                  </h1>
+                  <p className="relative text-zinc-400 text-base md:text-lg tracking-wide">
+                    Select a subject to begin your learning journey
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <>
+                <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold mb-6 text-white tracking-tight">
                   Learning Hub
                 </h1>
-                <p className="relative text-zinc-400 text-base md:text-lg tracking-wide">
+                <p className="text-zinc-500 text-base md:text-lg">
                   Select a subject to begin your learning journey
                 </p>
-              </div>
-            </div>
+              </>
+            )}
           </div>
         </header>
 
-        {/* Subject Cards Grid - Glass Morphism */}
+        {/* Subject Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 pb-12">
           {subjects.map((subject) => (
             <button
@@ -174,24 +187,33 @@ export default function HomePage() {
               disabled={subject.disabled}
               onMouseEnter={() => subject.clickable && setHoveredCard(subject.id)}
               onMouseLeave={() => setHoveredCard(null)}
-              className={`group relative bg-white/5 backdrop-blur-2xl rounded-3xl p-8 border transition-all duration-500 transform
+              className={`group relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-zinc-950 rounded-md'} p-8 border transform
+                       ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-300'}
                        ${subject.disabled
-                         ? 'border-white/5 opacity-40 cursor-not-allowed'
+                         ? liquidGlass ? 'border-white/5 opacity-40 cursor-not-allowed' : 'border-zinc-900 opacity-40 cursor-not-allowed'
                          : subject.clickable
                            ? hoveredCard === subject.id
-                             ? `border-white/20 bg-white/10 scale-105 shadow-2xl ${subject.glowColor}`
-                             : 'border-white/10 hover:border-white/20'
-                           : 'border-white/10 cursor-default'
+                             ? liquidGlass
+                               ? `border-white/20 bg-white/10 scale-105 shadow-2xl ${subject.glowColor}`
+                               : 'border-zinc-700 bg-zinc-900'
+                             : liquidGlass
+                               ? 'border-white/10 hover:border-white/20'
+                               : 'border-zinc-800 hover:border-zinc-700'
+                           : liquidGlass
+                             ? 'border-white/10 cursor-default'
+                             : 'border-zinc-800 cursor-default'
                        }
-                       focus:outline-none focus:ring-2 focus:ring-white/30`}
+                       ${liquidGlass ? 'focus:outline-none focus:ring-2 focus:ring-white/30' : 'focus:outline-none focus:ring-2 focus:ring-zinc-700'}`}
             >
-              {/* Gradient overlay on hover */}
-              {hoveredCard === subject.id && subject.clickable && (
+              {/* Gradient overlay on hover (Liquid Glass only) */}
+              {liquidGlass && hoveredCard === subject.id && subject.clickable && (
                 <div className={`absolute inset-0 bg-gradient-to-br ${subject.gradient} rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
               )}
 
-              {/* Light reflection */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+              {/* Light reflection (Liquid Glass only) */}
+              {liquidGlass && (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+              )}
 
               {/* Content */}
               <div className="relative">
@@ -206,7 +228,7 @@ export default function HomePage() {
                 </h2>
 
                 {/* Description */}
-                <p className="text-zinc-400 text-sm md:text-base min-h-[3rem]">
+                <p className={`text-sm md:text-base min-h-[3rem] ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'}`}>
                   {subject.description}
                 </p>
               </div>
@@ -214,18 +236,18 @@ export default function HomePage() {
               {/* Coming Soon Badge */}
               {subject.disabled && (
                 <div className="absolute top-4 right-4">
-                  <span className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-xl text-zinc-400 text-xs font-medium px-3 py-1.5 rounded-full border border-white/20">
-                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-500 animate-pulse" />
+                  <span className={`inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 ${liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-400 rounded-full border border-white/20' : 'bg-zinc-900 text-zinc-500 rounded-md border border-zinc-800'}`}>
+                    <span className={`${liquidGlass ? 'w-1.5 h-1.5 bg-zinc-500 animate-pulse' : 'w-1 h-1 bg-zinc-600'} rounded-full`} />
                     Coming Soon
                   </span>
                 </div>
               )}
 
-              {/* Active Indicator Arrow with Glow */}
+              {/* Active Indicator Arrow */}
               {subject.clickable && hoveredCard === subject.id && (
-                <div className="absolute bottom-6 right-6 text-white/80 animate-pulse">
+                <div className={`absolute bottom-6 right-6 ${liquidGlass ? 'text-white/80 animate-pulse' : 'text-zinc-600'}`}>
                   <svg
-                    className="w-6 h-6 drop-shadow-[0_0_8px_currentColor]"
+                    className={`${liquidGlass ? 'w-6 h-6 drop-shadow-[0_0_8px_currentColor]' : 'w-5 h-5'}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
