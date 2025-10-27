@@ -5,6 +5,166 @@ import { useApp } from './AppProvider';
 import { useRouter } from 'next/navigation';
 import { hasSufficientData } from '@/lib/irt';
 import PerformanceGraphs from './PerformanceGraphs';
+import { UserProgress } from '@/lib/types';
+
+// Generate dynamic insights based on actual performance
+function generatePerformanceInsights(userProgress: UserProgress | null, estimatedAbility: number): string[] {
+  if (!userProgress || !userProgress.quizHistory || userProgress.quizHistory.length === 0) {
+    return ['Not enough data yet - take more quizzes for personalized insights'];
+  }
+
+  const insights: string[] = [];
+
+  // Collect all attempts
+  const allAttempts = userProgress.quizHistory.flatMap(quiz => quiz.questions);
+
+  if (allAttempts.length === 0) return ['No question attempts found'];
+
+  // Analyze by difficulty
+  const byDifficulty = {
+    easy: { total: 0, correct: 0, points: 0, maxPoints: 0 },
+    medium: { total: 0, correct: 0, points: 0, maxPoints: 0 },
+    hard: { total: 0, correct: 0, points: 0, maxPoints: 0 },
+  };
+
+  // Analyze by category
+  const byCategory = {
+    'single-domain-single-topic': { total: 0, correct: 0, points: 0, maxPoints: 0 },
+    'single-domain-multiple-topics': { total: 0, correct: 0, points: 0, maxPoints: 0 },
+    'multiple-domains-multiple-topics': { total: 0, correct: 0, points: 0, maxPoints: 0 },
+  };
+
+  // Analyze by type
+  const byType = {
+    single: { total: 0, correct: 0 },
+    multiple: { total: 0, correct: 0, partialCredit: 0 },
+  };
+
+  // Domain performance
+  const domainPerformance: { [domain: string]: { correct: number; total: number } } = {};
+
+  allAttempts.forEach(attempt => {
+    const q = attempt.question;
+    const difficulty = q.difficulty || 'medium';
+    const category = q.questionCategory || 'single-domain-single-topic';
+    const type = q.questionType || 'single';
+
+    // Track by difficulty
+    byDifficulty[difficulty].total++;
+    if (attempt.isCorrect) byDifficulty[difficulty].correct++;
+    byDifficulty[difficulty].points += attempt.pointsEarned;
+    byDifficulty[difficulty].maxPoints += attempt.maxPoints;
+
+    // Track by category
+    byCategory[category].total++;
+    if (attempt.isCorrect) byCategory[category].correct++;
+    byCategory[category].points += attempt.pointsEarned;
+    byCategory[category].maxPoints += attempt.maxPoints;
+
+    // Track by type
+    byType[type].total++;
+    if (attempt.isCorrect) byType[type].correct++;
+    if (type === 'multiple' && attempt.pointsEarned > 0 && attempt.pointsEarned < attempt.maxPoints) {
+      byType[type].partialCredit++;
+    }
+
+    // Track by domain
+    q.topics?.forEach((topic: string) => {
+      // Extract domain from topic (this is simplified - you may need better domain extraction)
+      const domainMatch = topic.match(/^\d+\.\d+\s+(.+)$/);
+      const domain = domainMatch ? domainMatch[1] : 'Unknown';
+
+      if (!domainPerformance[domain]) {
+        domainPerformance[domain] = { correct: 0, total: 0 };
+      }
+      domainPerformance[domain].total++;
+      if (attempt.isCorrect) domainPerformance[domain].correct++;
+    });
+  });
+
+  // Generate insights based on analysis
+
+  // 1. Difficulty Performance Insight
+  const difficultyInsight = [];
+  for (const [diff, stats] of Object.entries(byDifficulty)) {
+    if (stats.total > 0) {
+      const acc = ((stats.correct / stats.total) * 100).toFixed(0);
+      difficultyInsight.push(`${diff}: ${acc}%`);
+    }
+  }
+  if (difficultyInsight.length > 0) {
+    insights.push(`Accuracy by difficulty: ${difficultyInsight.join(', ')}`);
+  }
+
+  // 2. Strength/Weakness by Difficulty
+  if (byDifficulty.easy.total >= 3 && byDifficulty.easy.correct / byDifficulty.easy.total < 0.7) {
+    insights.push('⚠️ Struggling with easy questions - review fundamental concepts');
+  } else if (byDifficulty.hard.total >= 3 && byDifficulty.hard.correct / byDifficulty.hard.total >= 0.75) {
+    insights.push('💪 Strong performance on hard questions - excellent mastery');
+  } else if (byDifficulty.medium.total >= 5 && byDifficulty.medium.correct / byDifficulty.medium.total >= 0.8) {
+    insights.push('✅ Solid grasp of medium difficulty concepts');
+  }
+
+  // 3. Category Performance Insight
+  const multiDomain = byCategory['multiple-domains-multiple-topics'];
+  if (multiDomain.total >= 3) {
+    const acc = (multiDomain.correct / multiDomain.total) * 100;
+    if (acc >= 75) {
+      insights.push(`🎯 Excelling at cross-domain synthesis (${acc.toFixed(0)}% accuracy)`);
+    } else if (acc < 50) {
+      insights.push(`📚 Improve cross-domain integration (currently ${acc.toFixed(0)}%)`);
+    }
+  }
+
+  const multiTopic = byCategory['single-domain-multiple-topics'];
+  if (multiTopic.total >= 3) {
+    const acc = (multiTopic.correct / multiTopic.total) * 100;
+    if (acc < 60) {
+      insights.push(`⚡ Focus on connecting multiple concepts within domains (${acc.toFixed(0)}%)`);
+    }
+  }
+
+  // 4. Question Type Performance
+  if (byType.multiple.total >= 3) {
+    const multiAcc = ((byType.multiple.correct / byType.multiple.total) * 100).toFixed(0);
+    if (byType.multiple.partialCredit > 0) {
+      insights.push(`Partial credit earned on ${byType.multiple.partialCredit} multi-select questions - review all correct options`);
+    }
+    if (byType.multiple.correct / byType.multiple.total < 0.6) {
+      insights.push(`Multi-select questions need work (${multiAcc}%) - practice "select all that apply"`);
+    }
+  }
+
+  // 5. Recent Performance Trend (last 3 quizzes)
+  if (userProgress.quizHistory.length >= 3) {
+    const recentQuizzes = userProgress.quizHistory.slice(-3);
+    const recentAccuracies = recentQuizzes.map(quiz =>
+      quiz.questions.length > 0 ? (quiz.questions.filter(q => q.isCorrect).length / quiz.questions.length) * 100 : 0
+    );
+    const avgRecent = recentAccuracies.reduce((a, b) => a + b, 0) / recentAccuracies.length;
+
+    if (recentAccuracies.length === 3) {
+      if (recentAccuracies[2] > recentAccuracies[0] + 10) {
+        insights.push('📈 Improving trend - keep up the momentum!');
+      } else if (recentAccuracies[2] < recentAccuracies[0] - 10) {
+        insights.push('📉 Recent dip in performance - consider reviewing recent topics');
+      }
+    }
+  }
+
+  // 6. Overall recommendation based on ability
+  if (estimatedAbility >= 1.5) {
+    insights.push('🚀 Exam-ready performance - consider scheduling your test');
+  } else if (estimatedAbility >= 1.0) {
+    insights.push('✅ On track for passing - continue building confidence');
+  } else if (estimatedAbility >= 0) {
+    insights.push('📖 Moderate understanding - increase practice volume');
+  } else {
+    insights.push('🎯 Focus on fundamentals - start with easier questions');
+  }
+
+  return insights.length > 0 ? insights : ['Continue taking quizzes for more detailed insights'];
+}
 
 export default function PerformancePage() {
   const { user, userProgress, predictedScore, loading, resetProgress, handleSignOut } = useApp();
@@ -399,112 +559,31 @@ export default function PerformancePage() {
 
                 <div className="bg-black rounded-md p-6 border border-zinc-800">
                   <div className="text-base text-zinc-300 leading-relaxed font-mono">
-                    {estimatedAbility >= 1.5 ? (
-                      <>
-                        <p className="text-emerald-400 font-semibold mb-4 flex items-center gap-2 text-lg font-mono">
-                          Excellent Performance!
-                        </p>
-                        <ul className="space-y-3 text-sm">
-                          <li className="flex items-start gap-3">
-                            <span className="text-blue-400 mt-1">▸</span>
-                            <span>Strong mastery across Security+ topics</span>
-                          </li>
-                          <li className="flex items-start gap-3">
-                            <span className="text-blue-400 mt-1">▸</span>
-                            <span>Handling harder synthesis questions well</span>
-                          </li>
-                          <li className="flex items-start gap-3">
-                            <span className="text-blue-400 mt-1">▸</span>
-                            <span>Deep understanding demonstrated</span>
-                          </li>
-                        </ul>
-                      </>
-                    ) : estimatedAbility >= 1.0 ? (
-                      <>
-                        <p className="text-emerald-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg font-mono">
-                          Good Performance
-                        </p>
-                        <ul className="space-y-3 text-sm">
-                          <li className="flex items-start gap-3">
-                            <span className="text-blue-400 mt-1">▸</span>
-                            <span>On track to pass the exam</span>
-                          </li>
-                          <li className="flex items-start gap-3">
-                            <span className="text-blue-400 mt-1">▸</span>
-                            <span>Handling medium-hard questions effectively</span>
-                          </li>
-                          <li className="flex items-start gap-3">
-                            <span className="text-blue-400 mt-1">▸</span>
-                            <span>Continue practicing to solidify knowledge</span>
-                          </li>
-                        </ul>
-                      </>
-                    ) : estimatedAbility >= 0 ? (
-                      <>
-                        <p className="text-yellow-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg font-mono">
-                          Average Performance
-                        </p>
-                        <ul className="space-y-3 text-sm">
-                          <li className="flex items-start gap-3">
-                            <span className="text-yellow-400 mt-1">▸</span>
-                            <span>Moderate understanding shown</span>
-                          </li>
-                          <li className="flex items-start gap-3">
-                            <span className="text-yellow-400 mt-1">▸</span>
-                            <span>Focus on multi-concept questions</span>
-                          </li>
-                          <li className="flex items-start gap-3">
-                            <span className="text-yellow-400 mt-1">▸</span>
-                            <span>Review explanations carefully</span>
-                          </li>
-                        </ul>
-                      </>
-                    ) : estimatedAbility >= -1 ? (
-                      <>
-                        <p className="text-yellow-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg font-mono">
-                          Below Average
-                        </p>
-                        <ul className="space-y-3 text-sm">
-                          <li className="flex items-start gap-3">
-                            <span className="text-yellow-400 mt-1">▸</span>
-                            <span>Struggling with harder questions</span>
-                          </li>
-                          <li className="flex items-start gap-3">
-                            <span className="text-yellow-400 mt-1">▸</span>
-                            <span>Review fundamental concepts</span>
-                          </li>
-                          <li className="flex items-start gap-3">
-                            <span className="text-yellow-400 mt-1">▸</span>
-                            <span>Focus on understanding, not memorizing</span>
-                          </li>
-                        </ul>
-                      </>
-                    ) : (
-                      <>
-                        <p className="text-red-400 font-semibold mb-4 flex items-center gap-2 tracking-tight text-lg font-mono">
-                          Needs Improvement
-                        </p>
-                        <ul className="space-y-3 text-sm">
-                          <li className="flex items-start gap-3">
-                            <span className="text-red-400 mt-1">▸</span>
-                            <span>More practice needed</span>
-                          </li>
-                          <li className="flex items-start gap-3">
-                            <span className="text-red-400 mt-1">▸</span>
-                            <span>Start with easier questions</span>
-                          </li>
-                          <li className="flex items-start gap-3">
-                            <span className="text-red-400 mt-1">▸</span>
-                            <span>Build foundational knowledge first</span>
-                          </li>
-                        </ul>
-                      </>
-                    )}
-                    {isGoodPerformance && (
-                      <p className="text-sm text-zinc-400 mt-4 pt-4 border-t border-zinc-700 font-mono">
-                        This level suggests likely exam success
-                      </p>
-                    )}
+                    <p className={`font-semibold mb-4 flex items-center gap-2 text-lg font-mono ${
+                      estimatedAbility >= 1.5 ? 'text-emerald-400' :
+                      estimatedAbility >= 1.0 ? 'text-emerald-400' :
+                      estimatedAbility >= 0 ? 'text-yellow-400' :
+                      estimatedAbility >= -1 ? 'text-yellow-400' :
+                      'text-red-400'
+                    }`}>
+                      {estimatedAbility >= 1.5 ? 'Excellent Performance!' :
+                       estimatedAbility >= 1.0 ? 'Good Performance' :
+                       estimatedAbility >= 0 ? 'Average Performance' :
+                       estimatedAbility >= -1 ? 'Below Average' :
+                       'Needs Improvement'}
+                    </p>
+                    <ul className="space-y-3 text-sm">
+                      {generatePerformanceInsights(userProgress, estimatedAbility).map((insight, index) => (
+                        <li key={index} className="flex items-start gap-3">
+                          <span className={`mt-1 ${
+                            estimatedAbility >= 1.0 ? 'text-blue-400' :
+                            estimatedAbility >= -1 ? 'text-yellow-400' :
+                            'text-red-400'
+                          }`}>▸</span>
+                          <span>{insight}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               </>
