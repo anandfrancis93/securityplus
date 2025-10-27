@@ -36,11 +36,11 @@ const CustomBarTooltip = ({ active, payload, label, color }: any) => {
         <div className="border-t border-gray-800 pt-3 space-y-1">
           <p className="text-xs text-slate-400">Performance Ranges:</p>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded" style={{ backgroundColor: '#ef4444' }}></div>
+            <div className="w-3 h-3 rounded" style={{ backgroundColor: '#ff0000' }}></div>
             <span className="text-xs text-slate-300">&lt; 70% (Low)</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded" style={{ backgroundColor: '#eab308' }}></div>
+            <div className="w-3 h-3 rounded" style={{ backgroundColor: '#f5a623' }}></div>
             <span className="text-xs text-slate-300">70-84% (Good)</span>
           </div>
           <div className="flex items-center gap-2">
@@ -256,9 +256,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               dot={(props: any) => {
                 const { cx, cy, payload } = props;
                 const ability = payload.ability;
-                let fill = '#ef4444'; // Red for below average
+                let fill = '#ff0000'; // Red for below average
                 if (ability >= 1) fill = '#22c55e'; // Green for excellent
-                else if (ability >= 0) fill = '#eab308'; // Yellow for average to good
+                else if (ability >= 0) fill = '#f5a623'; // Yellow for average to good
                 return <circle cx={cx} cy={cy} r={5} fill={fill} />;
               }}
             />
@@ -288,9 +288,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               dot={(props: any) => {
                 const { cx, cy, payload } = props;
                 const score = payload.score;
-                let fill = '#ef4444'; // Red for below passing
+                let fill = '#ff0000'; // Red for below passing
                 if (score >= 800) fill = '#22c55e'; // Green for excellent
-                else if (score >= 750) fill = '#eab308'; // Yellow for passing
+                else if (score >= 750) fill = '#f5a623'; // Yellow for passing
                 return <circle cx={cx} cy={cy} r={5} fill={fill} />;
               }}
             />
@@ -309,9 +309,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             <Tooltip content={(props) => {
               if (props.active && props.payload && props.payload.length) {
                 const accuracy = props.payload[0].payload.accuracy;
-                let color = '#ef4444'; // Red
+                let color = '#ff0000'; // Red
                 if (accuracy >= 85) color = '#22c55e'; // Green
-                else if (accuracy >= 70) color = '#eab308'; // Yellow
+                else if (accuracy >= 70) color = '#f5a623'; // Yellow
                 return <CustomBarTooltip {...props} color={color} />;
               }
               return null;
@@ -319,9 +319,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             <Bar dataKey="accuracy" radius={[8, 8, 0, 0]}>
               {accuracyByDifficulty.map((entry, index) => {
                 const accuracy = entry.accuracy;
-                let fill = '#ef4444'; // Red for low accuracy
+                let fill = '#ff0000'; // Red for low accuracy
                 if (accuracy >= 85) fill = '#22c55e'; // Green for excellent
-                else if (accuracy >= 70) fill = '#eab308'; // Yellow for good
+                else if (accuracy >= 70) fill = '#f5a623'; // Yellow for good
                 return <Cell key={`cell-${index}`} fill={fill} />;
               })}
             </Bar>
@@ -341,9 +341,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               <Tooltip content={(props) => {
                 if (props.active && props.payload && props.payload.length) {
                   const accuracy = props.payload[0].payload.accuracy;
-                  let color = '#ef4444'; // Red
+                  let color = '#ff0000'; // Red
                   if (accuracy >= 85) color = '#22c55e'; // Green
-                  else if (accuracy >= 70) color = '#eab308'; // Yellow
+                  else if (accuracy >= 70) color = '#f5a623'; // Yellow
                   return <CustomBarTooltip {...props} color={color} />;
                 }
                 return null;
@@ -351,9 +351,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               <Bar dataKey="accuracy" radius={[0, 8, 8, 0]}>
                 {domainPerformance.map((entry, index) => {
                   const accuracy = entry.accuracy;
-                  let fill = '#ef4444'; // Red for low accuracy
+                  let fill = '#ff0000'; // Red for low accuracy
                   if (accuracy >= 85) fill = '#22c55e'; // Green for excellent
-                  else if (accuracy >= 70) fill = '#eab308'; // Yellow for good
+                  else if (accuracy >= 70) fill = '#f5a623'; // Yellow for good
                   return <Cell key={`cell-${index}`} fill={fill} />;
                 })}
               </Bar>
