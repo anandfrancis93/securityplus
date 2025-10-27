@@ -109,12 +109,96 @@ function isTopicPresent(
 }
 
 /**
- * Analyze generated question and extract all Security+ topics actually tested
- * This provides deterministic tagging regardless of what topics were requested
- * Note: Only scans question text, options, and correct answer explanation
- * (incorrectExplanations are ignored as they contain distractor topics)
+ * Use AI to identify which topics a generated question actually tests
+ * This is more accurate than keyword matching as it understands context and semantics
  */
-function analyzeQuestionForTopics(
+async function identifyTopicsWithAI(
+  questionText: string,
+  options: string[],
+  correctAnswer: number | number[],
+  explanation: string
+): Promise<string[]> {
+  const correctAnswerText = Array.isArray(correctAnswer)
+    ? correctAnswer.map(i => options[i]).join(', ')
+    : options[correctAnswer];
+
+  const prompt = `You just generated this CompTIA Security+ SY0-701 question:
+
+QUESTION:
+${questionText}
+
+OPTIONS:
+${options.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`).join('\n')}
+
+CORRECT ANSWER: ${correctAnswerText}
+
+EXPLANATION:
+${explanation}
+
+Here is the COMPLETE list of Security+ SY0-701 topics (organized by domain):
+
+${JSON.stringify(ALL_SECURITY_PLUS_TOPICS, null, 2)}
+
+Your task: Identify which topics from the list above this question ACTUALLY TESTS.
+
+Rules:
+1. Only include topics that are CENTRAL to answering the question correctly
+2. Do NOT include topics only mentioned in wrong answer distractors
+3. Return EXACT topic strings from the list above (copy character-for-character)
+4. If a topic appears multiple times with different qualifiers (e.g., "Cost (architecture consideration)" vs "Cost (automation consideration)"), pick the MOST relevant one based on context
+5. Typically questions test 1-5 topics, rarely more than 6
+6. Think about what knowledge is REQUIRED to select the correct answer
+
+Return ONLY a valid JSON array of exact topic strings:
+["exact topic string 1", "exact topic string 2", ...]
+
+No explanation, just the JSON array.`;
+
+  try {
+    const message = await anthropic.messages.create({
+      model: "claude-sonnet-4-5-20250929",
+      max_tokens: 1024,
+      temperature: 0, // Deterministic for consistency
+      messages: [{ role: "user", content: prompt }]
+    });
+
+    const content = message.content[0];
+    if (content.type !== 'text') {
+      throw new Error('Unexpected response type from Claude');
+    }
+
+    const textContent = content.text.trim();
+    const jsonContent = textContent.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+    const extractedTopics: string[] = JSON.parse(jsonContent);
+
+    // Validation: Should be array of strings
+    if (!Array.isArray(extractedTopics)) {
+      throw new Error('AI did not return an array');
+    }
+
+    // Sanity check: No question should test more than 8 topics
+    if (extractedTopics.length > 8) {
+      console.warn(`⚠️ AI extracted ${extractedTopics.length} topics (seems high!)`);
+      console.warn(`   Topics: ${extractedTopics.join(', ')}`);
+    }
+
+    console.log(`AI identified ${extractedTopics.length} topics: ${extractedTopics.join(', ')}`);
+
+    return extractedTopics;
+
+  } catch (error) {
+    console.error('Error identifying topics with AI:', error);
+    // Fallback: return empty array (will trigger fallback to requested topics)
+    return [];
+  }
+}
+
+/**
+ * LEGACY: Keyword-based topic extraction (no longer used, kept for reference)
+ * Replaced by AI-based identification which is more accurate
+ */
+function analyzeQuestionForTopics_LEGACY(
   questionText: string,
   options: string[],
   explanation: string,
@@ -130,19 +214,6 @@ function analyzeQuestionForTopics(
         extractedTopics.push(topic);
       }
     }
-  }
-
-  // Sanity check: No question should test more than 8 topics
-  // If we extracted more, something went wrong (too many false positives)
-  if (extractedTopics.length > 8) {
-    console.warn(`⚠️ Extracted ${extractedTopics.length} topics (too many!) - likely false positives`);
-    console.warn(`   Topics: ${extractedTopics.join(', ')}`);
-    // Could implement scoring/ranking here, but for now just warn
-  }
-
-  console.log(`Extracted ${extractedTopics.length} topics from generated question`);
-  if (extractedTopics.length > 0) {
-    console.log(`   Topics: ${extractedTopics.join(', ')}`);
   }
 
   return extractedTopics;
@@ -548,17 +619,23 @@ ${prompt}`
     // Only shuffle for single-choice questions
     const shuffledData = questionType === 'single' ? shuffleQuestionOptions(questionData) : questionData;
 
-    // DETERMINISTIC TOPIC EXTRACTION
-    // Extract actual topics from generated question (not just what we asked for)
-    const extractedTopics = analyzeQuestionForTopics(
+    // AI-BASED TOPIC IDENTIFICATION
+    // Use AI to identify which topics the question actually tests
+    // This is more accurate than keyword matching as AI understands context and semantics
+    const extractedTopics = await identifyTopicsWithAI(
       shuffledData.question,
       shuffledData.options,
-      shuffledData.explanation,
-      shuffledData.incorrectExplanations
+      shuffledData.correctAnswer,
+      shuffledData.explanation
     );
 
-    // Fallback to requested topics if extraction fails
+    // Fallback to requested topics if AI extraction fails
     const finalTopics = extractedTopics.length > 0 ? extractedTopics : topicStrings;
+
+    // Log if AI couldn't identify any topics (shouldn't happen)
+    if (extractedTopics.length === 0) {
+      console.warn(`⚠️ AI topic identification failed, falling back to requested topics: ${topicStrings.join(', ')}`);
+    }
 
     // Determine domains from extracted topics
     const domains = getDomainsFromTopics(finalTopics);
