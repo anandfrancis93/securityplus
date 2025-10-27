@@ -197,6 +197,14 @@ export async function resetUserProgress(userId: string): Promise<void> {
     console.log('Resetting progress for user:', userId);
     const userRef = doc(db, USERS_COLLECTION, userId);
 
+    // Get current progress to preserve cachedQuiz
+    const currentDoc = await getDoc(userRef);
+    const currentProgress = currentDoc.exists() ? currentDoc.data() as UserProgress : null;
+    const cachedQuiz = currentProgress?.cachedQuiz || null;
+    const quizMetadata = currentProgress?.quizMetadata || undefined;
+
+    console.log(`Preserving ${cachedQuiz?.questions?.length || 0} cached questions and quiz metadata`);
+
     const resetProgress: UserProgress = {
       userId,
       answeredQuestions: [],
@@ -207,10 +215,12 @@ export async function resetUserProgress(userId: string): Promise<void> {
       estimatedAbility: 0,
       lastUpdated: Date.now(),
       quizHistory: [],
+      cachedQuiz, // Preserve pre-generated questions
+      quizMetadata, // Preserve quiz generation metadata
     };
 
     await setDoc(userRef, resetProgress);
-    console.log('User progress reset successfully');
+    console.log('User progress reset successfully (cached questions preserved)');
   } catch (error) {
     console.error('Error resetting user progress:', error);
     throw error;
