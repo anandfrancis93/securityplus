@@ -32,57 +32,38 @@ interface IRTParams {
   points: number;
 }
 
-export const IRT_CATEGORY_PARAMS: Record<QuestionCategory, Record<'easy' | 'medium' | 'hard', IRTParams>> = {
+/**
+ * Deterministically map question category to difficulty level
+ * Category IS the difficulty - no AI interpretation needed
+ */
+export function categoryToDifficulty(category: QuestionCategory): 'easy' | 'medium' | 'hard' {
+  const mapping: Record<QuestionCategory, 'easy' | 'medium' | 'hard'> = {
+    'single-domain-single-topic': 'easy',
+    'single-domain-multiple-topics': 'medium',
+    'multiple-domains-multiple-topics': 'hard',
+  };
+  return mapping[category];
+}
+
+/**
+ * Simplified IRT parameters - directly map category to params
+ * Difficulty is inherent in the category (number of topics/domains)
+ */
+export const IRT_CATEGORY_PARAMS: Record<QuestionCategory, IRTParams> = {
   'single-domain-single-topic': {
-    easy: {
-      difficulty: -1.0,      // Below average difficulty
-      discrimination: 1.0,   // Moderate discrimination
-      points: 100,           // Base points
-    },
-    medium: {
-      difficulty: 0.0,       // Average difficulty
-      discrimination: 1.5,   // Good discrimination
-      points: 150,           // 50% more
-    },
-    hard: {
-      difficulty: 1.5,       // Above average difficulty
-      discrimination: 2.0,   // Excellent discrimination
-      points: 250,           // 150% more
-    },
+    difficulty: -1.0,      // Below average difficulty (EASY)
+    discrimination: 1.0,   // Moderate discrimination
+    points: 100,           // Base points
   },
   'single-domain-multiple-topics': {
-    easy: {
-      difficulty: -0.5,      // Easier than medium, but harder than single-topic easy
-      discrimination: 1.3,   // Better discrimination than single-topic
-      points: 125,           // Bonus for multi-topic integration
-    },
-    medium: {
-      difficulty: 0.3,       // Slightly above baseline medium
-      discrimination: 1.8,   // Strong discrimination
-      points: 175,           // Reflects integration complexity
-    },
-    hard: {
-      difficulty: 1.8,       // More challenging than single-topic hard
-      discrimination: 2.2,   // Very strong discrimination
-      points: 275,           // Reward for complex integration
-    },
+    difficulty: 0.3,       // Slightly above baseline (MEDIUM)
+    discrimination: 1.8,   // Strong discrimination
+    points: 175,           // Reflects integration complexity
   },
   'multiple-domains-multiple-topics': {
-    easy: {
-      difficulty: 0.0,       // Baseline medium due to cross-domain complexity
-      discrimination: 1.5,   // Good discrimination even at "easy" level
-      points: 150,           // Higher baseline for synthesis
-    },
-    medium: {
-      difficulty: 0.7,       // Significantly above baseline
-      discrimination: 2.0,   // Excellent discrimination
-      points: 200,           // Substantial reward for synthesis
-    },
-    hard: {
-      difficulty: 2.2,       // Very challenging
-      discrimination: 2.5,   // Maximum discrimination - best ability indicator
-      points: 325,           // Maximum reward for complex synthesis
-    },
+    difficulty: 2.2,       // Very challenging (HARD)
+    discrimination: 2.5,   // Maximum discrimination - best ability indicator
+    points: 325,           // Maximum reward for complex synthesis
   },
 };
 
@@ -134,17 +115,16 @@ export function irtProbability(
 }
 
 /**
- * Calculate IRT parameters for a question based on difficulty and category
+ * Calculate IRT parameters for a question based on category
+ * Difficulty is derived from category (no separate difficulty parameter needed)
  *
- * @param difficulty - Difficulty label (easy/medium/hard)
  * @param category - Question category (single-domain-single-topic, etc.)
  * @returns IRT parameters (difficulty, discrimination, maxPoints)
  */
 export function calculateIRTParameters(
-  difficulty: 'easy' | 'medium' | 'hard',
   category: QuestionCategory = 'single-domain-single-topic'
 ) {
-  const params = IRT_CATEGORY_PARAMS[category][difficulty];
+  const params = IRT_CATEGORY_PARAMS[category];
 
   return {
     irtDifficulty: params.difficulty,

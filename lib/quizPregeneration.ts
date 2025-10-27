@@ -6,7 +6,7 @@ import {
   CachedQuiz,
   QuizGenerationMetadata,
 } from './types';
-import { generateQuestionWithTopics, generateSynthesisQuestion, selectAdaptiveDifficulty, selectQuestionType } from './questionGenerator';
+import { generateQuestionWithTopics, generateSynthesisQuestion, selectQuestionType } from './questionGenerator';
 import { ALL_SECURITY_PLUS_TOPICS as TOPIC_DATA, getTotalTopicCount as getTopicCount } from './topicData';
 
 // Re-export topic data for backward compatibility
@@ -670,15 +670,13 @@ export async function pregenerateQuiz(
           metadata
         );
 
-        // Use adaptive difficulty based on ability
-        const difficulty = selectAdaptiveDifficulty(ability);
+        // Select question type
         const questionType = selectQuestionType();
 
         try {
           const generatedQuestion = await generateQuestionWithTopics(
             selectedTopics,
             questionCategory,
-            difficulty,
             questionType
           );
 
@@ -686,7 +684,7 @@ export async function pregenerateQuiz(
           if (generatedQuestion.metadata &&
               !isDuplicateQuestion(generatedQuestion.metadata, metadata.questionHistory)) {
             question = generatedQuestion;
-            console.log(`Generated Q${i + 1}: ${questionCategory} ${difficulty} ${questionType}, Topics: ${selectedTopics.join(', ')}`);
+            console.log(`Generated Q${i + 1}: ${questionCategory} (${generatedQuestion.difficulty}) ${questionType}, Topics: ${selectedTopics.join(', ')}`);
           } else {
             console.log(`Duplicate detected, regenerating (attempt ${attempts}/${MAX_ATTEMPTS})`);
           }
@@ -727,14 +725,12 @@ export async function pregenerateQuiz(
           metadata
         );
 
-        const difficulty = selectAdaptiveDifficulty(ability);
         const questionType = selectQuestionType();
 
         try {
           const generatedQuestion = await generateQuestionWithTopics(
             selectedTopics,
             questionCategory,
-            difficulty,
             questionType
           );
 
@@ -742,7 +738,7 @@ export async function pregenerateQuiz(
           if (generatedQuestion.metadata &&
               !isDuplicateQuestion(generatedQuestion.metadata, metadata.questionHistory)) {
             question = generatedQuestion;
-            console.log(`Generated new Q${i + 1}: ${questionCategory} ${difficulty} ${questionType}, Topics: ${selectedTopics.join(', ')}`);
+            console.log(`Generated new Q${i + 1}: ${questionCategory} (${generatedQuestion.difficulty}) ${questionType}, Topics: ${selectedTopics.join(', ')}`);
           } else {
             console.log(`Duplicate detected, regenerating (attempt ${attempts}/${MAX_ATTEMPTS})`);
           }
@@ -773,14 +769,13 @@ export async function pregenerateQuiz(
       // Generate additional new questions to make up the difference
       const additionalNew = repeatCount - eligibleRepeats.length;
       for (let i = 0; i < additionalNew; i++) {
-        const difficulty = selectAdaptiveDifficulty(ability);
         const questionType = selectQuestionType();
 
         try {
-          const question = await generateSynthesisQuestion([], difficulty, questionType);
+          const question = await generateSynthesisQuestion([], questionType);
           if (question.metadata && !isDuplicateQuestion(question.metadata, metadata.questionHistory)) {
             questions.push(question);
-            console.log(`Generated additional new Q${newCount + i + 1}: ${difficulty} ${questionType}`);
+            console.log(`Generated additional new Q${newCount + i + 1}: ${question.difficulty} ${questionType}`);
           }
         } catch (error) {
           console.error(`Error generating additional question:`, error);

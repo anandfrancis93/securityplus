@@ -15,27 +15,27 @@ export async function POST(request: NextRequest) {
   try {
     const { count = 9, excludeTopics = [] } = await request.json();
 
-    // Define question configurations
-    const questionConfigs = [
-      { difficulty: 'easy' as const, type: 'single' as const },
-      { difficulty: 'easy' as const, type: 'single' as const },
-      { difficulty: 'easy' as const, type: 'single' as const },
-      { difficulty: 'medium' as const, type: 'single' as const },
-      { difficulty: 'medium' as const, type: 'single' as const },
-      { difficulty: 'medium' as const, type: 'multiple' as const },
-      { difficulty: 'medium' as const, type: 'multiple' as const },
-      { difficulty: 'hard' as const, type: 'single' as const },
-      { difficulty: 'hard' as const, type: 'single' as const },
-      { difficulty: 'hard' as const, type: 'multiple' as const },
+    // Define question types (difficulty is derived from category)
+    const questionTypes: Array<'single' | 'multiple'> = [
+      'single',
+      'single',
+      'single',
+      'single',
+      'single',
+      'multiple',
+      'multiple',
+      'single',
+      'single',
+      'multiple',
     ];
 
     // Shuffle and take the needed count
-    const shuffledConfigs = shuffleArray(questionConfigs).slice(0, count);
+    const shuffledTypes = shuffleArray(questionTypes).slice(0, count);
 
     console.log(`Generating ${count} remaining questions in parallel...`);
 
     // Generate all questions in parallel
-    const questionPromises = shuffledConfigs.map(async (config, index) => {
+    const questionPromises = shuffledTypes.map(async (type, index) => {
       // Retry up to 3 times if generation fails
       const maxRetries = 3;
 
@@ -43,10 +43,9 @@ export async function POST(request: NextRequest) {
         try {
           const question = await generateSynthesisQuestion(
             excludeTopics,
-            config.difficulty,
-            config.type
+            type
           );
-          console.log(`Generated ${index + 2}/10: ${config.difficulty} ${config.type}-choice`);
+          console.log(`Generated ${index + 2}/10: ${question.difficulty} ${type}-choice`);
           return question;
         } catch (error) {
           console.error(`Error generating question ${index + 2} (attempt ${attempt}/${maxRetries}):`, error);
@@ -72,11 +71,11 @@ export async function POST(request: NextRequest) {
     if (questions.length < count) {
       console.log(`Generating ${count - questions.length} additional questions...`);
       const additionalNeeded = count - questions.length;
-      const additionalConfigs = shuffleArray(questionConfigs).slice(0, additionalNeeded);
+      const additionalTypes = shuffleArray(questionTypes).slice(0, additionalNeeded);
 
-      const additionalPromises = additionalConfigs.map(async (config) => {
+      const additionalPromises = additionalTypes.map(async (type) => {
         try {
-          return await generateSynthesisQuestion(excludeTopics, config.difficulty, config.type);
+          return await generateSynthesisQuestion(excludeTopics, type);
         } catch (error) {
           console.error('Error generating additional question:', error);
           return null;

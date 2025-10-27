@@ -1,6 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { Question } from './types';
-import { calculateIRTParameters } from './irt';
+import { calculateIRTParameters, categoryToDifficulty } from './irt';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -261,15 +261,14 @@ const SECURITY_PLUS_TOPICS = `
 
 /**
  * Generate a Security+ question with exact topic strings
+ * Difficulty is automatically derived from category (no AI interpretation)
  * @param topicStrings - Exact topic strings from the cleaned topic list
- * @param questionCategory - Type of question: single-domain-single-topic, single-domain-multiple-topics, or multiple-domains-multiple-topics
- * @param difficulty - Easy, medium, or hard
+ * @param questionCategory - Type of question: single-domain-single-topic (easy), single-domain-multiple-topics (medium), or multiple-domains-multiple-topics (hard)
  * @param questionType - Single-choice or multiple-response
  */
 export async function generateQuestionWithTopics(
   topicStrings: string[],
   questionCategory: 'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics',
-  difficulty: 'easy' | 'medium' | 'hard' = 'medium',
   questionType: 'single' | 'multiple' = 'single'
 ): Promise<Question> {
 
@@ -277,27 +276,8 @@ export async function generateQuestionWithTopics(
     throw new Error('At least one topic string must be provided');
   }
 
-  const difficultyGuidance = {
-    easy: `EASY difficulty criteria:
-- Tests basic recall, definitions, or simple identification
-- No analysis or prioritization required - just know the answer
-- Clear, obvious correct answer once you know the concept
-- Incorrect options are clearly wrong to someone who studied
-- Example: "What port does HTTPS use?" or "What does CIA stand for in security?"`,
-    medium: `MEDIUM difficulty criteria:
-- Requires applying concepts to realistic scenarios
-- May involve choosing between 2-3 plausible options
-- Requires understanding HOW/WHY, not just WHAT
-- May ask "best practice" or "most appropriate" (but context makes answer clear)
-- Example: "Which authentication method is most appropriate for [specific scenario]?"`,
-    hard: `HARD difficulty criteria:
-- Requires deep analysis, synthesis, or prioritization
-- Must evaluate trade-offs or "MOST immediate/critical" decisions
-- Incorrect options are subtly wrong - require expert-level understanding
-- May combine multiple concepts or require security judgment
-- Tests critical thinking beyond memorization
-- Example: "Given [complex scenario], what is the MOST critical first step?" where multiple answers seem reasonable`
-  };
+  // Derive difficulty from category (deterministic, no AI interpretation)
+  const difficulty = categoryToDifficulty(questionCategory);
 
   const categoryGuidance = {
     'single-domain-single-topic': `This is a SINGLE DOMAIN, SINGLE TOPIC question testing: "${topicStrings[0]}". Focus the question specifically on this one concept.`,
@@ -314,9 +294,6 @@ export async function generateQuestionWithTopics(
 QUESTION CATEGORY: ${questionCategory.toUpperCase()}
 ${categoryGuidance[questionCategory]}
 
-DIFFICULTY LEVEL: ${difficulty.toUpperCase()}
-${difficultyGuidance[difficulty]}
-
 QUESTION TYPE: ${questionType.toUpperCase()}
 ${typeGuidance}
 
@@ -330,7 +307,6 @@ CRITICAL REQUIREMENTS:
 3. Include 4 answer options (A, B, C, D)
 4. Explain why the correct answer(s) are right
 5. Explain why each option is correct or wrong (provide 4 explanations)
-6. The difficulty rating in your response MUST match the requested difficulty: ${difficulty}
 
 CRITICAL - TOPIC TAGGING (VERY IMPORTANT):
 - In the "topics" array, you MUST include ONLY the EXACT topic strings provided above
@@ -340,11 +316,6 @@ CRITICAL - TOPIC TAGGING (VERY IMPORTANT):
 - Do NOT introduce concepts from other Security+ domains not represented in the topic list
 - The question should ONLY test knowledge of the provided topics - nothing more
 - In metadata.primaryTopic, use the first topic from the list: "${topicStrings[0]}"
-
-CRITICAL - DIFFICULTY ACCURACY:
-- Your response MUST have "difficulty": "${difficulty}" in the JSON
-- Ensure the question actually matches the ${difficulty.toUpperCase()} criteria described above
-- Do not make an EASY question if ${difficulty} is hard, and vice versa
 
 CRITICAL - ANSWER LENGTH RANDOMIZATION:
 - VARY the length of ALL answer options
@@ -386,8 +357,7 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
 
 CRITICAL RULES:
 1. ONLY test the exact topics provided - do not introduce unrelated domains
-2. Match the requested difficulty level precisely (easy = recall, medium = application, hard = analysis/prioritization)
-3. Use ONLY the exact topic strings provided in the "topics" array
+2. Use ONLY the exact topic strings provided in the "topics" array
 
 Return only valid JSON, no markdown formatting.
 
@@ -412,8 +382,8 @@ ${prompt}`
     // Only shuffle for single-choice questions
     const shuffledData = questionType === 'single' ? shuffleQuestionOptions(questionData) : questionData;
 
-    // Calculate IRT parameters based on difficulty and category
-    const irtParams = calculateIRTParameters(difficulty, questionCategory);
+    // Calculate IRT parameters based on category (difficulty is derived from category)
+    const irtParams = calculateIRTParameters(questionCategory);
 
     const correctAnswerDisplay = Array.isArray(shuffledData.correctAnswer)
       ? `[${shuffledData.correctAnswer.join(', ')}]`
@@ -447,10 +417,10 @@ ${prompt}`
 /**
  * Legacy function - kept for backwards compatibility
  * Now wraps the new generateQuestionWithTopics function
+ * Difficulty is automatically derived from category (medium for single-domain-multiple-topics)
  */
 export async function generateSynthesisQuestion(
   excludeTopics: string[] = [],
-  difficulty: 'easy' | 'medium' | 'hard' = 'medium',
   questionType: 'single' | 'multiple' = 'single'
 ): Promise<Question> {
   // For legacy calls, generate a synthesis question with generic topics
@@ -459,53 +429,48 @@ export async function generateSynthesisQuestion(
   return generateQuestionWithTopics(
     genericTopics,
     'single-domain-multiple-topics',
-    difficulty,
     questionType
   );
 }
 
 /**
- * Generate a batch of questions with varied difficulty and types
+ * Generate a batch of questions with varied types
+ * Difficulty is automatically derived from question category
  *
- * Distribution for 10 questions:
- * - 3 easy (1 single, 2 single)
- * - 4 medium (2 single, 2 multiple-response)
- * - 3 hard (2 single, 1 multiple-response)
- *
- * This creates a balanced mix similar to the real Security+ exam
+ * Legacy function - consider using pregenerateQuiz instead
  */
 export async function generateQuestionBatch(count: number, excludeTopics: string[] = []): Promise<Question[]> {
   const usedTopics = [...excludeTopics];
 
-  // Define question configuration for adaptive difficulty
-  const questionConfigs = [
-    { difficulty: 'easy' as const, type: 'single' as const },
-    { difficulty: 'easy' as const, type: 'single' as const },
-    { difficulty: 'easy' as const, type: 'single' as const },
-    { difficulty: 'medium' as const, type: 'single' as const },
-    { difficulty: 'medium' as const, type: 'single' as const },
-    { difficulty: 'medium' as const, type: 'multiple' as const },
-    { difficulty: 'medium' as const, type: 'multiple' as const },
-    { difficulty: 'hard' as const, type: 'single' as const },
-    { difficulty: 'hard' as const, type: 'single' as const },
-    { difficulty: 'hard' as const, type: 'multiple' as const },
+  // Define question types (difficulty comes from category)
+  const questionTypes: Array<'single' | 'multiple'> = [
+    'single',
+    'single',
+    'single',
+    'single',
+    'single',
+    'multiple',
+    'multiple',
+    'single',
+    'single',
+    'multiple',
   ];
 
-  // Shuffle configs to randomize question order
-  const shuffledConfigs = shuffleArray(questionConfigs).slice(0, count);
+  // Shuffle types to randomize question order
+  const shuffledTypes = shuffleArray(questionTypes).slice(0, count);
 
   console.log(`Generating ${count} questions in parallel...`);
 
   // Generate all questions in parallel for much faster generation
-  const questionPromises = shuffledConfigs.map(async (config, index) => {
+  const questionPromises = shuffledTypes.map(async (type, index) => {
     // Retry up to 3 times if generation fails
     const maxRetries = 3;
     let lastError: any = null;
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
-        const question = await generateSynthesisQuestion(usedTopics, config.difficulty, config.type);
-        console.log(`Generated ${index + 1}/${count}: ${config.difficulty} ${config.type}-choice (${question.maxPoints} pts)`);
+        const question = await generateSynthesisQuestion(usedTopics, type);
+        console.log(`Generated ${index + 1}/${count}: ${question.difficulty} ${type}-choice (${question.maxPoints} pts)`);
         return question;
       } catch (error) {
         lastError = error;
@@ -536,12 +501,12 @@ export async function generateQuestionBatch(count: number, excludeTopics: string
     console.log(`Attempting to generate ${count - questions.length} more questions to reach target of ${count}...`);
 
     const additionalNeeded = count - questions.length;
-    const additionalConfigs = shuffleArray(questionConfigs).slice(0, additionalNeeded);
+    const additionalTypes = shuffleArray(questionTypes).slice(0, additionalNeeded);
 
-    const additionalPromises = additionalConfigs.map(async (config, index) => {
+    const additionalPromises = additionalTypes.map(async (type, index) => {
       try {
-        const question = await generateSynthesisQuestion(usedTopics, config.difficulty, config.type);
-        console.log(`Generated additional ${index + 1}/${additionalNeeded}: ${config.difficulty} ${config.type}-choice`);
+        const question = await generateSynthesisQuestion(usedTopics, type);
+        console.log(`Generated additional ${index + 1}/${additionalNeeded}: ${question.difficulty} ${type}-choice`);
         return question;
       } catch (error) {
         console.error(`Error generating additional question ${index + 1}:`, error);
@@ -569,47 +534,46 @@ export async function generateProgressiveQuestions(
 ): Promise<Question[]> {
   const usedTopics = [...excludeTopics];
 
-  // Define question configuration for adaptive difficulty
-  const questionConfigs = [
-    { difficulty: 'easy' as const, type: 'single' as const },
-    { difficulty: 'easy' as const, type: 'single' as const },
-    { difficulty: 'easy' as const, type: 'single' as const },
-    { difficulty: 'medium' as const, type: 'single' as const },
-    { difficulty: 'medium' as const, type: 'single' as const },
-    { difficulty: 'medium' as const, type: 'multiple' as const },
-    { difficulty: 'medium' as const, type: 'multiple' as const },
-    { difficulty: 'hard' as const, type: 'single' as const },
-    { difficulty: 'hard' as const, type: 'single' as const },
-    { difficulty: 'hard' as const, type: 'multiple' as const },
+  // Define question types (difficulty comes from category)
+  const questionTypes: Array<'single' | 'multiple'> = [
+    'single',
+    'single',
+    'single',
+    'single',
+    'single',
+    'multiple',
+    'multiple',
+    'single',
+    'single',
+    'multiple',
   ];
 
-  // Shuffle configs to randomize question order
-  const shuffledConfigs = shuffleArray(questionConfigs).slice(0, count);
+  // Shuffle types to randomize question order
+  const shuffledTypes = shuffleArray(questionTypes).slice(0, count);
 
   console.log(`Generating first question immediately...`);
 
   // Generate first question immediately
-  const firstConfig = shuffledConfigs[0];
+  const firstType = shuffledTypes[0];
   const firstQuestion = await generateSynthesisQuestion(
     usedTopics,
-    firstConfig.difficulty,
-    firstConfig.type
+    firstType
   );
-  console.log(`First question ready: ${firstConfig.difficulty} ${firstConfig.type}-choice`);
+  console.log(`First question ready: ${firstQuestion.difficulty} ${firstType}-choice`);
 
   // Start generating remaining questions in parallel (but don't wait for them)
-  const remainingConfigs = shuffledConfigs.slice(1);
-  console.log(`Generating remaining ${remainingConfigs.length} questions in parallel...`);
+  const remainingTypes = shuffledTypes.slice(1);
+  console.log(`Generating remaining ${remainingTypes.length} questions in parallel...`);
 
-  const remainingPromises = remainingConfigs.map(async (config, index) => {
+  const remainingPromises = remainingTypes.map(async (type, index) => {
     // Retry up to 3 times if generation fails
     const maxRetries = 3;
     let lastError: any = null;
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
-        const question = await generateSynthesisQuestion(usedTopics, config.difficulty, config.type);
-        console.log(`Generated ${index + 2}/${count}: ${config.difficulty} ${config.type}-choice`);
+        const question = await generateSynthesisQuestion(usedTopics, type);
+        console.log(`Generated ${index + 2}/${count}: ${question.difficulty} ${type}-choice`);
         return question;
       } catch (error) {
         lastError = error;
@@ -640,11 +604,11 @@ export async function generateProgressiveQuestions(
   if (allQuestions.length < count) {
     console.log(`Generating ${count - allQuestions.length} additional questions...`);
     const additionalNeeded = count - allQuestions.length;
-    const additionalConfigs = shuffleArray(questionConfigs).slice(0, additionalNeeded);
+    const additionalTypes = shuffleArray(questionTypes).slice(0, additionalNeeded);
 
-    const additionalPromises = additionalConfigs.map(async (config) => {
+    const additionalPromises = additionalTypes.map(async (type) => {
       try {
-        return await generateSynthesisQuestion(usedTopics, config.difficulty, config.type);
+        return await generateSynthesisQuestion(usedTopics, type);
       } catch (error) {
         console.error('Error generating additional question:', error);
         return null;

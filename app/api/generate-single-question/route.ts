@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { generateQuestionWithTopics, selectAdaptiveDifficulty, selectQuestionType } from '@/lib/questionGenerator';
+import { generateQuestionWithTopics, selectQuestionType } from '@/lib/questionGenerator';
 import { selectQuestionCategory, selectTopicsForQuestion } from '@/lib/quizPregeneration';
 
 export async function POST(request: NextRequest) {
@@ -7,55 +7,27 @@ export async function POST(request: NextRequest) {
     const {
       excludeTopics = [],
       questionNumber = 1,
-      currentAbility = 0, // Current ability level for adaptive selection
-      useAdaptive = false // Whether to use adaptive difficulty selection
     } = await request.json();
 
-    let difficulty: 'easy' | 'medium' | 'hard';
-    let questionType: 'single' | 'multiple';
-
-    if (useAdaptive && questionNumber > 1) {
-      // Pseudo-Adaptive: Select difficulty based on current ability
-      difficulty = selectAdaptiveDifficulty(currentAbility);
-      questionType = selectQuestionType();
-      console.log(`Adaptive selection for Q${questionNumber}: ability=${currentAbility.toFixed(2)}, difficulty=${difficulty}, type=${questionType}`);
-    } else {
-      // Fixed distribution for first question or non-adaptive mode
-      const questionConfigs = [
-        { difficulty: 'easy' as const, type: 'single' as const },
-        { difficulty: 'easy' as const, type: 'single' as const },
-        { difficulty: 'easy' as const, type: 'single' as const },
-        { difficulty: 'medium' as const, type: 'single' as const },
-        { difficulty: 'medium' as const, type: 'single' as const },
-        { difficulty: 'medium' as const, type: 'multiple' as const },
-        { difficulty: 'medium' as const, type: 'multiple' as const },
-        { difficulty: 'hard' as const, type: 'single' as const },
-        { difficulty: 'hard' as const, type: 'single' as const },
-        { difficulty: 'hard' as const, type: 'multiple' as const },
-      ];
-
-      const configIndex = (questionNumber - 1) % questionConfigs.length;
-      const config = questionConfigs[configIndex];
-      difficulty = config.difficulty;
-      questionType = config.type;
-    }
+    // Select question type (single or multiple choice)
+    const questionType = selectQuestionType();
 
     // Select question category (single-domain-single-topic, single-domain-multiple-topics, multiple-domains-multiple-topics)
+    // Difficulty is automatically derived from category
     const questionCategory = selectQuestionCategory();
 
     // Select topics from our cleaned list based on category
     const selectedTopics = selectTopicsForQuestion(questionCategory, []);
 
-    console.log(`Generating question ${questionNumber}: ${questionCategory}, ${difficulty} ${questionType}-choice, Topics: ${selectedTopics.join(', ')}`);
+    console.log(`Generating question ${questionNumber}: ${questionCategory} ${questionType}-choice, Topics: ${selectedTopics.join(', ')}`);
 
     const question = await generateQuestionWithTopics(
       selectedTopics,
       questionCategory,
-      difficulty,
       questionType
     );
 
-    console.log(`Question ${questionNumber} generated successfully`);
+    console.log(`Question ${questionNumber} generated successfully: ${question.difficulty} difficulty`);
 
     return NextResponse.json({ question });
   } catch (error: any) {

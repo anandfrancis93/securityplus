@@ -13,7 +13,8 @@
       "Bash(dir \"C:\\Users\\anand\\securityplus\\app\\cybersecurity\\quiz\")",
       "Bash(move:*)",
       "WebFetch(domain:vercel.com)",
-      "Bash(git revert:*)"
+      "Bash(git revert:*)",
+      "Bash(git rm:*)"
     ],
     "deny": [],
     "ask": []

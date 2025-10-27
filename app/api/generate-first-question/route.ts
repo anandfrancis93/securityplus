@@ -15,29 +15,25 @@ export async function POST(request: NextRequest) {
   try {
     const { excludeTopics = [] } = await request.json();
 
-    // Define question configurations
-    const questionConfigs = [
-      { difficulty: 'easy' as const, type: 'single' as const },
-      { difficulty: 'easy' as const, type: 'single' as const },
-      { difficulty: 'easy' as const, type: 'single' as const },
-      { difficulty: 'medium' as const, type: 'single' as const },
-      { difficulty: 'medium' as const, type: 'single' as const },
-      { difficulty: 'medium' as const, type: 'multiple' as const },
-      { difficulty: 'medium' as const, type: 'multiple' as const },
-      { difficulty: 'hard' as const, type: 'single' as const },
-      { difficulty: 'hard' as const, type: 'single' as const },
-      { difficulty: 'hard' as const, type: 'multiple' as const },
+    // Define question types (difficulty is derived from category)
+    const questionTypes: Array<'single' | 'multiple'> = [
+      'single',
+      'single',
+      'single',
+      'single',
+      'single',
+      'multiple',
+      'multiple',
     ];
 
-    // Pick a random config for the first question
-    const shuffledConfigs = shuffleArray(questionConfigs);
-    const firstConfig = shuffledConfigs[0];
+    // Pick a random type for the first question
+    const shuffledTypes = shuffleArray(questionTypes);
+    const questionType = shuffledTypes[0];
 
     console.log('Generating first question...');
     const question = await generateSynthesisQuestion(
       excludeTopics,
-      firstConfig.difficulty,
-      firstConfig.type
+      questionType
     );
     console.log('First question generated successfully');
 
