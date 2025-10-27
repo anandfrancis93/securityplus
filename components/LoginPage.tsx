@@ -45,8 +45,8 @@ export default function LoginPage() {
   // Show loading state while checking auth
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-zinc-300 text-sm font-mono">Loading...</div>
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-zinc-300 text-sm">Loading...</div>
       </div>
     );
   }
@@ -57,7 +57,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="bg-black font-mono overflow-hidden flex flex-col" style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
+    <div className="bg-black text-white overflow-hidden flex flex-col" style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
       <div className="relative flex items-center justify-center px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 overflow-auto">
         <div className="max-w-2xl w-full my-auto">
           {/* Logo/Title Section */}
@@ -65,7 +65,7 @@ export default function LoginPage() {
             <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-3 sm:mb-3 md:mb-4 text-white tracking-tight leading-tight">
               Learning Hub
             </h1>
-            <p className="text-zinc-500 text-base sm:text-lg md:text-xl font-mono">
+            <p className="text-zinc-500 text-base sm:text-lg md:text-xl">
               Master your skills with adaptive learning
             </p>
           </div>
