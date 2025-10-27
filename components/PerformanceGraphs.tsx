@@ -18,7 +18,7 @@ import {
 } from 'recharts';
 import { UserProgress } from '@/lib/types';
 import { hasSufficientData } from '@/lib/irt';
-import { ALL_SECURITY_PLUS_TOPICS } from '@/lib/quizPregeneration';
+import { ALL_SECURITY_PLUS_TOPICS } from '@/lib/topicData';
 
 interface PerformanceGraphsProps {
   userProgress: UserProgress | null;
