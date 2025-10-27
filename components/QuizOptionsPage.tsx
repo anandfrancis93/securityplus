@@ -47,7 +47,16 @@ export default function QuizOptionsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-black font-mono flex flex-col">
+    <div className={`min-h-screen text-white relative overflow-hidden flex flex-col ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black font-mono'}`}>
+      {/* Animated Background Gradients (Liquid Glass only) */}
+      {liquidGlass && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        </div>
+      )}
+
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 md:py-8 max-w-7xl flex-1 flex flex-col">
         {/* Header */}
         <header className="mb-4 sm:mb-6 md:mb-8">
@@ -55,12 +64,33 @@ export default function QuizOptionsPage() {
 
           {/* Hero Section */}
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3 text-white font-mono tracking-tight">
-              Quiz
-            </h1>
-            <p className="text-zinc-500 text-sm sm:text-base font-mono tracking-tight">
-              Choose an option
-            </p>
+            {liquidGlass ? (
+              <div className="relative">
+                {/* Glow effect behind title */}
+                <div className="absolute inset-0 bg-gradient-to-r from-violet-500/20 via-cyan-500/20 to-emerald-500/20 blur-3xl" />
+
+                <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 sm:p-10 md:p-12 shadow-2xl">
+                  {/* Light reflection overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />
+
+                  <h1 className="relative text-4xl sm:text-5xl md:text-6xl font-bold mb-3 bg-gradient-to-r from-white via-zinc-100 to-white bg-clip-text text-transparent tracking-tight">
+                    Quiz
+                  </h1>
+                  <p className="relative text-zinc-400 text-sm sm:text-base tracking-tight">
+                    Choose an option
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <>
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-3 text-white font-mono tracking-tight">
+                  Quiz
+                </h1>
+                <p className="text-zinc-500 text-sm sm:text-base font-mono tracking-tight">
+                  Choose an option
+                </p>
+              </>
+            )}
           </div>
         </header>
 
