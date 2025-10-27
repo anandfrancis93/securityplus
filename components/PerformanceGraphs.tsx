@@ -365,7 +365,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       {/* Topic Coverage Tables by Domain */}
       <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-700 shadow-xl shadow-black/50">
         <h3 className="text-2xl md:text-3xl font-medium text-white mb-6 tracking-tight font-mono">Topic Coverage by Domain</h3>
-        <p className="text-slate-400 text-base md:text-lg mb-8">All Security+ SY0-701 topics organized by domain, showing coverage frequency</p>
 
         <div className="space-y-6">
           {Object.entries(topicCoverageData)
