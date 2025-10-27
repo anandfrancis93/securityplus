@@ -1,6 +1,8 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { Question } from './types';
 import { calculateIRTParameters, categoryToDifficulty } from './irt';
+import { ALL_SECURITY_PLUS_TOPICS } from './topicData';
+import { getDomainsFromTopics } from './domainDetection';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -14,6 +16,114 @@ function shuffleArray<T>(array: T[]): T[] {
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   return shuffled;
+}
+
+/**
+ * Extract keywords from a Security+ topic string for matching
+ * Examples:
+ * - "Structured Query Language injection (SQLi) (web-based vulnerability)"
+ *   → ["sql injection", "sqli", "structured query language injection"]
+ * - "Annualized loss expectancy (ALE) (risk analysis)"
+ *   → ["ale", "annualized loss expectancy", "annual loss expectancy"]
+ */
+function extractTopicKeywords(topic: string): string[] {
+  const keywords: string[] = [];
+
+  // Add the full topic (lowercase)
+  keywords.push(topic.toLowerCase());
+
+  // Extract main term (before first parenthesis)
+  const mainTerm = topic.split('(')[0].trim().toLowerCase();
+  if (mainTerm) {
+    keywords.push(mainTerm);
+  }
+
+  // Extract acronym from parentheses (if exists)
+  const acronymMatch = topic.match(/\(([A-Z]{2,})\)/);
+  if (acronymMatch) {
+    keywords.push(acronymMatch[1].toLowerCase());
+  }
+
+  // Add common variations
+  const variations: { [key: string]: string[] } = {
+    'probability (risk analysis)': ['probability', 'likelihood', 'chance of'],
+    'annualized loss expectancy (ALE) (risk analysis)': ['ale', 'annualized loss expectancy', 'annual loss expectancy'],
+    'single loss expectancy (SLE) (risk analysis)': ['sle', 'single loss expectancy'],
+    'exposure factor (risk analysis)': ['exposure factor', 'exposure'],
+    'structured query language injection (SQLi) (web-based vulnerability)': ['sql injection', 'sqli'],
+    'cross-site scripting (XSS) (web-based vulnerability)': ['cross-site scripting', 'xss'],
+    'infrastructure as code (IaC) (architecture model)': ['infrastructure as code', 'iac'],
+    'mobile device management (MDM) (mobile solution)': ['mobile device management', 'mdm'],
+    'unified threat management (UTM) (firewall type)': ['unified threat management', 'utm'],
+  };
+
+  const topicLower = topic.toLowerCase();
+  for (const [key, values] of Object.entries(variations)) {
+    if (topicLower.includes(key.toLowerCase().split('(')[0].trim())) {
+      keywords.push(...values);
+    }
+  }
+
+  return [...new Set(keywords)]; // Remove duplicates
+}
+
+/**
+ * Check if a topic is mentioned in question text with sufficient presence
+ * Requires the topic to appear in question stem, explanation, or multiple options
+ */
+function isTopicPresent(
+  topic: string,
+  questionText: string,
+  options: string[],
+  explanation: string
+): boolean {
+  const keywords = extractTopicKeywords(topic);
+  const allText = (questionText + ' ' + options.join(' ') + ' ' + explanation).toLowerCase();
+
+  // Check if any keyword appears
+  const hasKeyword = keywords.some(keyword => allText.includes(keyword));
+  if (!hasKeyword) return false;
+
+  // Verify significant presence (not just passing mention)
+  let presenceScore = 0;
+
+  for (const keyword of keywords) {
+    if (questionText.toLowerCase().includes(keyword)) presenceScore += 2; // Question = strong signal
+    if (explanation.toLowerCase().includes(keyword)) presenceScore += 2;  // Explanation = strong signal
+
+    const optionMatches = options.filter(opt => opt.toLowerCase().includes(keyword)).length;
+    if (optionMatches >= 2) presenceScore += 1; // Multiple options = moderate signal
+  }
+
+  // Require score of at least 2 (e.g., appears in question OR explanation)
+  return presenceScore >= 2;
+}
+
+/**
+ * Analyze generated question and extract all Security+ topics actually tested
+ * This provides deterministic tagging regardless of what topics were requested
+ */
+function analyzeQuestionForTopics(
+  questionText: string,
+  options: string[],
+  explanation: string,
+  incorrectExplanations: string[]
+): string[] {
+  const extractedTopics: string[] = [];
+  const allExplanations = explanation + ' ' + incorrectExplanations.join(' ');
+
+  // Scan all 400+ topics from authoritative list
+  for (const [domain, topics] of Object.entries(ALL_SECURITY_PLUS_TOPICS)) {
+    for (const topic of topics) {
+      if (isTopicPresent(topic, questionText, options, allExplanations)) {
+        extractedTopics.push(topic);
+      }
+    }
+  }
+
+  console.log(`Extracted ${extractedTopics.length} topics from generated question: ${extractedTopics.join(', ')}`);
+
+  return extractedTopics;
 }
 
 // Shuffle question options to randomize correct answer position
@@ -416,14 +526,50 @@ ${prompt}`
     // Only shuffle for single-choice questions
     const shuffledData = questionType === 'single' ? shuffleQuestionOptions(questionData) : questionData;
 
-    // Calculate IRT parameters based on category (difficulty is derived from category)
-    const irtParams = calculateIRTParameters(questionCategory);
+    // DETERMINISTIC TOPIC EXTRACTION
+    // Extract actual topics from generated question (not just what we asked for)
+    const extractedTopics = analyzeQuestionForTopics(
+      shuffledData.question,
+      shuffledData.options,
+      shuffledData.explanation,
+      shuffledData.incorrectExplanations
+    );
+
+    // Fallback to requested topics if extraction fails
+    const finalTopics = extractedTopics.length > 0 ? extractedTopics : topicStrings;
+
+    // Determine domains from extracted topics
+    const domains = getDomainsFromTopics(finalTopics);
+    const uniqueDomains = [...new Set(domains)];
+
+    // Determine category based on actual topics/domains
+    let actualCategory: 'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics';
+    if (uniqueDomains.length > 1) {
+      actualCategory = 'multiple-domains-multiple-topics';
+    } else if (finalTopics.length > 1) {
+      actualCategory = 'single-domain-multiple-topics';
+    } else {
+      actualCategory = 'single-domain-single-topic';
+    }
+
+    // Derive difficulty from actual category (deterministic)
+    const actualDifficulty = categoryToDifficulty(actualCategory);
+
+    // Calculate IRT parameters based on actual category
+    const irtParams = calculateIRTParameters(actualCategory);
 
     const correctAnswerDisplay = Array.isArray(shuffledData.correctAnswer)
       ? `[${shuffledData.correctAnswer.join(', ')}]`
       : shuffledData.correctAnswer;
 
-    console.log(`Question generated: Category=${questionCategory}, Type=${questionType}, Difficulty=${difficulty}, Correct=${correctAnswerDisplay}, IRT(b=${irtParams.irtDifficulty}, a=${irtParams.irtDiscrimination}), Points=${irtParams.maxPoints}`);
+    // Log comparison if category changed
+    if (actualCategory !== questionCategory) {
+      console.log(`⚠️ Category mismatch! Requested: ${questionCategory}, Actual: ${actualCategory}`);
+      console.log(`   Requested topics: ${topicStrings.join(', ')}`);
+      console.log(`   Extracted topics: ${finalTopics.join(', ')}`);
+    }
+
+    console.log(`Question generated: Category=${actualCategory}, Type=${questionType}, Difficulty=${actualDifficulty}, Correct=${correctAnswerDisplay}, IRT(b=${irtParams.irtDifficulty}, a=${irtParams.irtDiscrimination}), Points=${irtParams.maxPoints}`);
 
     return {
       id: `q_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -432,10 +578,10 @@ ${prompt}`
       correctAnswer: shuffledData.correctAnswer,
       explanation: shuffledData.explanation,
       incorrectExplanations: shuffledData.incorrectExplanations,
-      topics: topicStrings, // Use exact topic strings provided, not AI-generated
-      difficulty: shuffledData.difficulty,
+      topics: finalTopics, // Use extracted topics, not requested topics
+      difficulty: actualDifficulty, // Use derived difficulty from actual category
       questionType: questionType,
-      questionCategory: questionCategory, // Add question category
+      questionCategory: actualCategory, // Use actual category based on extracted topics
       irtDifficulty: irtParams.irtDifficulty,
       irtDiscrimination: irtParams.irtDiscrimination,
       maxPoints: irtParams.maxPoints,
