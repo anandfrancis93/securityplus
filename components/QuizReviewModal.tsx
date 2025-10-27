@@ -2,7 +2,7 @@
 
 import { QuizSession, QuestionAttempt } from '@/lib/types';
 import { useEffect, useState } from 'react';
-import { getDomainFromTopics } from '@/lib/domainDetection';
+import { getDomainFromTopics, getDomainsFromTopics } from '@/lib/domainDetection';
 
 interface QuizReviewModalProps {
   quiz: QuizSession;
@@ -288,21 +288,32 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
                     </div>
                   )}
 
-                  {/* Domain and Topics */}
+                  {/* Domain, Topics, Difficulty, and Type */}
                   <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
                     <div className="space-y-4">
-                      {/* Domain */}
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-400 font-semibold">Domain:</span>
-                        <span className="px-3 py-1 rounded-full text-sm bg-gray-700 text-gray-300">
-                          {getDomainFromTopics(question.topics)}
+                      {/* Domain(s) */}
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-sm text-gray-400 font-semibold">
+                          {getDomainsFromTopics(question.topics).length > 1 ? 'Domains:' : 'Domain:'}
                         </span>
+                        <div className="flex flex-wrap gap-2">
+                          {getDomainsFromTopics(question.topics).map((domain, idx) => (
+                            <span
+                              key={idx}
+                              className="px-3 py-1 rounded-full text-sm bg-gray-700 text-gray-300 font-semibold"
+                            >
+                              {domain}
+                            </span>
+                          ))}
+                        </div>
                       </div>
 
                       {/* Topics */}
                       {question.topics && question.topics.length > 0 && (
                         <div className="flex items-start gap-2 flex-wrap">
-                          <span className="text-sm text-gray-400 font-semibold">Topics:</span>
+                          <span className="text-sm text-gray-400 font-semibold">
+                            {question.topics.length > 1 ? 'Topics:' : 'Topic:'}
+                          </span>
                           <div className="flex flex-wrap gap-2">
                             {question.topics.map((topic, idx) => (
                               <span
@@ -313,6 +324,30 @@ export default function QuizReviewModal({ quiz, onClose }: QuizReviewModalProps)
                               </span>
                             ))}
                           </div>
+                        </div>
+                      )}
+
+                      {/* Difficulty */}
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-400 font-semibold">Difficulty:</span>
+                        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                          question.difficulty === 'easy' ? 'bg-green-900 text-green-200' :
+                          question.difficulty === 'medium' ? 'bg-yellow-900 text-yellow-200' :
+                          'bg-red-900 text-red-200'
+                        }`}>
+                          {question.difficulty.toUpperCase()}
+                        </span>
+                      </div>
+
+                      {/* Question Type */}
+                      {question.questionCategory && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-gray-400 font-semibold">Type:</span>
+                          <span className="px-3 py-1 rounded-full text-sm bg-gray-700 text-gray-300">
+                            {question.questionCategory === 'single-domain-single-topic' ? 'Single Domain, Single Topic' :
+                             question.questionCategory === 'single-domain-multiple-topics' ? 'Single Domain, Multiple Topics' :
+                             'Multiple Domains, Multiple Topics'}
+                          </span>
                         </div>
                       )}
                     </div>

@@ -259,23 +259,44 @@ const SECURITY_PLUS_TOPICS = `
 - Development, Execution
 `;
 
-export async function generateSynthesisQuestion(
-  excludeTopics: string[] = [],
+/**
+ * Generate a Security+ question with exact topic strings
+ * @param topicStrings - Exact topic strings from the cleaned topic list
+ * @param questionCategory - Type of question: single-domain-single-topic, single-domain-multiple-topics, or multiple-domains-multiple-topics
+ * @param difficulty - Easy, medium, or hard
+ * @param questionType - Single-choice or multiple-response
+ */
+export async function generateQuestionWithTopics(
+  topicStrings: string[],
+  questionCategory: 'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics',
   difficulty: 'easy' | 'medium' | 'hard' = 'medium',
   questionType: 'single' | 'multiple' = 'single'
 ): Promise<Question> {
 
+  if (!topicStrings || topicStrings.length === 0) {
+    throw new Error('At least one topic string must be provided');
+  }
+
   const difficultyGuidance = {
-    easy: 'The question should be straightforward, testing basic understanding of 1-2 concepts with clear, distinguishable answer options.',
-    medium: 'The question should require applying 2-3 concepts together with moderate complexity. Options should be plausible but distinguishable.',
-    hard: 'The question should be complex, combining 3+ concepts in a nuanced scenario. Incorrect options should be subtly wrong and require deep understanding to eliminate.'
+    easy: 'The question should be straightforward, testing basic understanding or simple recall with clear, distinguishable answer options.',
+    medium: 'The question should require applying concepts in realistic scenarios with moderate complexity. Options should be plausible but distinguishable.',
+    hard: 'The question should be complex, requiring deep analysis and critical thinking. Incorrect options should be subtly wrong and require deep understanding to eliminate.'
+  };
+
+  const categoryGuidance = {
+    'single-domain-single-topic': `This is a SINGLE DOMAIN, SINGLE TOPIC question testing: "${topicStrings[0]}". Focus the question specifically on this one concept.`,
+    'single-domain-multiple-topics': `This is a SINGLE DOMAIN, MULTIPLE TOPICS question combining related topics from the same domain: ${topicStrings.map(t => `"${t}"`).join(', ')}. Create a realistic scenario that integrates these concepts.`,
+    'multiple-domains-multiple-topics': `This is a MULTIPLE DOMAINS, MULTIPLE TOPICS question combining topics across different Security+ domains: ${topicStrings.map(t => `"${t}"`).join(', ')}. Create a complex scenario that requires understanding how these concepts work together across domains.`
   };
 
   const typeGuidance = questionType === 'single'
     ? 'This is a SINGLE-CHOICE question. Provide exactly ONE correct answer (index 0-3).'
     : 'This is a MULTIPLE-RESPONSE question (select all that apply). Provide 2-3 correct answers as an array of indices (e.g., [0, 2] or [1, 2, 3]). The question should ask "Which of the following are..." or "Select all that apply".';
 
-  const prompt = `Generate a single CompTIA Security+ SY0-701 synthesis question that combines multiple security concepts.
+  const prompt = `Generate a single CompTIA Security+ SY0-701 exam question.
+
+QUESTION CATEGORY: ${questionCategory.toUpperCase()}
+${categoryGuidance[questionCategory]}
 
 DIFFICULTY LEVEL: ${difficulty.toUpperCase()}
 ${difficultyGuidance[difficulty]}
@@ -283,20 +304,23 @@ ${difficultyGuidance[difficulty]}
 QUESTION TYPE: ${questionType.toUpperCase()}
 ${typeGuidance}
 
-IMPORTANT REQUIREMENTS:
-1. The question must be a SYNTHESIS question combining security topics
-2. Present a realistic scenario requiring application of multiple concepts
+TOPICS TO TEST:
+You MUST create a question that tests these EXACT topics:
+${topicStrings.map((t, i) => `${i + 1}. "${t}"`).join('\n')}
+
+CRITICAL REQUIREMENTS:
+1. Create a question based on the topics listed above
+2. Present a realistic Security+ exam scenario
 3. Include 4 answer options (A, B, C, D)
 4. Explain why the correct answer(s) are right
 5. Explain why each option is correct or wrong (provide 4 explanations)
-6. Tag with relevant topic areas
 
 CRITICAL - TOPIC TAGGING:
-- ONLY use topic names that EXACTLY match those in the Security+ topics list above
-- Do NOT create custom topic names or paraphrase the topics
-- Use the precise wording from the list (e.g., "Public key infrastructure (PKI)", not "PKI basics")
-- Select 2-3 specific topics that the question tests
-- In metadata.primaryTopic, use the most central topic from the official list
+- In the "topics" array, you MUST include the EXACT topic strings provided above
+- Use these EXACT strings character-for-character: ${topicStrings.map(t => `"${t}"`).join(', ')}
+- Do NOT modify, paraphrase, or shorten these topic strings
+- Do NOT add additional topics beyond those provided
+- In metadata.primaryTopic, use the first topic from the list: "${topicStrings[0]}"
 
 CRITICAL - ANSWER LENGTH RANDOMIZATION:
 - VARY the length of ALL answer options
@@ -307,10 +331,8 @@ CRITICAL - ANSWER LENGTH RANDOMIZATION:
 - Some incorrect answers should be LONG and detailed but subtly wrong
 - This prevents guessing based on answer length
 
-Topics to cover:
+Security+ Topics Reference (for context only):
 ${SECURITY_PLUS_TOPICS}
-
-${excludeTopics.length > 0 ? `Avoid these previously used topics: ${excludeTopics.join(', ')}` : ''}
 
 Return ONLY a valid JSON object in this exact format (no markdown, no extra text):
 {
@@ -319,10 +341,10 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
   "correctAnswer": ${questionType === 'single' ? '0' : '[0, 2]'},
   "explanation": "why the correct answer(s) are right",
   "incorrectExplanations": ["why option 0 is wrong/right", "why option 1 is wrong/right", "why option 2 is wrong/right", "why option 3 is wrong/right"],
-  "topics": ["topic1", "topic2", "topic3"],
+  "topics": ${JSON.stringify(topicStrings)},
   "difficulty": "${difficulty}",
   "metadata": {
-    "primaryTopic": "main Security+ topic from the list above",
+    "primaryTopic": "${topicStrings[0]}",
     "scenario": "brief scenario type (e.g., 'certificate_validation', 'network_attack', 'access_control')",
     "keyConcept": "specific concept tested (e.g., 'CRL_vs_OCSP', 'DDoS_mitigation', 'RBAC_implementation')"
   }
@@ -373,9 +395,10 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
       correctAnswer: shuffledData.correctAnswer,
       explanation: shuffledData.explanation,
       incorrectExplanations: shuffledData.incorrectExplanations,
-      topics: shuffledData.topics,
+      topics: topicStrings, // Use exact topic strings provided, not AI-generated
       difficulty: shuffledData.difficulty,
       questionType: questionType,
+      questionCategory: questionCategory, // Add question category
       irtDifficulty: irtParams.irtDifficulty,
       irtDiscrimination: irtParams.irtDiscrimination,
       maxPoints: irtParams.maxPoints,
@@ -386,6 +409,26 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
     console.error('Error generating question:', error);
     throw new Error('Failed to generate question');
   }
+}
+
+/**
+ * Legacy function - kept for backwards compatibility
+ * Now wraps the new generateQuestionWithTopics function
+ */
+export async function generateSynthesisQuestion(
+  excludeTopics: string[] = [],
+  difficulty: 'easy' | 'medium' | 'hard' = 'medium',
+  questionType: 'single' | 'multiple' = 'single'
+): Promise<Question> {
+  // For legacy calls, generate a synthesis question with generic topics
+  // This should ideally not be used anymore, but keeping for compatibility
+  const genericTopics = ['Security Concepts', 'Best Practices'];
+  return generateQuestionWithTopics(
+    genericTopics,
+    'single-domain-multiple-topics',
+    difficulty,
+    questionType
+  );
 }
 
 /**

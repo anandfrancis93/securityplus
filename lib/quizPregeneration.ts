@@ -6,7 +6,7 @@ import {
   CachedQuiz,
   QuizGenerationMetadata,
 } from './types';
-import { generateSynthesisQuestion, selectAdaptiveDifficulty, selectQuestionType } from './questionGenerator';
+import { generateQuestionWithTopics, generateSynthesisQuestion, selectAdaptiveDifficulty, selectQuestionType } from './questionGenerator';
 
 // All official Security+ SY0-701 topics organized by domain
 const ALL_SECURITY_PLUS_TOPICS: { [domain: string]: string[] } = {
@@ -492,6 +492,111 @@ export function isDuplicateQuestion(
 }
 
 /**
+ * Select random topics from a specific domain
+ */
+function selectRandomTopicsFromDomain(domain: string, count: number): string[] {
+  const topics = ALL_SECURITY_PLUS_TOPICS[domain];
+  if (!topics || topics.length === 0) return [];
+
+  const shuffled = [...topics].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, Math.min(count, topics.length));
+}
+
+/**
+ * Select random topics from multiple domains for cross-domain questions
+ */
+function selectCrossDomainTopics(count: number): string[] {
+  const domains = Object.keys(ALL_SECURITY_PLUS_TOPICS);
+  const selectedTopics: string[] = [];
+
+  // Select from at least 2 different domains
+  const numDomains = Math.min(count, domains.length, Math.max(2, Math.ceil(count / 2)));
+  const shuffledDomains = [...domains].sort(() => Math.random() - 0.5).slice(0, numDomains);
+
+  const topicsPerDomain = Math.ceil(count / numDomains);
+
+  shuffledDomains.forEach(domain => {
+    const topics = selectRandomTopicsFromDomain(domain, topicsPerDomain);
+    selectedTopics.push(...topics);
+  });
+
+  return selectedTopics.slice(0, count);
+}
+
+/**
+ * Select question category based on distribution
+ * 70% single-domain-single-topic, 25% single-domain-multiple-topics, 5% multiple-domains-multiple-topics
+ */
+function selectQuestionCategory(): 'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics' {
+  const random = Math.random();
+  if (random < 0.70) return 'single-domain-single-topic';
+  if (random < 0.95) return 'single-domain-multiple-topics'; // 0.70 to 0.95 = 25%
+  return 'multiple-domains-multiple-topics'; // 0.95 to 1.00 = 5%
+}
+
+/**
+ * Select topics for a question based on category and priority topics
+ * @param questionCategory - Type of question
+ * @param priorityTopics - Topics to prioritize (e.g., uncovered topics)
+ * @param metadata - Quiz generation metadata for domain-aware selection
+ */
+function selectTopicsForQuestion(
+  questionCategory: 'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics',
+  priorityTopics: string[] = [],
+  metadata?: QuizGenerationMetadata
+): string[] {
+  if (questionCategory === 'single-domain-single-topic') {
+    // Single domain, single topic: Select 1 topic
+    if (priorityTopics.length > 0) {
+      return [priorityTopics[Math.floor(Math.random() * priorityTopics.length)]];
+    }
+    // Random topic from any domain
+    const allTopics = Object.values(ALL_SECURITY_PLUS_TOPICS).flat();
+    return [allTopics[Math.floor(Math.random() * allTopics.length)]];
+  }
+
+  if (questionCategory === 'single-domain-multiple-topics') {
+    // Single domain, multiple topics: Select 2-4 topics from the same domain
+    const topicCount = 2 + Math.floor(Math.random() * 3); // 2, 3, or 4 topics
+
+    if (priorityTopics.length >= topicCount) {
+      // Try to find topics from the same domain in priority list
+      if (metadata) {
+        const topicsByDomain = new Map<string, string[]>();
+        priorityTopics.forEach(topic => {
+          const coverage = metadata.topicCoverage[topic];
+          if (coverage) {
+            if (!topicsByDomain.has(coverage.domain)) {
+              topicsByDomain.set(coverage.domain, []);
+            }
+            topicsByDomain.get(coverage.domain)!.push(topic);
+          }
+        });
+
+        // Find a domain with enough topics
+        for (const [, topics] of topicsByDomain) {
+          if (topics.length >= topicCount) {
+            return topics.slice(0, topicCount);
+          }
+        }
+      }
+
+      // Otherwise, just use priority topics (may span domains)
+      return priorityTopics.slice(0, topicCount);
+    }
+
+    // Select random domain and get topics from it
+    const domains = Object.keys(ALL_SECURITY_PLUS_TOPICS);
+    const randomDomain = domains[Math.floor(Math.random() * domains.length)];
+    return selectRandomTopicsFromDomain(randomDomain, topicCount);
+  }
+
+  // Multiple domains, multiple topics: Select 2-3 topics from different domains
+  const topicCount = 2 + Math.floor(Math.random() * 2); // 2 or 3 topics
+  return selectCrossDomainTopics(topicCount);
+}
+
+/**
  * Get questions eligible for repetition (spaced repetition logic)
  * Returns questions that haven't been asked in the last 3 quizzes
  */
@@ -557,18 +662,24 @@ export async function pregenerateQuiz(
       while (!question && attempts < MAX_ATTEMPTS) {
         attempts++;
 
+        // Select question category (70% direct, 25% synthesis, 5% cross-domain)
+        const questionCategory = selectQuestionCategory();
+
+        // Select topics based on category, prioritizing uncovered topics
+        const selectedTopics = selectTopicsForQuestion(
+          questionCategory,
+          uncoveredTopics,
+          metadata
+        );
+
         // Use adaptive difficulty based on ability
         const difficulty = selectAdaptiveDifficulty(ability);
         const questionType = selectQuestionType();
 
-        // Generate question with preference for uncovered topics
-        const suggestedTopics = uncoveredTopics.length > 0
-          ? uncoveredTopics.slice(0, 10) // Suggest first 10 uncovered topics
-          : [];
-
         try {
-          const generatedQuestion = await generateSynthesisQuestion(
-            suggestedTopics, // This will guide AI to focus on these topics
+          const generatedQuestion = await generateQuestionWithTopics(
+            selectedTopics,
+            questionCategory,
             difficulty,
             questionType
           );
@@ -577,7 +688,7 @@ export async function pregenerateQuiz(
           if (generatedQuestion.metadata &&
               !isDuplicateQuestion(generatedQuestion.metadata, metadata.questionHistory)) {
             question = generatedQuestion;
-            console.log(`Generated Q${i + 1}: ${difficulty} ${questionType}, Topics: ${generatedQuestion.topics.join(', ')}`);
+            console.log(`Generated Q${i + 1}: ${questionCategory} ${difficulty} ${questionType}, Topics: ${selectedTopics.join(', ')}`);
           } else {
             console.log(`Duplicate detected, regenerating (attempt ${attempts}/${MAX_ATTEMPTS})`);
           }
@@ -608,12 +719,23 @@ export async function pregenerateQuiz(
       while (!question && attempts < MAX_ATTEMPTS) {
         attempts++;
 
+        // Select question category (70% direct, 25% synthesis, 5% cross-domain)
+        const questionCategory = selectQuestionCategory();
+
+        // Select topics based on category (no priority topics in Phase 2)
+        const selectedTopics = selectTopicsForQuestion(
+          questionCategory,
+          [], // No restrictions on topics in Phase 2
+          metadata
+        );
+
         const difficulty = selectAdaptiveDifficulty(ability);
         const questionType = selectQuestionType();
 
         try {
-          const generatedQuestion = await generateSynthesisQuestion(
-            [], // No restrictions on topics in Phase 2
+          const generatedQuestion = await generateQuestionWithTopics(
+            selectedTopics,
+            questionCategory,
             difficulty,
             questionType
           );
@@ -622,7 +744,7 @@ export async function pregenerateQuiz(
           if (generatedQuestion.metadata &&
               !isDuplicateQuestion(generatedQuestion.metadata, metadata.questionHistory)) {
             question = generatedQuestion;
-            console.log(`Generated new Q${i + 1}: ${difficulty} ${questionType}`);
+            console.log(`Generated new Q${i + 1}: ${questionCategory} ${difficulty} ${questionType}, Topics: ${selectedTopics.join(', ')}`);
           } else {
             console.log(`Duplicate detected, regenerating (attempt ${attempts}/${MAX_ATTEMPTS})`);
           }

@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useApp } from './AppProvider';
 import { useRouter } from 'next/navigation';
 import { Question } from '@/lib/types';
-import { getDomainFromTopics } from '@/lib/domainDetection';
+import { getDomainFromTopics, getDomainsFromTopics } from '@/lib/domainDetection';
 
 export default function QuizPage() {
   const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, user, loading: authLoading, handleSignOut } = useApp();
@@ -790,21 +790,32 @@ export default function QuizPage() {
               </div>
             </div>
 
-            {/* Domain and Topics */}
+            {/* Domain, Topics, Difficulty, and Type */}
             <div className="bg-zinc-950 rounded-md p-10 md:p-12 border-2 border-zinc-800">
               <div className="space-y-6">
-                {/* Domain */}
+                {/* Domain(s) */}
                 <div className="flex items-center gap-4 flex-wrap">
-                  <span className="text-lg md:text-xl text-zinc-200 font-bold">Domain:</span>
-                  <span className="px-5 py-3 rounded-md text-base md:text-lg bg-zinc-900 text-zinc-300 border-2 border-zinc-700 font-bold">
-                    {getDomainFromTopics(currentQuestion.topics)}
+                  <span className="text-lg md:text-xl text-zinc-200 font-bold">
+                    {getDomainsFromTopics(currentQuestion.topics).length > 1 ? 'Domains:' : 'Domain:'}
                   </span>
+                  <div className="flex flex-wrap gap-3">
+                    {getDomainsFromTopics(currentQuestion.topics).map((domain, index) => (
+                      <span
+                        key={index}
+                        className="px-5 py-3 rounded-md text-base md:text-lg bg-zinc-900 text-zinc-300 border-2 border-zinc-700 font-bold"
+                      >
+                        {domain}
+                      </span>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Topics */}
                 {currentQuestion.topics && currentQuestion.topics.length > 0 && (
                   <div className="flex items-start gap-4 flex-wrap">
-                    <span className="text-lg md:text-xl text-zinc-200 font-bold">Topics:</span>
+                    <span className="text-lg md:text-xl text-zinc-200 font-bold">
+                      {currentQuestion.topics.length > 1 ? 'Topics:' : 'Topic:'}
+                    </span>
                     <div className="flex flex-wrap gap-3">
                       {currentQuestion.topics.map((topic, index) => (
                         <span
@@ -815,6 +826,30 @@ export default function QuizPage() {
                         </span>
                       ))}
                     </div>
+                  </div>
+                )}
+
+                {/* Difficulty */}
+                <div className="flex items-center gap-4 flex-wrap">
+                  <span className="text-lg md:text-xl text-zinc-200 font-bold">Difficulty:</span>
+                  <span className={`px-5 py-3 rounded-md text-base md:text-lg border-2 font-bold ${
+                    currentQuestion.difficulty === 'easy' ? 'bg-green-900 text-green-200 border-green-700' :
+                    currentQuestion.difficulty === 'medium' ? 'bg-yellow-900 text-yellow-200 border-yellow-700' :
+                    'bg-red-900 text-red-200 border-red-700'
+                  }`}>
+                    {currentQuestion.difficulty.toUpperCase()}
+                  </span>
+                </div>
+
+                {/* Question Type */}
+                {currentQuestion.questionCategory && (
+                  <div className="flex items-center gap-4 flex-wrap">
+                    <span className="text-lg md:text-xl text-zinc-200 font-bold">Type:</span>
+                    <span className="px-5 py-3 rounded-md text-base md:text-lg bg-zinc-900 text-zinc-300 border-2 border-zinc-700 font-medium">
+                      {currentQuestion.questionCategory === 'single-domain-single-topic' ? 'Single Domain, Single Topic' :
+                       currentQuestion.questionCategory === 'single-domain-multiple-topics' ? 'Single Domain, Multiple Topics' :
+                       'Multiple Domains, Multiple Topics'}
+                    </span>
                   </div>
                 )}
               </div>

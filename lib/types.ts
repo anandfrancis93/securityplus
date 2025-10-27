@@ -5,10 +5,11 @@ export interface Question {
   correctAnswer: number | number[]; // Single number for MCQ, array for multiple-response
   explanation: string;
   incorrectExplanations: string[];
-  topics: string[];
+  topics: string[]; // Exact topic strings from cleaned topic list
   difficulty: 'easy' | 'medium' | 'hard';
   createdAt: number;
   questionType: 'single' | 'multiple'; // Single-choice or multiple-response
+  questionCategory?: 'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics'; // Question complexity based on domain and topic coverage
   irtDifficulty?: number; // IRT difficulty parameter (-3 to +3, higher = harder)
   irtDiscrimination?: number; // IRT discrimination parameter (0.5 to 2.5, higher = better differentiates ability)
   maxPoints?: number; // Maximum points for this question

@@ -68,3 +68,20 @@ export function getDomainFromTopics(topics: string[]): string {
   // Default to most general domain if no match
   return '1.0 General Security Concepts';
 }
+
+/**
+ * Detects all unique Security+ domains covered by the given topics
+ * Returns an array of domains, useful for cross-domain synthesis questions
+ */
+export function getDomainsFromTopics(topics: string[]): string[] {
+  const domains = new Set<string>();
+
+  // Get domain for each topic individually
+  topics.forEach(topic => {
+    const domain = getDomainFromTopics([topic]);
+    domains.add(domain);
+  });
+
+  // Return sorted array of unique domains
+  return Array.from(domains).sort();
+}
