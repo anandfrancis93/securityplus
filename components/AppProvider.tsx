@@ -29,6 +29,8 @@ interface AppContextType {
   currentQuiz: QuizSession | null;
   loading: boolean;
   predictedScore: number;
+  liquidGlass: boolean;
+  toggleLiquidGlass: () => void;
   startNewQuiz: () => void;
   answerQuestion: (question: Question, answer: number | number[]) => void;
   endQuiz: (unusedQuestions?: Question[]) => Promise<void>;
@@ -54,6 +56,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [isPaired, setIsPaired] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isPregenerating, setIsPregenerating] = useState(false);
+  const [liquidGlass, setLiquidGlass] = useState(() => {
+    // Initialize from localStorage, default to true (enabled)
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('liquidGlass');
+      return stored !== null ? stored === 'true' : true;
+    }
+    return true;
+  });
 
   useEffect(() => {
     initAuth();
@@ -492,6 +502,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const toggleLiquidGlass = () => {
+    setLiquidGlass(prev => {
+      const newValue = !prev;
+      localStorage.setItem('liquidGlass', String(newValue));
+      return newValue;
+    });
+  };
+
   const value: AppContextType = {
     userId,
     user,
@@ -499,6 +517,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     currentQuiz,
     loading,
     predictedScore,
+    liquidGlass,
+    toggleLiquidGlass,
     startNewQuiz,
     answerQuestion,
     endQuiz,

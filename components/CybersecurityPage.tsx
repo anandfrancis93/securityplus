@@ -1,17 +1,17 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from './AppProvider';
 import { useRouter } from 'next/navigation';
 import { getUserFlashcards, getUserReviews } from '@/lib/flashcardDb';
 import { getDueFlashcards } from '@/lib/spacedRepetition';
+import Header from './Header';
 
 export default function CybersecurityPage() {
-  const { user, loading, handleSignOut, userId } = useApp();
+  const { user, loading, userId, liquidGlass } = useApp();
   const router = useRouter();
   const [selectedCard, setSelectedCard] = useState<'quiz' | 'flashcards' | null>(null);
   const [dueFlashcardsCount, setDueFlashcardsCount] = useState(0);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   // Redirect to login if not authenticated
@@ -20,23 +20,6 @@ export default function CybersecurityPage() {
       router.push('/');
     }
   }, [user, loading, router]);
-  const menuRef = useRef<HTMLDivElement>(null);
-
-  // Close menu when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setMenuOpen(false);
-      }
-    }
-
-    if (menuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }
-  }, [menuOpen]);
 
   useEffect(() => {
     const loadDueCount = async () => {
@@ -76,8 +59,10 @@ export default function CybersecurityPage() {
       onClick: () => router.push('/cybersecurity/quiz'),
       disabled: false,
       clickable: true,
+      gradient: 'from-violet-500/20 to-purple-500/20',
+      glowColor: 'shadow-violet-500/50',
       icon: (
-        <svg className="w-20 h-20 md:w-24 md:h-24 text-violet-400 transition-opacity duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+        <svg className={`w-20 h-20 md:w-24 md:h-24 text-violet-400 ${liquidGlass ? 'transition-all duration-500' : 'transition-opacity duration-200'} ${liquidGlass && hoveredCard === 'quiz' && 'scale-110 drop-shadow-[0_0_15px_currentColor]'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
       ),
@@ -90,8 +75,10 @@ export default function CybersecurityPage() {
       disabled: false,
       clickable: true,
       badge: dueFlashcardsCount > 0 ? `${dueFlashcardsCount} due` : null,
+      gradient: 'from-cyan-500/20 to-blue-500/20',
+      glowColor: 'shadow-cyan-500/50',
       icon: (
-        <svg className="w-20 h-20 md:w-24 md:h-24 text-cyan-400 transition-opacity duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+        <svg className={`w-20 h-20 md:w-24 md:h-24 text-cyan-400 ${liquidGlass ? 'transition-all duration-500' : 'transition-opacity duration-200'} ${liquidGlass && hoveredCard === 'flashcards' && 'scale-110 drop-shadow-[0_0_15px_currentColor]'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
         </svg>
       ),
@@ -103,6 +90,8 @@ export default function CybersecurityPage() {
       onClick: () => {},
       disabled: false,
       clickable: false,
+      gradient: 'from-emerald-500/20 to-teal-500/20',
+      glowColor: 'shadow-emerald-500/50',
       icon: (
         <svg className="w-20 h-20 md:w-24 md:h-24 text-emerald-400 transition-opacity duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -116,6 +105,8 @@ export default function CybersecurityPage() {
       onClick: () => {},
       disabled: false,
       clickable: false,
+      gradient: 'from-amber-500/20 to-orange-500/20',
+      glowColor: 'shadow-amber-500/50',
       icon: (
         <svg className="w-20 h-20 md:w-24 md:h-24 text-amber-400 transition-opacity duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -125,112 +116,55 @@ export default function CybersecurityPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
+      {/* Animated Background Gradients (Liquid Glass only) */}
+      {liquidGlass && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        </div>
+      )}
+
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl">
         {/* Header */}
         <header className="mb-16 md:mb-20">
-          {/* Navigation Buttons */}
-          <div className="flex justify-between items-center mb-12">
-            <div className="relative">
-              <button
-                id="back-to-home"
-                onClick={() => router.push('/home')}
-                className="p-2 border border-zinc-800 rounded-md hover:bg-zinc-900 transition-colors duration-150 focus:outline-none focus:ring-1 focus:ring-zinc-700"
-                title="Back to subjects"
-                aria-label="Back to subjects"
-              >
-                <svg
-                  className="w-5 h-5 text-zinc-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-            </div>
-
-            <div className="relative" ref={menuRef}>
-              <button
-                id="menu-cybersecurity"
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="p-2 border border-zinc-800 rounded-md hover:bg-zinc-900 transition-colors duration-150 focus:outline-none focus:ring-1 focus:ring-zinc-700"
-                title="Menu"
-                aria-label="Open menu"
-              >
-                <svg
-                  className="w-5 h-5 text-zinc-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-
-              {/* Dropdown Menu */}
-              {menuOpen && user && !user?.isAnonymous && (
-                <div className="absolute right-0 top-full mt-2 bg-black/95 backdrop-blur-xl border border-zinc-800 rounded-md overflow-hidden min-w-[200px] z-50">
-                  {/* User Name Section */}
-                  <div className="px-4 py-3 border-b border-zinc-800">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center">
-                        <svg
-                          className="w-4 h-4 text-zinc-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                      </div>
-                      <span className="text-sm text-zinc-300 font-mono">{user?.displayName || 'User'}</span>
-                    </div>
-                  </div>
-
-                  {/* Sign Out Button */}
-                  <button
-                    id="sign-out-cybersecurity"
-                    onClick={async () => {
-                      if (confirm('Are you sure you want to sign out?')) {
-                        await handleSignOut();
-                        setMenuOpen(false);
-                      }
-                    }}
-                    className="w-full px-4 py-3 text-sm text-left text-zinc-300 hover:bg-zinc-900 transition-colors duration-150 flex items-center gap-3"
-                  >
-                    <svg
-                      className="w-4 h-4 text-zinc-500"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
-                    <span className="font-mono">Sign Out</span>
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
+          <Header showBackButton backButtonPath="/home" backButtonLabel="Back to Subjects" className="mb-12" />
 
           {/* Hero Section */}
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold mb-6 text-white font-mono tracking-tighter">
-              Cybersecurity
-            </h1>
-            <p className="text-zinc-500 text-base md:text-lg font-mono tracking-tight">
-              Choose your study method
-            </p>
+            {liquidGlass ? (
+              <div className="relative">
+                {/* Glow effect behind title */}
+                <div className="absolute inset-0 bg-gradient-to-r from-violet-500/20 via-cyan-500/20 to-emerald-500/20 blur-3xl" />
+
+                <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-12 shadow-2xl">
+                  {/* Light reflection overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />
+
+                  <h1 className="relative text-6xl sm:text-7xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-white via-zinc-100 to-white bg-clip-text text-transparent tracking-tight">
+                    Cybersecurity
+                  </h1>
+                  <p className="relative text-zinc-400 text-base md:text-lg tracking-wide">
+                    Choose your study method
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <>
+                <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold mb-6 text-white font-mono tracking-tighter">
+                  Cybersecurity
+                </h1>
+                <p className="text-zinc-500 text-base md:text-lg font-mono tracking-tight">
+                  Choose your study method
+                </p>
+              </>
+            )}
           </div>
         </header>
 
         {/* Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 pb-12">
+        <div className={`grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 pb-12 ${liquidGlass ? 'md:gap-8' : ''}`}>
           {cards.map((card) => (
             <button
               key={card.id}
@@ -239,36 +173,55 @@ export default function CybersecurityPage() {
               disabled={card.disabled}
               onMouseEnter={() => card.clickable && setHoveredCard(card.id)}
               onMouseLeave={() => setHoveredCard(null)}
-              className={`relative bg-zinc-950 backdrop-blur-sm rounded-md p-10 md:p-12 border transition-all duration-150
+              className={`relative group ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-zinc-950 backdrop-blur-sm rounded-md'} p-10 md:p-12 border transform
+                       ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-150'}
                        ${card.disabled
-                         ? 'border-zinc-900 opacity-40 cursor-not-allowed'
+                         ? liquidGlass ? 'border-white/5 opacity-40 cursor-not-allowed' : 'border-zinc-900 opacity-40 cursor-not-allowed'
                          : card.clickable
                            ? hoveredCard === card.id
-                             ? 'border-zinc-700 bg-zinc-900/50'
-                             : 'border-zinc-800 hover:border-zinc-700'
-                           : 'border-zinc-800 cursor-default'
+                             ? liquidGlass
+                               ? `border-white/20 bg-white/10 scale-105 shadow-2xl ${card.glowColor}`
+                               : 'border-zinc-700 bg-zinc-900/50'
+                             : liquidGlass
+                               ? 'border-white/10 hover:border-white/20'
+                               : 'border-zinc-800 hover:border-zinc-700'
+                           : liquidGlass
+                             ? 'border-white/10 cursor-default'
+                             : 'border-zinc-800 cursor-default'
                        }
-                       focus:outline-none focus:ring-1 focus:ring-zinc-700`}
+                       ${liquidGlass ? 'focus:outline-none focus:ring-2 focus:ring-white/30' : 'focus:outline-none focus:ring-1 focus:ring-zinc-700'}`}
             >
-              {/* Icon */}
-              <div className={`flex justify-center items-center mb-6 ${card.disabled ? 'opacity-30' : ''}`}>
-                {card.icon}
+              {/* Gradient overlay on hover (Liquid Glass only) */}
+              {liquidGlass && hoveredCard === card.id && card.clickable && (
+                <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+              )}
+
+              {/* Light reflection (Liquid Glass only) */}
+              {liquidGlass && (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+              )}
+              {/* Content */}
+              <div className="relative">
+                {/* Icon */}
+                <div className={`flex justify-center items-center mb-6 ${card.disabled ? 'opacity-30' : ''}`}>
+                  {card.icon}
+                </div>
+
+                {/* Card Name */}
+                <h2 className={`text-2xl md:text-3xl font-bold mb-4 text-white tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>
+                  {card.name}
+                </h2>
+
+                {/* Description */}
+                <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
+                  {card.description}
+                </p>
               </div>
-
-              {/* Card Name */}
-              <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white font-mono tracking-tight">
-                {card.name}
-              </h2>
-
-              {/* Description */}
-              <p className="text-zinc-500 text-sm md:text-base font-mono">
-                {card.description}
-              </p>
 
               {/* Badge (for due flashcards) */}
               {!card.disabled && card.badge && (
                 <div className="absolute top-4 right-4">
-                  <span className="inline-flex items-center gap-2 bg-violet-900 text-violet-300 text-xs font-mono px-3 py-1.5 rounded-md border border-violet-800">
+                  <span className={`inline-flex items-center gap-2 text-xs px-3 py-1.5 ${liquidGlass ? 'bg-white/10 backdrop-blur-xl text-violet-300 border border-white/20 rounded-full' : 'bg-violet-900 text-violet-300 border border-violet-800 rounded-md font-mono'}`}>
                     {card.badge}
                   </span>
                 </div>
@@ -277,8 +230,8 @@ export default function CybersecurityPage() {
               {/* Coming Soon Badge */}
               {card.disabled && (
                 <div className="absolute top-4 right-4">
-                  <span className="inline-flex items-center gap-2 bg-zinc-900 text-zinc-500 text-xs font-mono px-3 py-1.5 rounded-md border border-zinc-800">
-                    <span className="w-1 h-1 rounded-full bg-zinc-600" />
+                  <span className={`inline-flex items-center gap-2 text-xs px-3 py-1.5 ${liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-400 border border-white/20 rounded-full' : 'bg-zinc-900 text-zinc-500 border border-zinc-800 rounded-md font-mono'}`}>
+                    <span className={`${liquidGlass ? 'w-1.5 h-1.5' : 'w-1 h-1'} rounded-full ${liquidGlass ? 'bg-zinc-500 animate-pulse' : 'bg-zinc-600'}`} />
                     Coming Soon
                   </span>
                 </div>
@@ -286,13 +239,13 @@ export default function CybersecurityPage() {
 
               {/* Active Indicator Arrow */}
               {card.clickable && hoveredCard === card.id && (
-                <div className="absolute bottom-4 right-4 text-zinc-600">
+                <div className={`absolute bottom-6 right-6 ${liquidGlass ? 'text-white/80 animate-pulse' : 'text-zinc-600'}`}>
                   <svg
-                    className="w-5 h-5"
+                    className={`${liquidGlass ? 'w-6 h-6 drop-shadow-[0_0_8px_currentColor]' : 'w-5 h-5'}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
-                    strokeWidth={1.5}
+                    strokeWidth={liquidGlass ? 2 : 1.5}
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>

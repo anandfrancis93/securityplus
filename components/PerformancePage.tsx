@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from './AppProvider';
 import { useRouter } from 'next/navigation';
 import { hasSufficientData } from '@/lib/irt';
 import PerformanceGraphs from './PerformanceGraphs';
 import { UserProgress } from '@/lib/types';
+import Header from './Header';
 
 // Generate dynamic insights based on actual performance
 function generatePerformanceInsights(userProgress: UserProgress | null, estimatedAbility: number): string[] {
@@ -167,7 +168,7 @@ function generatePerformanceInsights(userProgress: UserProgress | null, estimate
 }
 
 export default function PerformancePage() {
-  const { user, userProgress, predictedScore, loading, resetProgress, handleSignOut } = useApp();
+  const { user, userProgress, predictedScore, loading, resetProgress } = useApp();
   const router = useRouter();
   const [irtExpanded, setIrtExpanded] = useState(false);
   const [recentQuizzesExpanded, setRecentQuizzesExpanded] = useState(false);
@@ -178,24 +179,6 @@ export default function PerformancePage() {
       router.push('/');
     }
   }, [user, loading, router]);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-
-  // Close menu when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setMenuOpen(false);
-      }
-    }
-
-    if (menuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }
-  }, [menuOpen]);
 
   const handleResetProgress = async () => {
     console.log('[DEBUG] Reset button clicked');
@@ -252,110 +235,7 @@ export default function PerformancePage() {
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl">
         {/* Header */}
         <header className="mb-16 md:mb-20">
-          {/* Navigation Buttons */}
-          <div className="flex justify-between items-center mb-12">
-            <div className="relative">
-              <button
-                id="back-to-quiz"
-                onClick={() => router.push('/cybersecurity/quiz')}
-                className="relative group p-3 rounded-md transition-all duration-150 ease-out
-                         hover:bg-blue-500/10 active:bg-blue-500/20
-                         focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-                title="Back to Quiz"
-                aria-label="Back to Quiz"
-              >
-                <svg
-                  className="w-6 h-6 text-zinc-300 group-hover:text-blue-300 transition-colors duration-150 relative z-10"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-            </div>
-
-            <div className="relative" ref={menuRef}>
-              <button
-                id="menu-performance"
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="relative group p-3 rounded-md transition-all duration-150 ease-out
-                         hover:bg-zinc-900 active:bg-zinc-900
-                         focus:outline-none focus:ring-2 focus:ring-zinc-600/50"
-                title="Menu"
-                aria-label="Open menu"
-              >
-                <svg
-                  className="w-6 h-6 text-zinc-300 group-hover:text-zinc-100 transition-colors duration-150 relative z-10"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-
-              {/* Dropdown Menu */}
-              {menuOpen && user && !user?.isAnonymous && (
-                <div
-                  className="absolute right-0 top-full mt-3 bg-black
-                           border border-zinc-800 rounded-md overflow-hidden
-                           min-w-[240px] z-50 transition-opacity duration-150"
-                >
-                  {/* User Name Section */}
-                  <div className="px-5 py-4 border-b border-zinc-800 bg-black">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-md bg-blue-500/20">
-                        <svg
-                          className="w-5 h-5 text-blue-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          strokeWidth={2}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                      </div>
-                      <span className="text-sm font-medium text-zinc-200 font-mono">{user?.displayName || 'User'}</span>
-                    </div>
-                  </div>
-
-                  {/* Sign Out Button */}
-                  <button
-                    id="sign-out-performance"
-                    onClick={async () => {
-                      if (confirm('Are you sure you want to sign out?')) {
-                        await handleSignOut();
-                        setMenuOpen(false);
-                      }
-                    }}
-                    className="w-full px-5 py-4 text-sm text-left text-zinc-200 font-mono
-                             hover:bg-zinc-900 active:bg-zinc-900
-                             transition-colors duration-150 flex items-center gap-3 group"
-                  >
-                    <div className="p-2 rounded-md bg-red-500/20 group-hover:bg-red-500/30 transition-colors duration-150">
-                      <svg
-                        className="w-4 h-4 text-red-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                      </svg>
-                    </div>
-                    <span className="font-medium">Sign Out</span>
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
+          <Header showBackButton backButtonPath="/cybersecurity/quiz" backButtonLabel="Back to Quiz" className="mb-12" />
 
           {/* Hero Section */}
           <div className="text-center max-w-4xl mx-auto">

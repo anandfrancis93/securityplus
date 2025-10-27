@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from './AppProvider';
 import { useRouter } from 'next/navigation';
 import { Question } from '@/lib/types';
 import { getDomainFromTopics, getDomainsFromTopics } from '@/lib/domainDetection';
 import { authenticatedPost } from '@/lib/apiClient';
+import Header from './Header';
 
 export default function QuizPage() {
-  const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, user, loading: authLoading, handleSignOut } = useApp();
+  const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, user, loading: authLoading } = useApp();
   const router = useRouter();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -27,25 +28,7 @@ export default function QuizPage() {
     }
   }, [user, authLoading, router]);
   const [quizStats, setQuizStats] = useState<{ total: number; correct: number; accuracy: number } | null>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const menuRef = useRef<HTMLDivElement>(null);
-
-  // Close menu when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setMenuOpen(false);
-      }
-    }
-
-    if (menuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }
-  }, [menuOpen]);
 
   useEffect(() => {
     initQuiz();
@@ -269,71 +252,7 @@ export default function QuizPage() {
     return (
       <div className="min-h-screen bg-black text-white font-mono">
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 max-w-7xl">
-          {/* Header with hamburger menu */}
-          <div className="flex justify-end items-center mb-8">
-            <div className="relative" ref={menuRef}>
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="p-3 rounded-md transition-all duration-150 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-700"
-                title="Menu"
-              >
-                <svg
-                  className="w-6 h-6 text-zinc-300 transition-colors duration-150"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-
-              {menuOpen && user && !user?.isAnonymous && (
-                <div className="absolute right-0 top-full mt-3 bg-zinc-900 border border-zinc-800 rounded-md overflow-hidden min-w-[240px] z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                  <div className="px-5 py-4 border-b border-zinc-800">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-md bg-zinc-800">
-                        <svg
-                          className="w-5 h-5 text-zinc-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          strokeWidth={2}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                      </div>
-                      <span className="text-sm font-medium text-zinc-200">{user?.displayName || 'User'}</span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={async () => {
-                      if (confirm('Are you sure you want to sign out?')) {
-                        await handleSignOut();
-                        setMenuOpen(false);
-                      }
-                    }}
-                    className="w-full px-5 py-4 text-sm text-left text-zinc-200 hover:bg-zinc-800 transition-colors duration-150 flex items-center gap-3"
-                  >
-                    <div className="p-2 rounded-md bg-red-950">
-                      <svg
-                        className="w-4 h-4 text-red-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                      </svg>
-                    </div>
-                    <span className="font-medium">Sign Out</span>
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
+          <Header className="mb-8" />
 
           {/* Loading spinner */}
           <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
@@ -352,71 +271,7 @@ export default function QuizPage() {
     return (
       <div className="min-h-screen bg-black text-white font-mono">
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 max-w-7xl">
-          {/* Header with hamburger menu */}
-          <div className="flex justify-end items-center mb-8">
-            <div className="relative" ref={menuRef}>
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="p-3 rounded-md transition-all duration-150 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-700"
-                title="Menu"
-              >
-                <svg
-                  className="w-6 h-6 text-zinc-300 transition-colors duration-150"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-
-              {menuOpen && user && !user?.isAnonymous && (
-                <div className="absolute right-0 top-full mt-3 bg-zinc-900 border border-zinc-800 rounded-md overflow-hidden min-w-[240px] z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                  <div className="px-5 py-4 border-b border-zinc-800">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-md bg-zinc-800">
-                        <svg
-                          className="w-5 h-5 text-zinc-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          strokeWidth={2}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                      </div>
-                      <span className="text-sm font-medium text-zinc-200">{user?.displayName || 'User'}</span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={async () => {
-                      if (confirm('Are you sure you want to sign out?')) {
-                        await handleSignOut();
-                        setMenuOpen(false);
-                      }
-                    }}
-                    className="w-full px-5 py-4 text-sm text-left text-zinc-200 hover:bg-zinc-800 transition-colors duration-150 flex items-center gap-3"
-                  >
-                    <div className="p-2 rounded-md bg-red-950">
-                      <svg
-                        className="w-4 h-4 text-red-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                      </svg>
-                    </div>
-                    <span className="font-medium">Sign Out</span>
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
+          <Header className="mb-8" />
 
           {/* Error message */}
           <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
@@ -542,85 +397,23 @@ export default function QuizPage() {
 
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 max-w-7xl">
         {/* Header */}
-        <div className="flex justify-between items-start mb-12 md:mb-16">
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-150">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-3">
-              Question {currentQuestionIndex + 1} of {totalQuestions}
-            </h1>
-            {generatingNext && (
-              <div className="text-base md:text-lg text-zinc-400 mt-3 flex items-center gap-3 font-medium animate-in fade-in duration-150">
-                <div className="animate-spin rounded-md h-5 w-5 border-2 border-zinc-700 border-t-zinc-400"></div>
-                Generating next question...
-              </div>
-            )}
-            <div className="text-base md:text-lg text-zinc-400 mt-2">
-              {questions.length} question{questions.length !== 1 ? 's' : ''} generated so far
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="relative" ref={menuRef}>
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="p-3 rounded-md transition-all duration-150 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-700"
-                title="Menu"
-              >
-                <svg
-                  className="w-6 h-6 text-zinc-300 transition-colors duration-150"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-
-              {menuOpen && user && !user?.isAnonymous && (
-                <div className="absolute right-0 top-full mt-3 bg-zinc-900 border border-zinc-800 rounded-md overflow-hidden min-w-[240px] z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                  <div className="px-5 py-4 border-b border-zinc-800">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-md bg-zinc-800">
-                        <svg
-                          className="w-5 h-5 text-zinc-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          strokeWidth={2}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                      </div>
-                      <span className="text-sm font-medium text-zinc-200">{user?.displayName || 'User'}</span>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={async () => {
-                      if (confirm('Are you sure you want to sign out?')) {
-                        await handleSignOut();
-                        setMenuOpen(false);
-                      }
-                    }}
-                    className="w-full px-5 py-4 text-sm text-left text-zinc-200 hover:bg-zinc-800 transition-colors duration-150 flex items-center gap-3"
-                  >
-                    <div className="p-2 rounded-md bg-red-950">
-                      <svg
-                        className="w-4 h-4 text-red-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                      </svg>
-                    </div>
-                    <span className="font-medium">Sign Out</span>
-                  </button>
+        <div className="mb-12 md:mb-16">
+          <div className="flex justify-between items-start mb-4">
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-150">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-3">
+                Question {currentQuestionIndex + 1} of {totalQuestions}
+              </h1>
+              {generatingNext && (
+                <div className="text-base md:text-lg text-zinc-400 mt-3 flex items-center gap-3 font-medium animate-in fade-in duration-150">
+                  <div className="animate-spin rounded-md h-5 w-5 border-2 border-zinc-700 border-t-zinc-400"></div>
+                  Generating next question...
                 </div>
               )}
+              <div className="text-base md:text-lg text-zinc-400 mt-2">
+                {questions.length} question{questions.length !== 1 ? 's' : ''} generated so far
+              </div>
             </div>
+            <Header className="" />
           </div>
         </div>
 
