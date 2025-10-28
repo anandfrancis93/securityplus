@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useApp } from './AppProvider';
 import Header from './Header';
 
-export default function HomePage() {
+export default function Home() {
   const router = useRouter();
   const { user, loading, liquidGlass } = useApp();
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);

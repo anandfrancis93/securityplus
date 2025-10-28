@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { signInWithGoogle } from '@/lib/firebase';
 import { useApp } from './AppProvider';
 
-export default function LoginPage() {
+export default function Login() {
   const router = useRouter();
   const { user, loading: authLoading, liquidGlass } = useApp();
   const [loading, setLoading] = useState(false);

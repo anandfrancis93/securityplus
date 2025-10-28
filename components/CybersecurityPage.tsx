@@ -7,7 +7,7 @@ import { getUserFlashcards, getUserReviews } from '@/lib/flashcardDb';
 import { getDueFlashcards } from '@/lib/spacedRepetition';
 import Header from './Header';
 
-export default function CybersecurityPage() {
+export default function Cybersecurity() {
   const { user, loading, userId, liquidGlass } = useApp();
   const router = useRouter();
   const [selectedCard, setSelectedCard] = useState<'quiz' | 'flashcards' | null>(null);
