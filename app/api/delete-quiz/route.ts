@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebaseAdmin';
 import { authenticateAndAuthorize } from '@/lib/apiAuth';
-import { estimateAbility, calculateIRTScore } from '@/lib/irt';
+import { estimateAbility, estimateAbilityWithError, calculateIRTScore } from '@/lib/irt';
 import { UserProgress } from '@/lib/types';
 
 export async function POST(request: NextRequest) {
@@ -56,10 +56,13 @@ export async function POST(request: NextRequest) {
 
     // Recalculate IRT metrics if there are remaining questions
     let estimatedAbility = 0;
+    let abilityStandardError = Infinity;
     let predictedScore = 0;
 
     if (totalQuestions > 0) {
-      estimatedAbility = estimateAbility(allAttempts);
+      const abilityResult = estimateAbilityWithError(allAttempts);
+      estimatedAbility = abilityResult.theta;
+      abilityStandardError = abilityResult.standardError;
 
       // Calculate predicted score using IRT
       const tempProgress: UserProgress = {
@@ -71,6 +74,7 @@ export async function POST(request: NextRequest) {
         totalPoints: 0,
         maxPossiblePoints: 0,
         estimatedAbility,
+        abilityStandardError,
         lastUpdated: Date.now(),
       };
 
@@ -95,6 +99,7 @@ export async function POST(request: NextRequest) {
       totalPoints,
       maxPossiblePoints,
       estimatedAbility,
+      abilityStandardError,
       predictedScore,
       answeredQuestions,
       lastUpdated: Date.now(),

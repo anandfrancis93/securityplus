@@ -42,6 +42,7 @@ export interface UserProgress {
   lastUpdated: number;
   quizHistory: QuizSession[];
   estimatedAbility?: number; // IRT ability estimate (theta)
+  abilityStandardError?: number; // Standard error of ability estimate (for confidence intervals)
   notificationsEnabled?: boolean; // Whether flashcard notifications are enabled
   topicPerformance?: { [topicName: string]: TopicPerformance }; // Cross-session topic tracking
   cachedQuiz?: CachedQuiz | null; // Pre-generated quiz ready to use

@@ -11,7 +11,7 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { UserProgress, QuizSession, Question, QuestionAttempt, TopicPerformance, CachedQuiz } from './types';
-import { estimateAbility, calculateIRTScore } from './irt';
+import { estimateAbility, estimateAbilityWithError, calculateIRTScore } from './irt';
 
 const USERS_COLLECTION = 'users';
 const QUESTIONS_COLLECTION = 'questions';
@@ -111,8 +111,10 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
     // Get all attempts across all quizzes for ability estimation
     const allAttempts: QuestionAttempt[] = quizHistory.flatMap(quiz => quiz.questions);
 
-    // Estimate ability using IRT
-    const estimatedAbility = allAttempts.length > 0 ? estimateAbility(allAttempts) : 0;
+    // Estimate ability using IRT with standard error for confidence intervals
+    const { theta: estimatedAbility, standardError: abilityStandardError } = allAttempts.length > 0
+      ? estimateAbilityWithError(allAttempts)
+      : { theta: 0, standardError: Infinity };
 
     // Update topic performance tracking
     const topicPerformance = updateTopicPerformance(userData.topicPerformance || {}, session);
@@ -126,6 +128,7 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
       totalPoints: (userData.totalPoints || 0) + sessionPoints,
       maxPossiblePoints: (userData.maxPossiblePoints || 0) + sessionMaxPoints,
       estimatedAbility,
+      abilityStandardError,
       topicPerformance,
       lastUpdated: Date.now(),
     };

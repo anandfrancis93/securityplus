@@ -264,6 +264,41 @@ export function estimateAbility(attempts: QuestionAttempt[]): number {
 }
 
 /**
+ * Estimate user ability with confidence interval
+ * Returns both ability estimate and standard error for confidence interval calculation
+ *
+ * @param attempts - Array of question attempts
+ * @returns Object with theta and standardError
+ */
+export function estimateAbilityWithError(attempts: QuestionAttempt[]): { theta: number; standardError: number } {
+  const theta = estimateAbility(attempts);
+
+  if (attempts.length === 0) {
+    return { theta: 0, standardError: Infinity };
+  }
+
+  // Calculate Fisher Information for standard error
+  let fisherInformation = 0;
+
+  for (const attempt of attempts) {
+    const q = attempt.question;
+    const a = q.irtDiscrimination || 1.5;
+    const b = q.irtDifficulty || 0;
+
+    // Calculate probability at current theta
+    const p = irtProbability(theta, b, a);
+
+    // Fisher Information contribution: I(θ) = a² * P(θ) * (1 - P(θ))
+    fisherInformation += a * a * p * (1 - p);
+  }
+
+  // Standard error is inverse square root of Fisher Information
+  const standardError = fisherInformation > 0 ? 1 / Math.sqrt(fisherInformation) : Infinity;
+
+  return { theta, standardError };
+}
+
+/**
  * Calculate predicted Security+ exam score using IRT
  *
  * Maps IRT ability (theta) to the 100-900 score scale

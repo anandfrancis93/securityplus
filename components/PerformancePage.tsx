@@ -7,6 +7,12 @@ import PerformanceGraphs from './PerformanceGraphs';
 import { UserProgress } from '@/lib/types';
 import Header from './Header';
 import { authenticatedPost } from '@/lib/apiClient';
+import {
+  calculateIRTConfidenceInterval,
+  calculateScoreConfidenceInterval,
+  wilsonScoreInterval,
+  formatConfidenceInterval,
+} from '@/lib/confidenceIntervals';
 
 // Generate dynamic insights based on actual performance
 function generatePerformanceInsights(userProgress: UserProgress | null, estimatedAbility: number): string[] {
@@ -286,7 +292,13 @@ export default function QuizPerformance() {
   const totalAnswered = userProgress?.totalQuestions || 0;
   const correctAnswers = userProgress?.correctAnswers || 0;
   const estimatedAbility = userProgress?.estimatedAbility || 0;
+  const abilityStandardError = userProgress?.abilityStandardError || Infinity;
   const accuracy = totalAnswered > 0 ? ((correctAnswers / totalAnswered) * 100).toFixed(1) : 0;
+
+  // Calculate confidence intervals
+  const abilityCI = calculateIRTConfidenceInterval(estimatedAbility, abilityStandardError);
+  const scoreCI = calculateScoreConfidenceInterval(abilityCI.lower, abilityCI.upper);
+  const accuracyCI = wilsonScoreInterval(correctAnswers, totalAnswered);
 
   // Minimum questions needed for reliable IRT prediction
   const MIN_QUESTIONS_FOR_PREDICTION = 10;
@@ -404,7 +416,7 @@ export default function QuizPerformance() {
             {hasEnoughQuestions ? (
               <>
                 <div className="relative group cursor-help inline-block">
-                  <div className={`text-8xl md:text-9xl font-bold mb-6 transition-all duration-700 ${
+                  <div className={`text-8xl md:text-9xl font-bold mb-2 transition-all duration-700 ${
                     totalAnswered === 0 ? 'text-zinc-400' :
                     isGoodPerformance ? 'text-emerald-400' :
                     isNeedsWork ? 'text-red-400' :
@@ -412,6 +424,12 @@ export default function QuizPerformance() {
                   }`}>
                     {predictedScore}
                   </div>
+                  {/* Confidence Interval */}
+                  {isFinite(abilityStandardError) && totalAnswered >= 5 && (
+                    <div className={`text-xl md:text-2xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'} mb-6`}>
+                      95% CI: {scoreCI.lower} - {scoreCI.upper}
+                    </div>
+                  )}
                   {/* Hover tooltip */}
                   <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 w-56 ${liquidGlass ? 'bg-zinc-950/95 backdrop-blur-2xl rounded-[32px] border-white/20 shadow-2xl' : 'bg-zinc-900 rounded-2xl border-zinc-800'} border p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-700`}>
                     {/* Light reflection overlay */}
@@ -583,6 +601,12 @@ export default function QuizPerformance() {
                 isNeedsWork ? 'text-red-400' :
                 'text-yellow-400'
               }`}>{accuracy}%</div>
+              {/* Confidence Interval for Accuracy */}
+              {totalAnswered >= 5 && (
+                <div className={`text-base md:text-lg mt-2 ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600 font-mono'}`}>
+                  95% CI: {accuracyCI.lower.toFixed(1)}% - {accuracyCI.upper.toFixed(1)}%
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -634,6 +658,12 @@ export default function QuizPerformance() {
                     }`}>
                       {estimatedAbility.toFixed(2)}
                     </div>
+                    {/* Confidence Interval for Ability */}
+                    {isFinite(abilityStandardError) && totalAnswered >= 5 && (
+                      <div className={`text-lg md:text-xl mt-2 ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
+                        95% CI: [{abilityCI.lower.toFixed(2)}, {abilityCI.upper.toFixed(2)}]
+                      </div>
+                    )}
                   </div>
                   <div className="relative mt-6">
                     <div className={`h-6 relative overflow-hidden ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl' : 'bg-zinc-900 border border-zinc-800 rounded-md'}`}>

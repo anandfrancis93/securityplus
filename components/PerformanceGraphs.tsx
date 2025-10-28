@@ -15,9 +15,12 @@ import {
   Legend,
   TooltipProps,
   Cell,
+  ErrorBar,
 } from 'recharts';
 import { UserProgress } from '@/lib/types';
 import { ALL_SECURITY_PLUS_TOPICS } from '@/lib/topicData';
+import { estimateAbilityWithError } from '@/lib/irt';
+import { calculateIRTConfidenceInterval, wilsonScoreInterval } from '@/lib/confidenceIntervals';
 
 interface PerformanceGraphsProps {
   userProgress: UserProgress | null;
@@ -78,21 +81,24 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     );
   }
 
-  // Graph 1: Ability Level Over Time
+  // Graph 1: Ability Level Over Time with Confidence Intervals
   const abilityOverTime = userProgress.quizHistory.map((quiz, index) => {
     // Calculate ability up to this quiz
     const attemptsUpToNow = userProgress.quizHistory
       .slice(0, index + 1)
       .flatMap(q => q.questions);
 
-    // Get the estimated ability from this quiz
-    const ability = userProgress.quizHistory[index + 1]?.questions
-      ? userProgress.estimatedAbility || 0
-      : userProgress.estimatedAbility || 0;
+    // Estimate ability with standard error for this point in time
+    const { theta, standardError } = estimateAbilityWithError(attemptsUpToNow);
+    const abilityCI = calculateIRTConfidenceInterval(theta, standardError);
 
     return {
       quiz: `Quiz ${index + 1}`,
-      ability: parseFloat(ability.toFixed(2)),
+      ability: parseFloat(theta.toFixed(2)),
+      abilityErrorLower: parseFloat((theta - abilityCI.lower).toFixed(2)),
+      abilityErrorUpper: parseFloat((abilityCI.upper - theta).toFixed(2)),
+      ciLower: abilityCI.lower,
+      ciUpper: abilityCI.upper,
       date: new Date(quiz.endedAt || quiz.startedAt).toLocaleDateString(),
     };
   });
@@ -136,6 +142,19 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         ? Math.round((difficultyStats.easy.correct / difficultyStats.easy.total) * 100)
         : 0,
       questions: difficultyStats.easy.total,
+      ...(() => {
+        if (difficultyStats.easy.total > 0) {
+          const ci = wilsonScoreInterval(difficultyStats.easy.correct, difficultyStats.easy.total);
+          const accuracy = Math.round(ci.proportion);
+          return {
+            ciLower: ci.lower,
+            ciUpper: ci.upper,
+            errorLower: accuracy - ci.lower,
+            errorUpper: ci.upper - accuracy,
+          };
+        }
+        return { ciLower: 0, ciUpper: 0, errorLower: 0, errorUpper: 0 };
+      })(),
     },
     {
       difficulty: 'Medium',
@@ -143,6 +162,19 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         ? Math.round((difficultyStats.medium.correct / difficultyStats.medium.total) * 100)
         : 0,
       questions: difficultyStats.medium.total,
+      ...(() => {
+        if (difficultyStats.medium.total > 0) {
+          const ci = wilsonScoreInterval(difficultyStats.medium.correct, difficultyStats.medium.total);
+          const accuracy = Math.round(ci.proportion);
+          return {
+            ciLower: ci.lower,
+            ciUpper: ci.upper,
+            errorLower: accuracy - ci.lower,
+            errorUpper: ci.upper - accuracy,
+          };
+        }
+        return { ciLower: 0, ciUpper: 0, errorLower: 0, errorUpper: 0 };
+      })(),
     },
     {
       difficulty: 'Hard',
@@ -150,6 +182,19 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         ? Math.round((difficultyStats.hard.correct / difficultyStats.hard.total) * 100)
         : 0,
       questions: difficultyStats.hard.total,
+      ...(() => {
+        if (difficultyStats.hard.total > 0) {
+          const ci = wilsonScoreInterval(difficultyStats.hard.correct, difficultyStats.hard.total);
+          const accuracy = Math.round(ci.proportion);
+          return {
+            ciLower: ci.lower,
+            ciUpper: ci.upper,
+            errorLower: accuracy - ci.lower,
+            errorUpper: ci.upper - accuracy,
+          };
+        }
+        return { ciLower: 0, ciUpper: 0, errorLower: 0, errorUpper: 0 };
+      })(),
     },
   ];
 
@@ -280,7 +325,10 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 else if (ability >= 0) fill = '#f5a623'; // Yellow for average to good
                 return <circle cx={cx} cy={cy} r={5} fill={fill} />;
               }}
-            />
+            >
+              <ErrorBar dataKey="abilityErrorLower" direction="y" stroke="#888" strokeWidth={2} />
+              <ErrorBar dataKey="abilityErrorUpper" direction="y" stroke="#888" strokeWidth={2} />
+            </Line>
           </LineChart>
         </ResponsiveContainer>
           </div>
@@ -379,6 +427,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                     else if (accuracy >= 70) fill = '#f5a623'; // Yellow for good
                     return <Cell key={`cell-${index}`} fill={fill} />;
                   })}
+                  <ErrorBar dataKey="errorLower" direction="y" stroke="#888" strokeWidth={2} />
+                  <ErrorBar dataKey="errorUpper" direction="y" stroke="#888" strokeWidth={2} />
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
