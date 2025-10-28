@@ -77,9 +77,13 @@ export default function Quiz() {
         // Initialize quiz with quizSessionId BEFORE clearing cache
         if (!quizSessionId) {
           console.error('⚠️ WARNING: quizSessionId is missing from cached quiz!');
-          setErrorMessage('Quiz session is missing. Reloading...');
-          window.location.reload();
-          return;
+          console.log('Clearing bad cache and regenerating...');
+          // Clear the bad cached quiz
+          await clearCachedQuiz();
+          // Trigger pre-generation to create a new one with quizSessionId
+          setLoading(true);
+          setHasInitialized(false); // Allow re-initialization
+          return; // Let the useEffect run again
         }
 
         startNewQuiz(quizSessionId);
@@ -100,9 +104,13 @@ export default function Quiz() {
         // Initialize quiz with quizSessionId BEFORE clearing cache
         if (!quizSessionId) {
           console.error('⚠️ WARNING: quizSessionId is missing from cached quiz!');
-          setErrorMessage('Quiz session is missing. Reloading...');
-          window.location.reload();
-          return;
+          console.log('Clearing bad cache and regenerating...');
+          // Clear the bad cached quiz
+          await clearCachedQuiz();
+          // Trigger pre-generation to create a new one with quizSessionId
+          setLoading(true);
+          setHasInitialized(false); // Allow re-initialization
+          return; // Let the useEffect run again
         }
 
         startNewQuiz(quizSessionId);
