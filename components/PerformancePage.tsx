@@ -375,11 +375,11 @@ export default function QuizPerformance() {
 
             {hasEnoughQuestions ? (
               <>
-                <div className="relative group cursor-help inline-block">
+                <div className="relative group cursor-help">
                   {/* Score Range Display */}
                   {isFinite(abilityStandardError) && totalAnswered >= 5 ? (
                     <>
-                      <div className={`text-7xl md:text-8xl font-bold transition-all duration-700 flex items-center justify-center gap-4`}>
+                      <div className={`text-7xl md:text-8xl font-bold transition-all duration-700 flex items-center justify-center gap-2 sm:gap-4`}>
                         <span className={
                           lowerColor === 'emerald' ? 'text-emerald-400' :
                           lowerColor === 'yellow' ? 'text-yellow-400' :
