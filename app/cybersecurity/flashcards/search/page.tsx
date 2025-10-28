@@ -217,8 +217,8 @@ export default function SearchFlashcards() {
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.85)',
-              backdropFilter: 'blur(12px)',
+              backgroundColor: 'rgba(0, 0, 0, 0.90)',
+              backdropFilter: 'blur(16px)',
               zIndex: 999998,
               transition: 'opacity 700ms cubic-bezier(0.4, 0, 0.2, 1)'
             }}
@@ -230,47 +230,61 @@ export default function SearchFlashcards() {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            backgroundColor: 'rgba(30, 41, 59, 0.95)',
+            backgroundColor: liquidGlass ? 'rgba(18, 18, 18, 0.95)' : 'rgba(30, 41, 59, 0.95)',
             color: 'white',
-            padding: '40px',
-            borderRadius: '32px',
+            padding: '48px',
+            borderRadius: liquidGlass ? '40px' : '32px',
             width: '90%',
-            maxWidth: '650px',
+            maxWidth: '700px',
             maxHeight: '90vh',
             overflowY: 'auto',
             zIndex: 999999,
-            boxShadow: '0 24px 48px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(148, 163, 184, 0.1)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(148, 163, 184, 0.2)',
+            boxShadow: liquidGlass ? '0 32px 64px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(52, 211, 153, 0.2)' : '0 24px 48px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(148, 163, 184, 0.1)',
+            backdropFilter: 'blur(24px)',
+            border: liquidGlass ? '1px solid rgba(52, 211, 153, 0.15)' : '1px solid rgba(148, 163, 184, 0.2)',
             transition: 'all 700ms cubic-bezier(0.4, 0, 0.2, 1)'
           }}>
+            {/* Light Reflection */}
+            {liquidGlass && (
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, transparent 50%)',
+                borderRadius: '40px',
+                pointerEvents: 'none'
+              }} />
+            )}
+
             {/* Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
-              <h2 style={{ fontSize: '32px', fontWeight: '700', margin: 0, letterSpacing: '-0.02em', color: '#e2e8f0' }}>Edit Flashcard</h2>
+            <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '36px' }}>
+              <h2 style={{ fontSize: '36px', fontWeight: '700', margin: 0, letterSpacing: '-0.03em', color: '#fff', textShadow: liquidGlass ? '0 2px 8px rgba(0, 0, 0, 0.3)' : 'none' }}>Edit Flashcard</h2>
               <button
                 onClick={handleCancelEdit}
                 style={{
-                  background: 'none',
+                  background: liquidGlass ? 'rgba(255, 255, 255, 0.05)' : 'transparent',
                   border: 'none',
                   color: '#cbd5e1',
-                  fontSize: '32px',
+                  fontSize: '36px',
                   cursor: 'pointer',
-                  padding: '8px',
+                  padding: '10px',
                   lineHeight: '1',
-                  borderRadius: '50%',
+                  borderRadius: liquidGlass ? '20px' : '50%',
                   transition: 'all 700ms cubic-bezier(0.4, 0, 0.2, 1)'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.05)' : 'transparent'}
               >
                 ×
               </button>
             </div>
 
             {/* Form */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '28px' }}>
               <div>
-                <label style={{ display: 'block', marginBottom: '12px', fontSize: '15px', fontWeight: '600', color: '#cbd5e1', letterSpacing: '0.01em' }}>
+                <label style={{ display: 'block', marginBottom: '14px', fontSize: '16px', fontWeight: '700', color: '#fff', letterSpacing: '0.01em' }}>
                   Term / Question *
                 </label>
                 <input
@@ -281,34 +295,37 @@ export default function SearchFlashcards() {
                   disabled={generating}
                   style={{
                     width: '100%',
-                    padding: '16px 20px',
-                    fontSize: '17px',
-                    borderRadius: '28px',
-                    border: '2px solid rgba(148, 163, 184, 0.2)',
-                    backgroundColor: 'rgba(15, 23, 42, 0.6)',
-                    color: '#e2e8f0',
+                    padding: '18px 24px',
+                    fontSize: '18px',
+                    borderRadius: liquidGlass ? '24px' : '28px',
+                    border: liquidGlass ? '2px solid rgba(52, 211, 153, 0.15)' : '2px solid rgba(148, 163, 184, 0.2)',
+                    backgroundColor: liquidGlass ? 'rgba(255, 255, 255, 0.03)' : 'rgba(15, 23, 42, 0.6)',
+                    color: '#fff',
                     outline: 'none',
                     boxSizing: 'border-box',
-                    transition: 'all 700ms cubic-bezier(0.4, 0, 0.2, 1)'
+                    transition: 'all 700ms cubic-bezier(0.4, 0, 0.2, 1)',
+                    backdropFilter: liquidGlass ? 'blur(8px)' : 'none'
                   }}
                   onFocus={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.5)';
-                    e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.8)';
+                    e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.6)';
+                    e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.06)' : 'rgba(15, 23, 42, 0.8)';
+                    e.currentTarget.style.boxShadow = '0 0 0 4px rgba(52, 211, 153, 0.1)';
                   }}
                   onBlur={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(148, 163, 184, 0.2)';
-                    e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.6)';
+                    e.currentTarget.style.borderColor = liquidGlass ? 'rgba(52, 211, 153, 0.15)' : 'rgba(148, 163, 184, 0.2)';
+                    e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.03)' : 'rgba(15, 23, 42, 0.6)';
+                    e.currentTarget.style.boxShadow = 'none';
                   }}
                 />
                 {editTerm.length > 0 && editTerm.length < 2 && (
-                  <span style={{ color: '#fbbf24', fontSize: '14px', marginTop: '8px', display: 'block' }}>
+                  <span style={{ color: '#fbbf24', fontSize: '15px', marginTop: '10px', display: 'block', fontWeight: '500' }}>
                     Term must be at least 2 characters
                   </span>
                 )}
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: '12px', fontSize: '15px', fontWeight: '600', color: '#cbd5e1', letterSpacing: '0.01em' }}>
+                <label style={{ display: 'block', marginBottom: '14px', fontSize: '16px', fontWeight: '700', color: '#fff', letterSpacing: '0.01em' }}>
                   Definition / Answer *
                 </label>
                 <textarea
@@ -319,35 +336,39 @@ export default function SearchFlashcards() {
                   disabled={generating}
                   style={{
                     width: '100%',
-                    padding: '16px 20px',
-                    fontSize: '17px',
-                    borderRadius: '28px',
-                    border: '2px solid rgba(148, 163, 184, 0.2)',
-                    backgroundColor: 'rgba(15, 23, 42, 0.6)',
-                    color: '#e2e8f0',
+                    padding: '18px 24px',
+                    fontSize: '18px',
+                    borderRadius: liquidGlass ? '24px' : '28px',
+                    border: liquidGlass ? '2px solid rgba(52, 211, 153, 0.15)' : '2px solid rgba(148, 163, 184, 0.2)',
+                    backgroundColor: liquidGlass ? 'rgba(255, 255, 255, 0.03)' : 'rgba(15, 23, 42, 0.6)',
+                    color: '#fff',
                     outline: 'none',
                     resize: 'vertical',
                     boxSizing: 'border-box',
-                    transition: 'all 700ms cubic-bezier(0.4, 0, 0.2, 1)'
+                    transition: 'all 700ms cubic-bezier(0.4, 0, 0.2, 1)',
+                    backdropFilter: liquidGlass ? 'blur(8px)' : 'none',
+                    lineHeight: '1.6'
                   }}
                   onFocus={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.5)';
-                    e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.8)';
+                    e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.6)';
+                    e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.06)' : 'rgba(15, 23, 42, 0.8)';
+                    e.currentTarget.style.boxShadow = '0 0 0 4px rgba(52, 211, 153, 0.1)';
                   }}
                   onBlur={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(148, 163, 184, 0.2)';
-                    e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.6)';
+                    e.currentTarget.style.borderColor = liquidGlass ? 'rgba(52, 211, 153, 0.15)' : 'rgba(148, 163, 184, 0.2)';
+                    e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.03)' : 'rgba(15, 23, 42, 0.6)';
+                    e.currentTarget.style.boxShadow = 'none';
                   }}
                 />
                 {editDefinition.length > 0 && editDefinition.length < 10 && (
-                  <span style={{ color: '#fbbf24', fontSize: '14px', marginTop: '8px', display: 'block' }}>
+                  <span style={{ color: '#fbbf24', fontSize: '15px', marginTop: '10px', display: 'block', fontWeight: '500' }}>
                     Definition must be at least 10 characters
                   </span>
                 )}
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: '12px', fontSize: '15px', fontWeight: '600', color: '#cbd5e1', letterSpacing: '0.01em' }}>
+                <label style={{ display: 'block', marginBottom: '14px', fontSize: '16px', fontWeight: '700', color: '#fff', letterSpacing: '0.01em' }}>
                   Security+ Domain
                 </label>
                 <select
@@ -356,57 +377,61 @@ export default function SearchFlashcards() {
                   disabled={generating}
                   style={{
                     width: '100%',
-                    padding: '16px 20px',
-                    fontSize: '17px',
-                    borderRadius: '28px',
-                    border: '2px solid rgba(148, 163, 184, 0.2)',
-                    backgroundColor: 'rgba(15, 23, 42, 0.6)',
-                    color: '#e2e8f0',
+                    padding: '18px 24px',
+                    fontSize: '18px',
+                    borderRadius: liquidGlass ? '24px' : '28px',
+                    border: liquidGlass ? '2px solid rgba(52, 211, 153, 0.15)' : '2px solid rgba(148, 163, 184, 0.2)',
+                    backgroundColor: liquidGlass ? 'rgba(255, 255, 255, 0.03)' : 'rgba(15, 23, 42, 0.6)',
+                    color: '#fff',
                     outline: 'none',
                     cursor: 'pointer',
                     boxSizing: 'border-box',
-                    transition: 'all 700ms cubic-bezier(0.4, 0, 0.2, 1)'
+                    transition: 'all 700ms cubic-bezier(0.4, 0, 0.2, 1)',
+                    backdropFilter: liquidGlass ? 'blur(8px)' : 'none'
                   }}
                   onFocus={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.5)';
-                    e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.8)';
+                    e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.6)';
+                    e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.06)' : 'rgba(15, 23, 42, 0.8)';
+                    e.currentTarget.style.boxShadow = '0 0 0 4px rgba(52, 211, 153, 0.1)';
                   }}
                   onBlur={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(148, 163, 184, 0.2)';
-                    e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.6)';
+                    e.currentTarget.style.borderColor = liquidGlass ? 'rgba(52, 211, 153, 0.15)' : 'rgba(148, 163, 184, 0.2)';
+                    e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.03)' : 'rgba(15, 23, 42, 0.6)';
+                    e.currentTarget.style.boxShadow = 'none';
                   }}
                 >
-                  <option value="General Security Concepts">General Security Concepts</option>
-                  <option value="Threats, Vulnerabilities, and Mitigations">Threats, Vulnerabilities, and Mitigations</option>
-                  <option value="Security Architecture">Security Architecture</option>
-                  <option value="Security Operations">Security Operations</option>
-                  <option value="Security Program Management and Oversight">Security Program Management and Oversight</option>
+                  <option value="General Security Concepts" style={{ background: '#1e293b', color: '#fff' }}>General Security Concepts</option>
+                  <option value="Threats, Vulnerabilities, and Mitigations" style={{ background: '#1e293b', color: '#fff' }}>Threats, Vulnerabilities, and Mitigations</option>
+                  <option value="Security Architecture" style={{ background: '#1e293b', color: '#fff' }}>Security Architecture</option>
+                  <option value="Security Operations" style={{ background: '#1e293b', color: '#fff' }}>Security Operations</option>
+                  <option value="Security Program Management and Oversight" style={{ background: '#1e293b', color: '#fff' }}>Security Program Management and Oversight</option>
                 </select>
               </div>
 
               {/* Buttons */}
-              <div style={{ display: 'flex', gap: '16px', marginTop: '24px' }}>
+              <div style={{ display: 'flex', gap: '20px', marginTop: '32px' }}>
                 <button
                   onClick={handleCancelEdit}
                   disabled={generating}
                   style={{
                     flex: 1,
-                    padding: '16px 32px',
-                    backgroundColor: 'rgba(71, 85, 105, 0.4)',
-                    color: '#cbd5e1',
-                    border: 'none',
-                    borderRadius: '9999px',
-                    fontSize: '16px',
-                    fontWeight: '600',
+                    padding: '18px 36px',
+                    backgroundColor: liquidGlass ? 'rgba(255, 255, 255, 0.05)' : 'rgba(71, 85, 105, 0.4)',
+                    color: liquidGlass ? '#d1d5db' : '#cbd5e1',
+                    border: liquidGlass ? '2px solid rgba(255, 255, 255, 0.1)' : 'none',
+                    borderRadius: liquidGlass ? '24px' : '9999px',
+                    fontSize: '17px',
+                    fontWeight: '700',
                     cursor: generating ? 'not-allowed' : 'pointer',
                     opacity: generating ? 0.6 : 1,
                     transition: 'all 700ms cubic-bezier(0.4, 0, 0.2, 1)',
-                    letterSpacing: '0.01em'
+                    letterSpacing: '0.02em',
+                    backdropFilter: liquidGlass ? 'blur(8px)' : 'none'
                   }}
-                  onMouseEnter={(e) => !generating && (e.currentTarget.style.backgroundColor = 'rgba(71, 85, 105, 0.6)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(71, 85, 105, 0.4)')}
-                  onMouseDown={(e) => !generating && (e.currentTarget.style.backgroundColor = 'rgba(71, 85, 105, 0.7)')}
-                  onMouseUp={(e) => !generating && (e.currentTarget.style.backgroundColor = 'rgba(71, 85, 105, 0.6)')}
+                  onMouseEnter={(e) => !generating && (e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.1)' : 'rgba(71, 85, 105, 0.6)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.05)' : 'rgba(71, 85, 105, 0.4)')}
+                  onMouseDown={(e) => !generating && (e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.15)' : 'rgba(71, 85, 105, 0.7)')}
+                  onMouseUp={(e) => !generating && (e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.1)' : 'rgba(71, 85, 105, 0.6)')}
                 >
                   Cancel
                 </button>
@@ -415,22 +440,22 @@ export default function SearchFlashcards() {
                   disabled={generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10}
                   style={{
                     flex: 1,
-                    padding: '16px 32px',
-                    backgroundColor: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? 'rgba(71, 85, 105, 0.4)' : 'rgba(52, 211, 153, 0.9)',
-                    color: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? '#64748b' : 'white',
-                    border: 'none',
-                    borderRadius: '9999px',
-                    fontSize: '16px',
-                    fontWeight: '600',
+                    padding: '18px 36px',
+                    backgroundColor: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? (liquidGlass ? 'rgba(255, 255, 255, 0.05)' : 'rgba(71, 85, 105, 0.4)') : 'rgba(52, 211, 153, 1)',
+                    color: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? '#64748b' : '#000',
+                    border: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? (liquidGlass ? '2px solid rgba(255, 255, 255, 0.1)' : 'none') : 'none',
+                    borderRadius: liquidGlass ? '24px' : '9999px',
+                    fontSize: '17px',
+                    fontWeight: '700',
                     cursor: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? 'not-allowed' : 'pointer',
                     transition: 'all 700ms cubic-bezier(0.4, 0, 0.2, 1)',
-                    letterSpacing: '0.01em',
-                    boxShadow: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? 'none' : '0 4px 12px rgba(52, 211, 153, 0.3)'
+                    letterSpacing: '0.02em',
+                    boxShadow: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? 'none' : '0 8px 24px rgba(52, 211, 153, 0.4), 0 0 0 1px rgba(52, 211, 153, 0.3)'
                   }}
-                  onMouseEnter={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = 'rgba(16, 185, 129, 0.9)')}
-                  onMouseLeave={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = 'rgba(52, 211, 153, 0.9)')}
-                  onMouseDown={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = 'rgba(5, 150, 105, 0.9)')}
-                  onMouseUp={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = 'rgba(16, 185, 129, 0.9)')}
+                  onMouseEnter={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = 'rgba(16, 185, 129, 1)', e.currentTarget.style.boxShadow = '0 12px 32px rgba(52, 211, 153, 0.5), 0 0 0 1px rgba(52, 211, 153, 0.4)')}
+                  onMouseLeave={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = 'rgba(52, 211, 153, 1)', e.currentTarget.style.boxShadow = '0 8px 24px rgba(52, 211, 153, 0.4), 0 0 0 1px rgba(52, 211, 153, 0.3)')}
+                  onMouseDown={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = 'rgba(5, 150, 105, 1)')}
+                  onMouseUp={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = 'rgba(16, 185, 129, 1)')}
                 >
                   {generating ? 'Saving...' : 'Save Changes'}
                 </button>
