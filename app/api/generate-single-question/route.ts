@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateQuestionWithTopics, selectQuestionType } from '@/lib/questionGenerator';
-import { selectQuestionCategory, selectTopicsForQuestion } from '@/lib/quizPregeneration';
+import { selectQuestionCategory, selectTopicsForQuestion, initializeQuizMetadata } from '@/lib/quizPregeneration';
 import { authenticateRequest, authenticateAndAuthorize } from '@/lib/apiAuth';
 import { GenerateSingleQuestionSchema, safeValidateRequestBody } from '@/lib/apiValidation';
 import { addQuestionToSession, sanitizeQuestionForClient, createQuizSession, getQuizSession } from '@/lib/quizStateManager';
 import { generateUniqueQuestion } from '@/lib/similarityCheck';
+import { selectTopicsWithFSRS, determineCurrentPhase } from '@/lib/topicSelectionFSRS';
+import { getUserProgress } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
@@ -52,15 +54,40 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Get user progress for FSRS-based topic selection
+    let userProgress = null;
+    let metadata = null;
+    let selectedTopics: string[] = [];
+    let questionCategory = selectQuestionCategory(); // Declare outside to avoid scope issues
+
+    if (userId) {
+      try {
+        userProgress = await getUserProgress(userId);
+        metadata = userProgress?.quizMetadata || initializeQuizMetadata();
+
+        // Determine how many topics to select based on category
+        const topicCount = questionCategory === 'single-domain-single-topic' ? 1 :
+                          questionCategory === 'single-domain-multiple-topics' ? 3 : 2;
+
+        // Use FSRS-based topic selection
+        selectedTopics = selectTopicsWithFSRS(metadata, topicCount, questionCategory);
+
+        const phase = determineCurrentPhase(metadata);
+        console.log(`[FSRS] Phase ${phase}: Selected topics for ${questionCategory}: ${selectedTopics.join(', ')}`);
+      } catch (error) {
+        console.warn('Could not use FSRS topic selection, falling back to random:', error);
+        // Fallback to random selection if FSRS fails
+        selectedTopics = selectTopicsForQuestion(questionCategory, []);
+      }
+    }
+
+    // If no userId or FSRS selection failed, use random selection
+    if (selectedTopics.length === 0) {
+      selectedTopics = selectTopicsForQuestion(questionCategory, []);
+    }
+
     // Select question type (single or multiple choice)
     const questionType = selectQuestionType();
-
-    // Select question category (single-domain-single-topic, single-domain-multiple-topics, multiple-domains-multiple-topics)
-    // Difficulty is automatically derived from category
-    const questionCategory = selectQuestionCategory();
-
-    // Select topics from our cleaned list based on category
-    const selectedTopics = selectTopicsForQuestion(questionCategory, []);
 
     console.log(`Generating question ${questionNumber}: ${questionCategory} ${questionType}-choice, Topics: ${selectedTopics.join(', ')}`);
 

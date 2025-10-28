@@ -30,6 +30,17 @@ export interface TopicPerformance {
   accuracy: number; // Percentage
   lastTested: number; // Timestamp
   isMastered: boolean; // accuracy >= 80% && questionsAnswered >= 3
+
+  // FSRS spaced repetition fields
+  stability?: number; // FSRS memory stability (days)
+  difficulty?: number; // FSRS difficulty (0-10)
+  nextReviewQuiz?: number; // Quiz number when due for review
+  lastReviewQuiz?: number; // Quiz number when last tested
+  reps?: number; // Number of reviews
+  lapses?: number; // Number of times forgotten
+  state?: number; // FSRS State: 0=New, 1=Learning, 2=Review, 3=Relearning
+  lastReviewDate?: number; // Timestamp of last review
+  isStruggling?: boolean; // accuracy < 60% && questionsAnswered >= 2
 }
 
 export interface UserProgress {
@@ -125,6 +136,18 @@ export interface QuestionHistory {
   timesAsked: number;
   correctHistory: boolean[]; // Track if user got it right each time
   lastAskedDate: number; // Timestamp
+
+  // FSRS spaced repetition fields
+  stability?: number; // FSRS memory stability (days)
+  difficulty?: number; // FSRS difficulty (0-10)
+  elapsedDays?: number; // Days since last review
+  scheduledDays?: number; // Scheduled interval (days)
+  reps?: number; // Number of reviews
+  lapses?: number; // Number of times forgotten
+  state?: number; // FSRS State: 0=New, 1=Learning, 2=Review, 3=Relearning
+  lastRating?: number; // Last rating given (1=Again, 2=Hard, 3=Good, 4=Easy)
+  nextReviewDate?: number; // Timestamp when next review is due
+  nextReviewQuiz?: number; // Quiz number when next review is due
 }
 
 export interface TopicCoverageStatus {
@@ -148,4 +171,11 @@ export interface QuizGenerationMetadata {
   allTopicsCoveredOnce: boolean; // Phase 1 complete flag
   questionHistory: { [questionId: string]: QuestionHistory };
   topicCoverage: { [topicName: string]: TopicCoverageStatus };
+
+  // FSRS and Phase tracking
+  currentPhase?: 1 | 2 | 3; // Learning phase
+  phase1CompletedAt?: number; // Quiz number when Phase 1 completed
+  phase2CompletedAt?: number; // Quiz number when Phase 2 completed
+  fsrsParameters?: number[]; // User-specific FSRS parameters (learned from history)
+  lastParameterUpdate?: number; // Timestamp when parameters were last optimized
 }

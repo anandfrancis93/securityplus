@@ -12,6 +12,7 @@
     "@anthropic-ai/sdk": "^0.32.1",
     "firebase": "^11.0.1",
     "firebase-admin": "^13.5.0",
+    "fsrs": "^1.0.0",
     "geist": "^1.5.1",
     "next": "^15.0.0",
     "openai": "^6.7.0",

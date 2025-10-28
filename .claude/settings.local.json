@@ -17,7 +17,9 @@
       "Bash(git rm:*)",
       "Bash(dir \"C:\\Users\\anand\\securityplus\\app\\cybersecurity\\flashcards\")",
       "Bash(dir \"C:\\Users\\anand\\securityplus\\app\\cybersecurity\\flashcards\\study\")",
-      "Bash(awk:*)"
+      "Bash(awk:*)",
+      "WebSearch",
+      "WebFetch(domain:expertium.github.io)"
     ],
     "deny": [],
     "ask": []
