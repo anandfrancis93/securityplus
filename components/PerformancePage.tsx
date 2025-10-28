@@ -303,7 +303,10 @@ export default function QuizPerformance() {
                 <p className={`text-xs text-zinc-400 mt-3 pt-2 border-t ${liquidGlass ? 'border-zinc-700' : 'border-zinc-700 font-mono'}`}>Color is based on your Ability Level from IRT analysis, which correlates with predicted exam score.</p>
               </div>
             </div>
-            <div className={`text-xl md:text-2xl text-zinc-500 mb-8 ${liquidGlass ? '' : 'font-mono'}`}>out of 900</div>
+            <div className={`text-xl md:text-2xl text-zinc-500 ${liquidGlass ? '' : 'font-mono'}`}>out of 900</div>
+            <div className={`text-base md:text-lg ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'} mb-8`}>
+              Based on {totalAnswered} question{totalAnswered !== 1 ? 's' : ''} attempted
+            </div>
             <div>
               {totalAnswered > 0 ? (
                 <div className={`inline-block px-10 py-4 text-xl md:text-2xl font-bold transition-all duration-700 ${
