@@ -182,7 +182,7 @@ export default function QuizReviewPage() {
         </div>
 
         {/* Back to Performance Button */}
-        <div className="mt-20 text-center">
+        <div className="mt-20 mb-20 text-center">
           <button
             id="back-to-performance"
             onClick={() => router.push('/cybersecurity/performance')}
