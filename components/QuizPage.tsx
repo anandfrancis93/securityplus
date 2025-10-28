@@ -31,8 +31,15 @@ export default function Quiz() {
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   useEffect(() => {
+    // Don't initialize until auth is complete and user exists
+    if (authLoading || !user) {
+      console.log('Waiting for auth to complete...', { authLoading, user: !!user });
+      return;
+    }
+
+    console.log('Auth complete, initializing quiz...');
     initQuiz();
-  }, []);
+  }, [authLoading, user]);
 
   // Automatically generate next question in background whenever a new question is added
   useEffect(() => {
