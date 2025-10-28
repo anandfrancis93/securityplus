@@ -389,7 +389,7 @@ export default function QuizPerformance() {
                     onMouseEnter={handleReliabilityHover}
                     onMouseLeave={handleReliabilityLeave}
                   >
-                    {confidenceInfo.label} (±{confidenceInfo.margin} points)
+                    {confidenceInfo.label}
 
                     {/* Tooltip */}
                     {showReliabilityTooltip && (
