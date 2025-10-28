@@ -5,7 +5,7 @@ import { useApp } from './AppProvider';
 import { useRouter } from 'next/navigation';
 import Header from './Header';
 
-export default function QuizOptionsPage() {
+export default function QuizOptions() {
   const { user, loading, liquidGlass } = useApp();
   const router = useRouter();
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);

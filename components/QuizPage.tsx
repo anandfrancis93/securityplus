@@ -8,7 +8,7 @@ import { getDomainFromTopics, getDomainsFromTopics } from '@/lib/domainDetection
 import { authenticatedPost } from '@/lib/apiClient';
 import Header from './Header';
 
-export default function QuizPage() {
+export default function Quiz() {
   const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, user, loading: authLoading, liquidGlass } = useApp();
   const router = useRouter();
   const [questions, setQuestions] = useState<Question[]>([]);
