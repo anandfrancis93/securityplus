@@ -34,6 +34,8 @@ export interface TopicPerformance {
   // FSRS spaced repetition fields
   stability?: number; // FSRS memory stability (days)
   difficulty?: number; // FSRS difficulty (0-10)
+  elapsedDays?: number; // Days since last review
+  scheduledDays?: number; // Scheduled interval (days)
   nextReviewQuiz?: number; // Quiz number when due for review
   lastReviewQuiz?: number; // Quiz number when last tested
   reps?: number; // Number of reviews
