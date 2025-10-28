@@ -346,7 +346,7 @@ export default function QuizPerformance() {
 
                 {/* Tooltip */}
                 {showReliabilityTooltip && (
-                  <div className={`absolute left-1/2 transform -translate-x-1/2 bottom-full mb-3 w-80 ${liquidGlass ? 'bg-zinc-950/95 backdrop-blur-2xl rounded-[32px] border-white/20 shadow-2xl' : 'bg-zinc-900 rounded-2xl border-zinc-800'} border p-6 z-50 transition-all duration-700`}>
+                  <div className={`absolute left-1/2 transform -translate-x-1/2 bottom-full mb-3 w-72 max-w-[90vw] ${liquidGlass ? 'bg-zinc-950/95 backdrop-blur-2xl rounded-[32px] border-white/20 shadow-2xl' : 'bg-zinc-900 rounded-2xl border-zinc-800'} border p-6 z-50 transition-all duration-700`}>
                     {/* Light reflection overlay */}
                     {liquidGlass && (
                       <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] pointer-events-none" />
