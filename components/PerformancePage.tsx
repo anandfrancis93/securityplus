@@ -347,32 +347,39 @@ export default function QuizPerformance() {
 
                 {/* Tooltip */}
                 {showReliabilityTooltip && (
-                  <div className={`absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 w-72 ${liquidGlass ? 'bg-black/90 backdrop-blur-xl border-white/20 rounded-2xl' : 'bg-black border-zinc-700 rounded-xl'} border p-4 z-50 ${liquidGlass ? 'transition-opacity duration-500' : 'transition-opacity duration-150'}`}>
-                    <h4 className={`text-sm font-bold text-white mb-3 ${liquidGlass ? '' : 'font-mono'}`}>
-                      Prediction Reliability Tiers
-                    </h4>
-                    <div className="space-y-2 text-xs">
-                      <div className="flex items-start gap-2">
-                        <span className="text-emerald-400 font-bold min-w-[80px]">50+ questions:</span>
-                        <span className={`text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>High reliability - Very stable predictions</span>
+                  <div className={`absolute left-1/2 transform -translate-x-1/2 bottom-full mb-3 w-80 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px] border-white/10 shadow-2xl' : 'bg-zinc-900 rounded-2xl border-zinc-800'} border p-6 z-50 transition-all duration-700`}>
+                    {/* Light reflection overlay */}
+                    {liquidGlass && (
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] pointer-events-none" />
+                    )}
+
+                    <div className="relative">
+                      <h4 className={`text-base font-bold text-white mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>
+                        Prediction Reliability Tiers
+                      </h4>
+                      <div className="space-y-3 text-sm">
+                        <div className="flex items-start gap-3">
+                          <span className="text-emerald-400 font-bold min-w-[90px]">50+ questions:</span>
+                          <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>High reliability - Very stable predictions</span>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <span className="text-cyan-400 font-bold min-w-[90px]">30-50 questions:</span>
+                          <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>Good reliability - Stable estimates</span>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <span className="text-yellow-400 font-bold min-w-[90px]">20-30 questions:</span>
+                          <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>Moderate reliability - Reasonable confidence</span>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <span className="text-orange-400 font-bold min-w-[90px]">10-19 questions:</span>
+                          <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>Basic estimate - High uncertainty</span>
+                        </div>
                       </div>
-                      <div className="flex items-start gap-2">
-                        <span className="text-cyan-400 font-bold min-w-[80px]">30-50 questions:</span>
-                        <span className={`text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>Good reliability - Stable estimates</span>
+                      <div className={`mt-4 pt-4 border-t ${liquidGlass ? 'border-white/10' : 'border-zinc-800'}`}>
+                        <p className={`text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600 font-mono'} leading-relaxed`}>
+                          You currently have <span className="text-white font-bold">{totalAnswered}</span> {totalAnswered === 1 ? 'question' : 'questions'}
+                        </p>
                       </div>
-                      <div className="flex items-start gap-2">
-                        <span className="text-yellow-400 font-bold min-w-[80px]">20-30 questions:</span>
-                        <span className={`text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>Moderate reliability - Reasonable confidence</span>
-                      </div>
-                      <div className="flex items-start gap-2">
-                        <span className="text-orange-400 font-bold min-w-[80px]">10-19 questions:</span>
-                        <span className={`text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>Basic estimate - High uncertainty</span>
-                      </div>
-                    </div>
-                    <div className={`mt-3 pt-3 border-t ${liquidGlass ? 'border-zinc-700' : 'border-zinc-800'}`}>
-                      <p className={`text-xs ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600 font-mono'}`}>
-                        You currently have <span className="text-white font-bold">{totalAnswered}</span> {totalAnswered === 1 ? 'question' : 'questions'}
-                      </p>
                     </div>
                   </div>
                 )}
