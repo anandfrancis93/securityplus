@@ -277,7 +277,10 @@ export default function QuizPerformance() {
           )}
 
           <div className="relative text-center mb-10">
-            <h2 className={`text-3xl md:text-4xl text-white mb-8 tracking-tight font-bold ${liquidGlass ? '' : 'font-mono'}`}>Predicted Exam Score</h2>
+            <h2 className={`text-3xl md:text-4xl text-white mb-2 tracking-tight font-bold ${liquidGlass ? '' : 'font-mono'}`}>Predicted Exam Score</h2>
+            <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'} mb-8`}>
+              Based on {totalAnswered} question{totalAnswered !== 1 ? 's' : ''} attempted
+            </p>
             <div className="relative group cursor-help inline-block">
               <div className={`text-8xl md:text-9xl font-bold mb-6 transition-all duration-700 ${
                 totalAnswered === 0 ? 'text-zinc-400' :
@@ -303,10 +306,7 @@ export default function QuizPerformance() {
                 <p className={`text-xs text-zinc-400 mt-3 pt-2 border-t ${liquidGlass ? 'border-zinc-700' : 'border-zinc-700 font-mono'}`}>Color is based on your Ability Level from IRT analysis, which correlates with predicted exam score.</p>
               </div>
             </div>
-            <div className={`text-xl md:text-2xl text-zinc-500 ${liquidGlass ? '' : 'font-mono'}`}>out of 900</div>
-            <div className={`text-base md:text-lg ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'} mb-8`}>
-              Based on {totalAnswered} question{totalAnswered !== 1 ? 's' : ''} attempted
-            </div>
+            <div className={`text-xl md:text-2xl text-zinc-500 mb-8 ${liquidGlass ? '' : 'font-mono'}`}>out of 900</div>
             <div>
               {totalAnswered > 0 ? (
                 <div className={`inline-block px-10 py-4 text-xl md:text-2xl font-bold transition-all duration-700 ${
