@@ -17,7 +17,6 @@ import {
   Cell,
 } from 'recharts';
 import { UserProgress } from '@/lib/types';
-import { hasSufficientData } from '@/lib/irt';
 import { ALL_SECURITY_PLUS_TOPICS } from '@/lib/topicData';
 
 interface PerformanceGraphsProps {
@@ -204,8 +203,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     };
   }).sort((a, b) => a.domainNum.localeCompare(b.domainNum));
 
-  const hasSufficientQuestions = hasSufficientData(userProgress.totalQuestions);
-
   // Use the same topic list as quiz generation to ensure consistency
   const allTopicsByDomain = ALL_SECURITY_PLUS_TOPICS;
 
@@ -239,18 +236,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
   return (
     <div className="space-y-12">
-      {/* Phase 1 Warning if insufficient data */}
-      {!hasSufficientQuestions && (
-        <div className="relative bg-white/5 backdrop-blur-2xl border-2 border-yellow-500/50 rounded-[40px] p-10 md:p-12 shadow-2xl shadow-yellow-500/20">
-          <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-transparent rounded-[40px]" />
-          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
-          <p className="relative text-yellow-300 text-xl md:text-2xl">
-            <strong className="font-bold">Preliminary Estimates:</strong> Answer at least 15 questions for reliable IRT analysis.
-            Current progress: {userProgress.totalQuestions}/15 questions
-          </p>
-        </div>
-      )}
-
       {/* Graph 1: Ability Level Over Time */}
       <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl transition-all duration-700 hover:border-white/30">
         <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
