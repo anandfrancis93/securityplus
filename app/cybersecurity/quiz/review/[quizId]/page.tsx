@@ -101,11 +101,9 @@ export default function QuizReviewPage() {
             <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-4">
               Quiz Review
             </h1>
-            <div className="flex flex-wrap items-center gap-4 text-lg md:text-xl text-zinc-400">
+            <div className="flex flex-col gap-2 text-lg md:text-xl text-zinc-400">
               <span>{formattedDate} • {formattedTime}</span>
-              <span>•</span>
               <span>{quiz.questions.length} questions</span>
-              <span>•</span>
               <span>Time: {timeDisplay}</span>
             </div>
             <div className="mt-4 flex items-center gap-4">
