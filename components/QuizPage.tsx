@@ -101,17 +101,11 @@ export default function Quiz() {
 
       console.log(`Generating question ${questionNumber}...`);
 
-      // Calculate current ability for adaptive selection
-      const currentAbility = userProgress?.estimatedAbility || 0;
-      const useAdaptive = true; // Enable pseudo-adaptive selection
-
       const data = await authenticatedPost('/api/generate-single-question', {
         userId: user?.uid,
-        quizSessionId: quizSessionId,
+        ...(quizSessionId ? { quizSessionId } : {}), // Only include if not null
         excludeTopics: userProgress?.answeredQuestions || [],
         questionNumber,
-        currentAbility,
-        useAdaptive,
       });
 
       // Check for API errors (authenticatedPost will throw if there's an error, caught below)
