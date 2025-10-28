@@ -115,8 +115,11 @@ export default function Quiz() {
         completedQuestions: [],
       });
 
+      console.log('Pregenerate API response:', data);
+
       if (data.success) {
         console.log('✅ Quiz session created with', data.questionsCount, 'pre-generated questions');
+        console.log('Quiz session ID from API:', data.quizSessionId);
 
         // Refresh progress to get the cached quiz with quizSessionId
         await refreshProgress();
@@ -124,12 +127,18 @@ export default function Quiz() {
         // Reload the page to reinitialize with fresh data
         window.location.reload();
       } else {
-        setErrorMessage('Failed to initialize quiz session. Please try again.');
+        console.error('Pregenerate failed:', data);
+        setErrorMessage(`Failed to initialize quiz session: ${data.error || 'Unknown error'}. Please try again.`);
         setLoading(false);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating quiz session:', error);
-      setErrorMessage('Failed to initialize quiz. Please try again.');
+      console.error('Error details:', {
+        message: error?.message,
+        response: error?.response,
+        stack: error?.stack
+      });
+      setErrorMessage(`Failed to initialize quiz: ${error?.message || 'Unknown error'}. Please try again.`);
       setLoading(false);
     }
   };
