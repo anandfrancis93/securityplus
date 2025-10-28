@@ -43,7 +43,6 @@ export default function QuestionCard({
       {liquidGlass && (
         <>
           <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-white/5 to-transparent rounded-[48px]" />
-          <div className="absolute inset-0 bg-gradient-to-tr from-violet-500/10 via-transparent to-cyan-500/10 rounded-[48px]" />
         </>
       )}
 
@@ -54,7 +53,7 @@ export default function QuestionCard({
       {/* Multiple-response instruction */}
       {question.questionType === 'multiple' && !showExplanation && (
         <div className={`mb-12 text-base md:text-lg text-zinc-200 p-10 relative ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border-2 border-white/20 rounded-3xl shadow-lg' : 'bg-zinc-900 border-2 border-zinc-700 rounded-md'}`}>
-          {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 via-transparent to-transparent rounded-3xl" />}
+          {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />}
           <strong className="font-bold relative">Select all that apply</strong> <span className="relative">- This question has multiple correct answers</span>
         </div>
       )}
@@ -98,7 +97,7 @@ export default function QuestionCard({
               `group relative w-full text-left p-10 md:p-12 transition-all duration-700 cursor-pointer ${
                 isSelected
                   ? liquidGlass
-                    ? 'bg-white/15 backdrop-blur-2xl border-2 border-violet-400/60 rounded-3xl shadow-2xl shadow-violet-500/30'
+                    ? 'bg-white/15 backdrop-blur-2xl border-2 border-white/50 rounded-3xl shadow-2xl shadow-white/20'
                     : 'border-2 border-zinc-600 bg-zinc-900 rounded-md'
                   : liquidGlass
                     ? 'bg-white/8 backdrop-blur-2xl border-2 border-white/20 hover:border-white/40 hover:bg-white/12 rounded-3xl hover:shadow-2xl hover:shadow-white/20 hover:scale-[1.02]'
@@ -130,7 +129,6 @@ export default function QuestionCard({
               {liquidGlass && !showExplanation && (
                 <>
                   <div className="absolute inset-0 bg-gradient-to-br from-white/15 via-transparent to-transparent rounded-3xl" />
-                  {isSelected && <div className="absolute inset-0 bg-gradient-to-br from-violet-500/15 via-transparent to-transparent rounded-3xl" />}
                 </>
               )}
 
@@ -148,10 +146,10 @@ export default function QuestionCard({
                             : liquidGlass
                               ? 'border-white/40'
                               : 'border-zinc-600'
-                        : // Active mode - violet colors
+                        : // Active mode - white colors
                           isSelected
                             ? liquidGlass
-                              ? 'bg-violet-500/40 border-violet-400 shadow-lg shadow-violet-500/30'
+                              ? 'bg-white/20 border-white/60 shadow-lg shadow-white/20'
                               : 'bg-zinc-700 border-zinc-600'
                             : liquidGlass
                               ? 'border-white/40'
@@ -170,10 +168,10 @@ export default function QuestionCard({
                             : liquidGlass
                               ? 'border-white/40'
                               : 'border-zinc-600'
-                        : // Active mode - violet colors
+                        : // Active mode - white colors
                           isSelected
                             ? liquidGlass
-                              ? 'border-violet-400 shadow-lg shadow-violet-500/30'
+                              ? 'border-white/60 shadow-lg shadow-white/20'
                               : 'border-zinc-600'
                             : liquidGlass
                               ? 'border-white/40'
@@ -182,7 +180,7 @@ export default function QuestionCard({
                       {isSelected && <div className={`${showExplanation ? 'w-4 h-4' : 'w-5 h-5'} rounded-full ${
                         showExplanation
                           ? liquidGlass ? 'bg-white/50 shadow-inner' : 'bg-zinc-500'
-                          : liquidGlass ? 'bg-violet-400 shadow-inner' : 'bg-zinc-700'
+                          : liquidGlass ? 'bg-white/60 shadow-inner' : 'bg-zinc-700'
                       }`}></div>}
                     </div>
                   )}
