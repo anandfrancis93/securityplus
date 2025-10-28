@@ -21,6 +21,7 @@ export default function Quiz() {
   const [totalQuestions] = useState(10);
   const [showCelebration, setShowCelebration] = useState(false);
   const [hasInitialized, setHasInitialized] = useState(false);
+  const [quizSessionId, setQuizSessionId] = useState<string | null>(null);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -106,7 +107,7 @@ export default function Quiz() {
 
       const data = await authenticatedPost('/api/generate-single-question', {
         userId: user?.uid,
-        quizSessionId: currentQuiz?.quizSessionId,
+        quizSessionId: quizSessionId,
         excludeTopics: userProgress?.answeredQuestions || [],
         questionNumber,
         currentAbility,
@@ -125,7 +126,8 @@ export default function Quiz() {
         console.log(`Question ${questionNumber} loaded`);
 
         // If this is the first question and we got a quizSessionId, store it
-        if (questionNumber === 1 && data.quizSessionId && currentQuiz) {
+        if (questionNumber === 1 && data.quizSessionId) {
+          setQuizSessionId(data.quizSessionId);
           startNewQuiz(data.quizSessionId);
           console.log('✅ Quiz session created:', data.quizSessionId);
         }
@@ -165,14 +167,20 @@ export default function Quiz() {
   };
 
   const handleSubmitAnswer = async () => {
+    // Check if we have a quizSessionId
+    if (!quizSessionId) {
+      alert('Quiz session not ready. Please wait a moment and try again.');
+      return;
+    }
+
     const currentQuestion = questions[currentQuestionIndex];
 
     if (currentQuestion.questionType === 'multiple') {
       if (selectedAnswers.length === 0) return;
-      await answerQuestion(currentQuestion, selectedAnswers);
+      await answerQuestion(currentQuestion, selectedAnswers, quizSessionId || undefined);
     } else {
       if (selectedAnswer === null) return;
-      await answerQuestion(currentQuestion, selectedAnswer);
+      await answerQuestion(currentQuestion, selectedAnswer, quizSessionId || undefined);
     }
 
     setShowExplanation(true);

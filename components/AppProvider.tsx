@@ -32,7 +32,7 @@ interface AppContextType {
   liquidGlass: boolean;
   toggleLiquidGlass: () => void;
   startNewQuiz: (quizSessionId?: string) => void;
-  answerQuestion: (question: Question, answer: number | number[]) => void;
+  answerQuestion: (question: Question, answer: number | number[], quizSessionId?: string) => void;
   endQuiz: (unusedQuestions?: Question[]) => Promise<void>;
   refreshProgress: () => Promise<void>;
   resetProgress: () => Promise<void>;
@@ -230,16 +230,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setCurrentQuiz(newQuiz);
   };
 
-  const answerQuestion = async (question: Question, answer: number | number[]) => {
+  const answerQuestion = async (question: Question, answer: number | number[], quizSessionId?: string) => {
     if (!currentQuiz || !userId) {
       console.error('Cannot answer question: missing currentQuiz or userId');
       alert('Error: Quiz session not initialized. Please refresh the page and try again.');
       return;
     }
 
-    if (!currentQuiz.quizSessionId) {
+    // Use provided quizSessionId or fall back to currentQuiz.quizSessionId
+    const sessionId = quizSessionId || currentQuiz.quizSessionId;
+
+    if (!sessionId) {
       console.error('Cannot answer question: missing quizSessionId');
       console.error('currentQuiz:', currentQuiz);
+      console.error('Provided quizSessionId:', quizSessionId);
       alert('Error: Quiz session ID is missing. Please refresh the page and try again.');
       return;
     }
@@ -248,7 +252,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       // SECURITY: Verify answer server-side
       const verificationResult = await authenticatedPost('/api/verify-answer', {
         userId,
-        quizSessionId: currentQuiz.quizSessionId,
+        quizSessionId: sessionId,
         questionId: question.id,
         userAnswer: answer,
         questionNumber: currentQuiz.questions.length + 1,
