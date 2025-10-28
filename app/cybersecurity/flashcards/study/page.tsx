@@ -345,10 +345,16 @@ export default function StudyFlashcards() {
                 id="again"
                 onClick={() => handleAnswer('again')}
                 disabled={answering}
-                className="w-full bg-red-600 hover:bg-red-700 hover:bg-white/5 active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-5 px-4 rounded-full font-medium min-h-[56px] touch-manipulation border-2 border-transparent hover:border-red-400 active:translate-y-0 shadow-lg hover:shadow-red-500/50 transition-all duration-500"
+                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-red-600 rounded-full'} ${liquidGlass ? 'hover:bg-white/10' : 'hover:bg-red-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-5 px-4 font-medium min-h-[56px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-red-400/50' : 'border-transparent hover:border-red-400'} active:translate-y-0 shadow-lg ${liquidGlass ? 'hover:shadow-2xl hover:shadow-red-500/30' : 'hover:shadow-red-500/50'} ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-500'}`}
               >
-                <div className="text-lg font-bold tracking-wide">Again</div>
-                <div className="text-xs opacity-75 tracking-wide">1 day</div>
+                {liquidGlass && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                )}
+                {liquidGlass && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+                )}
+                <div className="relative text-lg font-bold tracking-wide">Again</div>
+                <div className="relative text-xs opacity-75 tracking-wide">1 day</div>
               </button>
               {/* Hover tooltip */}
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
@@ -362,10 +368,16 @@ export default function StudyFlashcards() {
                 id="hard"
                 onClick={() => handleAnswer('hard')}
                 disabled={answering}
-                className="w-full bg-yellow-600 hover:bg-yellow-700 hover:bg-white/5 active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-5 px-4 rounded-full font-medium min-h-[56px] touch-manipulation border-2 border-transparent hover:border-yellow-400 active:translate-y-0 shadow-lg hover:shadow-yellow-500/50 transition-all duration-500"
+                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-yellow-600 rounded-full'} ${liquidGlass ? 'hover:bg-white/10' : 'hover:bg-yellow-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-5 px-4 font-medium min-h-[56px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-yellow-400/50' : 'border-transparent hover:border-yellow-400'} active:translate-y-0 shadow-lg ${liquidGlass ? 'hover:shadow-2xl hover:shadow-yellow-500/30' : 'hover:shadow-yellow-500/50'} ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-500'}`}
               >
-                <div className="text-lg font-bold tracking-wide">Hard</div>
-                <div className="text-xs opacity-75 tracking-wide">1 day</div>
+                {liquidGlass && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 via-transparent to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                )}
+                {liquidGlass && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+                )}
+                <div className="relative text-lg font-bold tracking-wide">Hard</div>
+                <div className="relative text-xs opacity-75 tracking-wide">1 day</div>
               </button>
               {/* Hover tooltip */}
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
@@ -379,10 +391,16 @@ export default function StudyFlashcards() {
                 id="good"
                 onClick={() => handleAnswer('good')}
                 disabled={answering}
-                className="w-full bg-green-600 hover:bg-green-700 hover:bg-white/5 active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-5 px-4 rounded-full font-medium min-h-[56px] touch-manipulation border-2 border-transparent hover:border-green-400 active:translate-y-0 shadow-lg hover:shadow-green-500/50 transition-all duration-500"
+                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-green-600 rounded-full'} ${liquidGlass ? 'hover:bg-white/10' : 'hover:bg-green-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-5 px-4 font-medium min-h-[56px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-green-400/50' : 'border-transparent hover:border-green-400'} active:translate-y-0 shadow-lg ${liquidGlass ? 'hover:shadow-2xl hover:shadow-green-500/30' : 'hover:shadow-green-500/50'} ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-500'}`}
               >
-                <div className="text-lg font-bold tracking-wide">Good</div>
-                <div className="text-xs opacity-75 tracking-wide">3 days</div>
+                {liquidGlass && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-transparent to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                )}
+                {liquidGlass && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+                )}
+                <div className="relative text-lg font-bold tracking-wide">Good</div>
+                <div className="relative text-xs opacity-75 tracking-wide">3 days</div>
               </button>
               {/* Hover tooltip */}
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
@@ -396,10 +414,16 @@ export default function StudyFlashcards() {
                 id="easy"
                 onClick={() => handleAnswer('easy')}
                 disabled={answering}
-                className="w-full bg-blue-600 hover:bg-blue-700 hover:bg-white/5 active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-5 px-4 rounded-full font-medium min-h-[56px] touch-manipulation border-2 border-transparent hover:border-blue-400 active:translate-y-0 shadow-lg hover:shadow-blue-500/50 transition-all duration-500"
+                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-blue-600 rounded-full'} ${liquidGlass ? 'hover:bg-white/10' : 'hover:bg-blue-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-5 px-4 font-medium min-h-[56px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-blue-400/50' : 'border-transparent hover:border-blue-400'} active:translate-y-0 shadow-lg ${liquidGlass ? 'hover:shadow-2xl hover:shadow-blue-500/30' : 'hover:shadow-blue-500/50'} ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-500'}`}
               >
-                <div className="text-lg font-bold tracking-wide">Easy</div>
-                <div className="text-xs opacity-75 tracking-wide">7 days</div>
+                {liquidGlass && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                )}
+                {liquidGlass && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+                )}
+                <div className="relative text-lg font-bold tracking-wide">Easy</div>
+                <div className="relative text-xs opacity-75 tracking-wide">7 days</div>
               </button>
               {/* Hover tooltip */}
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
