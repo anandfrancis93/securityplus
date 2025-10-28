@@ -237,14 +237,14 @@ export default function QuizPerformance() {
   const questionsNeeded = MIN_QUESTIONS_FOR_PREDICTION - totalAnswered;
 
   // Reliability tier based on question count
-  const getReliabilityTier = () => {
-    if (totalAnswered >= 50) return { level: 'High', label: 'Very stable predictions', color: 'emerald', range: '50+' };
-    if (totalAnswered >= 30) return { level: 'Good', label: 'Stable estimates', color: 'cyan', range: '30-50' };
-    if (totalAnswered >= 20) return { level: 'Moderate', label: 'Reasonable confidence', color: 'yellow', range: '20-30' };
-    if (totalAnswered >= 10) return { level: 'Basic', label: 'High uncertainty', color: 'orange', range: '10-15' };
-    return { level: 'Insufficient', label: 'Not enough data', color: 'zinc', range: '<10' };
+  const getReliabilityInfo = () => {
+    if (totalAnswered >= 50) return { label: 'High reliability', sublabel: 'Very stable predictions', color: 'emerald' };
+    if (totalAnswered >= 30) return { label: 'Good reliability', sublabel: 'Stable estimates', color: 'cyan' };
+    if (totalAnswered >= 20) return { label: 'Moderate reliability', sublabel: 'Reasonable confidence', color: 'yellow' };
+    if (totalAnswered >= 10) return { label: 'Basic estimate', sublabel: 'High uncertainty', color: 'orange' };
+    return { label: 'Insufficient', sublabel: 'Not enough data', color: 'zinc' };
   };
-  const reliabilityTier = getReliabilityTier();
+  const reliabilityInfo = getReliabilityInfo();
 
   // Color logic based on Ability Level (matches IRT progress bar)
   const isGoodPerformance = estimatedAbility >= 1.0;
@@ -324,7 +324,33 @@ export default function QuizPerformance() {
                     <p className={`text-xs text-zinc-400 mt-3 pt-2 border-t ${liquidGlass ? 'border-zinc-700' : 'border-zinc-700 font-mono'}`}>Color is based on your Ability Level from IRT analysis, which correlates with predicted exam score.</p>
                   </div>
                 </div>
-                <div className={`text-xl md:text-2xl text-zinc-500 mb-8 ${liquidGlass ? '' : 'font-mono'}`}>out of 900</div>
+                <div className={`text-xl md:text-2xl text-zinc-500 ${liquidGlass ? '' : 'font-mono'}`}>out of 900</div>
+
+                {/* Dynamic Reliability Indicator */}
+                <div className={`inline-flex flex-col items-center gap-1 mt-4 mb-8 px-6 py-3 ${liquidGlass ? 'rounded-2xl backdrop-blur-xl' : 'rounded-xl'} border ${
+                  reliabilityInfo.color === 'emerald' ? 'bg-emerald-500/10 border-emerald-500/30' :
+                  reliabilityInfo.color === 'cyan' ? 'bg-cyan-500/10 border-cyan-500/30' :
+                  reliabilityInfo.color === 'yellow' ? 'bg-yellow-500/10 border-yellow-500/30' :
+                  'bg-orange-500/10 border-orange-500/30'
+                }`}>
+                  <p className={`text-sm font-bold ${
+                    reliabilityInfo.color === 'emerald' ? 'text-emerald-400' :
+                    reliabilityInfo.color === 'cyan' ? 'text-cyan-400' :
+                    reliabilityInfo.color === 'yellow' ? 'text-yellow-400' :
+                    'text-orange-400'
+                  } ${liquidGlass ? '' : 'font-mono'}`}>
+                    {reliabilityInfo.label}
+                  </p>
+                  <p className={`text-xs ${
+                    reliabilityInfo.color === 'emerald' ? liquidGlass ? 'text-emerald-300/80' : 'text-emerald-400/80' :
+                    reliabilityInfo.color === 'cyan' ? liquidGlass ? 'text-cyan-300/80' : 'text-cyan-400/80' :
+                    reliabilityInfo.color === 'yellow' ? liquidGlass ? 'text-yellow-300/80' : 'text-yellow-400/80' :
+                    liquidGlass ? 'text-orange-300/80' : 'text-orange-400/80'
+                  } ${liquidGlass ? '' : 'font-mono'}`}>
+                    {reliabilityInfo.sublabel}
+                  </p>
+                </div>
+
                 <div>
                   {totalAnswered > 0 ? (
                     <div className={`inline-block px-10 py-4 text-xl md:text-2xl font-bold transition-all duration-700 ${
@@ -377,146 +403,6 @@ export default function QuizPerformance() {
               </div>
             )}
           </div>
-
-          {/* Prediction Reliability Indicator */}
-          {hasEnoughQuestions && (
-            <div className={`relative mt-12 p-8 ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10' : 'bg-zinc-900 rounded-2xl border border-zinc-800'}`}>
-              {liquidGlass && (
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-3xl" />
-              )}
-              <div className="relative">
-                <h3 className={`text-xl md:text-2xl font-bold text-white mb-6 text-center ${liquidGlass ? '' : 'font-mono'}`}>
-                  Prediction Reliability
-                </h3>
-
-                <div className="space-y-3">
-                  {/* High Reliability: 50+ questions */}
-                  <div className={`flex items-center justify-between p-4 ${liquidGlass ? 'rounded-2xl' : 'rounded-xl'} transition-all duration-500 ${
-                    totalAnswered >= 50
-                      ? liquidGlass
-                        ? 'bg-emerald-500/20 backdrop-blur-xl border border-emerald-500/50'
-                        : 'bg-emerald-900/20 border border-emerald-500/50'
-                      : liquidGlass
-                        ? 'bg-white/5'
-                        : 'bg-zinc-800/50'
-                  }`}>
-                    <div className="flex items-center gap-3">
-                      {totalAnswered >= 50 && (
-                        <svg className="w-5 h-5 text-emerald-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                      )}
-                      <div>
-                        <p className={`font-bold ${totalAnswered >= 50 ? 'text-emerald-400' : liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} ${liquidGlass ? '' : 'font-mono'}`}>
-                          High reliability
-                        </p>
-                        <p className={`text-sm ${totalAnswered >= 50 ? liquidGlass ? 'text-emerald-300' : 'text-emerald-400' : liquidGlass ? 'text-zinc-600' : 'text-zinc-600'} ${liquidGlass ? '' : 'font-mono'}`}>
-                          Very stable predictions
-                        </p>
-                      </div>
-                    </div>
-                    <span className={`text-sm font-bold ${totalAnswered >= 50 ? 'text-emerald-400' : liquidGlass ? 'text-zinc-600' : 'text-zinc-600'} ${liquidGlass ? '' : 'font-mono'}`}>
-                      50+ questions
-                    </span>
-                  </div>
-
-                  {/* Good Reliability: 30-50 questions */}
-                  <div className={`flex items-center justify-between p-4 ${liquidGlass ? 'rounded-2xl' : 'rounded-xl'} transition-all duration-500 ${
-                    totalAnswered >= 30 && totalAnswered < 50
-                      ? liquidGlass
-                        ? 'bg-cyan-500/20 backdrop-blur-xl border border-cyan-500/50'
-                        : 'bg-cyan-900/20 border border-cyan-500/50'
-                      : liquidGlass
-                        ? 'bg-white/5'
-                        : 'bg-zinc-800/50'
-                  }`}>
-                    <div className="flex items-center gap-3">
-                      {totalAnswered >= 30 && totalAnswered < 50 && (
-                        <svg className="w-5 h-5 text-cyan-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                      )}
-                      <div>
-                        <p className={`font-bold ${totalAnswered >= 30 && totalAnswered < 50 ? 'text-cyan-400' : liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} ${liquidGlass ? '' : 'font-mono'}`}>
-                          Good reliability
-                        </p>
-                        <p className={`text-sm ${totalAnswered >= 30 && totalAnswered < 50 ? liquidGlass ? 'text-cyan-300' : 'text-cyan-400' : liquidGlass ? 'text-zinc-600' : 'text-zinc-600'} ${liquidGlass ? '' : 'font-mono'}`}>
-                          Stable estimates
-                        </p>
-                      </div>
-                    </div>
-                    <span className={`text-sm font-bold ${totalAnswered >= 30 && totalAnswered < 50 ? 'text-cyan-400' : liquidGlass ? 'text-zinc-600' : 'text-zinc-600'} ${liquidGlass ? '' : 'font-mono'}`}>
-                      30-50 questions
-                    </span>
-                  </div>
-
-                  {/* Moderate Reliability: 20-30 questions */}
-                  <div className={`flex items-center justify-between p-4 ${liquidGlass ? 'rounded-2xl' : 'rounded-xl'} transition-all duration-500 ${
-                    totalAnswered >= 20 && totalAnswered < 30
-                      ? liquidGlass
-                        ? 'bg-yellow-500/20 backdrop-blur-xl border border-yellow-500/50'
-                        : 'bg-yellow-900/20 border border-yellow-500/50'
-                      : liquidGlass
-                        ? 'bg-white/5'
-                        : 'bg-zinc-800/50'
-                  }`}>
-                    <div className="flex items-center gap-3">
-                      {totalAnswered >= 20 && totalAnswered < 30 && (
-                        <svg className="w-5 h-5 text-yellow-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                      )}
-                      <div>
-                        <p className={`font-bold ${totalAnswered >= 20 && totalAnswered < 30 ? 'text-yellow-400' : liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} ${liquidGlass ? '' : 'font-mono'}`}>
-                          Moderate reliability
-                        </p>
-                        <p className={`text-sm ${totalAnswered >= 20 && totalAnswered < 30 ? liquidGlass ? 'text-yellow-300' : 'text-yellow-400' : liquidGlass ? 'text-zinc-600' : 'text-zinc-600'} ${liquidGlass ? '' : 'font-mono'}`}>
-                          Reasonable confidence
-                        </p>
-                      </div>
-                    </div>
-                    <span className={`text-sm font-bold ${totalAnswered >= 20 && totalAnswered < 30 ? 'text-yellow-400' : liquidGlass ? 'text-zinc-600' : 'text-zinc-600'} ${liquidGlass ? '' : 'font-mono'}`}>
-                      20-30 questions
-                    </span>
-                  </div>
-
-                  {/* Basic Reliability: 10-15 questions */}
-                  <div className={`flex items-center justify-between p-4 ${liquidGlass ? 'rounded-2xl' : 'rounded-xl'} transition-all duration-500 ${
-                    totalAnswered >= 10 && totalAnswered < 20
-                      ? liquidGlass
-                        ? 'bg-orange-500/20 backdrop-blur-xl border border-orange-500/50'
-                        : 'bg-orange-900/20 border border-orange-500/50'
-                      : liquidGlass
-                        ? 'bg-white/5'
-                        : 'bg-zinc-800/50'
-                  }`}>
-                    <div className="flex items-center gap-3">
-                      {totalAnswered >= 10 && totalAnswered < 20 && (
-                        <svg className="w-5 h-5 text-orange-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                      )}
-                      <div>
-                        <p className={`font-bold ${totalAnswered >= 10 && totalAnswered < 20 ? 'text-orange-400' : liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} ${liquidGlass ? '' : 'font-mono'}`}>
-                          Basic estimate
-                        </p>
-                        <p className={`text-sm ${totalAnswered >= 10 && totalAnswered < 20 ? liquidGlass ? 'text-orange-300' : 'text-orange-400' : liquidGlass ? 'text-zinc-600' : 'text-zinc-600'} ${liquidGlass ? '' : 'font-mono'}`}>
-                          High uncertainty
-                        </p>
-                      </div>
-                    </div>
-                    <span className={`text-sm font-bold ${totalAnswered >= 10 && totalAnswered < 20 ? 'text-orange-400' : liquidGlass ? 'text-zinc-600' : 'text-zinc-600'} ${liquidGlass ? '' : 'font-mono'}`}>
-                      10-19 questions
-                    </span>
-                  </div>
-                </div>
-
-                <p className={`text-xs md:text-sm ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'} text-center mt-6`}>
-                  Your current prediction is based on <span className="font-bold text-white">{totalAnswered}</span> {totalAnswered === 1 ? 'question' : 'questions'}
-                </p>
-              </div>
-            </div>
-          )}
 
           <div className="relative mt-12">
             <div className={`w-full h-6 relative overflow-hidden ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl' : 'bg-zinc-900 border border-zinc-800 rounded-md'}`}>
