@@ -289,9 +289,10 @@ export default function QuizPerformance() {
   };
   const confidenceInfo = getConfidenceInfo();
 
-  // Color logic based on Ability Level (matches IRT progress bar)
-  const isGoodPerformance = estimatedAbility >= 1.0;
-  const isNeedsWork = estimatedAbility < -1.0;
+  // Color logic based on predicted score ranges
+  // Green: 750-900 (passing), Yellow: 600-749, Red: 100-599
+  const isGoodPerformance = predictedScore >= 750;
+  const isNeedsWork = predictedScore < 600;
 
   return (
     <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black font-mono'}`}>
