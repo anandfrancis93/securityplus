@@ -61,10 +61,12 @@ export default function Cybersecurity() {
         </div>
       )}
 
-      <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 py-8 max-w-7xl">
-        {/* Header */}
+      {/* Header - Full width */}
+      <div className="relative py-8">
         <Header showBackButton backButtonPath="/home" backButtonLabel="Back to Subjects" className="mb-20" />
+      </div>
 
+      <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
         {/* Hero Section - Apple Style */}
         <section className="text-center mb-16 md:mb-20">
           <div className="max-w-5xl mx-auto space-y-8">
