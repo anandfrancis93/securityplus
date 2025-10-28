@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import PerformanceGraphs from './PerformanceGraphs';
 import { UserProgress } from '@/lib/types';
 import Header from './Header';
+import { authenticatedPost } from '@/lib/apiClient';
 
 // Generate dynamic insights based on actual performance
 function generatePerformanceInsights(userProgress: UserProgress | null, estimatedAbility: number): string[] {
@@ -161,12 +162,14 @@ function generatePerformanceInsights(userProgress: UserProgress | null, estimate
 }
 
 export default function QuizPerformance() {
-  const { user, userProgress, predictedScore, loading, resetProgress, liquidGlass } = useApp();
+  const { user, userProgress, predictedScore, loading, resetProgress, liquidGlass, refreshProgress } = useApp();
   const router = useRouter();
   const [irtExpanded, setIrtExpanded] = useState(false);
   const [recentQuizzesExpanded, setRecentQuizzesExpanded] = useState(false);
   const [showReliabilityTooltip, setShowReliabilityTooltip] = useState(false);
   const [tooltipDismissTimeout, setTooltipDismissTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -209,6 +212,30 @@ export default function QuizPerformance() {
       }
     };
   }, [tooltipDismissTimeout]);
+
+  const handleDeleteQuiz = async (quizId: string) => {
+    if (!user) return;
+
+    setIsDeleting(true);
+    try {
+      await authenticatedPost('/api/delete-quiz', {
+        userId: user.uid,
+        quizId: quizId,
+      });
+
+      // Refresh user progress to reflect the deletion
+      await refreshProgress();
+
+      // Close confirmation dialog
+      setDeleteConfirmId(null);
+      console.log(`[DELETE QUIZ] Successfully deleted quiz ${quizId}`);
+    } catch (error) {
+      console.error('[DELETE QUIZ] Failed to delete quiz:', error);
+      alert('Failed to delete quiz. Please try again.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const handleResetProgress = async () => {
     console.log('[DEBUG] Reset button clicked');
@@ -742,44 +769,96 @@ export default function QuizPerformance() {
                   const isIncomplete = quiz.questions.length < 10;
 
                   return (
-                    <button
+                    <div
                       key={quiz.id}
-                      id={`quiz-review-${quiz.id}`}
-                      onClick={() => router.push(`/cybersecurity/quiz/review/${quiz.id}`)}
-                      className={`relative w-full p-8 md:p-10 transition-all duration-700 hover:scale-[1.01] cursor-pointer text-left ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/30 hover:bg-white/10 rounded-3xl hover:shadow-xl hover:shadow-white/10' : 'bg-black border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 rounded-md'}`}
+                      className="relative"
                     >
-                      {liquidGlass && (
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />
-                      )}
-                      <div className="relative flex justify-between items-center">
-                        <div>
-                          <div className={`text-lg md:text-xl text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>
-                            {formattedDate} • {formattedTime}
-                          </div>
-                          <div className="text-lg md:text-xl mt-4 space-y-3">
-                            <div>
-                              <span className={`text-zinc-300 font-medium ${liquidGlass ? '' : 'font-mono'}`}>{quiz.questions.length} questions</span>
-                              {isIncomplete && (
-                                <span className={`ml-4 text-base px-4 py-2 transition-all duration-700 ${liquidGlass ? 'rounded-2xl' : 'rounded-md'} bg-black text-yellow-400 border border-yellow-500/50 ${liquidGlass ? '' : 'font-mono'}`}>
-                                  Incomplete
-                                </span>
-                              )}
+                      <div
+                        id={`quiz-review-${quiz.id}`}
+                        onClick={() => router.push(`/cybersecurity/quiz/review/${quiz.id}`)}
+                        className={`relative w-full p-8 md:p-10 transition-all duration-700 hover:scale-[1.01] cursor-pointer ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/30 hover:bg-white/10 rounded-3xl hover:shadow-xl hover:shadow-white/10' : 'bg-black border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 rounded-md'}`}
+                      >
+                        {liquidGlass && (
+                          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />
+                        )}
+
+                        {/* Delete Button */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setDeleteConfirmId(quiz.id);
+                          }}
+                          className={`absolute top-4 right-4 z-10 p-3 transition-all duration-700 group ${liquidGlass ? 'bg-red-500/10 hover:bg-red-500/20 backdrop-blur-xl rounded-2xl border border-red-500/30 hover:border-red-500/50' : 'bg-red-900/20 hover:bg-red-900/30 rounded-md border border-red-500/30 hover:border-red-500/50'}`}
+                          title="Delete quiz"
+                        >
+                          <svg className="w-5 h-5 text-red-400 group-hover:text-red-300 transition-colors duration-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+
+                        <div className="relative flex justify-between items-center pr-12">
+                          <div>
+                            <div className={`text-lg md:text-xl text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>
+                              {formattedDate} • {formattedTime}
                             </div>
-                            <div className={`text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>
-                              Time: {timeDisplay}
+                            <div className="text-lg md:text-xl mt-4 space-y-3">
+                              <div>
+                                <span className={`text-zinc-300 font-medium ${liquidGlass ? '' : 'font-mono'}`}>{quiz.questions.length} questions</span>
+                                {isIncomplete && (
+                                  <span className={`ml-4 text-base px-4 py-2 transition-all duration-700 ${liquidGlass ? 'rounded-2xl' : 'rounded-md'} bg-black text-yellow-400 border border-yellow-500/50 ${liquidGlass ? '' : 'font-mono'}`}>
+                                    Incomplete
+                                  </span>
+                                )}
+                              </div>
+                              <div className={`text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>
+                                Time: {timeDisplay}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="text-right">
-                          <div className={`text-4xl md:text-5xl font-bold text-cyan-400 ${liquidGlass ? '' : 'font-mono'}`}>
-                            {quiz.score}/{quiz.questions.length}
-                          </div>
-                          <div className={`text-xl text-zinc-400 mt-2 ${liquidGlass ? '' : 'font-mono'}`}>
-                            {((quiz.score / quiz.questions.length) * 100).toFixed(0)}%
+                          <div className="text-right">
+                            <div className={`text-4xl md:text-5xl font-bold text-cyan-400 ${liquidGlass ? '' : 'font-mono'}`}>
+                              {quiz.score}/{quiz.questions.length}
+                            </div>
+                            <div className={`text-xl text-zinc-400 mt-2 ${liquidGlass ? '' : 'font-mono'}`}>
+                              {((quiz.score / quiz.questions.length) * 100).toFixed(0)}%
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </button>
+
+                      {/* Delete Confirmation Dialog */}
+                      {deleteConfirmId === quiz.id && (
+                        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                          <div className={`relative w-full max-w-md p-8 md:p-10 transition-all duration-700 ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl rounded-[40px] border border-white/20' : 'bg-zinc-900 rounded-md border border-zinc-700'}`}>
+                            {liquidGlass && (
+                              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
+                            )}
+                            <div className="relative">
+                              <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">Delete Quiz?</h3>
+                              <p className="text-lg text-zinc-300 mb-8">
+                                Are you sure you want to delete this quiz? This will remove all associated data and recalculate your performance metrics. This action cannot be undone.
+                              </p>
+                              <div className="flex gap-4">
+                                <button
+                                  onClick={() => handleDeleteQuiz(quiz.id)}
+                                  disabled={isDeleting}
+                                  className={`flex-1 py-4 px-6 font-bold text-lg transition-all duration-700 ${liquidGlass ? 'bg-red-500/20 hover:bg-red-500/30 backdrop-blur-xl rounded-2xl border border-red-500/50 hover:border-red-500/70' : 'bg-red-900/30 hover:bg-red-900/40 rounded-md border border-red-500/50'} text-red-300 hover:text-red-200 disabled:opacity-50 disabled:cursor-not-allowed`}
+                                >
+                                  {isDeleting ? 'Deleting...' : 'Delete'}
+                                </button>
+                                <button
+                                  onClick={() => setDeleteConfirmId(null)}
+                                  disabled={isDeleting}
+                                  className={`flex-1 py-4 px-6 font-bold text-lg transition-all duration-700 ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl rounded-2xl border border-white/20 hover:border-white/30' : 'bg-zinc-800 hover:bg-zinc-700 rounded-md border border-zinc-700'} text-white disabled:opacity-50 disabled:cursor-not-allowed`}
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   );
                 })}
               </div>
