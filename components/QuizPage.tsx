@@ -9,7 +9,7 @@ import { authenticatedPost } from '@/lib/apiClient';
 import Header from './Header';
 
 export default function Quiz() {
-  const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, user, loading: authLoading, liquidGlass, handleSignOut } = useApp();
+  const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, user, loading: authLoading, liquidGlass, handleSignOut, refreshProgress } = useApp();
   const router = useRouter();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -79,10 +79,33 @@ export default function Quiz() {
       }
     }
 
-    // No cached quiz - generate first question only
-    console.log('No cached quiz found, generating questions on-demand');
-    await generateNextQuestion();
-    // The useEffect will automatically start generating Q2 in the background
+    // No cached quiz - need to trigger pre-generation first to create session
+    console.log('No cached quiz found, triggering pre-generation to create session...');
+    try {
+      const data = await authenticatedPost('/api/pregenerate-quiz', {
+        userId: user?.uid,
+        completedQuestions: [],
+      });
+
+      if (data.success) {
+        console.log('✅ Quiz session created with', data.questionsCount, 'pre-generated questions');
+        // Refresh progress to get the cached quiz with quizSessionId
+        await refreshProgress();
+
+        // Small delay to ensure state updates propagate
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        // userProgress will be updated by refreshProgress, reload page to reinitialize
+        router.push('/cybersecurity/quiz');
+      } else {
+        setErrorMessage('Failed to initialize quiz session. Please try again.');
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error('Error creating quiz session:', error);
+      setErrorMessage('Failed to initialize quiz. Please try again.');
+      setLoading(false);
+    }
   };
 
   const clearCachedQuiz = async () => {
