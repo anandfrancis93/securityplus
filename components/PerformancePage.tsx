@@ -416,19 +416,35 @@ export default function QuizPerformance() {
             {hasEnoughQuestions ? (
               <>
                 <div className="relative group cursor-help inline-block">
-                  <div className={`text-8xl md:text-9xl font-bold mb-2 transition-all duration-700 ${
-                    totalAnswered === 0 ? 'text-zinc-400' :
-                    isGoodPerformance ? 'text-emerald-400' :
-                    isNeedsWork ? 'text-red-400' :
-                    'text-yellow-400'
-                  }`}>
-                    {predictedScore}
-                  </div>
-                  {/* Confidence Interval */}
-                  {isFinite(abilityStandardError) && totalAnswered >= 5 && (
-                    <div className={`text-xl md:text-2xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'} mb-6`}>
-                      95% CI: {scoreCI.lower} - {scoreCI.upper}
-                    </div>
+                  {/* Score Range Display */}
+                  {isFinite(abilityStandardError) && totalAnswered >= 5 ? (
+                    <>
+                      <div className={`text-7xl md:text-8xl font-bold mb-4 transition-all duration-700 ${
+                        totalAnswered === 0 ? 'text-zinc-400' :
+                        isGoodPerformance ? 'text-emerald-400' :
+                        isNeedsWork ? 'text-red-400' :
+                        'text-yellow-400'
+                      }`}>
+                        {scoreCI.lower} - {scoreCI.upper}
+                      </div>
+                      <div className={`text-xl md:text-2xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'} mb-6`}>
+                        95% Confidence Interval
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className={`text-8xl md:text-9xl font-bold mb-2 transition-all duration-700 ${
+                        totalAnswered === 0 ? 'text-zinc-400' :
+                        isGoodPerformance ? 'text-emerald-400' :
+                        isNeedsWork ? 'text-red-400' :
+                        'text-yellow-400'
+                      }`}>
+                        {predictedScore}
+                      </div>
+                      <div className={`text-xl md:text-2xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'} mb-6`}>
+                        Point Estimate (need more data for CI)
+                      </div>
+                    </>
                   )}
                   {/* Hover tooltip */}
                   <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 w-56 ${liquidGlass ? 'bg-zinc-950/95 backdrop-blur-2xl rounded-[32px] border-white/20 shadow-2xl' : 'bg-zinc-900 rounded-2xl border-zinc-800'} border p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-700`}>
@@ -567,7 +583,9 @@ export default function QuizPerformance() {
                   }`}
                   style={{ left: `${((predictedScore - 100) / 800) * 100}%`, transform: 'translateX(-50%)' }}
                 >
-                  {predictedScore}
+                  {isFinite(abilityStandardError) && totalAnswered >= 5
+                    ? `${scoreCI.lower}-${scoreCI.upper}`
+                    : predictedScore}
                 </div>
               </div>
             )}
