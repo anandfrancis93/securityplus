@@ -626,12 +626,6 @@ export default function QuizPerformance() {
                 isNeedsWork ? 'text-red-400' :
                 'text-yellow-400'
               }`}>{accuracy}%</div>
-              {/* Confidence Interval for Accuracy */}
-              {totalAnswered >= 5 && (
-                <div className={`text-base md:text-lg mt-2 ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600 font-mono'}`}>
-                  95% CI: {accuracyCI.lower.toFixed(1)}% - {accuracyCI.upper.toFixed(1)}%
-                </div>
-              )}
             </div>
           </div>
         </div>
