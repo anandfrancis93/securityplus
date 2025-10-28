@@ -7,6 +7,12 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Security+ SY0-701 MCQ Generator",
   description: "AI-powered synthesis question generator for CompTIA Security+ SY0-701",
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+  },
 };
 
 export default function RootLayout({
