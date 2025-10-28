@@ -96,22 +96,22 @@ function generatePerformanceInsights(userProgress: UserProgress | null, estimate
     insights.push(`Accuracy by difficulty: ${difficultyInsight.join(', ')}`);
   }
 
-  // 2. Strength/Weakness by Difficulty
+  // 2. Weakness by Difficulty
   if (byDifficulty.easy.total >= 3 && byDifficulty.easy.correct / byDifficulty.easy.total < 0.7) {
     insights.push('Struggling with easy questions - review fundamental concepts');
-  } else if (byDifficulty.hard.total >= 3 && byDifficulty.hard.correct / byDifficulty.hard.total >= 0.75) {
-    insights.push('Strong performance on hard questions - excellent mastery');
-  } else if (byDifficulty.medium.total >= 5 && byDifficulty.medium.correct / byDifficulty.medium.total >= 0.8) {
-    insights.push('Solid grasp of medium difficulty concepts');
+  }
+  if (byDifficulty.medium.total >= 5 && byDifficulty.medium.correct / byDifficulty.medium.total < 0.7) {
+    insights.push('Medium difficulty questions need more practice');
+  }
+  if (byDifficulty.hard.total >= 3 && byDifficulty.hard.correct / byDifficulty.hard.total < 0.6) {
+    insights.push('Hard questions require deeper understanding - review advanced topics');
   }
 
-  // 3. Category Performance Insight
+  // 3. Category Performance - Areas for Improvement
   const multiDomain = byCategory['multiple-domains-multiple-topics'];
   if (multiDomain.total >= 3) {
     const acc = (multiDomain.correct / multiDomain.total) * 100;
-    if (acc >= 75) {
-      insights.push(`Excelling at cross-domain synthesis (${acc.toFixed(0)}% accuracy)`);
-    } else if (acc < 50) {
+    if (acc < 70) {
       insights.push(`Improve cross-domain integration (currently ${acc.toFixed(0)}%)`);
     }
   }
@@ -135,7 +135,7 @@ function generatePerformanceInsights(userProgress: UserProgress | null, estimate
     }
   }
 
-  // 5. Recent Performance Trend (last 3 quizzes)
+  // 5. Recent Performance Trend - Areas for Improvement
   if (userProgress.quizHistory.length >= 3) {
     const recentQuizzes = userProgress.quizHistory.slice(-3);
     const recentAccuracies = recentQuizzes.map(quiz =>
@@ -144,22 +144,16 @@ function generatePerformanceInsights(userProgress: UserProgress | null, estimate
     const avgRecent = recentAccuracies.reduce((a, b) => a + b, 0) / recentAccuracies.length;
 
     if (recentAccuracies.length === 3) {
-      if (recentAccuracies[2] > recentAccuracies[0] + 10) {
-        insights.push('Improving trend - keep up the momentum!');
-      } else if (recentAccuracies[2] < recentAccuracies[0] - 10) {
+      if (recentAccuracies[2] < recentAccuracies[0] - 10) {
         insights.push('Recent dip in performance - consider reviewing recent topics');
       }
     }
   }
 
-  // 6. Overall recommendation based on ability
-  if (estimatedAbility >= 1.5) {
-    insights.push('Exam-ready performance - consider scheduling your test');
-  } else if (estimatedAbility >= 1.0) {
-    insights.push('On track for passing - continue building confidence');
-  } else if (estimatedAbility >= 0) {
+  // 6. Recommendations based on ability
+  if (estimatedAbility < 1.0 && estimatedAbility >= 0) {
     insights.push('Moderate understanding - increase practice volume');
-  } else {
+  } else if (estimatedAbility < 0) {
     insights.push('Focus on fundamentals - start with easier questions');
   }
 
@@ -392,7 +386,7 @@ export default function QuizPerformance() {
                     {predictedScore}
                   </div>
                   {/* Hover tooltip */}
-                  <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 w-64 ${liquidGlass ? 'bg-zinc-950/95 backdrop-blur-2xl rounded-[32px] border-white/20 shadow-2xl' : 'bg-zinc-900 rounded-2xl border-zinc-800'} border p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-700`}>
+                  <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 w-56 ${liquidGlass ? 'bg-zinc-950/95 backdrop-blur-2xl rounded-[32px] border-white/20 shadow-2xl' : 'bg-zinc-900 rounded-2xl border-zinc-800'} border p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-700`}>
                     {/* Light reflection overlay */}
                     {liquidGlass && (
                       <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] pointer-events-none" />
@@ -583,12 +577,12 @@ export default function QuizPerformance() {
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
             )}
             <div className="relative flex items-center justify-between">
-              <h3 className={`text-3xl md:text-4xl font-bold text-white tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>IRT Performance Analysis</h3>
+              <h3 className={`text-3xl md:text-4xl font-bold text-white tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Performance Analysis</h3>
               <button
                 id="toggle-irt"
                 onClick={() => setIrtExpanded(!irtExpanded)}
                 className={`p-4 hover:bg-white/5 active:bg-white/10 transition-all duration-700 ${liquidGlass ? 'rounded-3xl' : 'rounded-md'}`}
-                aria-label="Toggle IRT Performance Analysis"
+                aria-label="Toggle Performance Analysis"
               >
                 <svg
                   className={`w-8 h-8 text-zinc-400 transition-transform duration-700 ${irtExpanded ? 'rotate-180' : ''}`}
@@ -691,7 +685,7 @@ export default function QuizPerformance() {
               </>
             ) : (
               <div className={`relative mt-8 text-xl text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>
-                Click to view detailed IRT analysis
+                Click to view detailed performance analysis
               </div>
             )}
           </div>
