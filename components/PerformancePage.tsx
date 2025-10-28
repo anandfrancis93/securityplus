@@ -299,11 +299,11 @@ export default function QuizPerformance() {
 
       <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 py-8 max-w-7xl">
         {/* Header */}
-        <header className="mb-32">
-          <Header showBackButton backButtonPath="/cybersecurity/quiz" backButtonLabel="Back to Quiz" className="mb-20" />
+        <header className="mb-16">
+          <Header showBackButton backButtonPath="/cybersecurity/quiz" backButtonLabel="Back to Quiz" className="mb-12" />
 
           {/* Hero Section - Apple Style */}
-          <section className="text-center mb-16">
+          <section className="text-center">
             <div className="max-w-5xl mx-auto space-y-8">
               <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight leading-[0.95]">
                 <span className="block bg-gradient-to-br from-white via-zinc-100 to-zinc-300 bg-clip-text text-transparent">
