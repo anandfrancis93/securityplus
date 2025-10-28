@@ -39,32 +39,33 @@ export default function Header({
   }, [menuOpen]);
 
   return (
-    <div className={`flex justify-between items-center ${className}`}>
-      {/* Back Button (Optional) */}
-      {showBackButton && (
-        <button
-          onClick={() => router.push(backButtonPath)}
-          className="p-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl hover:bg-white/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/20 shadow-lg hover:shadow-white/10 flex items-center gap-2"
-          title={backButtonLabel}
-        >
-          <svg
-            className="w-5 h-5 text-zinc-300"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
+    <div className={`w-full ${className}`}>
+      <div className="flex justify-between items-center px-6 sm:px-8 lg:px-12">
+        {/* Back Button (Optional) */}
+        {showBackButton && (
+          <button
+            onClick={() => router.push(backButtonPath)}
+            className="p-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl hover:bg-white/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/20 shadow-lg hover:shadow-white/10 flex items-center gap-2"
+            title={backButtonLabel}
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-          </svg>
-          <span className="text-sm text-zinc-300">{backButtonLabel}</span>
-        </button>
-      )}
+            <svg
+              className="w-5 h-5 text-zinc-300"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span className="text-sm text-zinc-300">{backButtonLabel}</span>
+          </button>
+        )}
 
-      {/* Spacer */}
-      {!showBackButton && <div />}
+        {/* Spacer */}
+        {!showBackButton && <div />}
 
-      {/* Menu Button - Liquid Glass */}
-      <div className="relative" ref={menuRef}>
+        {/* Menu Button - Liquid Glass */}
+        <div className="relative" ref={menuRef}>
         <button
           id="menu"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -153,6 +154,7 @@ export default function Header({
             </button>
           </div>
         )}
+        </div>
       </div>
     </div>
   );

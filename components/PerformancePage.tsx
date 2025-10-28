@@ -341,13 +341,14 @@ export default function QuizPerformance() {
         </div>
       )}
 
-      <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 py-8 max-w-7xl">
-        {/* Header */}
-        <header className="mb-8">
-          <Header showBackButton backButtonPath="/cybersecurity/quiz" backButtonLabel="Back to Quiz" className="mb-12" />
+      {/* Header - Full width */}
+      <div className="relative py-8">
+        <Header showBackButton backButtonPath="/cybersecurity/quiz" backButtonLabel="Back to Quiz" className="mb-12" />
+      </div>
 
-          {/* Hero Section - Apple Style */}
-          <section className="text-center">
+      <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
+        {/* Hero Section - Apple Style */}
+        <section className="text-center mb-8">
             <div className="max-w-5xl mx-auto space-y-8">
               <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight leading-[0.95]">
                 <span className="block bg-gradient-to-br from-white via-zinc-100 to-zinc-300 bg-clip-text text-transparent">
@@ -361,8 +362,7 @@ export default function QuizPerformance() {
                 Track your progress and master Security+
               </p>
             </div>
-          </section>
-        </header>
+        </section>
 
         {/* Predicted Score Card */}
         <div className={`relative p-12 md:p-16 mb-12 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl' : 'bg-black border border-zinc-800 rounded-md'} transition-all duration-700`}>
