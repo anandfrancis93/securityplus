@@ -32,6 +32,8 @@ export default function ExplanationSection({
 
   console.log('ExplanationSection Debug:', {
     correctAnswers,
+    correctAnswersStringified: JSON.stringify(correctAnswers),
+    questionCorrectAnswer: question.correctAnswer,
     incorrectExplanationsLength: question.incorrectExplanations?.length,
     hasIncorrectExplanations
   });
@@ -123,12 +125,20 @@ export default function ExplanationSection({
               const isEmpty = !explanation || explanation.trim() === '';
 
               console.log(`Option ${String.fromCharCode(65 + index)} (index ${index}):`, {
+                index,
                 isCorrect,
                 isEmpty,
+                correctAnswersArray: correctAnswers,
+                includesCheck: correctAnswers.includes(index),
                 explanation: explanation?.substring(0, 50)
               });
 
-              if (isCorrect || isEmpty) return null;
+              if (isCorrect || isEmpty) {
+                console.log(`  -> FILTERED OUT (isCorrect: ${isCorrect}, isEmpty: ${isEmpty})`);
+                return null;
+              }
+
+              console.log(`  -> SHOWING THIS OPTION`);
 
               return (
                 <div key={index} className="text-xl md:text-2xl">
