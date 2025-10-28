@@ -41,9 +41,10 @@ export default function QuizReviewPage() {
             <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
           </div>
         )}
-        <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 py-8 max-w-7xl">
-          <Header className="mb-20" />
-
+        <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
+          <Header />
+        </div>
+        <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
           {/* Loading spinner */}
           <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
             <div className={`text-center relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] p-16 shadow-2xl' : ''}`}>
@@ -88,38 +89,40 @@ export default function QuizReviewPage() {
         </div>
       )}
 
-      <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 py-8 max-w-7xl">
+      {/* Header - Full width */}
+      <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
+        <Header />
+      </div>
+
+      <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
         {/* Header */}
-        <div className="mb-20">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-4">
-                Quiz Review
-              </h1>
-              <div className="flex flex-wrap items-center gap-4 text-lg md:text-xl text-zinc-400">
-                <span>{formattedDate} • {formattedTime}</span>
-                <span>•</span>
-                <span>{quiz.questions.length} questions</span>
-                <span>•</span>
-                <span>Time: {timeDisplay}</span>
-              </div>
-              <div className="mt-4 flex items-center gap-4">
-                <div className="text-2xl md:text-3xl font-bold">
-                  <span className="text-white">{quiz.score}</span>
-                  <span className="text-zinc-500">/</span>
-                  <span className="text-zinc-300">{quiz.questions.length}</span>
-                  <span className="text-zinc-500 ml-3 text-xl md:text-2xl">
-                    ({((quiz.score / quiz.questions.length) * 100).toFixed(0)}%)
-                  </span>
-                </div>
-                {!quiz.completed && (
-                  <span className={`px-4 py-2 text-sm font-bold ${liquidGlass ? 'bg-yellow-500/20 backdrop-blur-xl border border-yellow-500/50 rounded-2xl text-yellow-300' : 'bg-yellow-950 text-yellow-300 border border-yellow-500 rounded-md'}`}>
-                    Incomplete Quiz
-                  </span>
-                )}
-              </div>
+        <div className="mb-8 md:mb-12">
+          <div className="mb-6">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-4">
+              Quiz Review
+            </h1>
+            <div className="flex flex-wrap items-center gap-4 text-lg md:text-xl text-zinc-400">
+              <span>{formattedDate} • {formattedTime}</span>
+              <span>•</span>
+              <span>{quiz.questions.length} questions</span>
+              <span>•</span>
+              <span>Time: {timeDisplay}</span>
             </div>
-            <Header className="" />
+            <div className="mt-4 flex items-center gap-4">
+              <div className="text-2xl md:text-3xl font-bold">
+                <span className="text-white">{quiz.score}</span>
+                <span className="text-zinc-500">/</span>
+                <span className="text-zinc-300">{quiz.questions.length}</span>
+                <span className="text-zinc-500 ml-3 text-xl md:text-2xl">
+                  ({((quiz.score / quiz.questions.length) * 100).toFixed(0)}%)
+                </span>
+              </div>
+              {!quiz.completed && (
+                <span className={`px-4 py-2 text-sm font-bold ${liquidGlass ? 'bg-yellow-500/20 backdrop-blur-xl border border-yellow-500/50 rounded-2xl text-yellow-300' : 'bg-yellow-950 text-yellow-300 border border-yellow-500 rounded-md'}`}>
+                  Incomplete Quiz
+                </span>
+              )}
+            </div>
           </div>
         </div>
 

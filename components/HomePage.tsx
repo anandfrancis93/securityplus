@@ -29,8 +29,8 @@ export default function Home() {
       )}
 
       {/* Header - Full width */}
-      <div className="relative py-8">
-        <Header className="mb-20" />
+      <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
+        <Header />
       </div>
 
       <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">

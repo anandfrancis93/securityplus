@@ -273,8 +273,8 @@ export default function Quiz() {
             <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
           </div>
         )}
-        <div className="relative py-8">
-          <Header className="mb-20" />
+        <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
+          <Header />
         </div>
         <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
 
@@ -301,8 +301,8 @@ export default function Quiz() {
             <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-red-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
           </div>
         )}
-        <div className="relative py-8">
-          <Header className="mb-20" />
+        <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
+          <Header />
         </div>
         <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
 
@@ -459,13 +459,13 @@ export default function Quiz() {
       )}
 
       {/* Header - Full width */}
-      <div className="relative py-8">
-        <Header className="" />
+      <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
+        <Header />
       </div>
 
       <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
         {/* Question Header */}
-        <div className="mb-20">
+        <div className="mb-8 md:mb-12">
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-4">
             Question {currentQuestionIndex + 1} of {totalQuestions}
           </h1>

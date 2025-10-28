@@ -342,8 +342,8 @@ export default function QuizPerformance() {
       )}
 
       {/* Header - Full width */}
-      <div className="relative py-8">
-        <Header showBackButton backButtonPath="/cybersecurity/quiz" backButtonLabel="Back to Quiz" className="mb-12" />
+      <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
+        <Header showBackButton backButtonPath="/cybersecurity/quiz" backButtonLabel="Back to Quiz" />
       </div>
 
       <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
