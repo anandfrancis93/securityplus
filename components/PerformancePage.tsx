@@ -172,8 +172,6 @@ export default function QuizPerformance() {
   const router = useRouter();
   const [irtExpanded, setIrtExpanded] = useState(false);
   const [recentQuizzesExpanded, setRecentQuizzesExpanded] = useState(false);
-  const [showReliabilityTooltip, setShowReliabilityTooltip] = useState(false);
-  const [tooltipDismissTimeout, setTooltipDismissTimeout] = useState<NodeJS.Timeout | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -183,41 +181,6 @@ export default function QuizPerformance() {
       router.push('/');
     }
   }, [user, loading, router]);
-
-  // Handle reliability tooltip hover
-  const handleReliabilityHover = () => {
-    setShowReliabilityTooltip(true);
-
-    // Clear any existing timeout
-    if (tooltipDismissTimeout) {
-      clearTimeout(tooltipDismissTimeout);
-    }
-
-    // Set new timeout to auto-dismiss after 5 seconds
-    const timeout = setTimeout(() => {
-      setShowReliabilityTooltip(false);
-    }, 5000);
-
-    setTooltipDismissTimeout(timeout);
-  };
-
-  const handleReliabilityLeave = () => {
-    // Clear timeout when user moves away
-    if (tooltipDismissTimeout) {
-      clearTimeout(tooltipDismissTimeout);
-      setTooltipDismissTimeout(null);
-    }
-    setShowReliabilityTooltip(false);
-  };
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (tooltipDismissTimeout) {
-        clearTimeout(tooltipDismissTimeout);
-      }
-    };
-  }, [tooltipDismissTimeout]);
 
   const handleDeleteQuiz = async (quizId: string) => {
     if (!user) return;
@@ -373,63 +336,8 @@ export default function QuizPerformance() {
 
           <div className="relative text-center mb-10">
             <h2 className={`text-3xl md:text-4xl text-white mb-2 tracking-tight font-bold ${liquidGlass ? '' : 'font-mono'}`}>Predicted Exam Score</h2>
-            <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'} mb-8 flex items-center justify-center gap-2 flex-wrap`}>
-              <span>Based on {totalAnswered} question{totalAnswered !== 1 ? 's' : ''}</span>
-              {confidenceInfo.margin > 0 && (
-                <>
-                  <span className="text-zinc-700">•</span>
-                  <span
-                    className={`relative text-sm md:text-base font-semibold cursor-help ${
-                      confidenceInfo.color === 'emerald' ? 'text-emerald-500' :
-                      confidenceInfo.color === 'yellow' ? 'text-yellow-500' :
-                      confidenceInfo.color === 'orange' ? 'text-orange-500' :
-                      confidenceInfo.color === 'red' ? 'text-red-500' :
-                      'text-zinc-500'
-                    }`}
-                    onMouseEnter={handleReliabilityHover}
-                    onMouseLeave={handleReliabilityLeave}
-                  >
-                    {confidenceInfo.label}
-
-                    {/* Tooltip */}
-                    {showReliabilityTooltip && (
-                      <div className={`absolute left-1/2 transform -translate-x-1/2 bottom-full mb-3 w-72 max-w-[85vw] ${liquidGlass ? 'bg-zinc-950/95 backdrop-blur-2xl rounded-[32px] border-white/20 shadow-2xl' : 'bg-zinc-900 rounded-2xl border-zinc-800'} border p-6 z-50 transition-all duration-700`}>
-                        {/* Light reflection overlay */}
-                        {liquidGlass && (
-                          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] pointer-events-none" />
-                        )}
-
-                        <div className="relative">
-                          <h4 className={`text-base md:text-lg font-bold text-white mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>
-                            Confidence Level Guide
-                          </h4>
-                          <div className="space-y-3 text-sm md:text-base">
-                            <div className="flex items-start gap-3">
-                              <span className="text-emerald-400 font-bold min-w-[110px]">High confidence:</span>
-                              <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>CI width ≤50 points - Very precise estimate</span>
-                            </div>
-                            <div className="flex items-start gap-3">
-                              <span className="text-yellow-400 font-bold min-w-[110px]">Medium confidence:</span>
-                              <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>CI width 51-100 points - Reasonable precision</span>
-                            </div>
-                            <div className="flex items-start gap-3">
-                              <span className="text-orange-400 font-bold min-w-[110px]">Low confidence:</span>
-                              <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>CI width 101-150 points - Wide range</span>
-                            </div>
-                            <div className="flex items-start gap-3">
-                              <span className="text-red-400 font-bold min-w-[110px]">Very low:</span>
-                              <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>CI width &gt;150 points - Very uncertain</span>
-                            </div>
-                          </div>
-                          <p className={`mt-4 text-xs md:text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600 font-mono'} leading-relaxed`}>
-                            Answer more questions to narrow the confidence interval and increase precision.
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </span>
-                </>
-              )}
+            <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'} mb-8`}>
+              Based on {totalAnswered} question{totalAnswered !== 1 ? 's' : ''}
             </p>
 
             {hasEnoughQuestions ? (
@@ -446,8 +354,15 @@ export default function QuizPerformance() {
                       }`}>
                         {scoreCI.lower} - {scoreCI.upper}
                       </div>
-                      <div className={`text-xl md:text-2xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'} mb-6`}>
-                        95% Confidence Interval
+                      <div className={`text-xl md:text-2xl mb-6 flex items-center justify-center gap-2 flex-wrap`}>
+                        <span className={liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}>Predicted Score Range</span>
+                        <span className={`font-semibold ${
+                          confidenceInfo.color === 'emerald' ? 'text-emerald-400' :
+                          confidenceInfo.color === 'yellow' ? 'text-yellow-400' :
+                          confidenceInfo.color === 'orange' ? 'text-orange-400' :
+                          confidenceInfo.color === 'red' ? 'text-red-400' :
+                          'text-zinc-400'
+                        }`}>({confidenceInfo.label})</span>
                       </div>
                     </>
                   ) : (
