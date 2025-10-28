@@ -681,24 +681,94 @@ export default function QuizPerformance() {
                   <div className="relative mt-6">
                     <div className={`h-6 relative overflow-hidden ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl' : 'bg-zinc-900 border border-zinc-800 rounded-md'}`}>
                       {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-2xl" />}
-                      <div
-                        className={`h-6 relative transition-all duration-700 ${
-                          estimatedAbility >= 1.0
-                            ? liquidGlass
-                              ? 'bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-600 rounded-2xl'
-                              : 'bg-emerald-500 rounded-md'
-                            : estimatedAbility >= -1.0
+                      {/* Show range if CI available, otherwise point estimate */}
+                      {isFinite(abilityStandardError) && totalAnswered >= 5 ? (
+                        // Show range (confidence interval) with multiple color segments
+                        <>
+                          {/* Red segment: -3 to -1 */}
+                          {abilityCI.lower < -1.0 && (
+                            <div
+                              className={`h-6 absolute transition-all duration-700 ${
+                                liquidGlass
+                                  ? 'bg-gradient-to-r from-red-500 via-red-400 to-red-600'
+                                  : 'bg-red-500'
+                              }`}
+                              style={{
+                                left: `${Math.max(0, ((abilityCI.lower + 3) / 6) * 100)}%`,
+                                width: `${((Math.min(abilityCI.upper, -1.0) - abilityCI.lower) / 6) * 100}%`,
+                                borderTopLeftRadius: liquidGlass ? '1rem' : '0.375rem',
+                                borderBottomLeftRadius: liquidGlass ? '1rem' : '0.375rem',
+                                borderTopRightRadius: abilityCI.upper < -1.0 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                                borderBottomRightRadius: abilityCI.upper < -1.0 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                              }}
+                            >
+                              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" style={{ borderTopLeftRadius: '1rem', borderBottomLeftRadius: '1rem', borderTopRightRadius: abilityCI.upper < -1.0 ? '1rem' : '0', borderBottomRightRadius: abilityCI.upper < -1.0 ? '1rem' : '0' }} />}
+                            </div>
+                          )}
+
+                          {/* Yellow segment: -1 to 1 */}
+                          {abilityCI.lower < 1.0 && abilityCI.upper >= -1.0 && (
+                            <div
+                              className={`h-6 absolute transition-all duration-700 ${
+                                liquidGlass
+                                  ? 'bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600'
+                                  : 'bg-yellow-500'
+                              }`}
+                              style={{
+                                left: `${((Math.max(abilityCI.lower, -1.0) + 3) / 6) * 100}%`,
+                                width: `${((Math.min(abilityCI.upper, 1.0) - Math.max(abilityCI.lower, -1.0)) / 6) * 100}%`,
+                                borderTopLeftRadius: abilityCI.lower >= -1.0 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                                borderBottomLeftRadius: abilityCI.lower >= -1.0 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                                borderTopRightRadius: abilityCI.upper < 1.0 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                                borderBottomRightRadius: abilityCI.upper < 1.0 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                              }}
+                            >
+                              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" style={{ borderTopLeftRadius: abilityCI.lower >= -1.0 ? '1rem' : '0', borderBottomLeftRadius: abilityCI.lower >= -1.0 ? '1rem' : '0', borderTopRightRadius: abilityCI.upper < 1.0 ? '1rem' : '0', borderBottomRightRadius: abilityCI.upper < 1.0 ? '1rem' : '0' }} />}
+                            </div>
+                          )}
+
+                          {/* Green segment: 1 to 3 */}
+                          {abilityCI.upper >= 1.0 && (
+                            <div
+                              className={`h-6 absolute transition-all duration-700 ${
+                                liquidGlass
+                                  ? 'bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-600'
+                                  : 'bg-emerald-500'
+                              }`}
+                              style={{
+                                left: `${((Math.max(abilityCI.lower, 1.0) + 3) / 6) * 100}%`,
+                                width: `${((abilityCI.upper - Math.max(abilityCI.lower, 1.0)) / 6) * 100}%`,
+                                borderTopLeftRadius: abilityCI.lower >= 1.0 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                                borderBottomLeftRadius: abilityCI.lower >= 1.0 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                                borderTopRightRadius: liquidGlass ? '1rem' : '0.375rem',
+                                borderBottomRightRadius: liquidGlass ? '1rem' : '0.375rem',
+                              }}
+                            >
+                              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" style={{ borderTopLeftRadius: abilityCI.lower >= 1.0 ? '1rem' : '0', borderBottomLeftRadius: abilityCI.lower >= 1.0 ? '1rem' : '0', borderTopRightRadius: '1rem', borderBottomRightRadius: '1rem' }} />}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        // Show point estimate
+                        <div
+                          className={`h-6 relative transition-all duration-700 ${
+                            estimatedAbility >= 1.0
                               ? liquidGlass
-                                ? 'bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 rounded-2xl'
-                                : 'bg-yellow-500 rounded-md'
-                              : liquidGlass
-                                ? 'bg-gradient-to-r from-red-500 via-red-400 to-red-600 rounded-2xl'
-                                : 'bg-red-500 rounded-md'
-                        }`}
-                        style={{ width: `${((estimatedAbility + 3) / 6) * 100}%` }}
-                      >
-                        {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-2xl" />}
-                      </div>
+                                ? 'bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-600 rounded-2xl'
+                                : 'bg-emerald-500 rounded-md'
+                              : estimatedAbility >= -1.0
+                                ? liquidGlass
+                                  ? 'bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 rounded-2xl'
+                                  : 'bg-yellow-500 rounded-md'
+                                : liquidGlass
+                                  ? 'bg-gradient-to-r from-red-500 via-red-400 to-red-600 rounded-2xl'
+                                  : 'bg-red-500 rounded-md'
+                          }`}
+                          style={{ width: `${((estimatedAbility + 3) / 6) * 100}%` }}
+                        >
+                          {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-2xl" />}
+                        </div>
+                      )}
                     </div>
                     <div className={`flex justify-between text-lg text-zinc-500 mt-3 ${liquidGlass ? '' : 'font-mono'}`}>
                       <span>Beginner</span>
