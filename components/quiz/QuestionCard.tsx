@@ -163,6 +163,21 @@ export default function QuestionCard({
                 <span className={`text-white ${showExplanation ? 'text-xl md:text-2xl' : 'text-xl md:text-2xl'} leading-relaxed inline align-top`}>
                   {option}
                 </span>
+                {/* Visual indicators for correct/incorrect in review mode */}
+                {showExplanation && (
+                  <>
+                    {showCorrect && (
+                      <span className={`ml-4 px-4 py-2 text-sm font-bold rounded-xl inline-block align-top ${liquidGlass ? 'bg-green-500/20 text-green-300 border border-green-500/50' : 'bg-green-900 text-green-200 border border-green-500'}`}>
+                        Correct
+                      </span>
+                    )}
+                    {showIncorrect && (
+                      <span className={`ml-4 px-4 py-2 text-sm font-bold rounded-xl inline-block align-top ${liquidGlass ? 'bg-red-500/20 text-red-300 border border-red-500/50' : 'bg-red-900 text-red-200 border border-red-500'}`}>
+                        Incorrect
+                      </span>
+                    )}
+                  </>
+                )}
               </div>
             </ButtonElement>
           );

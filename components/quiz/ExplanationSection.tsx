@@ -23,6 +23,12 @@ export default function ExplanationSection({
     ? question.correctAnswer
     : [question.correctAnswer];
 
+  // Filter out correct answers and empty explanations from incorrect explanations
+  const hasIncorrectExplanations = question.incorrectExplanations &&
+    question.incorrectExplanations.some((explanation, index) =>
+      !correctAnswers.includes(index) && explanation && explanation.trim() !== ''
+    );
+
   return (
     <div className="space-y-8">
       {/* Main Explanation Card */}
@@ -55,7 +61,7 @@ export default function ExplanationSection({
               ? 'text-yellow-400'
               : 'text-red-400'
           }`}>
-            {isCorrect ? '✓ Correct!' : isPartiallyCorrect ? '◐ Partially Correct' : '✗ Incorrect'}
+            {isCorrect ? 'Correct!' : isPartiallyCorrect ? 'Partially Correct' : 'Incorrect'}
           </h3>
 
           {showDifficultyBadge && difficulty && (
@@ -99,12 +105,12 @@ export default function ExplanationSection({
       </div>
 
       {/* Why Other Answers Are Wrong */}
-      {question.incorrectExplanations && question.incorrectExplanations.length > 0 && (
+      {hasIncorrectExplanations && (
         <div className={`relative p-12 md:p-16 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'}`}>
           {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
           <h4 className="font-bold text-white mb-8 text-3xl md:text-4xl relative">Why Other Answers Are Incorrect:</h4>
           <div className="space-y-6 relative">
-            {question.incorrectExplanations.map((explanation, index) => {
+            {question.incorrectExplanations?.map((explanation, index) => {
               // Skip if this is a correct answer or if explanation is empty
               if (correctAnswers.includes(index) || !explanation || explanation.trim() === '') return null;
 
