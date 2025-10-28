@@ -2,10 +2,35 @@
 
 import { Question } from '@/lib/types';
 import { getDomainsFromTopics } from '@/lib/domainDetection';
+import { ALL_SECURITY_PLUS_TOPICS } from '@/lib/topicData';
 
 interface QuestionMetadataProps {
   question: Question;
   liquidGlass?: boolean;
+}
+
+// Domain color mapping
+const DOMAIN_COLORS: { [key: string]: string } = {
+  '1.0 General Security Concepts': '#6e2a8d',
+  '2.0 Threats, Vulnerabilities, and Mitigations': '#f36c23',
+  '3.0 Security Architecture': '#0090ba',
+  '4.0 Security Operations': '#f5a81c',
+  '5.0 Security Program Management and Oversight': '#5fa511',
+};
+
+// Helper function to get domain color
+function getDomainColor(domain: string): string {
+  return DOMAIN_COLORS[domain] || '#ffffff';
+}
+
+// Helper function to get the domain for a specific topic
+function getTopicDomain(topic: string): string {
+  for (const [domain, domainTopics] of Object.entries(ALL_SECURITY_PLUS_TOPICS)) {
+    if (domainTopics.includes(topic)) {
+      return domain;
+    }
+  }
+  return '1.0 General Security Concepts';
 }
 
 export default function QuestionMetadata({ question, liquidGlass = true }: QuestionMetadataProps) {
@@ -21,14 +46,24 @@ export default function QuestionMetadata({ question, liquidGlass = true }: Quest
             {domains.length > 1 ? 'Domains:' : 'Domain:'}
           </span>
           <div className="flex flex-wrap gap-3">
-            {domains.map((domain, index) => (
-              <span
-                key={index}
-                className={`px-6 py-4 text-lg md:text-xl font-bold ${liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-200 border border-white/20 rounded-2xl' : 'bg-zinc-900 text-zinc-300 border-2 border-zinc-700 rounded-md'}`}
-              >
-                {domain.replace('.0', '.')}
-              </span>
-            ))}
+            {domains.map((domain, index) => {
+              const color = getDomainColor(domain);
+              return (
+                <span
+                  key={index}
+                  className={`px-6 py-4 text-lg md:text-xl font-bold ${liquidGlass ? 'backdrop-blur-xl rounded-2xl' : 'rounded-md'}`}
+                  style={{
+                    backgroundColor: liquidGlass ? `${color}20` : color,
+                    color: '#ffffff',
+                    borderWidth: '2px',
+                    borderStyle: 'solid',
+                    borderColor: liquidGlass ? `${color}80` : color,
+                  }}
+                >
+                  {domain.replace('.0', '.')}
+                </span>
+              );
+            })}
           </div>
         </div>
 
@@ -39,14 +74,25 @@ export default function QuestionMetadata({ question, liquidGlass = true }: Quest
               {question.topics.length > 1 ? 'Topics:' : 'Topic:'}
             </span>
             <div className="flex flex-wrap gap-3">
-              {question.topics.map((topic, index) => (
-                <span
-                  key={index}
-                  className={`px-6 py-4 text-lg md:text-xl font-medium ${liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-200 border border-white/20 rounded-2xl' : 'bg-zinc-900 text-zinc-200 border-2 border-zinc-700 rounded-md'}`}
-                >
-                  {topic}
-                </span>
-              ))}
+              {question.topics.map((topic, index) => {
+                const topicDomain = getTopicDomain(topic);
+                const color = getDomainColor(topicDomain);
+                return (
+                  <span
+                    key={index}
+                    className={`px-6 py-4 text-lg md:text-xl font-medium ${liquidGlass ? 'backdrop-blur-xl rounded-2xl' : 'rounded-md'}`}
+                    style={{
+                      backgroundColor: liquidGlass ? `${color}20` : color,
+                      color: '#ffffff',
+                      borderWidth: '2px',
+                      borderStyle: 'solid',
+                      borderColor: liquidGlass ? `${color}80` : color,
+                    }}
+                  >
+                    {topic}
+                  </span>
+                );
+              })}
             </div>
           </div>
         )}
