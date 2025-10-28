@@ -467,26 +467,52 @@ export default function QuizPerformance() {
           <div className="relative mt-12">
             <div className={`w-full h-6 relative overflow-hidden ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl' : 'bg-zinc-900 border border-zinc-800 rounded-md'}`}>
               {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-2xl" />}
-              {/* Progress bar fill - only show if enough questions answered */}
+              {/* Progress bar fill - show range if CI available, otherwise point estimate */}
               {hasEnoughQuestions && (
-                <div
-                  className={`h-6 relative transition-all duration-700 ${
-                    isGoodPerformance
-                      ? liquidGlass
-                        ? 'bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-600 rounded-2xl'
-                        : 'bg-emerald-500 rounded-md'
-                    : isNeedsWork
-                      ? liquidGlass
-                        ? 'bg-gradient-to-r from-red-500 via-red-400 to-red-600 rounded-2xl'
-                        : 'bg-red-500 rounded-md'
-                    : liquidGlass
-                      ? 'bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 rounded-2xl'
-                      : 'bg-yellow-500 rounded-md'
-                  }`}
-                  style={{ width: `${Math.min(((predictedScore - 100) / 800) * 100, 100)}%` }}
-                >
-                  {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-2xl" />}
-                </div>
+                isFinite(abilityStandardError) && totalAnswered >= 5 ? (
+                  // Show range (confidence interval)
+                  <div
+                    className={`h-6 absolute transition-all duration-700 ${
+                      isGoodPerformance
+                        ? liquidGlass
+                          ? 'bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-600 rounded-2xl'
+                          : 'bg-emerald-500 rounded-md'
+                      : isNeedsWork
+                        ? liquidGlass
+                          ? 'bg-gradient-to-r from-red-500 via-red-400 to-red-600 rounded-2xl'
+                          : 'bg-red-500 rounded-md'
+                      : liquidGlass
+                        ? 'bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 rounded-2xl'
+                        : 'bg-yellow-500 rounded-md'
+                    }`}
+                    style={{
+                      left: `${Math.max(0, ((scoreCI.lower - 100) / 800) * 100)}%`,
+                      width: `${Math.min(100, ((scoreCI.upper - scoreCI.lower) / 800) * 100)}%`
+                    }}
+                  >
+                    {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-2xl" />}
+                  </div>
+                ) : (
+                  // Show point estimate
+                  <div
+                    className={`h-6 relative transition-all duration-700 ${
+                      isGoodPerformance
+                        ? liquidGlass
+                          ? 'bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-600 rounded-2xl'
+                          : 'bg-emerald-500 rounded-md'
+                      : isNeedsWork
+                        ? liquidGlass
+                          ? 'bg-gradient-to-r from-red-500 via-red-400 to-red-600 rounded-2xl'
+                          : 'bg-red-500 rounded-md'
+                      : liquidGlass
+                        ? 'bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 rounded-2xl'
+                        : 'bg-yellow-500 rounded-md'
+                    }`}
+                    style={{ width: `${Math.min(((predictedScore - 100) / 800) * 100, 100)}%` }}
+                  >
+                    {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-2xl" />}
+                  </div>
+                )
               )}
 
               {/* Passing line marker at 750 */}
