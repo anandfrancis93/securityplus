@@ -167,7 +167,7 @@ function generatePerformanceInsights(userProgress: UserProgress | null, estimate
   return insights.length > 0 ? insights : ['Continue taking quizzes for more detailed insights'];
 }
 
-export default function PerformancePage() {
+export default function QuizPerformance() {
   const { user, userProgress, predictedScore, loading, resetProgress, liquidGlass } = useApp();
   const router = useRouter();
   const [irtExpanded, setIrtExpanded] = useState(false);
