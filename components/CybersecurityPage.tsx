@@ -63,7 +63,7 @@ export default function Cybersecurity() {
 
       {/* Header - Full width */}
       <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
-        <Header showBackButton backButtonPath="/home" backButtonLabel="Back to Subjects" />
+        <Header />
       </div>
 
       <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
