@@ -11,7 +11,7 @@ import {
   getFlashcard,
   saveFlashcardReview,
 } from '@/lib/flashcardDb';
-import { getDueFlashcards, calculateNextReview, getDeckStats } from '@/lib/spacedRepetition';
+import { getDueFlashcards, calculateNextReview } from '@/lib/spacedRepetition';
 import { Flashcard, FlashcardReview } from '@/lib/types';
 
 export default function StudyFlashcards() {
@@ -33,8 +33,6 @@ export default function StudyFlashcards() {
   const [imageEnlarged, setImageEnlarged] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const [stats, setStats] = useState({ total: 0, new: 0, learning: 0, review: 0, mastered: 0 });
-  const [openTooltip, setOpenTooltip] = useState<string | null>(null);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -74,10 +72,6 @@ export default function StudyFlashcards() {
 
       setDueCardIds(due);
 
-      // Calculate deck stats
-      const deckStats = getDeckStats(reviews, allCards.map((c) => c.id));
-      setStats(deckStats);
-
       if (due.length > 0) {
         const card = await getFlashcard(due[0]);
         setCurrentCard(card);
@@ -91,7 +85,6 @@ export default function StudyFlashcards() {
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
-    setOpenTooltip(null); // Close any open tooltips when flipping
   };
 
   const handleAnswer = async (difficulty: 'again' | 'hard' | 'good' | 'easy') => {
@@ -117,7 +110,6 @@ export default function StudyFlashcards() {
         const nextCard = await getFlashcard(dueCardIds[nextIndex]);
         setCurrentCard(nextCard);
         setIsFlipped(false);
-        setOpenTooltip(null); // Close any open tooltips when moving to next card
       } else {
         // Finished all cards
         router.push('/cybersecurity/flashcards?completed=true');
@@ -416,49 +408,6 @@ export default function StudyFlashcards() {
             </div>
           </div>
         )}
-
-        {/* Stats - Always Visible at Bottom */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8">
-          {/* Total */}
-          <div className="bg-slate-800/95 backdrop-blur rounded-3xl p-4 border border-slate-700 relative group cursor-help transition-all duration-500 hover:bg-white/5 shadow-lg hover:shadow-violet-500/20">
-            <div className="text-slate-400 text-xs mb-1 tracking-wide font-medium">Total</div>
-            <div className="text-2xl font-bold text-violet-400 tracking-tight">{stats.total}</div>
-            {/* Hover tooltip */}
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-              <p className="text-sm text-slate-200 tracking-wide">The total number of flashcards in your deck.</p>
-            </div>
-          </div>
-
-          {/* Learning */}
-          <div className="bg-slate-800/95 backdrop-blur rounded-3xl p-4 border border-slate-700 relative group cursor-help transition-all duration-500 hover:bg-white/5 shadow-lg hover:shadow-yellow-500/20">
-            <div className="text-slate-400 text-xs mb-1 tracking-wide font-medium">Learning</div>
-            <div className="text-2xl font-bold text-yellow-400 tracking-tight">{stats.learning}</div>
-            {/* Hover tooltip */}
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-              <p className="text-sm text-slate-200 tracking-wide">Cards you&apos;ve attempted but got wrong or rated as &quot;Again&quot;. These cards have 0 successful repetitions and need daily practice.</p>
-            </div>
-          </div>
-
-          {/* Review */}
-          <div className="bg-slate-800/95 backdrop-blur rounded-3xl p-4 border border-slate-700 relative group cursor-help transition-all duration-500 hover:bg-white/5 shadow-lg hover:shadow-yellow-500/20">
-            <div className="text-slate-400 text-xs mb-1 tracking-wide font-medium">Review</div>
-            <div className="text-2xl font-bold text-yellow-400 tracking-tight">{stats.review}</div>
-            {/* Hover tooltip */}
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-              <p className="text-sm text-slate-200 tracking-wide">Cards you&apos;re actively learning and have reviewed correctly 1-2 times. These cards are in progress but not yet mastered.</p>
-            </div>
-          </div>
-
-          {/* Mastered */}
-          <div className="bg-slate-800/95 backdrop-blur rounded-3xl p-4 border border-slate-700 relative group cursor-help transition-all duration-500 hover:bg-white/5 shadow-lg hover:shadow-violet-500/20">
-            <div className="text-slate-400 text-xs mb-1 tracking-wide font-medium">Mastered</div>
-            <div className="text-2xl font-bold text-violet-400 tracking-tight">{stats.mastered}</div>
-            {/* Hover tooltip */}
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-              <p className="text-sm text-slate-200 tracking-wide">Cards you&apos;ve successfully reviewed 3 or more times. These cards are well-learned and appear less frequently to maintain long-term retention.</p>
-            </div>
-          </div>
-        </div>
 
       </div>
 
