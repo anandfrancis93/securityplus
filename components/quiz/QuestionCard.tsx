@@ -39,17 +39,22 @@ export default function QuestionCard({
   };
 
   return (
-    <div className={`relative p-12 md:p-16 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'}`}>
-      {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
+    <div className={`relative p-16 md:p-20 ${liquidGlass ? 'bg-white/10 backdrop-blur-3xl border-2 border-white/20 rounded-[48px] shadow-2xl' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'}`}>
+      {liquidGlass && (
+        <>
+          <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-white/5 to-transparent rounded-[48px]" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-violet-500/10 via-transparent to-cyan-500/10 rounded-[48px]" />
+        </>
+      )}
 
-      <h2 className="text-2xl md:text-3xl font-bold mb-12 leading-tight text-white relative">
+      <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-16 leading-tight text-white relative">
         {question.question}
       </h2>
 
       {/* Multiple-response instruction */}
       {question.questionType === 'multiple' && !showExplanation && (
-        <div className={`mb-10 text-xl md:text-2xl text-zinc-300 p-8 relative ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl' : 'bg-zinc-900 border-2 border-zinc-700 rounded-md'}`}>
-          {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-3xl" />}
+        <div className={`mb-12 text-xl md:text-2xl text-zinc-200 p-10 relative ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border-2 border-white/20 rounded-3xl shadow-lg' : 'bg-zinc-900 border-2 border-zinc-700 rounded-md'}`}>
+          {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 via-transparent to-transparent rounded-3xl" />}
           <strong className="font-bold relative">Select all that apply</strong> <span className="relative">- This question has multiple correct answers</span>
         </div>
       )}
@@ -64,19 +69,19 @@ export default function QuestionCard({
 
           const buttonClasses = showExplanation
             ? // Review mode - not interactive
-              `relative w-full text-left p-6 md:p-8 border-2 ${
+              `relative w-full text-left p-8 md:p-10 border-2 ${
                 liquidGlass
                   ? showCorrect
                     ? question.questionType === 'single'
-                      ? 'bg-green-500/20 backdrop-blur-xl border-green-500/60 rounded-3xl shadow-lg shadow-green-500/20'
-                      : 'bg-white/10 backdrop-blur-xl border-green-500/50 rounded-3xl'
+                      ? 'bg-green-500/25 backdrop-blur-2xl border-green-500/70 rounded-3xl shadow-2xl shadow-green-500/30'
+                      : 'bg-white/10 backdrop-blur-2xl border-green-500/60 rounded-3xl shadow-lg shadow-green-500/20'
                     : showIncorrect
                     ? question.questionType === 'single'
-                      ? 'bg-red-500/20 backdrop-blur-xl border-red-500/60 rounded-3xl shadow-lg shadow-red-500/20'
-                      : 'bg-white/10 backdrop-blur-xl border-red-500/50 rounded-3xl'
+                      ? 'bg-red-500/25 backdrop-blur-2xl border-red-500/70 rounded-3xl shadow-2xl shadow-red-500/30'
+                      : 'bg-white/10 backdrop-blur-2xl border-red-500/60 rounded-3xl shadow-lg shadow-red-500/20'
                     : isSelected
-                    ? 'bg-white/10 backdrop-blur-xl border-white/30 rounded-3xl'
-                    : 'bg-white/5 backdrop-blur-xl border-white/20 rounded-3xl'
+                    ? 'bg-white/10 backdrop-blur-2xl border-white/40 rounded-3xl shadow-lg'
+                    : 'bg-white/5 backdrop-blur-2xl border-white/25 rounded-3xl'
                   : showCorrect
                   ? question.questionType === 'single'
                     ? 'border-green-500 bg-green-950 rounded-md'
@@ -90,13 +95,13 @@ export default function QuestionCard({
                   : 'border-zinc-700 bg-zinc-950 rounded-md'
               }`
             : // Active quiz mode - interactive
-              `group relative w-full text-left p-8 md:p-10 transition-all duration-700 cursor-pointer ${
+              `group relative w-full text-left p-10 md:p-12 transition-all duration-700 cursor-pointer ${
                 isSelected
                   ? liquidGlass
-                    ? 'bg-white/10 backdrop-blur-xl border border-violet-400/50 rounded-3xl shadow-lg shadow-violet-500/20'
+                    ? 'bg-white/15 backdrop-blur-2xl border-2 border-violet-400/60 rounded-3xl shadow-2xl shadow-violet-500/30'
                     : 'border-2 border-zinc-600 bg-zinc-900 rounded-md'
                   : liquidGlass
-                    ? 'bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/30 hover:bg-white/10 rounded-3xl hover:shadow-xl hover:shadow-white/10 hover:scale-[1.01]'
+                    ? 'bg-white/8 backdrop-blur-2xl border-2 border-white/20 hover:border-white/40 hover:bg-white/12 rounded-3xl hover:shadow-2xl hover:shadow-white/20 hover:scale-[1.02]'
                     : 'border-2 border-zinc-700 hover:border-zinc-600 bg-zinc-950 hover:bg-zinc-900 rounded-md'
               }`;
 
@@ -111,76 +116,81 @@ export default function QuestionCard({
               {liquidGlass && showExplanation && showCorrect && (
                 <div className={`absolute inset-0 bg-gradient-to-br rounded-3xl ${
                   question.questionType === 'single'
-                    ? 'from-green-500/30 via-green-500/10 to-transparent'
-                    : 'from-green-500/20 via-transparent to-transparent'
+                    ? 'from-green-500/40 via-green-500/15 to-transparent'
+                    : 'from-green-500/25 via-transparent to-transparent'
                 }`} />
               )}
               {liquidGlass && showExplanation && showIncorrect && (
                 <div className={`absolute inset-0 bg-gradient-to-br rounded-3xl ${
                   question.questionType === 'single'
-                    ? 'from-red-500/30 via-red-500/10 to-transparent'
-                    : 'from-red-500/20 via-transparent to-transparent'
+                    ? 'from-red-500/40 via-red-500/15 to-transparent'
+                    : 'from-red-500/25 via-transparent to-transparent'
                 }`} />
               )}
-              {liquidGlass && !showExplanation && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />}
+              {liquidGlass && !showExplanation && (
+                <>
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/15 via-transparent to-transparent rounded-3xl" />
+                  {isSelected && <div className="absolute inset-0 bg-gradient-to-br from-violet-500/15 via-transparent to-transparent rounded-3xl" />}
+                </>
+              )}
 
               <div className="relative">
-                <div className="inline-flex items-center gap-4 mr-4 align-top">
+                <div className="inline-flex items-center gap-5 mr-5 align-top">
                   {/* Checkbox or Radio indicator */}
                   {question.questionType === 'multiple' ? (
-                    <div className={`${showExplanation ? 'w-6 h-6' : 'w-8 h-8'} ${showExplanation ? 'rounded' : 'rounded-xl'} border-2 flex items-center justify-center transition-all duration-700 shrink-0 ${
+                    <div className={`${showExplanation ? 'w-7 h-7' : 'w-9 h-9'} ${showExplanation ? 'rounded-lg' : 'rounded-xl'} border-2 flex items-center justify-center transition-all duration-700 shrink-0 ${
                       showExplanation
                         ? // Review mode - neutral colors
                           isSelected
                             ? liquidGlass
-                              ? 'bg-white/10 border-white/40'
+                              ? 'bg-white/15 border-white/50 shadow-lg'
                               : 'bg-zinc-700 border-zinc-500'
                             : liquidGlass
-                              ? 'border-white/30'
+                              ? 'border-white/40'
                               : 'border-zinc-600'
                         : // Active mode - violet colors
                           isSelected
                             ? liquidGlass
-                              ? 'bg-violet-500/30 border-violet-400'
+                              ? 'bg-violet-500/40 border-violet-400 shadow-lg shadow-violet-500/30'
                               : 'bg-zinc-700 border-zinc-600'
                             : liquidGlass
-                              ? 'border-white/30'
+                              ? 'border-white/40'
                               : 'border-zinc-600'
                     }`}>
-                      {isSelected && <span className={`text-white ${showExplanation ? 'text-sm' : 'text-lg'} font-bold`}>✓</span>}
+                      {isSelected && <span className={`text-white ${showExplanation ? 'text-base' : 'text-xl'} font-bold`}>✓</span>}
                     </div>
                   ) : (
-                    <div className={`${showExplanation ? 'w-6 h-6' : 'w-8 h-8'} rounded-full border-2 flex items-center justify-center transition-all duration-700 shrink-0 ${
+                    <div className={`${showExplanation ? 'w-7 h-7' : 'w-9 h-9'} rounded-full border-2 flex items-center justify-center transition-all duration-700 shrink-0 ${
                       showExplanation
                         ? // Review mode - neutral colors
                           isSelected
                             ? liquidGlass
-                              ? 'border-white/40'
+                              ? 'border-white/50 shadow-lg'
                               : 'border-zinc-500'
                             : liquidGlass
-                              ? 'border-white/30'
+                              ? 'border-white/40'
                               : 'border-zinc-600'
                         : // Active mode - violet colors
                           isSelected
                             ? liquidGlass
-                              ? 'border-violet-400'
+                              ? 'border-violet-400 shadow-lg shadow-violet-500/30'
                               : 'border-zinc-600'
                             : liquidGlass
-                              ? 'border-white/30'
+                              ? 'border-white/40'
                               : 'border-zinc-600'
                     }`}>
                       {isSelected && <div className={`${showExplanation ? 'w-4 h-4' : 'w-5 h-5'} rounded-full ${
                         showExplanation
-                          ? liquidGlass ? 'bg-white/40' : 'bg-zinc-500'
-                          : liquidGlass ? 'bg-violet-400' : 'bg-zinc-700'
+                          ? liquidGlass ? 'bg-white/50 shadow-inner' : 'bg-zinc-500'
+                          : liquidGlass ? 'bg-violet-400 shadow-inner' : 'bg-zinc-700'
                       }`}></div>}
                     </div>
                   )}
-                  <span className={`font-bold ${showExplanation ? 'text-xl' : 'text-2xl'} text-zinc-400`}>
+                  <span className={`font-bold ${showExplanation ? 'text-2xl' : 'text-2xl md:text-3xl'} text-zinc-300`}>
                     {String.fromCharCode(65 + index)}.
                   </span>
                 </div>
-                <span className={`text-white ${showExplanation ? 'text-xl md:text-2xl' : 'text-xl md:text-2xl'} leading-relaxed inline align-top`}>
+                <span className={`text-white ${showExplanation ? 'text-xl md:text-2xl lg:text-3xl' : 'text-2xl md:text-3xl'} leading-relaxed inline align-top`}>
                   {option}
                 </span>
                 {/* Visual indicators for correct/incorrect in review mode - only for multiple choice */}
