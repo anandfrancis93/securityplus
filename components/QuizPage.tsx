@@ -77,13 +77,13 @@ export default function Quiz() {
         // Initialize quiz with quizSessionId BEFORE clearing cache
         if (!quizSessionId) {
           console.error('⚠️ WARNING: quizSessionId is missing from cached quiz!');
-          console.log('Clearing bad cache and regenerating...');
-          // Clear the bad cached quiz
+          console.log('Clearing bad cache and forcing fresh start...');
+          // Clear the bad cached quiz from Firebase
           await clearCachedQuiz();
-          // Trigger pre-generation to create a new one with quizSessionId
-          setLoading(true);
-          setHasInitialized(false); // Allow re-initialization
-          return; // Let the useEffect run again
+          // Reload page to start completely fresh (only happens once after clearing)
+          console.log('Reloading page for fresh initialization...');
+          window.location.reload();
+          return;
         }
 
         startNewQuiz(quizSessionId);
@@ -104,13 +104,13 @@ export default function Quiz() {
         // Initialize quiz with quizSessionId BEFORE clearing cache
         if (!quizSessionId) {
           console.error('⚠️ WARNING: quizSessionId is missing from cached quiz!');
-          console.log('Clearing bad cache and regenerating...');
-          // Clear the bad cached quiz
+          console.log('Clearing bad cache and forcing fresh start...');
+          // Clear the bad cached quiz from Firebase
           await clearCachedQuiz();
-          // Trigger pre-generation to create a new one with quizSessionId
-          setLoading(true);
-          setHasInitialized(false); // Allow re-initialization
-          return; // Let the useEffect run again
+          // Reload page to start completely fresh (only happens once after clearing)
+          console.log('Reloading page for fresh initialization...');
+          window.location.reload();
+          return;
         }
 
         startNewQuiz(quizSessionId);
