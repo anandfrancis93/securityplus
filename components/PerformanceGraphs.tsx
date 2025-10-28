@@ -493,7 +493,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                     <div className="relative border-t border-white/10">
                     <div className="max-h-96 overflow-y-auto">
                       <table className="w-full">
-                        <thead className="bg-zinc-950/95 backdrop-blur-xl border-b border-white/10 sticky top-0 z-10">
+                        <thead className="bg-zinc-900/85 backdrop-blur-2xl border-b border-white/10 sticky top-0 z-10">
                           <tr>
                             <th className="text-left px-6 py-4 text-lg md:text-xl font-bold text-white w-3/5">Topic</th>
                             <th className="text-center px-6 py-4 text-lg md:text-xl font-bold text-white w-1/5">Times Covered</th>
