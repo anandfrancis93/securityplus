@@ -304,6 +304,16 @@ export default function QuizPerformance() {
   const lowerColor = getScoreColor(scoreCI.lower);
   const upperColor = getScoreColor(scoreCI.upper);
 
+  // Helper function to get color for ability level
+  const getAbilityColor = (ability: number) => {
+    if (ability >= 1.0) return 'emerald';
+    if (ability >= -1.0) return 'yellow';
+    return 'red';
+  };
+
+  const lowerAbilityColor = getAbilityColor(abilityCI.lower);
+  const upperAbilityColor = getAbilityColor(abilityCI.upper);
+
   return (
     <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black font-mono'}`}>
       {/* Animated Background Gradients */}
@@ -670,13 +680,33 @@ export default function QuizPerformance() {
                         <p className={`text-base text-zinc-300 leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
                       </div>
                     </div>
-                    <div className={`text-6xl md:text-7xl font-bold transition-all duration-700 ${
-                      estimatedAbility >= 1.0 ? 'text-emerald-400' :
-                      estimatedAbility >= -1.0 ? 'text-yellow-400' :
-                      'text-red-400'
-                    }`}>
-                      {estimatedAbility.toFixed(2)}
-                    </div>
+                    {isFinite(abilityStandardError) && totalAnswered >= 5 ? (
+                      <div className={`text-6xl md:text-7xl font-bold transition-all duration-700 flex items-center justify-center gap-4`}>
+                        <span className={
+                          lowerAbilityColor === 'emerald' ? 'text-emerald-400' :
+                          lowerAbilityColor === 'yellow' ? 'text-yellow-400' :
+                          'text-red-400'
+                        }>
+                          {abilityCI.lower.toFixed(2)}
+                        </span>
+                        <span className="text-zinc-500">-</span>
+                        <span className={
+                          upperAbilityColor === 'emerald' ? 'text-emerald-400' :
+                          upperAbilityColor === 'yellow' ? 'text-yellow-400' :
+                          'text-red-400'
+                        }>
+                          {abilityCI.upper.toFixed(2)}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className={`text-6xl md:text-7xl font-bold transition-all duration-700 ${
+                        estimatedAbility >= 1.0 ? 'text-emerald-400' :
+                        estimatedAbility >= -1.0 ? 'text-yellow-400' :
+                        'text-red-400'
+                      }`}>
+                        {estimatedAbility.toFixed(2)}
+                      </div>
+                    )}
                   </div>
                   <div className="relative mt-6">
                     <div className={`h-6 relative overflow-hidden ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl' : 'bg-zinc-900 border border-zinc-800 rounded-md'}`}>
