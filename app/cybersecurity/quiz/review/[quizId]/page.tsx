@@ -215,7 +215,7 @@ export default function QuizReviewPage() {
         </header>
 
         {/* Questions List */}
-        <div className="space-y-8 pb-8">
+        <div className="space-y-12 pb-8">
           {quiz.questions.map((attempt, index) => {
             const { question } = attempt;
             const correctAnswers = Array.isArray(question.correctAnswer)
@@ -232,21 +232,21 @@ export default function QuizReviewPage() {
               userAnswers.length > 0;
 
             return (
-              <div key={attempt.questionId} className="space-y-4">
+              <div key={attempt.questionId} className="space-y-8">
                 {/* Question Number Header */}
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-md bg-zinc-800 border border-zinc-700 flex items-center justify-center text-white font-bold text-sm">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-md bg-zinc-800 border-2 border-zinc-700 flex items-center justify-center text-white font-bold text-lg">
                     {index + 1}
                   </div>
-                  <h3 className="text-lg font-semibold text-white">Question {index + 1}</h3>
+                  <h3 className="text-2xl md:text-3xl font-bold text-white">Question {index + 1}</h3>
                 </div>
 
                 {/* Question Card */}
-                <div className="bg-zinc-950 rounded-md p-8 border border-zinc-800">
-                  <h2 className="text-lg md:text-xl font-bold mb-4 leading-tight text-white">{question.question}</h2>
+                <div className="bg-zinc-950 rounded-md p-12 md:p-16 border-2 border-zinc-800">
+                  <h2 className="text-2xl md:text-3xl font-bold mb-8 leading-tight text-white">{question.question}</h2>
 
                   {/* Answer Options */}
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {question.options.map((option, idx) => {
                       const isSelected = userAnswers.includes(idx);
                       const isCorrectAnswer = correctAnswers.includes(idx);
@@ -256,7 +256,7 @@ export default function QuizReviewPage() {
                       return (
                         <div
                           key={idx}
-                          className={`w-full text-left p-4 rounded-md border-2 ${
+                          className={`w-full text-left p-6 md:p-8 rounded-md border-2 ${
                             showCorrect
                               ? 'border-green-500 bg-zinc-900'
                               : showIncorrect
@@ -267,28 +267,28 @@ export default function QuizReviewPage() {
                           }`}
                         >
                           <div>
-                            <div className="inline-flex items-center gap-3 mr-3 align-top">
+                            <div className="inline-flex items-center gap-4 mr-4 align-top">
                               {/* Checkbox or Radio indicator */}
                               {question.questionType === 'multiple' ? (
-                                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 ${
+                                <div className={`w-6 h-6 rounded border-2 flex items-center justify-center shrink-0 ${
                                   isSelected ? 'bg-zinc-700 border-zinc-600' : 'border-zinc-600'
                                 }`}>
-                                  {isSelected && <span className="text-white text-xs">✓</span>}
+                                  {isSelected && <span className="text-white text-sm">✓</span>}
                                 </div>
                               ) : (
-                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${
                                   isSelected ? 'border-zinc-600' : 'border-zinc-600'
                                 }`}>
-                                  {isSelected && <div className="w-3 h-3 rounded-full bg-zinc-700"></div>}
+                                  {isSelected && <div className="w-4 h-4 rounded-full bg-zinc-700"></div>}
                                 </div>
                               )}
-                              <span className="font-bold text-zinc-400">
+                              <span className="font-bold text-zinc-400 text-xl">
                                 {String.fromCharCode(65 + idx)}.
                               </span>
                             </div>
-                            <span className="text-zinc-100 text-lg md:text-xl leading-relaxed inline align-top">{option}</span>
-                            {showCorrect && <span className="ml-2 text-green-400 text-2xl align-top">✓</span>}
-                            {showIncorrect && <span className="ml-2 text-red-400 text-2xl align-top">✗</span>}
+                            <span className="text-zinc-100 text-xl md:text-2xl leading-relaxed inline align-top">{option}</span>
+                            {showCorrect && <span className="ml-3 text-green-400 text-3xl align-top">✓</span>}
+                            {showIncorrect && <span className="ml-3 text-red-400 text-3xl align-top">✗</span>}
                           </div>
                         </div>
                       );
@@ -297,9 +297,9 @@ export default function QuizReviewPage() {
                 </div>
 
                 {/* Explanation Section */}
-                <div className="space-y-4">
+                <div className="space-y-8">
                   <div
-                    className={`rounded-md p-6 border-2 ${
+                    className={`rounded-md p-12 md:p-16 border-2 ${
                       attempt.isCorrect
                         ? 'border-green-500 bg-zinc-950'
                         : isPartiallyCorrect
@@ -307,8 +307,8 @@ export default function QuizReviewPage() {
                         : 'border-red-500 bg-zinc-950'
                     }`}
                   >
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className={`text-xl font-bold ${
+                    <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
+                      <h3 className={`text-3xl md:text-4xl font-bold ${
                         attempt.isCorrect
                           ? 'text-green-400'
                           : isPartiallyCorrect
@@ -317,54 +317,54 @@ export default function QuizReviewPage() {
                       }`}>
                         {attempt.isCorrect ? '✓ Correct!' : isPartiallyCorrect ? '◐ Partially Correct' : '✗ Incorrect'}
                       </h3>
-                      <span className={`px-3 py-1 rounded-md text-sm font-medium ${
+                      <span className={`px-5 py-3 rounded-md text-lg font-medium ${
                         question.difficulty === 'easy'
-                          ? 'bg-green-950 text-green-300 border border-green-500'
+                          ? 'bg-green-950 text-green-300 border-2 border-green-500'
                           : question.difficulty === 'medium'
-                          ? 'bg-yellow-950 text-yellow-300 border border-yellow-500'
-                          : 'bg-red-950 text-red-300 border border-red-500'
+                          ? 'bg-yellow-950 text-yellow-300 border-2 border-yellow-500'
+                          : 'bg-red-950 text-red-300 border-2 border-red-500'
                       }`}>
                         {question.difficulty.charAt(0).toUpperCase() + question.difficulty.slice(1)}
                       </span>
                     </div>
-                    <div className="mb-4">
-                      <p className="font-medium text-zinc-300 mb-2">
+                    <div className="mb-10">
+                      <p className="font-bold text-white mb-6 text-2xl md:text-3xl">
                         {question.questionType === 'multiple' ? 'Correct Answers:' : 'Correct Answer:'}
                       </p>
                       {question.questionType === 'multiple' && Array.isArray(question.correctAnswer) ? (
-                        <div className="space-y-2">
+                        <div className="space-y-4">
                           {question.correctAnswer.map((answerIndex) => (
-                            <p key={answerIndex} className="text-white">
+                            <p key={answerIndex} className="text-white text-xl md:text-2xl leading-relaxed">
                               {String.fromCharCode(65 + answerIndex)}. {question.options[answerIndex]}
                             </p>
                           ))}
                         </div>
                       ) : (
-                        <p className="text-white">
+                        <p className="text-white text-xl md:text-2xl leading-relaxed">
                           {String.fromCharCode(65 + (question.correctAnswer as number))}. {question.options[question.correctAnswer as number]}
                         </p>
                       )}
                     </div>
                     <div>
-                      <p className="font-medium text-zinc-300 mb-2">Explanation:</p>
-                      <p className="text-zinc-100 leading-relaxed">{question.explanation}</p>
+                      <p className="font-bold text-white mb-6 text-2xl md:text-3xl">Explanation:</p>
+                      <p className="text-zinc-100 leading-relaxed text-xl md:text-2xl">{question.explanation}</p>
                     </div>
                   </div>
 
                   {/* Why Other Answers Are Wrong */}
                   {question.incorrectExplanations && question.incorrectExplanations.length > 0 && (
-                    <div className="bg-zinc-950 rounded-md p-6 border border-zinc-800">
-                      <h4 className="font-bold text-zinc-300 mb-3">Why Other Answers Are Incorrect:</h4>
-                      <div className="space-y-3">
+                    <div className="bg-zinc-950 rounded-md p-12 md:p-16 border-2 border-zinc-800">
+                      <h4 className="font-bold text-white mb-8 text-3xl md:text-4xl">Why Other Answers Are Incorrect:</h4>
+                      <div className="space-y-6">
                         {question.incorrectExplanations.map((explanation, idx) => {
                           if (correctAnswers.includes(idx)) return null;
 
                           return (
-                            <div key={idx} className="text-sm">
+                            <div key={idx} className="text-xl md:text-2xl">
                               <span className="font-bold text-zinc-400">
                                 {String.fromCharCode(65 + idx)}.
                               </span>
-                              <span className="text-zinc-300 ml-2">{explanation}</span>
+                              <span className="text-zinc-200 ml-4 leading-relaxed">{explanation}</span>
                             </div>
                           );
                         })}
@@ -373,18 +373,18 @@ export default function QuizReviewPage() {
                   )}
 
                   {/* Domain, Topics, Difficulty, and Type */}
-                  <div className="bg-zinc-950 rounded-md p-10 md:p-12 border-2 border-zinc-800">
-                    <div className="space-y-6">
+                  <div className="bg-zinc-950 rounded-md p-12 md:p-16 border-2 border-zinc-800">
+                    <div className="space-y-8">
                       {/* Domain(s) */}
                       <div className="flex items-center gap-4 flex-wrap">
-                        <span className="text-lg md:text-xl text-zinc-200 font-bold">
+                        <span className="text-xl md:text-2xl text-white font-bold">
                           {getDomainsFromTopics(question.topics).length > 1 ? 'Domains:' : 'Domain:'}
                         </span>
                         <div className="flex flex-wrap gap-3">
                           {getDomainsFromTopics(question.topics).map((domain, idx) => (
                             <span
                               key={idx}
-                              className="px-5 py-3 rounded-md text-base md:text-lg bg-zinc-900 text-zinc-300 border-2 border-zinc-700 font-bold"
+                              className="px-6 py-4 rounded-md text-lg md:text-xl bg-zinc-900 text-zinc-300 border-2 border-zinc-700 font-bold"
                             >
                               {domain}
                             </span>
@@ -395,14 +395,14 @@ export default function QuizReviewPage() {
                       {/* Topics */}
                       {question.topics && question.topics.length > 0 && (
                         <div className="flex items-start gap-4 flex-wrap">
-                          <span className="text-lg md:text-xl text-zinc-200 font-bold">
+                          <span className="text-xl md:text-2xl text-white font-bold">
                             {question.topics.length > 1 ? 'Topics:' : 'Topic:'}
                           </span>
                           <div className="flex flex-wrap gap-3">
                             {question.topics.map((topic, idx) => (
                               <span
                                 key={idx}
-                                className="px-5 py-3 rounded-md text-base md:text-lg bg-zinc-900 text-zinc-200 border-2 border-zinc-700 font-medium"
+                                className="px-6 py-4 rounded-md text-lg md:text-xl bg-zinc-900 text-zinc-200 border-2 border-zinc-700 font-medium"
                               >
                                 {topic}
                               </span>
@@ -413,8 +413,8 @@ export default function QuizReviewPage() {
 
                       {/* Difficulty */}
                       <div className="flex items-center gap-4 flex-wrap">
-                        <span className="text-lg md:text-xl text-zinc-200 font-bold">Difficulty:</span>
-                        <span className={`px-5 py-3 rounded-md text-base md:text-lg border-2 font-bold ${
+                        <span className="text-xl md:text-2xl text-white font-bold">Difficulty:</span>
+                        <span className={`px-6 py-4 rounded-md text-lg md:text-xl border-2 font-bold ${
                           question.difficulty === 'easy' ? 'bg-green-900 text-green-200 border-green-700' :
                           question.difficulty === 'medium' ? 'bg-yellow-900 text-yellow-200 border-yellow-700' :
                           'bg-red-900 text-red-200 border-red-700'
@@ -425,8 +425,8 @@ export default function QuizReviewPage() {
 
                       {/* Question Type */}
                       <div className="flex items-center gap-4 flex-wrap">
-                        <span className="text-lg md:text-xl text-zinc-200 font-bold">Type:</span>
-                        <span className="px-5 py-3 rounded-md text-base md:text-lg bg-zinc-900 text-zinc-300 border-2 border-zinc-700 font-medium">
+                        <span className="text-xl md:text-2xl text-white font-bold">Type:</span>
+                        <span className="px-6 py-4 rounded-md text-lg md:text-xl bg-zinc-900 text-zinc-300 border-2 border-zinc-700 font-medium">
                           {(() => {
                             const category = question.questionCategory || inferQuestionCategory(question.topics);
                             return category === 'single-domain-single-topic' ? 'Single Domain, Single Topic' :
