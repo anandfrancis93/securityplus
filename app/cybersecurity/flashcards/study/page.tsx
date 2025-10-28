@@ -277,7 +277,7 @@ export default function StudyFlashcards() {
             <div
               className="flex items-center justify-center min-h-[350px] px-2 sm:px-0"
               style={{
-                transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                transform: isFlipped ? 'rotateY(-180deg)' : 'rotateY(0deg)',
                 backfaceVisibility: 'hidden',
               }}
             >
