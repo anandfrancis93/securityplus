@@ -58,16 +58,27 @@ export async function POST(request: NextRequest) {
 
     console.log(`Question ${questionNumber} generated successfully: ${question.difficulty} difficulty`);
 
-    // If quizSessionId provided, add question to the session
-    if (quizSessionId && userId) {
-      await addQuestionToSession(userId, quizSessionId, question);
-      console.log(`Added question to quiz session ${quizSessionId}`);
+    // Create or use existing quiz session
+    let sessionId = quizSessionId;
+    if (userId) {
+      if (!sessionId) {
+        // Create new quiz session for first question
+        sessionId = await createQuizSession(userId, [question]);
+        console.log(`Created new quiz session ${sessionId} for question 1`);
+      } else {
+        // Add to existing session
+        await addQuestionToSession(userId, sessionId, question);
+        console.log(`Added question to quiz session ${sessionId}`);
+      }
     }
 
     // SECURITY: Sanitize question before returning (remove correct answer)
     const sanitizedQuestion = sanitizeQuestionForClient(question);
 
-    return NextResponse.json({ question: sanitizedQuestion });
+    return NextResponse.json({
+      question: sanitizedQuestion,
+      quizSessionId: sessionId  // Return session ID so client can use it
+    });
   } catch (error: any) {
     console.error(`Error generating question:`, error);
     console.error('Error details:', {

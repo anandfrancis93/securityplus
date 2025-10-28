@@ -62,108 +62,16 @@ export default function Quiz() {
   }, [loading, questions.length, generatingNext]); // Watch generatingNext too
 
   const initQuiz = async () => {
-    // Check if there's a cached quiz available
-    if (userProgress?.cachedQuiz && userProgress.cachedQuiz.questions.length > 0) {
-      const cachedCount = userProgress.cachedQuiz.questions.length;
-      const quizSessionId = userProgress.cachedQuiz.quizSessionId;
+    console.log('Starting fresh quiz - generating first question...');
 
-      if (cachedCount === totalQuestions) {
-        // Full cache - use all questions
-        console.log('✅ Using full pre-generated cached quiz (10 questions)!');
-        console.log(`  Phase: ${userProgress.quizMetadata?.allTopicsCoveredOnce ? 2 : 1}`);
-        console.log(`  Generated ${(Date.now() - userProgress.cachedQuiz.generatedAt) / 1000}s ago`);
-        console.log(`  Quiz session ID: ${quizSessionId}`);
+    // Clear any old cached quiz
+    await clearCachedQuiz();
 
-        // Initialize quiz with quizSessionId BEFORE clearing cache
-        if (!quizSessionId) {
-          console.error('⚠️ WARNING: quizSessionId is missing from cached quiz!');
-          console.log('Clearing bad cache and forcing fresh start...');
-          // Clear the bad cached quiz from Firebase
-          await clearCachedQuiz();
-          // Reload page to start completely fresh (only happens once after clearing)
-          console.log('Reloading page for fresh initialization...');
-          window.location.reload();
-          return;
-        }
+    // Start new quiz (quizSessionId will be created with first question)
+    startNewQuiz();
 
-        startNewQuiz(quizSessionId);
-        console.log('✅ Quiz initialized with session ID:', quizSessionId);
-
-        // SECURITY: Questions are sanitized (no correctAnswer), cast to Question[]
-        setQuestions(userProgress.cachedQuiz.questions as Question[]);
-        setLoading(false);
-        clearCachedQuiz();
-        return;
-      } else if (cachedCount < totalQuestions) {
-        // Partial cache - use what we have and generate the rest
-        console.log(`✅ Using partial cached quiz (${cachedCount} questions)!`);
-        console.log(`  Will generate ${totalQuestions - cachedCount} more questions`);
-        console.log(`  Generated ${(Date.now() - userProgress.cachedQuiz.generatedAt) / 1000}s ago`);
-        console.log(`  Quiz session ID: ${quizSessionId}`);
-
-        // Initialize quiz with quizSessionId BEFORE clearing cache
-        if (!quizSessionId) {
-          console.error('⚠️ WARNING: quizSessionId is missing from cached quiz!');
-          console.log('Clearing bad cache and forcing fresh start...');
-          // Clear the bad cached quiz from Firebase
-          await clearCachedQuiz();
-          // Reload page to start completely fresh (only happens once after clearing)
-          console.log('Reloading page for fresh initialization...');
-          window.location.reload();
-          return;
-        }
-
-        startNewQuiz(quizSessionId);
-        console.log('✅ Quiz initialized with session ID:', quizSessionId);
-
-        // SECURITY: Questions are sanitized (no correctAnswer), cast to Question[]
-        setQuestions(userProgress.cachedQuiz.questions as Question[]);
-        setLoading(false);
-        clearCachedQuiz();
-        // The useEffect will automatically generate remaining questions in background
-        return;
-      }
-    }
-
-    // No cached quiz exists - initialize without quizSessionId (will be created)
-    if (!currentQuiz) {
-      startNewQuiz();
-    }
-
-    // No cached quiz - need to trigger pre-generation first to create session
-    console.log('No cached quiz found, triggering pre-generation to create session...');
-    try {
-      const data = await authenticatedPost('/api/pregenerate-quiz', {
-        userId: user?.uid,
-        completedQuestions: [],
-      });
-
-      console.log('Pregenerate API response:', data);
-
-      if (data.success) {
-        console.log('✅ Quiz session created with', data.questionsCount, 'pre-generated questions');
-        console.log('Quiz session ID from API:', data.quizSessionId);
-
-        // Refresh progress to get the cached quiz with quizSessionId
-        await refreshProgress();
-
-        // Reload the page to reinitialize with fresh data
-        window.location.reload();
-      } else {
-        console.error('Pregenerate failed:', data);
-        setErrorMessage(`Failed to initialize quiz session: ${data.error || 'Unknown error'}. Please try again.`);
-        setLoading(false);
-      }
-    } catch (error: any) {
-      console.error('Error creating quiz session:', error);
-      console.error('Error details:', {
-        message: error?.message,
-        response: error?.response,
-        stack: error?.stack
-      });
-      setErrorMessage(`Failed to initialize quiz: ${error?.message || 'Unknown error'}. Please try again.`);
-      setLoading(false);
-    }
+    // Generate first question
+    await generateNextQuestion();
   };
 
   const clearCachedQuiz = async () => {
@@ -215,6 +123,12 @@ export default function Quiz() {
       if (data.question) {
         setQuestions(prev => [...prev, data.question]);
         console.log(`Question ${questionNumber} loaded`);
+
+        // If this is the first question and we got a quizSessionId, store it
+        if (questionNumber === 1 && data.quizSessionId && currentQuiz) {
+          startNewQuiz(data.quizSessionId);
+          console.log('✅ Quiz session created:', data.quizSessionId);
+        }
       } else {
         setErrorMessage('No question was generated. Please try again.');
       }
