@@ -14,7 +14,7 @@ import {
 import { getDueFlashcards, calculateNextReview, getDeckStats } from '@/lib/spacedRepetition';
 import { Flashcard, FlashcardReview } from '@/lib/types';
 
-export default function StudyPage() {
+export default function StudyFlashcards() {
   const { userId, user, loading: authLoading, handleSignOut, liquidGlass } = useApp();
   const router = useRouter();
 

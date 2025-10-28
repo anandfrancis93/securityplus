@@ -439,7 +439,7 @@ Security+ Learning Platform
 │               │   └─ <button> Save Changes (onClick: handleSaveEdit)
 │               └─ Escape Key Listener
 │
-├─ StudyPage (Component: app/cybersecurity/flashcards/study/page.tsx, Route: /cybersecurity/flashcards/study)
+├─ StudyFlashcards (Component: app/cybersecurity/flashcards/study/page.tsx, Route: /cybersecurity/flashcards/study)
 │   │
 │   ├─ <button> Back Arrow (onClick: router.push('/cybersecurity/flashcards'))
 │   │
@@ -583,7 +583,7 @@ Performance Indicators
 
 ## Keyboard Shortcuts
 
-StudyPage
+StudyFlashcards
 │
 ├─ Spacebar: Toggle flip (setIsFlipped(!isFlipped))
 ├─ 1: Rate as Again (handleRating('again'))

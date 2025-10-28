@@ -14,7 +14,7 @@ import {
 import { getDueFlashcards, calculateNextReview } from '@/lib/spacedRepetition';
 import { Flashcard, FlashcardReview } from '@/lib/types';
 
-export default function StudyPage() {
+export default function StudyFlashcards() {
   const { userId, user, loading: authLoading } = useApp();
   const router = useRouter();
   const [dueCardIds, setDueCardIds] = useState<string[]>([]);
