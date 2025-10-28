@@ -476,11 +476,11 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                     onClick={() => toggleDomainTable(domain)}
                     className="relative w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/5 transition-all duration-700 focus:outline-none"
                   >
-                    <h4 className="text-2xl md:text-3xl font-bold text-cyan-400 tracking-tight">
+                    <h4 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
                       <span className="mr-2">{domainNum}</span>{domainName}
                     </h4>
                     <svg
-                      className={`w-6 h-6 text-cyan-400 transition-transform duration-700 ${openDomainTables[domain] ? 'rotate-180' : ''}`}
+                      className={`w-6 h-6 text-zinc-400 transition-transform duration-700 ${openDomainTables[domain] ? 'rotate-180' : ''}`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
