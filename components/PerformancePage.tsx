@@ -677,12 +677,6 @@ export default function QuizPerformance() {
                     }`}>
                       {estimatedAbility.toFixed(2)}
                     </div>
-                    {/* Confidence Interval for Ability */}
-                    {isFinite(abilityStandardError) && totalAnswered >= 5 && (
-                      <div className={`text-lg md:text-xl mt-2 ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
-                        95% CI: [{abilityCI.lower.toFixed(2)}, {abilityCI.upper.toFixed(2)}]
-                      </div>
-                    )}
                   </div>
                   <div className="relative mt-6">
                     <div className={`h-6 relative overflow-hidden ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl' : 'bg-zinc-900 border border-zinc-800 rounded-md'}`}>
