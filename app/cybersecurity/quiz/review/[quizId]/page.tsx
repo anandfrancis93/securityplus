@@ -4,22 +4,9 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useApp } from '@/components/AppProvider';
 import { QuizSession } from '@/lib/types';
-import { getDomainFromTopics, getDomainsFromTopics } from '@/lib/domainDetection';
-
-// Helper function to infer question category from topics if not stored
-function inferQuestionCategory(topics: string[]): 'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics' {
-  if (!topics || topics.length === 0) return 'single-domain-single-topic';
-
-  const domains = getDomainsFromTopics(topics);
-
-  if (domains.length > 1) {
-    return 'multiple-domains-multiple-topics';
-  } else if (topics.length > 1) {
-    return 'single-domain-multiple-topics';
-  } else {
-    return 'single-domain-single-topic';
-  }
-}
+import QuestionCard from '@/components/quiz/QuestionCard';
+import ExplanationSection from '@/components/quiz/ExplanationSection';
+import QuestionMetadata from '@/components/quiz/QuestionMetadata';
 
 export default function QuizReviewPage() {
   const router = useRouter();
@@ -218,12 +205,13 @@ export default function QuizReviewPage() {
         <div className="space-y-12 pb-8">
           {quiz.questions.map((attempt, index) => {
             const { question } = attempt;
-            const correctAnswers = Array.isArray(question.correctAnswer)
-              ? question.correctAnswer
-              : [question.correctAnswer];
             const userAnswers = Array.isArray(attempt.userAnswer)
               ? attempt.userAnswer
               : (attempt.userAnswer !== null ? [attempt.userAnswer] : []);
+
+            const correctAnswers = Array.isArray(question.correctAnswer)
+              ? question.correctAnswer
+              : [question.correctAnswer];
 
             // Check if partially correct (for multiple-response questions)
             const isPartiallyCorrect = question.questionType === 'multiple' &&
@@ -241,231 +229,31 @@ export default function QuizReviewPage() {
                   <h3 className="text-2xl md:text-3xl font-bold text-white">Question {index + 1}</h3>
                 </div>
 
-                {/* Question Card */}
-                <div className={`relative p-12 md:p-16 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'}`}>
-                  {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
-                  <h2 className="text-2xl md:text-3xl font-bold mb-8 leading-tight text-white relative">{question.question}</h2>
-
-                  {/* Answer Options */}
-                  <div className="space-y-4 relative">
-                    {question.options.map((option, idx) => {
-                      const isSelected = userAnswers.includes(idx);
-                      const isCorrectAnswer = correctAnswers.includes(idx);
-                      const showCorrect = isCorrectAnswer;
-                      const showIncorrect = isSelected && !isCorrectAnswer;
-
-                      return (
-                        <div
-                          key={idx}
-                          className={`relative w-full text-left p-6 md:p-8 border-2 ${
-                            liquidGlass
-                              ? showCorrect
-                                ? 'bg-white/10 backdrop-blur-xl border-green-500/50 rounded-3xl'
-                                : showIncorrect
-                                ? 'bg-white/10 backdrop-blur-xl border-red-500/50 rounded-3xl'
-                                : isSelected
-                                ? 'bg-white/10 backdrop-blur-xl border-white/30 rounded-3xl'
-                                : 'bg-white/5 backdrop-blur-xl border-white/20 rounded-3xl'
-                              : showCorrect
-                              ? 'border-green-500 bg-zinc-900 rounded-md'
-                              : showIncorrect
-                              ? 'border-red-500 bg-zinc-900 rounded-md'
-                              : isSelected
-                              ? 'border-zinc-600 bg-zinc-900 rounded-md'
-                              : 'border-zinc-700 bg-zinc-950 rounded-md'
-                          }`}
-                        >
-                          {liquidGlass && showCorrect && <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-transparent to-transparent rounded-3xl" />}
-                          {liquidGlass && showIncorrect && <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-3xl" />}
-                          {liquidGlass && !showCorrect && !showIncorrect && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />}
-                          <div className="relative">
-                            <div className="inline-flex items-center gap-4 mr-4 align-top">
-                              {/* Checkbox or Radio indicator */}
-                              {question.questionType === 'multiple' ? (
-                                <div className={`w-6 h-6 rounded border-2 flex items-center justify-center shrink-0 ${
-                                  isSelected ? 'bg-zinc-700 border-zinc-600' : 'border-zinc-600'
-                                }`}>
-                                  {isSelected && <span className="text-white text-sm">✓</span>}
-                                </div>
-                              ) : (
-                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                                  isSelected ? 'border-zinc-600' : 'border-zinc-600'
-                                }`}>
-                                  {isSelected && <div className="w-4 h-4 rounded-full bg-zinc-700"></div>}
-                                </div>
-                              )}
-                              <span className="font-bold text-zinc-400 text-xl">
-                                {String.fromCharCode(65 + idx)}.
-                              </span>
-                            </div>
-                            <span className="text-zinc-100 text-xl md:text-2xl leading-relaxed inline align-top">{option}</span>
-                            {showCorrect && <span className="ml-3 text-green-400 text-3xl align-top">✓</span>}
-                            {showIncorrect && <span className="ml-3 text-red-400 text-3xl align-top">✗</span>}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
+                {/* Question Card with Answer Options */}
+                <QuestionCard
+                  question={question}
+                  questionNumber={index + 1}
+                  showExplanation={true}
+                  selectedAnswer={question.questionType === 'single' ? (userAnswers[0] ?? null) : null}
+                  selectedAnswers={question.questionType === 'multiple' ? userAnswers : []}
+                  liquidGlass={liquidGlass}
+                />
 
                 {/* Explanation Section */}
-                <div className="space-y-8">
-                  <div
-                    className={`relative p-12 md:p-16 border-2 ${
-                      liquidGlass
-                        ? attempt.isCorrect
-                          ? 'bg-white/5 backdrop-blur-2xl border-green-500/50 rounded-[40px] shadow-2xl shadow-green-500/20'
-                          : isPartiallyCorrect
-                          ? 'bg-white/5 backdrop-blur-2xl border-yellow-500/50 rounded-[40px] shadow-2xl shadow-yellow-500/20'
-                          : 'bg-white/5 backdrop-blur-2xl border-red-500/50 rounded-[40px] shadow-2xl shadow-red-500/20'
-                        : attempt.isCorrect
-                        ? 'border-green-500 bg-zinc-950 rounded-md'
-                        : isPartiallyCorrect
-                        ? 'border-yellow-500 bg-zinc-950 rounded-md'
-                        : 'border-red-500 bg-zinc-950 rounded-md'
-                    }`}
-                  >
-                    {liquidGlass && attempt.isCorrect && <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-transparent to-transparent rounded-[40px]" />}
-                    {liquidGlass && isPartiallyCorrect && <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 via-transparent to-transparent rounded-[40px]" />}
-                    {liquidGlass && !attempt.isCorrect && !isPartiallyCorrect && <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-[40px]" />}
-                    {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
-                    <div className="flex items-center justify-between mb-8 flex-wrap gap-4 relative">
-                      <h3 className={`text-3xl md:text-4xl font-bold ${
-                        attempt.isCorrect
-                          ? 'text-green-400'
-                          : isPartiallyCorrect
-                          ? 'text-yellow-400'
-                          : 'text-red-400'
-                      }`}>
-                        {attempt.isCorrect ? '✓ Correct!' : isPartiallyCorrect ? '◐ Partially Correct' : '✗ Incorrect'}
-                      </h3>
-                      <span className={`px-5 py-3 rounded-md text-lg font-medium ${
-                        question.difficulty === 'easy'
-                          ? 'bg-green-950 text-green-300 border-2 border-green-500'
-                          : question.difficulty === 'medium'
-                          ? 'bg-yellow-950 text-yellow-300 border-2 border-yellow-500'
-                          : 'bg-red-950 text-red-300 border-2 border-red-500'
-                      }`}>
-                        {question.difficulty.charAt(0).toUpperCase() + question.difficulty.slice(1)}
-                      </span>
-                    </div>
-                    <div className="mb-10 relative">
-                      <p className="font-bold text-white mb-6 text-2xl md:text-3xl">
-                        {question.questionType === 'multiple' ? 'Correct Answers:' : 'Correct Answer:'}
-                      </p>
-                      {question.questionType === 'multiple' && Array.isArray(question.correctAnswer) ? (
-                        <div className="space-y-4">
-                          {question.correctAnswer.map((answerIndex) => (
-                            <p key={answerIndex} className="text-white text-xl md:text-2xl leading-relaxed">
-                              {String.fromCharCode(65 + answerIndex)}. {question.options[answerIndex]}
-                            </p>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-white text-xl md:text-2xl leading-relaxed">
-                          {String.fromCharCode(65 + (question.correctAnswer as number))}. {question.options[question.correctAnswer as number]}
-                        </p>
-                      )}
-                    </div>
-                    <div className="relative">
-                      <p className="font-bold text-white mb-6 text-2xl md:text-3xl">Explanation:</p>
-                      <p className="text-zinc-100 leading-relaxed text-xl md:text-2xl">{question.explanation}</p>
-                    </div>
-                  </div>
+                <ExplanationSection
+                  question={question}
+                  isCorrect={attempt.isCorrect}
+                  isPartiallyCorrect={isPartiallyCorrect}
+                  liquidGlass={liquidGlass}
+                  difficulty={question.difficulty}
+                  showDifficultyBadge={true}
+                />
 
-                  {/* Why Other Answers Are Wrong */}
-                  {question.incorrectExplanations && question.incorrectExplanations.length > 0 && (
-                    <div className={`relative p-12 md:p-16 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'}`}>
-                      {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
-                      <h4 className="font-bold text-white mb-8 text-3xl md:text-4xl relative">Why Other Answers Are Incorrect:</h4>
-                      <div className="space-y-6 relative">
-                        {question.incorrectExplanations.map((explanation, idx) => {
-                          if (correctAnswers.includes(idx)) return null;
-
-                          return (
-                            <div key={idx} className="text-xl md:text-2xl">
-                              <span className="font-bold text-zinc-400">
-                                {String.fromCharCode(65 + idx)}.
-                              </span>
-                              <span className="text-zinc-200 ml-4 leading-relaxed">{explanation}</span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Domain, Topics, Difficulty, and Type */}
-                  <div className={`relative p-12 md:p-16 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'}`}>
-                    {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
-                    <div className="space-y-8 relative">
-                      {/* Domain(s) */}
-                      <div className="flex items-center gap-4 flex-wrap">
-                        <span className="text-xl md:text-2xl text-white font-bold">
-                          {getDomainsFromTopics(question.topics).length > 1 ? 'Domains:' : 'Domain:'}
-                        </span>
-                        <div className="flex flex-wrap gap-3">
-                          {getDomainsFromTopics(question.topics).map((domain, idx) => (
-                            <span
-                              key={idx}
-                              className={`px-6 py-4 text-lg md:text-xl font-bold ${liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-200 border border-white/20 rounded-2xl' : 'bg-zinc-900 text-zinc-300 border-2 border-zinc-700 rounded-md'}`}
-                            >
-                              {domain}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Topics */}
-                      {question.topics && question.topics.length > 0 && (
-                        <div className="flex items-start gap-4 flex-wrap">
-                          <span className="text-xl md:text-2xl text-white font-bold">
-                            {question.topics.length > 1 ? 'Topics:' : 'Topic:'}
-                          </span>
-                          <div className="flex flex-wrap gap-3">
-                            {question.topics.map((topic, idx) => (
-                              <span
-                                key={idx}
-                                className={`px-6 py-4 text-lg md:text-xl font-medium ${liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-200 border border-white/20 rounded-2xl' : 'bg-zinc-900 text-zinc-200 border-2 border-zinc-700 rounded-md'}`}
-                              >
-                                {topic}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Difficulty */}
-                      <div className="flex items-center gap-4 flex-wrap">
-                        <span className="text-xl md:text-2xl text-white font-bold">Difficulty:</span>
-                        <span className={`px-6 py-4 text-lg md:text-xl border-2 font-bold ${
-                          liquidGlass
-                            ? question.difficulty === 'easy' ? 'bg-green-500/20 text-green-200 border-green-500/50 backdrop-blur-xl rounded-2xl' :
-                              question.difficulty === 'medium' ? 'bg-yellow-500/20 text-yellow-200 border-yellow-500/50 backdrop-blur-xl rounded-2xl' :
-                              'bg-red-500/20 text-red-200 border-red-500/50 backdrop-blur-xl rounded-2xl'
-                            : question.difficulty === 'easy' ? 'bg-green-900 text-green-200 border-green-700 rounded-md' :
-                              question.difficulty === 'medium' ? 'bg-yellow-900 text-yellow-200 border-yellow-700 rounded-md' :
-                              'bg-red-900 text-red-200 border-red-700 rounded-md'
-                        }`}>
-                          {question.difficulty.toUpperCase()}
-                        </span>
-                      </div>
-
-                      {/* Question Type */}
-                      <div className="flex items-center gap-4 flex-wrap">
-                        <span className="text-xl md:text-2xl text-white font-bold">Type:</span>
-                        <span className={`px-6 py-4 text-lg md:text-xl font-medium ${liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-300 border border-white/20 rounded-2xl' : 'bg-zinc-900 text-zinc-300 border-2 border-zinc-700 rounded-md'}`}>
-                          {(() => {
-                            const category = question.questionCategory || inferQuestionCategory(question.topics);
-                            return category === 'single-domain-single-topic' ? 'Single Domain, Single Topic' :
-                                   category === 'single-domain-multiple-topics' ? 'Single Domain, Multiple Topics' :
-                                   'Multiple Domains, Multiple Topics';
-                          })()}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                {/* Question Metadata */}
+                <QuestionMetadata
+                  question={question}
+                  liquidGlass={liquidGlass}
+                />
               </div>
             );
           })}

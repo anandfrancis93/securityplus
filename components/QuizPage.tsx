@@ -4,9 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from './AppProvider';
 import { useRouter } from 'next/navigation';
 import { Question } from '@/lib/types';
-import { getDomainFromTopics, getDomainsFromTopics } from '@/lib/domainDetection';
 import { authenticatedPost } from '@/lib/apiClient';
 import Header from './Header';
+import QuestionCard from './quiz/QuestionCard';
+import ExplanationSection from './quiz/ExplanationSection';
+import QuestionMetadata from './quiz/QuestionMetadata';
 
 export default function Quiz() {
   const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, user, loading: authLoading, liquidGlass, handleSignOut, refreshProgress } = useApp();
@@ -473,99 +475,16 @@ export default function Quiz() {
         </div>
 
         {/* Question Card */}
-        <div className={`relative p-12 md:p-16 mb-16 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'}`}>
-          {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
-          <h2 className="text-2xl md:text-3xl font-bold mb-12 leading-tight text-white relative">{currentQuestion.question}</h2>
-
-          {/* Multiple-response instruction */}
-          {currentQuestion.questionType === 'multiple' && !showExplanation && (
-            <div className={`mb-10 text-xl md:text-2xl text-zinc-300 p-8 relative ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl' : 'bg-zinc-900 border-2 border-zinc-700 rounded-md'}`}>
-              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-3xl" />}
-              <strong className="font-bold relative">Select all that apply</strong> <span className="relative">- This question has multiple correct answers</span>
-            </div>
-          )}
-
-          {/* Answer Options */}
-          <div className="space-y-6">
-            {currentQuestion.options.map((option, index) => {
-              const isSelected = currentQuestion.questionType === 'multiple'
-                ? selectedAnswers.includes(index)
-                : selectedAnswer === index;
-
-              const correctAnswers = Array.isArray(currentQuestion.correctAnswer)
-                ? currentQuestion.correctAnswer
-                : [currentQuestion.correctAnswer];
-
-              const isCorrectAnswer = correctAnswers.includes(index);
-              const showCorrect = showExplanation && isCorrectAnswer;
-              const showIncorrect = showExplanation && isSelected && !isCorrectAnswer;
-
-              return (
-                <button
-                  key={index}
-                  onClick={() => handleAnswerSelect(index)}
-                  disabled={showExplanation}
-                  className={`group relative w-full text-left p-8 md:p-10 transition-all duration-700 ${
-                    showCorrect
-                      ? liquidGlass
-                        ? 'bg-white/10 backdrop-blur-xl border-2 border-green-500/80 rounded-3xl shadow-xl shadow-green-500/30'
-                        : 'border-2 border-green-500 bg-zinc-900 rounded-md'
-                      : showIncorrect
-                      ? liquidGlass
-                        ? 'bg-white/10 backdrop-blur-xl border-2 border-red-500/80 rounded-3xl shadow-xl shadow-red-500/30'
-                        : 'border-2 border-red-500 bg-zinc-900 rounded-md'
-                      : isSelected
-                      ? liquidGlass
-                        ? 'bg-white/10 backdrop-blur-xl border border-violet-400/50 rounded-3xl shadow-lg shadow-violet-500/20'
-                        : 'border-2 border-zinc-600 bg-zinc-900 rounded-md'
-                      : liquidGlass
-                        ? 'bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/30 hover:bg-white/10 rounded-3xl hover:shadow-xl hover:shadow-white/10'
-                        : 'border-2 border-zinc-700 hover:border-zinc-600 bg-zinc-950 hover:bg-zinc-900 rounded-md'
-                  } ${showExplanation ? 'cursor-default' : 'cursor-pointer hover:scale-[1.01]'}`}
-                >
-                  {liquidGlass && !showExplanation && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />}
-                  {liquidGlass && showCorrect && <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-transparent to-transparent rounded-3xl" />}
-                  {liquidGlass && showIncorrect && <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-3xl" />}
-                  <div className="relative">
-                    <div className="inline-flex items-center gap-4 mr-4 align-top">
-                      {/* Checkbox or Radio indicator */}
-                      {currentQuestion.questionType === 'multiple' ? (
-                        <div className={`w-8 h-8 rounded-xl border-2 flex items-center justify-center transition-all duration-700 shrink-0 ${
-                          isSelected
-                            ? liquidGlass
-                              ? 'bg-violet-500/30 border-violet-400'
-                              : 'bg-zinc-700 border-zinc-600'
-                            : liquidGlass
-                              ? 'border-white/30'
-                              : 'border-zinc-600'
-                        }`}>
-                          {isSelected && <span className="text-white text-lg font-bold">✓</span>}
-                        </div>
-                      ) : (
-                        <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-700 shrink-0 ${
-                          isSelected
-                            ? liquidGlass
-                              ? 'border-violet-400'
-                              : 'border-zinc-600'
-                            : liquidGlass
-                              ? 'border-white/30'
-                              : 'border-zinc-600'
-                        }`}>
-                          {isSelected && <div className={`w-5 h-5 rounded-full ${liquidGlass ? 'bg-violet-400' : 'bg-zinc-700'}`}></div>}
-                        </div>
-                      )}
-                      <span className="font-bold text-2xl text-zinc-400">
-                        {String.fromCharCode(65 + index)}.
-                      </span>
-                    </div>
-                    <span className="text-white text-xl md:text-2xl leading-relaxed inline align-top">{option}</span>
-                    {showCorrect && <span className="ml-3 text-green-400 text-3xl align-top">✓</span>}
-                    {showIncorrect && <span className="ml-3 text-red-400 text-3xl align-top">✗</span>}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+        <div className="mb-16">
+          <QuestionCard
+            question={currentQuestion}
+            questionNumber={currentQuestionIndex + 1}
+            showExplanation={showExplanation}
+            selectedAnswer={currentQuestion.questionType === 'single' ? selectedAnswer : null}
+            selectedAnswers={currentQuestion.questionType === 'multiple' ? selectedAnswers : []}
+            liquidGlass={liquidGlass}
+            onAnswerSelect={handleAnswerSelect}
+          />
 
           {/* Submit Button */}
           {!showExplanation && (
@@ -599,157 +518,17 @@ export default function Quiz() {
         {/* Explanation */}
         {showExplanation && (
           <div className="space-y-12 mb-16">
-            <div
-              className={`relative p-12 md:p-16 border-2 ${
-                isCorrect
-                  ? liquidGlass
-                    ? 'bg-white/5 backdrop-blur-2xl border-green-500/50 rounded-[40px] shadow-2xl shadow-green-500/20'
-                    : 'bg-zinc-950 border-green-500 rounded-md'
-                  : isPartiallyCorrect
-                  ? liquidGlass
-                    ? 'bg-white/5 backdrop-blur-2xl border-yellow-500/50 rounded-[40px] shadow-2xl shadow-yellow-500/20'
-                    : 'bg-zinc-950 border-yellow-500 rounded-md'
-                  : liquidGlass
-                    ? 'bg-white/5 backdrop-blur-2xl border-red-500/50 rounded-[40px] shadow-2xl shadow-red-500/20'
-                    : 'bg-zinc-950 border-red-500 rounded-md'
-              }`}
-            >
-              {liquidGlass && isCorrect && <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-transparent to-transparent rounded-[40px]" />}
-              {liquidGlass && isPartiallyCorrect && <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 via-transparent to-transparent rounded-[40px]" />}
-              {liquidGlass && !isCorrect && !isPartiallyCorrect && <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-[40px]" />}
-              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
-              <div className="mb-10 relative">
-                <h3 className={`text-4xl md:text-5xl font-bold ${
-                  isCorrect
-                    ? 'text-green-400'
-                    : isPartiallyCorrect
-                    ? 'text-yellow-400'
-                    : 'text-red-400'
-                }`}>
-                  {isCorrect ? '✓ Correct!' : isPartiallyCorrect ? '◐ Partially Correct' : '✗ Incorrect'}
-                </h3>
-              </div>
-              <div className="mb-10 relative">
-                <p className="font-bold text-white mb-6 text-2xl md:text-3xl">
-                  {currentQuestion.questionType === 'multiple' ? 'Correct Answers:' : 'Correct Answer:'}
-                </p>
-                {currentQuestion.questionType === 'multiple' && Array.isArray(currentQuestion.correctAnswer) ? (
-                  <div className="space-y-4">
-                    {currentQuestion.correctAnswer.map((answerIndex) => (
-                      <p key={answerIndex} className="text-white text-xl md:text-2xl leading-relaxed">
-                        {String.fromCharCode(65 + answerIndex)}. {currentQuestion.options[answerIndex]}
-                      </p>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-white text-xl md:text-2xl leading-relaxed">
-                    {String.fromCharCode(65 + (currentQuestion.correctAnswer as number))}. {currentQuestion.options[currentQuestion.correctAnswer as number]}
-                  </p>
-                )}
-              </div>
-              <div className="relative">
-                <p className="font-bold text-white mb-6 text-2xl md:text-3xl">Explanation:</p>
-                <p className="text-zinc-100 leading-relaxed text-xl md:text-2xl">{currentQuestion.explanation}</p>
-              </div>
-            </div>
+            <ExplanationSection
+              question={currentQuestion}
+              isCorrect={isCorrect}
+              isPartiallyCorrect={isPartiallyCorrect}
+              liquidGlass={liquidGlass}
+            />
 
-            {/* Why Other Answers Are Wrong */}
-            <div className={`relative p-12 md:p-16 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'}`}>
-              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
-              <h4 className="font-bold text-white mb-8 text-3xl md:text-4xl relative">Why Other Answers Are Incorrect:</h4>
-              <div className="space-y-6 relative">
-                {currentQuestion.incorrectExplanations.map((explanation, index) => {
-                  const correctAnswers = Array.isArray(currentQuestion.correctAnswer)
-                    ? currentQuestion.correctAnswer
-                    : [currentQuestion.correctAnswer];
-
-                  if (correctAnswers.includes(index)) return null;
-
-                  return (
-                    <div key={index} className="text-xl md:text-2xl">
-                      <span className="font-bold text-zinc-400">
-                        {String.fromCharCode(65 + index)}.
-                      </span>
-                      <span className="text-zinc-200 ml-4 leading-relaxed">{explanation}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Domain, Topics, Difficulty, and Type */}
-            <div className={`relative p-12 md:p-16 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'}`}>
-              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
-              <div className="space-y-8 relative">
-                {/* Domain(s) */}
-                <div className="flex items-center gap-4 flex-wrap">
-                  <span className="text-xl md:text-2xl text-white font-bold">
-                    {getDomainsFromTopics(currentQuestion.topics).length > 1 ? 'Domains:' : 'Domain:'}
-                  </span>
-                  <div className="flex flex-wrap gap-3">
-                    {getDomainsFromTopics(currentQuestion.topics).map((domain, index) => (
-                      <span
-                        key={index}
-                        className={`px-6 py-4 text-lg md:text-xl font-bold ${liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-200 border border-white/20 rounded-2xl' : 'bg-zinc-900 text-zinc-300 border-2 border-zinc-700 rounded-md'}`}
-                      >
-                        {domain}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Topics */}
-                {currentQuestion.topics && currentQuestion.topics.length > 0 && (
-                  <div className="flex items-start gap-4 flex-wrap">
-                    <span className="text-xl md:text-2xl text-white font-bold">
-                      {currentQuestion.topics.length > 1 ? 'Topics:' : 'Topic:'}
-                    </span>
-                    <div className="flex flex-wrap gap-3">
-                      {currentQuestion.topics.map((topic, index) => (
-                        <span
-                          key={index}
-                          className={`px-6 py-4 text-lg md:text-xl font-medium ${liquidGlass ? 'bg-white/5 backdrop-blur-xl text-zinc-300 border border-white/20 rounded-2xl' : 'bg-zinc-900 text-zinc-200 border-2 border-zinc-700 rounded-md'}`}
-                        >
-                          {topic}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Difficulty */}
-                <div className="flex items-center gap-4 flex-wrap">
-                  <span className="text-xl md:text-2xl text-white font-bold">Difficulty:</span>
-                  <span className={`px-6 py-4 text-lg md:text-xl font-bold ${
-                    currentQuestion.difficulty === 'easy'
-                      ? liquidGlass
-                        ? 'bg-green-500/20 backdrop-blur-xl text-green-300 border border-green-500/50 rounded-2xl'
-                        : 'bg-green-900 text-green-200 border-2 border-green-700 rounded-md'
-                      : currentQuestion.difficulty === 'medium'
-                      ? liquidGlass
-                        ? 'bg-yellow-500/20 backdrop-blur-xl text-yellow-300 border border-yellow-500/50 rounded-2xl'
-                        : 'bg-yellow-900 text-yellow-200 border-2 border-yellow-700 rounded-md'
-                      : liquidGlass
-                        ? 'bg-red-500/20 backdrop-blur-xl text-red-300 border border-red-500/50 rounded-2xl'
-                        : 'bg-red-900 text-red-200 border-2 border-red-700 rounded-md'
-                  }`}>
-                    {currentQuestion.difficulty.toUpperCase()}
-                  </span>
-                </div>
-
-                {/* Question Type */}
-                {currentQuestion.questionCategory && (
-                  <div className="flex items-center gap-4 flex-wrap">
-                    <span className="text-xl md:text-2xl text-white font-bold">Type:</span>
-                    <span className={`px-6 py-4 text-lg md:text-xl font-medium ${liquidGlass ? 'bg-white/5 backdrop-blur-xl text-zinc-300 border border-white/20 rounded-2xl' : 'bg-zinc-900 text-zinc-300 border-2 border-zinc-700 rounded-md'}`}>
-                      {currentQuestion.questionCategory === 'single-domain-single-topic' ? 'Single Domain, Single Topic' :
-                       currentQuestion.questionCategory === 'single-domain-multiple-topics' ? 'Single Domain, Multiple Topics' :
-                       'Multiple Domains, Multiple Topics'}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
+            <QuestionMetadata
+              question={currentQuestion}
+              liquidGlass={liquidGlass}
+            />
 
             {/* Next Button */}
             <button
