@@ -230,8 +230,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const answerQuestion = async (question: Question, answer: number | number[]) => {
-    if (!currentQuiz || !userId || !userProgress?.cachedQuiz?.quizSessionId) {
-      console.error('Cannot answer question: missing required data');
+    if (!currentQuiz || !userId) {
+      console.error('Cannot answer question: missing currentQuiz or userId');
+      alert('Error: Quiz session not initialized. Please refresh the page and try again.');
+      return;
+    }
+
+    if (!userProgress?.cachedQuiz?.quizSessionId) {
+      console.error('Cannot answer question: missing quizSessionId');
+      console.error('userProgress:', userProgress);
+      alert('Error: Quiz session data is corrupted or missing. Please reset your progress on the Performance page and try again.');
       return;
     }
 
