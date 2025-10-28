@@ -215,7 +215,7 @@ export default function Cybersecurity() {
         </section>
 
         {/* Coming Soon Section */}
-        <section className="mb-20">
+        <section className="mb-8">
           <div className="max-w-6xl mx-auto">
             {/* Section Header */}
             <div className="text-center mb-16">
