@@ -28,24 +28,25 @@ interface PerformanceGraphsProps {
 const CustomBarTooltip = ({ active, payload, label, color }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-black border border-gray-800 rounded-2xl p-4 shadow-xl shadow-black/50">
-        <p className="text-slate-200 font-medium mb-2">{label}</p>
-        <p className="text-sm mb-3" style={{ color: color || '#3b82f6' }}>
+      <div className="relative bg-black/90 backdrop-blur-2xl border border-white/20 rounded-3xl p-5 shadow-2xl">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />
+        <p className="relative text-white font-bold mb-3 text-lg">{label}</p>
+        <p className="relative text-base mb-4 font-medium" style={{ color: color || '#3b82f6' }}>
           Accuracy: {payload[0].value}% ({payload[0].payload.questions} questions)
         </p>
-        <div className="border-t border-gray-800 pt-3 space-y-1">
-          <p className="text-xs text-slate-400">Performance Ranges:</p>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded" style={{ backgroundColor: '#ff0000' }}></div>
-            <span className="text-xs text-slate-300">&lt; 70% (Low)</span>
+        <div className="relative border-t border-white/20 pt-4 space-y-2">
+          <p className="text-sm text-zinc-400 font-medium">Performance Ranges:</p>
+          <div className="flex items-center gap-3">
+            <div className="w-4 h-4 rounded-lg" style={{ backgroundColor: '#ff0000' }}></div>
+            <span className="text-sm text-zinc-300">&lt; 70% (Low)</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded" style={{ backgroundColor: '#f5a623' }}></div>
-            <span className="text-xs text-slate-300">70-84% (Good)</span>
+          <div className="flex items-center gap-3">
+            <div className="w-4 h-4 rounded-lg" style={{ backgroundColor: '#f5a623' }}></div>
+            <span className="text-sm text-zinc-300">70-84% (Good)</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded" style={{ backgroundColor: '#22c55e' }}></div>
-            <span className="text-xs text-slate-300">≥ 85% (Excellent)</span>
+          <div className="flex items-center gap-3">
+            <div className="w-4 h-4 rounded-lg" style={{ backgroundColor: '#22c55e' }}></div>
+            <span className="text-sm text-zinc-300">≥ 85% (Excellent)</span>
           </div>
         </div>
       </div>
@@ -71,8 +72,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
   if (!userProgress || userProgress.totalQuestions === 0) {
     return (
-      <div className="bg-black rounded-[28px] p-8 md:p-10 border border-gray-800 shadow-xl shadow-black/50 text-center">
-        <p className="text-slate-400 text-base md:text-lg">Take quizzes to see your progress charts</p>
+      <div className="relative bg-white/5 backdrop-blur-2xl rounded-[40px] p-12 md:p-16 border border-white/10 shadow-2xl text-center">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
+        <p className="relative text-zinc-400 text-xl md:text-2xl">Take quizzes to see your progress charts</p>
       </div>
     );
   }
@@ -236,11 +238,13 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
   });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-12">
       {/* Phase 1 Warning if insufficient data */}
       {!hasSufficientQuestions && (
-        <div className="bg-black border border-yellow-500/30 rounded-[28px] p-6 md:p-8 shadow-xl shadow-black/50">
-          <p className="text-yellow-300 text-base md:text-lg">
+        <div className="relative bg-white/5 backdrop-blur-2xl border-2 border-yellow-500/50 rounded-[40px] p-10 md:p-12 shadow-2xl shadow-yellow-500/20">
+          <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-transparent rounded-[40px]" />
+          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
+          <p className="relative text-yellow-300 text-xl md:text-2xl">
             <strong className="font-bold">Preliminary Estimates:</strong> Answer at least 15 questions for reliable IRT analysis.
             Current progress: {userProgress.totalQuestions}/15 questions
           </p>
@@ -248,14 +252,15 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       )}
 
       {/* Graph 1: Ability Level Over Time */}
-      <div className="bg-black rounded-[28px] border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
+      <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl transition-all duration-700 hover:border-white/30">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
         <button
           onClick={() => setIsAbilityGraphOpen(!isAbilityGraphOpen)}
-          className="w-full p-8 md:p-10 flex items-center justify-between text-left"
+          className="relative w-full p-10 md:p-12 flex items-center justify-between text-left"
         >
-          <h3 className="text-2xl md:text-3xl font-medium text-white tracking-tight font-mono">Ability Level Over Time</h3>
+          <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Ability Level Over Time</h3>
           <svg
-            className={`w-6 h-6 text-white transition-transform duration-300 ${isAbilityGraphOpen ? 'rotate-180' : ''}`}
+            className={`w-8 h-8 text-zinc-400 transition-transform duration-700 ${isAbilityGraphOpen ? 'rotate-180' : ''}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -264,7 +269,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           </svg>
         </button>
         {isAbilityGraphOpen && (
-          <div className="px-8 md:px-10 pb-8 md:pb-10">
+          <div className="relative px-10 md:px-12 pb-10 md:pb-12">
             <ResponsiveContainer width="100%" height={400}>
           <LineChart data={abilityOverTime}>
             <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
@@ -298,14 +303,15 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       </div>
 
       {/* Graph 2: Predicted Score Over Time */}
-      <div className="bg-black rounded-[28px] border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
+      <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl transition-all duration-700 hover:border-white/30">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
         <button
           onClick={() => setIsPredictedScoreGraphOpen(!isPredictedScoreGraphOpen)}
-          className="w-full p-8 md:p-10 flex items-center justify-between text-left"
+          className="relative w-full p-10 md:p-12 flex items-center justify-between text-left"
         >
-          <h3 className="text-2xl md:text-3xl font-medium text-white tracking-tight font-mono">Predicted Score Over Time</h3>
+          <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Predicted Score Over Time</h3>
           <svg
-            className={`w-6 h-6 text-white transition-transform duration-300 ${isPredictedScoreGraphOpen ? 'rotate-180' : ''}`}
+            className={`w-8 h-8 text-zinc-400 transition-transform duration-700 ${isPredictedScoreGraphOpen ? 'rotate-180' : ''}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -314,7 +320,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           </svg>
         </button>
         {isPredictedScoreGraphOpen && (
-          <div className="px-8 md:px-10 pb-8 md:pb-10">
+          <div className="relative px-10 md:px-12 pb-10 md:pb-12">
             <ResponsiveContainer width="100%" height={400}>
               <LineChart data={scoreOverTime}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
@@ -347,14 +353,15 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       </div>
 
       {/* Graph 3: Accuracy by Difficulty */}
-      <div className="bg-black rounded-[28px] border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
+      <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl transition-all duration-700 hover:border-white/30">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
         <button
           onClick={() => setIsAccuracyByDifficultyOpen(!isAccuracyByDifficultyOpen)}
-          className="w-full p-8 md:p-10 flex items-center justify-between text-left"
+          className="relative w-full p-10 md:p-12 flex items-center justify-between text-left"
         >
-          <h3 className="text-2xl md:text-3xl font-medium text-white tracking-tight font-mono">Accuracy by Difficulty Level</h3>
+          <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Accuracy by Difficulty Level</h3>
           <svg
-            className={`w-6 h-6 text-white transition-transform duration-300 ${isAccuracyByDifficultyOpen ? 'rotate-180' : ''}`}
+            className={`w-8 h-8 text-zinc-400 transition-transform duration-700 ${isAccuracyByDifficultyOpen ? 'rotate-180' : ''}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -363,7 +370,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           </svg>
         </button>
         {isAccuracyByDifficultyOpen && (
-          <div className="px-8 md:px-10 pb-8 md:pb-10">
+          <div className="relative px-10 md:px-12 pb-10 md:pb-12">
             <ResponsiveContainer width="100%" height={350}>
               <BarChart data={accuracyByDifficulty}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
@@ -396,14 +403,15 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
       {/* Graph 4: Topic Performance by Domain */}
       {domainPerformance.length > 0 && (
-        <div className="bg-black rounded-[28px] border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
+        <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl transition-all duration-700 hover:border-white/30">
+          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
           <button
             onClick={() => setIsPerformanceByDomainOpen(!isPerformanceByDomainOpen)}
-            className="w-full p-8 md:p-10 flex items-center justify-between text-left"
+            className="relative w-full p-10 md:p-12 flex items-center justify-between text-left"
           >
-            <h3 className="text-2xl md:text-3xl font-medium text-white tracking-tight font-mono">Performance by SY0-701 Domain</h3>
+            <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Performance by SY0-701 Domain</h3>
             <svg
-              className={`w-6 h-6 text-white transition-transform duration-300 ${isPerformanceByDomainOpen ? 'rotate-180' : ''}`}
+              className={`w-8 h-8 text-zinc-400 transition-transform duration-700 ${isPerformanceByDomainOpen ? 'rotate-180' : ''}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -412,7 +420,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             </svg>
           </button>
           {isPerformanceByDomainOpen && (
-            <div className="px-8 md:px-10 pb-8 md:pb-10">
+            <div className="relative px-10 md:px-12 pb-10 md:pb-12">
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={domainPerformance} layout="vertical">
                   <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
@@ -445,14 +453,15 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       )}
 
       {/* Topic Coverage Tables by Domain */}
-      <div className="bg-black rounded-[28px] border border-gray-700 hover:border-gray-600 shadow-xl shadow-black/50 transition-all duration-300">
+      <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl transition-all duration-700 hover:border-white/30">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
         <button
           onClick={() => setIsTopicCoverageOpen(!isTopicCoverageOpen)}
-          className="w-full p-8 md:p-10 flex items-center justify-between text-left"
+          className="relative w-full p-10 md:p-12 flex items-center justify-between text-left"
         >
-          <h3 className="text-2xl md:text-3xl font-medium text-white tracking-tight font-mono">Topic Coverage by Domain</h3>
+          <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Topic Coverage by Domain</h3>
           <svg
-            className={`w-6 h-6 text-white transition-transform duration-300 ${isTopicCoverageOpen ? 'rotate-180' : ''}`}
+            className={`w-8 h-8 text-zinc-400 transition-transform duration-700 ${isTopicCoverageOpen ? 'rotate-180' : ''}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -461,8 +470,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           </svg>
         </button>
         {isTopicCoverageOpen && (
-          <div className="px-8 md:px-10 pb-8 md:pb-10">
-            <div className="space-y-6">
+          <div className="relative px-10 md:px-12 pb-10 md:pb-12">
+            <div className="space-y-8">
           {Object.entries(topicCoverageData)
             .sort(([domainA], [domainB]) => {
               const numA = domainA.split(' ')[0];
@@ -476,16 +485,17 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               const totalTopics = topics.length;
 
               return (
-                <div key={domain} className="border border-gray-800 rounded-[20px] bg-black">
+                <div key={domain} className="relative border border-white/10 rounded-3xl bg-white/5 backdrop-blur-xl overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-3xl" />
                   <button
                     onClick={() => toggleDomainTable(domain)}
-                    className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-gray-900/50 transition-all duration-200"
+                    className="relative w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/5 transition-all duration-700"
                   >
-                    <h4 className="text-xl md:text-2xl font-semibold text-blue-400 tracking-tight">
-                      <span className="mr-1">{domainNum}</span>{domainName}
+                    <h4 className="text-2xl md:text-3xl font-bold text-cyan-400 tracking-tight">
+                      <span className="mr-2">{domainNum}</span>{domainName}
                     </h4>
                     <svg
-                      className={`w-5 h-5 text-blue-400 transition-transform duration-300 ${openDomainTables[domain] ? 'rotate-180' : ''}`}
+                      className={`w-6 h-6 text-cyan-400 transition-transform duration-700 ${openDomainTables[domain] ? 'rotate-180' : ''}`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -495,31 +505,31 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                   </button>
 
                   {openDomainTables[domain] && (
-                    <div className="border-t border-gray-800">
+                    <div className="relative border-t border-white/10">
                     <div className="max-h-96 overflow-y-auto">
                       <table className="w-full">
-                        <thead className="bg-black border-b border-gray-800 sticky top-0">
+                        <thead className="bg-white/5 backdrop-blur-xl border-b border-white/10 sticky top-0">
                           <tr>
-                            <th className="text-left px-4 py-3 text-sm md:text-base font-semibold text-slate-300 w-3/5">Topic</th>
-                            <th className="text-center px-4 py-3 text-sm md:text-base font-semibold text-slate-300 w-1/5">Times Covered</th>
-                            <th className="text-center px-4 py-3 text-sm md:text-base font-semibold text-slate-300 w-1/5">Accuracy</th>
+                            <th className="text-left px-6 py-4 text-lg md:text-xl font-bold text-white w-3/5">Topic</th>
+                            <th className="text-center px-6 py-4 text-lg md:text-xl font-bold text-white w-1/5">Times Covered</th>
+                            <th className="text-center px-6 py-4 text-lg md:text-xl font-bold text-white w-1/5">Accuracy</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-800">
+                        <tbody className="divide-y divide-white/10">
                           {topics.map((topic, index) => (
                             <tr
                               key={index}
-                              className="bg-black hover:bg-gray-900/50 transition-all duration-200"
+                              className="hover:bg-white/5 transition-all duration-700"
                             >
-                              <td className="px-4 py-2 text-sm md:text-base text-slate-300">{topic.topicName}</td>
-                              <td className={`px-4 py-2 text-sm md:text-base text-center font-medium ${
-                                topic.count === 0 ? 'text-slate-500' : 'text-blue-400'
+                              <td className="px-6 py-4 text-base md:text-lg text-zinc-300">{topic.topicName}</td>
+                              <td className={`px-6 py-4 text-base md:text-lg text-center font-bold ${
+                                topic.count === 0 ? 'text-zinc-500' : 'text-cyan-400'
                               }`}>
                                 {topic.count}
                               </td>
-                              <td className={`px-4 py-2 text-sm md:text-base text-center font-medium ${
+                              <td className={`px-6 py-4 text-base md:text-lg text-center font-bold ${
                                 topic.count === 0
-                                  ? 'text-slate-500'
+                                  ? 'text-zinc-500'
                                   : topic.accuracy >= 80
                                   ? 'text-emerald-400'
                                   : topic.accuracy >= 60
@@ -530,11 +540,11 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                               </td>
                             </tr>
                           ))}
-                          <tr className="bg-gray-900 border-t-2 border-gray-700">
-                            <td className="px-4 py-3 text-sm md:text-base font-bold text-white">
+                          <tr className="bg-white/10 backdrop-blur-xl border-t-2 border-white/20">
+                            <td className="px-6 py-5 text-lg md:text-xl font-bold text-white">
                               Total Coverage
                             </td>
-                            <td colSpan={2} className="px-4 py-3 text-sm md:text-base text-center font-bold text-blue-400">
+                            <td colSpan={2} className="px-6 py-5 text-lg md:text-xl text-center font-bold text-cyan-400">
                               {totalCovered} of {totalTopics}
                             </td>
                           </tr>
