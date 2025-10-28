@@ -81,25 +81,27 @@ export default function ExplanationSection({
           )}
         </div>
 
-        {/* Correct Answer(s) */}
-        <div className="mb-10 relative">
-          <p className="font-bold text-white mb-6 text-2xl md:text-3xl">
-            {question.questionType === 'multiple' ? 'Correct Answers:' : 'Correct Answer:'}
-          </p>
-          {question.questionType === 'multiple' && Array.isArray(question.correctAnswer) ? (
-            <div className="space-y-4">
-              {question.correctAnswer.map((answerIndex) => (
-                <p key={answerIndex} className="text-white text-xl md:text-2xl leading-relaxed">
-                  {String.fromCharCode(65 + answerIndex)}. {question.options[answerIndex]}
-                </p>
-              ))}
-            </div>
-          ) : (
-            <p className="text-white text-xl md:text-2xl leading-relaxed">
-              {String.fromCharCode(65 + (question.correctAnswer as number))}. {question.options[question.correctAnswer as number]}
+        {/* Correct Answer(s) - Only show if user answered incorrectly */}
+        {!isCorrect && (
+          <div className="mb-10 relative">
+            <p className="font-bold text-white mb-6 text-2xl md:text-3xl">
+              {question.questionType === 'multiple' ? 'Correct Answers:' : 'Correct Answer:'}
             </p>
-          )}
-        </div>
+            {question.questionType === 'multiple' && Array.isArray(question.correctAnswer) ? (
+              <div className="space-y-4">
+                {question.correctAnswer.map((answerIndex) => (
+                  <p key={answerIndex} className="text-white text-xl md:text-2xl leading-relaxed">
+                    {String.fromCharCode(65 + answerIndex)}. {question.options[answerIndex]}
+                  </p>
+                ))}
+              </div>
+            ) : (
+              <p className="text-white text-xl md:text-2xl leading-relaxed">
+                {String.fromCharCode(65 + (question.correctAnswer as number))}. {question.options[question.correctAnswer as number]}
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Explanation */}
         <div className="relative">
