@@ -374,11 +374,6 @@ export default function QuizPerformance() {
                           <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>Basic estimate - High uncertainty</span>
                         </div>
                       </div>
-                      <div className={`mt-4 pt-4 border-t ${liquidGlass ? 'border-white/10' : 'border-zinc-800'}`}>
-                        <p className={`text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600 font-mono'} leading-relaxed`}>
-                          You currently have <span className="text-white font-bold">{totalAnswered}</span> {totalAnswered === 1 ? 'question' : 'questions'}
-                        </p>
-                      </div>
                     </div>
                   </div>
                 )}
@@ -420,11 +415,6 @@ export default function QuizPerformance() {
                           <span className="text-red-400 font-bold">Red</span>
                           <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} ${liquidGlass ? '' : 'font-mono'}`}>100 - 599</span>
                         </div>
-                      </div>
-                      <div className={`mt-4 pt-4 border-t ${liquidGlass ? 'border-white/10' : 'border-zinc-800'}`}>
-                        <p className={`text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600 font-mono'} leading-relaxed`}>
-                          Color is based on your Ability Level from IRT analysis, which correlates with predicted exam score.
-                        </p>
                       </div>
                     </div>
                   </div>
