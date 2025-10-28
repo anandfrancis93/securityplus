@@ -305,15 +305,26 @@ export default function QuizPerformance() {
   const hasEnoughQuestions = totalAnswered >= MIN_QUESTIONS_FOR_PREDICTION;
   const questionsNeeded = MIN_QUESTIONS_FOR_PREDICTION - totalAnswered;
 
-  // Reliability tier based on question count
-  const getReliabilityInfo = () => {
-    if (totalAnswered >= 50) return { label: 'High reliability', sublabel: 'Very stable predictions', color: 'emerald' };
-    if (totalAnswered >= 30) return { label: 'Good reliability', sublabel: 'Stable estimates', color: 'cyan' };
-    if (totalAnswered >= 20) return { label: 'Moderate reliability', sublabel: 'Reasonable confidence', color: 'yellow' };
-    if (totalAnswered >= 10) return { label: 'Basic estimate', sublabel: 'High uncertainty', color: 'orange' };
-    return { label: 'Insufficient', sublabel: 'Not enough data', color: 'zinc' };
+  // Confidence level based on CI width
+  const getConfidenceInfo = () => {
+    if (!isFinite(abilityStandardError) || totalAnswered < 5) {
+      return { label: 'Insufficient data', margin: 0, color: 'zinc' };
+    }
+
+    const ciWidth = scoreCI.upper - scoreCI.lower;
+    const margin = Math.round(ciWidth / 2);
+
+    if (ciWidth <= 50) {
+      return { label: 'High confidence', margin, color: 'emerald' };
+    } else if (ciWidth <= 100) {
+      return { label: 'Medium confidence', margin, color: 'yellow' };
+    } else if (ciWidth <= 150) {
+      return { label: 'Low confidence', margin, color: 'orange' };
+    } else {
+      return { label: 'Very low confidence', margin, color: 'red' };
+    }
   };
-  const reliabilityInfo = getReliabilityInfo();
+  const confidenceInfo = getConfidenceInfo();
 
   // Color logic based on Ability Level (matches IRT progress bar)
   const isGoodPerformance = estimatedAbility >= 1.0;
@@ -364,53 +375,61 @@ export default function QuizPerformance() {
             <h2 className={`text-3xl md:text-4xl text-white mb-2 tracking-tight font-bold ${liquidGlass ? '' : 'font-mono'}`}>Predicted Exam Score</h2>
             <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'} mb-8 flex items-center justify-center gap-2 flex-wrap`}>
               <span>Based on {totalAnswered} question{totalAnswered !== 1 ? 's' : ''}</span>
-              <span className="text-zinc-700">•</span>
-              <span
-                className={`relative text-xs font-semibold cursor-help ${
-                  reliabilityInfo.color === 'emerald' ? 'text-emerald-500' :
-                  reliabilityInfo.color === 'cyan' ? 'text-cyan-500' :
-                  reliabilityInfo.color === 'yellow' ? 'text-yellow-500' :
-                  'text-orange-500'
-                }`}
-                onMouseEnter={handleReliabilityHover}
-                onMouseLeave={handleReliabilityLeave}
-              >
-                {reliabilityInfo.label}
+              {confidenceInfo.margin > 0 && (
+                <>
+                  <span className="text-zinc-700">•</span>
+                  <span
+                    className={`relative text-xs font-semibold cursor-help ${
+                      confidenceInfo.color === 'emerald' ? 'text-emerald-500' :
+                      confidenceInfo.color === 'yellow' ? 'text-yellow-500' :
+                      confidenceInfo.color === 'orange' ? 'text-orange-500' :
+                      confidenceInfo.color === 'red' ? 'text-red-500' :
+                      'text-zinc-500'
+                    }`}
+                    onMouseEnter={handleReliabilityHover}
+                    onMouseLeave={handleReliabilityLeave}
+                  >
+                    {confidenceInfo.label} (±{confidenceInfo.margin} points)
 
-                {/* Tooltip */}
-                {showReliabilityTooltip && (
-                  <div className={`absolute left-1/2 transform -translate-x-1/2 bottom-full mb-3 w-72 max-w-[85vw] ${liquidGlass ? 'bg-zinc-950/95 backdrop-blur-2xl rounded-[32px] border-white/20 shadow-2xl' : 'bg-zinc-900 rounded-2xl border-zinc-800'} border p-6 z-50 transition-all duration-700`}>
-                    {/* Light reflection overlay */}
-                    {liquidGlass && (
-                      <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] pointer-events-none" />
-                    )}
+                    {/* Tooltip */}
+                    {showReliabilityTooltip && (
+                      <div className={`absolute left-1/2 transform -translate-x-1/2 bottom-full mb-3 w-72 max-w-[85vw] ${liquidGlass ? 'bg-zinc-950/95 backdrop-blur-2xl rounded-[32px] border-white/20 shadow-2xl' : 'bg-zinc-900 rounded-2xl border-zinc-800'} border p-6 z-50 transition-all duration-700`}>
+                        {/* Light reflection overlay */}
+                        {liquidGlass && (
+                          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] pointer-events-none" />
+                        )}
 
-                    <div className="relative">
-                      <h4 className={`text-base font-bold text-white mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>
-                        Prediction Reliability Tiers
-                      </h4>
-                      <div className="space-y-3 text-sm">
-                        <div className="flex items-start gap-3">
-                          <span className="text-emerald-400 font-bold min-w-[90px]">50+ questions:</span>
-                          <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>High reliability - Very stable predictions</span>
-                        </div>
-                        <div className="flex items-start gap-3">
-                          <span className="text-cyan-400 font-bold min-w-[90px]">30-50 questions:</span>
-                          <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>Good reliability - Stable estimates</span>
-                        </div>
-                        <div className="flex items-start gap-3">
-                          <span className="text-yellow-400 font-bold min-w-[90px]">20-30 questions:</span>
-                          <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>Moderate reliability - Reasonable confidence</span>
-                        </div>
-                        <div className="flex items-start gap-3">
-                          <span className="text-orange-400 font-bold min-w-[90px]">10-19 questions:</span>
-                          <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>Basic estimate - High uncertainty</span>
+                        <div className="relative">
+                          <h4 className={`text-base font-bold text-white mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>
+                            Confidence Level Guide
+                          </h4>
+                          <div className="space-y-3 text-sm">
+                            <div className="flex items-start gap-3">
+                              <span className="text-emerald-400 font-bold min-w-[110px]">High confidence:</span>
+                              <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>CI width ≤50 points - Very precise estimate</span>
+                            </div>
+                            <div className="flex items-start gap-3">
+                              <span className="text-yellow-400 font-bold min-w-[110px]">Medium confidence:</span>
+                              <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>CI width 51-100 points - Reasonable precision</span>
+                            </div>
+                            <div className="flex items-start gap-3">
+                              <span className="text-orange-400 font-bold min-w-[110px]">Low confidence:</span>
+                              <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>CI width 101-150 points - Wide range</span>
+                            </div>
+                            <div className="flex items-start gap-3">
+                              <span className="text-red-400 font-bold min-w-[110px]">Very low:</span>
+                              <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>CI width &gt;150 points - Very uncertain</span>
+                            </div>
+                          </div>
+                          <p className={`mt-4 text-xs ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600 font-mono'} leading-relaxed`}>
+                            Answer more questions to narrow the confidence interval and increase precision.
+                          </p>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                )}
-              </span>
+                    )}
+                  </span>
+                </>
+              )}
             </p>
 
             {hasEnoughQuestions ? (
