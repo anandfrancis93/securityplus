@@ -398,19 +398,36 @@ export default function QuizPerformance() {
                     {predictedScore}
                   </div>
                   {/* Hover tooltip */}
-                  <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 ${liquidGlass ? 'bg-black/80 backdrop-blur-xl border-white/20 rounded-2xl' : 'bg-black border-zinc-800 rounded-md'} border p-3 z-50 pointer-events-none opacity-0 group-hover:opacity-100 ${liquidGlass ? 'transition-opacity duration-500' : 'transition-opacity duration-150'}`}>
-                    <div className="space-y-1 text-sm text-zinc-300 font-mono">
-                      <div>
-                        <span className="text-emerald-400 font-medium">Green:</span> 750 - 900
+                  <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 w-80 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px] border-white/10 shadow-2xl' : 'bg-zinc-900 rounded-2xl border-zinc-800'} border p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-700`}>
+                    {/* Light reflection overlay */}
+                    {liquidGlass && (
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] pointer-events-none" />
+                    )}
+
+                    <div className="relative">
+                      <h4 className={`text-base font-bold text-white mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>
+                        Score Color Ranges
+                      </h4>
+                      <div className="space-y-3 text-sm">
+                        <div className="flex items-center justify-between">
+                          <span className="text-emerald-400 font-bold">Green</span>
+                          <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} ${liquidGlass ? '' : 'font-mono'}`}>750 - 900</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-yellow-400 font-bold">Yellow</span>
+                          <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} ${liquidGlass ? '' : 'font-mono'}`}>600 - 749</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-red-400 font-bold">Red</span>
+                          <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} ${liquidGlass ? '' : 'font-mono'}`}>100 - 599</span>
+                        </div>
                       </div>
-                      <div>
-                        <span className="text-yellow-400 font-medium">Yellow:</span> 600 - 749
-                      </div>
-                      <div>
-                        <span className="text-red-400 font-medium">Red:</span> 100 - 599
+                      <div className={`mt-4 pt-4 border-t ${liquidGlass ? 'border-white/10' : 'border-zinc-800'}`}>
+                        <p className={`text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600 font-mono'} leading-relaxed`}>
+                          Color is based on your Ability Level from IRT analysis, which correlates with predicted exam score.
+                        </p>
                       </div>
                     </div>
-                    <p className={`text-xs text-zinc-400 mt-3 pt-2 border-t ${liquidGlass ? 'border-zinc-700' : 'border-zinc-700 font-mono'}`}>Color is based on your Ability Level from IRT analysis, which correlates with predicted exam score.</p>
                   </div>
                 </div>
                 <div className={`text-xl md:text-2xl text-zinc-500 mb-8 ${liquidGlass ? '' : 'font-mono'}`}>out of 900</div>
