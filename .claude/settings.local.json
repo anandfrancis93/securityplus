@@ -14,7 +14,9 @@
       "Bash(move:*)",
       "WebFetch(domain:vercel.com)",
       "Bash(git revert:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(dir \"C:\\Users\\anand\\securityplus\\app\\cybersecurity\\flashcards\")",
+      "Bash(dir \"C:\\Users\\anand\\securityplus\\app\\cybersecurity\\flashcards\\study\")"
     ],
     "deny": [],
     "ask": []

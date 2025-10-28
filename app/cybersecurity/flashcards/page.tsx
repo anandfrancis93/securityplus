@@ -769,7 +769,14 @@ export default function FlashcardsPage() {
             100% { opacity: 0; }
           }
         `}</style>
-        <div className="min-h-screen bg-black text-white">
+        <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
+        {liquidGlass && (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+            <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+          </div>
+        )}
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           {/* Header */}
           <div className="mb-8">
@@ -829,54 +836,66 @@ export default function FlashcardsPage() {
 
           {/* Stats */}
           {flashcards.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <div className="bg-slate-800/95 backdrop-blur-xl rounded-3xl p-5 border border-slate-700/50 relative group cursor-help hover:border-violet-500/30 hover:bg-white/5 transition-all duration-300 hover:shadow-xl">
-                <div className="flex items-center gap-2 mb-2">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 relative">
+              <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-slate-800/95 backdrop-blur-xl rounded-3xl'} p-5 border ${liquidGlass ? 'border-white/10 hover:border-white/20' : 'border-slate-700/50 hover:border-violet-500/30'} group cursor-help hover:bg-white/5 ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-300'} hover:shadow-xl`}>
+                {liquidGlass && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+                )}
+                <div className="relative flex items-center gap-2 mb-2">
                   <span className="text-lg">📚</span>
-                  <div className="text-slate-400 text-xs font-medium tracking-wide">Total</div>
+                  <div className={`text-xs font-medium tracking-wide ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>Total</div>
                 </div>
-                <div className="text-3xl font-bold text-violet-400">{stats.total}</div>
+                <div className="relative text-3xl font-bold text-violet-400">{stats.total}</div>
                 {/* Hover tooltip */}
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
                   <p className="text-sm text-slate-300 leading-relaxed">The total number of flashcards in your deck.</p>
                 </div>
               </div>
-              <div className="bg-slate-800/95 backdrop-blur-xl rounded-3xl p-5 border border-slate-700/50 relative group cursor-help hover:border-violet-500/30 hover:bg-white/5 transition-all duration-300 hover:shadow-xl">
-                <div className="flex items-center gap-2 mb-2">
+              <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-slate-800/95 backdrop-blur-xl rounded-3xl'} p-5 border ${liquidGlass ? 'border-white/10 hover:border-white/20' : 'border-slate-700/50 hover:border-violet-500/30'} group cursor-help hover:bg-white/5 ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-300'} hover:shadow-xl`}>
+                {liquidGlass && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+                )}
+                <div className="relative flex items-center gap-2 mb-2">
                   <span className="text-lg">🌱</span>
-                  <div className="text-slate-400 text-xs font-medium tracking-wide">Learning</div>
+                  <div className={`text-xs font-medium tracking-wide ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>Learning</div>
                 </div>
-                <div className="text-3xl font-bold text-yellow-400">{stats.learning}</div>
+                <div className="relative text-3xl font-bold text-yellow-400">{stats.learning}</div>
                 {stats.learning > 0 && (
-                  <div className="text-xs text-slate-500 mt-1 font-medium">New cards</div>
+                  <div className="relative text-xs text-slate-500 mt-1 font-medium">New cards</div>
                 )}
                 {/* Hover tooltip */}
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
                   <p className="text-sm text-slate-300 leading-relaxed">Cards you&apos;ve attempted but got wrong or rated as &quot;Again&quot;. These cards have 0 successful repetitions and need daily practice.</p>
                 </div>
               </div>
-              <div className="bg-slate-800/95 backdrop-blur-xl rounded-3xl p-5 border border-slate-700/50 relative group cursor-help hover:border-violet-500/30 hover:bg-white/5 transition-all duration-300 hover:shadow-xl">
-                <div className="flex items-center gap-2 mb-2">
+              <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-slate-800/95 backdrop-blur-xl rounded-3xl'} p-5 border ${liquidGlass ? 'border-white/10 hover:border-white/20' : 'border-slate-700/50 hover:border-violet-500/30'} group cursor-help hover:bg-white/5 ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-300'} hover:shadow-xl`}>
+                {liquidGlass && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+                )}
+                <div className="relative flex items-center gap-2 mb-2">
                   <span className="text-lg">🔄</span>
-                  <div className="text-slate-400 text-xs font-medium tracking-wide">Review</div>
+                  <div className={`text-xs font-medium tracking-wide ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>Review</div>
                 </div>
-                <div className="text-3xl font-bold text-yellow-400">{stats.review}</div>
+                <div className="relative text-3xl font-bold text-yellow-400">{stats.review}</div>
                 {stats.review > 0 && (
-                  <div className="text-xs text-slate-500 mt-1 font-medium">In progress</div>
+                  <div className="relative text-xs text-slate-500 mt-1 font-medium">In progress</div>
                 )}
                 {/* Hover tooltip */}
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
                   <p className="text-sm text-slate-300 leading-relaxed">Cards you&apos;re actively learning and have reviewed correctly 1-2 times. These cards are in progress but not yet mastered.</p>
                 </div>
               </div>
-              <div className="bg-slate-800/95 backdrop-blur-xl rounded-3xl p-5 border border-slate-700/50 relative group cursor-help hover:border-violet-500/30 hover:bg-white/5 transition-all duration-300 hover:shadow-xl">
-                <div className="flex items-center gap-2 mb-2">
+              <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-slate-800/95 backdrop-blur-xl rounded-3xl'} p-5 border ${liquidGlass ? 'border-white/10 hover:border-white/20' : 'border-slate-700/50 hover:border-violet-500/30'} group cursor-help hover:bg-white/5 ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-300'} hover:shadow-xl`}>
+                {liquidGlass && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+                )}
+                <div className="relative flex items-center gap-2 mb-2">
                   <span className="text-lg">⭐</span>
-                  <div className="text-slate-400 text-xs font-medium tracking-wide">Mastered</div>
+                  <div className={`text-xs font-medium tracking-wide ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>Mastered</div>
                 </div>
-                <div className="text-3xl font-bold text-violet-400">{stats.mastered}</div>
+                <div className="relative text-3xl font-bold text-violet-400">{stats.mastered}</div>
                 {stats.mastered > 0 && (
-                  <div className="text-xs text-slate-500 mt-1 font-medium">
+                  <div className="relative text-xs text-slate-500 mt-1 font-medium">
                     {Math.round((stats.mastered / stats.total) * 100)}% complete
                   </div>
                 )}
@@ -890,11 +909,11 @@ export default function FlashcardsPage() {
 
           {/* Reset Progress Button */}
           {flashcards.length > 0 && (
-            <div className="text-center mt-8">
+            <div className="relative text-center mt-8">
               <button
                 id="reset-flashcard-progress"
                 onClick={handleResetProgress}
-                className="bg-yellow-600/20 hover:bg-yellow-600/30 active:bg-yellow-600/40 text-yellow-400 border border-yellow-600/50 font-semibold py-3 px-8 rounded-full transition-all duration-300 min-h-[44px] hover:shadow-lg hover:shadow-yellow-600/10"
+                className={`${liquidGlass ? 'bg-yellow-600/20 hover:bg-yellow-600/30 active:bg-yellow-600/40 border-yellow-600/50' : 'bg-yellow-600/20 hover:bg-yellow-600/30 active:bg-yellow-600/40 border-yellow-600/50'} text-yellow-400 border font-semibold py-3 px-8 rounded-full ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-300'} min-h-[44px] hover:shadow-lg hover:shadow-yellow-600/10`}
               >
                 Reset Progress
               </button>
@@ -921,7 +940,14 @@ export default function FlashcardsPage() {
     return (
       <>
         <DebugOverlay />
-        <div className="fixed inset-0 bg-black text-white overflow-hidden flex flex-col">
+        <div className={`fixed inset-0 text-white overflow-hidden flex flex-col relative ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
+        {liquidGlass && (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+            <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+          </div>
+        )}
         <div className="container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0" style={{ overscrollBehavior: 'none' }}>
           {/* Header */}
           <div className="mb-4 flex-shrink-0">
@@ -980,10 +1006,13 @@ export default function FlashcardsPage() {
           </div>
 
           {/* Flashcard Creation Form - Scrollable */}
-          <div className="flex-1 overflow-y-auto" style={{ overscrollBehavior: 'contain' }}>
-        <div className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-6 mb-4 border border-slate-700/50 shadow-2xl">
-          <h2 className="text-2xl font-semibold mb-3 tracking-tight text-slate-100">✍️ Create Flashcard</h2>
-            <p className="text-slate-400 text-sm mb-6 leading-relaxed">
+          <div className="flex-1 overflow-y-auto relative" style={{ overscrollBehavior: 'contain' }}>
+        <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-slate-800/95 backdrop-blur-xl rounded-[28px]'} p-6 mb-4 border ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} shadow-2xl`}>
+          {liquidGlass && (
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+          )}
+          <h2 className="relative text-2xl font-semibold mb-3 tracking-tight text-slate-100">✍️ Create Flashcard</h2>
+            <p className={`relative text-sm mb-6 leading-relaxed ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>
               Enter a term/question and its definition to create a single flashcard.
             </p>
 
@@ -1105,8 +1134,15 @@ export default function FlashcardsPage() {
   return (
     <>
       <DebugOverlay />
-      <div className="fixed inset-0 bg-black text-white overflow-hidden flex flex-col">
-      <div className="container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0" style={{ overscrollBehavior: 'none' }}>
+      <div className={`fixed inset-0 text-white overflow-hidden flex flex-col relative ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
+      {liquidGlass && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        </div>
+      )}
+      <div className="relative container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0" style={{ overscrollBehavior: 'none' }}>
         {/* Header */}
         <div className="mb-4 flex-shrink-0">
           <div className="flex justify-between items-center mb-3">
@@ -1165,8 +1201,11 @@ export default function FlashcardsPage() {
 
         {/* Flashcard List */}
         {flashcards.length > 0 && (
-          <div className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-5 border border-slate-700/50 flex-1 flex flex-col overflow-hidden mb-4 shadow-2xl">
-              <div className="flex items-center justify-between mb-4 flex-shrink-0">
+          <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-slate-800/95 backdrop-blur-xl rounded-[28px]'} p-5 border ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} flex-1 flex flex-col overflow-hidden mb-4 shadow-2xl`}>
+              {liquidGlass && (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50 pointer-events-none" />
+              )}
+              <div className="relative flex items-center justify-between mb-4 flex-shrink-0">
                 <h3 className="text-xl font-semibold text-slate-100 tracking-tight">
                   Your Flashcards ({filteredFlashcards.length}{filteredFlashcards.length !== flashcards.length && ` of ${flashcards.length}`})
                 </h3>
@@ -1307,11 +1346,19 @@ export default function FlashcardsPage() {
   );
 
   // Search view (default when selectedOption === 'search')
+  // NOTE: This is unreachable code - the search view above already returns
   return (
     <>
       <DebugOverlay />
 
-      <div className="fixed inset-0 bg-black text-white overflow-hidden flex flex-col">
+      <div className={`fixed inset-0 text-white overflow-hidden flex-col relative ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
+      {liquidGlass && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        </div>
+      )}
       <div className="container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0" style={{ overscrollBehavior: 'none' }}>
         {/* Header */}
         <div className="mb-4 flex-shrink-0">
@@ -1371,8 +1418,11 @@ export default function FlashcardsPage() {
 
         {/* Flashcard List */}
         {flashcards.length > 0 && (
-          <div className="bg-slate-800/95 backdrop-blur-xl rounded-[28px] p-5 border border-slate-700/50 flex-1 flex flex-col overflow-hidden mb-4 shadow-2xl">
-              <div className="flex items-center justify-between mb-4 flex-shrink-0">
+          <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-slate-800/95 backdrop-blur-xl rounded-[28px]'} p-5 border ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} flex-1 flex flex-col overflow-hidden mb-4 shadow-2xl`}>
+              {liquidGlass && (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50 pointer-events-none" />
+              )}
+              <div className="relative flex items-center justify-between mb-4 flex-shrink-0">
                 <h3 className="text-xl font-semibold text-slate-100 tracking-tight">
                   Your Flashcards ({filteredFlashcards.length}{filteredFlashcards.length !== flashcards.length && ` of ${flashcards.length}`})
                 </h3>
