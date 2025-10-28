@@ -24,7 +24,7 @@ function inferQuestionCategory(topics: string[]): 'single-domain-single-topic' |
 export default function QuizReviewPage() {
   const router = useRouter();
   const params = useParams();
-  const { user, userProgress, loading: authLoading, handleSignOut } = useApp();
+  const { user, userProgress, loading: authLoading, handleSignOut, liquidGlass } = useApp();
   const [quiz, setQuiz] = useState<QuizSession | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -91,7 +91,7 @@ export default function QuizReviewPage() {
     : `${timeTakenSeconds}s`;
 
   return (
-    <div className="min-h-screen bg-black flex flex-col">
+    <div className={`min-h-screen text-white relative overflow-hidden flex flex-col ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 md:py-8 max-w-7xl flex-1 flex flex-col">
         {/* Header */}
         <header className="mb-4 sm:mb-6 md:mb-8">
@@ -242,11 +242,12 @@ export default function QuizReviewPage() {
                 </div>
 
                 {/* Question Card */}
-                <div className="bg-zinc-950 rounded-md p-12 md:p-16 border-2 border-zinc-800">
-                  <h2 className="text-2xl md:text-3xl font-bold mb-8 leading-tight text-white">{question.question}</h2>
+                <div className={`relative p-12 md:p-16 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'}`}>
+                  {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
+                  <h2 className="text-2xl md:text-3xl font-bold mb-8 leading-tight text-white relative">{question.question}</h2>
 
                   {/* Answer Options */}
-                  <div className="space-y-4">
+                  <div className="space-y-4 relative">
                     {question.options.map((option, idx) => {
                       const isSelected = userAnswers.includes(idx);
                       const isCorrectAnswer = correctAnswers.includes(idx);
@@ -256,17 +257,28 @@ export default function QuizReviewPage() {
                       return (
                         <div
                           key={idx}
-                          className={`w-full text-left p-6 md:p-8 rounded-md border-2 ${
-                            showCorrect
-                              ? 'border-green-500 bg-zinc-900'
+                          className={`relative w-full text-left p-6 md:p-8 border-2 ${
+                            liquidGlass
+                              ? showCorrect
+                                ? 'bg-white/10 backdrop-blur-xl border-green-500/50 rounded-3xl'
+                                : showIncorrect
+                                ? 'bg-white/10 backdrop-blur-xl border-red-500/50 rounded-3xl'
+                                : isSelected
+                                ? 'bg-white/10 backdrop-blur-xl border-white/30 rounded-3xl'
+                                : 'bg-white/5 backdrop-blur-xl border-white/20 rounded-3xl'
+                              : showCorrect
+                              ? 'border-green-500 bg-zinc-900 rounded-md'
                               : showIncorrect
-                              ? 'border-red-500 bg-zinc-900'
+                              ? 'border-red-500 bg-zinc-900 rounded-md'
                               : isSelected
-                              ? 'border-zinc-600 bg-zinc-900'
-                              : 'border-zinc-700 bg-zinc-950'
+                              ? 'border-zinc-600 bg-zinc-900 rounded-md'
+                              : 'border-zinc-700 bg-zinc-950 rounded-md'
                           }`}
                         >
-                          <div>
+                          {liquidGlass && showCorrect && <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-transparent to-transparent rounded-3xl" />}
+                          {liquidGlass && showIncorrect && <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-3xl" />}
+                          {liquidGlass && !showCorrect && !showIncorrect && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />}
+                          <div className="relative">
                             <div className="inline-flex items-center gap-4 mr-4 align-top">
                               {/* Checkbox or Radio indicator */}
                               {question.questionType === 'multiple' ? (
@@ -299,15 +311,25 @@ export default function QuizReviewPage() {
                 {/* Explanation Section */}
                 <div className="space-y-8">
                   <div
-                    className={`rounded-md p-12 md:p-16 border-2 ${
-                      attempt.isCorrect
-                        ? 'border-green-500 bg-zinc-950'
+                    className={`relative p-12 md:p-16 border-2 ${
+                      liquidGlass
+                        ? attempt.isCorrect
+                          ? 'bg-white/5 backdrop-blur-2xl border-green-500/50 rounded-[40px] shadow-2xl shadow-green-500/20'
+                          : isPartiallyCorrect
+                          ? 'bg-white/5 backdrop-blur-2xl border-yellow-500/50 rounded-[40px] shadow-2xl shadow-yellow-500/20'
+                          : 'bg-white/5 backdrop-blur-2xl border-red-500/50 rounded-[40px] shadow-2xl shadow-red-500/20'
+                        : attempt.isCorrect
+                        ? 'border-green-500 bg-zinc-950 rounded-md'
                         : isPartiallyCorrect
-                        ? 'border-yellow-500 bg-zinc-950'
-                        : 'border-red-500 bg-zinc-950'
+                        ? 'border-yellow-500 bg-zinc-950 rounded-md'
+                        : 'border-red-500 bg-zinc-950 rounded-md'
                     }`}
                   >
-                    <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
+                    {liquidGlass && attempt.isCorrect && <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-transparent to-transparent rounded-[40px]" />}
+                    {liquidGlass && isPartiallyCorrect && <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 via-transparent to-transparent rounded-[40px]" />}
+                    {liquidGlass && !attempt.isCorrect && !isPartiallyCorrect && <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-[40px]" />}
+                    {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
+                    <div className="flex items-center justify-between mb-8 flex-wrap gap-4 relative">
                       <h3 className={`text-3xl md:text-4xl font-bold ${
                         attempt.isCorrect
                           ? 'text-green-400'
@@ -327,7 +349,7 @@ export default function QuizReviewPage() {
                         {question.difficulty.charAt(0).toUpperCase() + question.difficulty.slice(1)}
                       </span>
                     </div>
-                    <div className="mb-10">
+                    <div className="mb-10 relative">
                       <p className="font-bold text-white mb-6 text-2xl md:text-3xl">
                         {question.questionType === 'multiple' ? 'Correct Answers:' : 'Correct Answer:'}
                       </p>
@@ -345,7 +367,7 @@ export default function QuizReviewPage() {
                         </p>
                       )}
                     </div>
-                    <div>
+                    <div className="relative">
                       <p className="font-bold text-white mb-6 text-2xl md:text-3xl">Explanation:</p>
                       <p className="text-zinc-100 leading-relaxed text-xl md:text-2xl">{question.explanation}</p>
                     </div>
@@ -353,9 +375,10 @@ export default function QuizReviewPage() {
 
                   {/* Why Other Answers Are Wrong */}
                   {question.incorrectExplanations && question.incorrectExplanations.length > 0 && (
-                    <div className="bg-zinc-950 rounded-md p-12 md:p-16 border-2 border-zinc-800">
-                      <h4 className="font-bold text-white mb-8 text-3xl md:text-4xl">Why Other Answers Are Incorrect:</h4>
-                      <div className="space-y-6">
+                    <div className={`relative p-12 md:p-16 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'}`}>
+                      {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
+                      <h4 className="font-bold text-white mb-8 text-3xl md:text-4xl relative">Why Other Answers Are Incorrect:</h4>
+                      <div className="space-y-6 relative">
                         {question.incorrectExplanations.map((explanation, idx) => {
                           if (correctAnswers.includes(idx)) return null;
 
@@ -373,8 +396,9 @@ export default function QuizReviewPage() {
                   )}
 
                   {/* Domain, Topics, Difficulty, and Type */}
-                  <div className="bg-zinc-950 rounded-md p-12 md:p-16 border-2 border-zinc-800">
-                    <div className="space-y-8">
+                  <div className={`relative p-12 md:p-16 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'}`}>
+                    {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
+                    <div className="space-y-8 relative">
                       {/* Domain(s) */}
                       <div className="flex items-center gap-4 flex-wrap">
                         <span className="text-xl md:text-2xl text-white font-bold">
@@ -384,7 +408,7 @@ export default function QuizReviewPage() {
                           {getDomainsFromTopics(question.topics).map((domain, idx) => (
                             <span
                               key={idx}
-                              className="px-6 py-4 rounded-md text-lg md:text-xl bg-zinc-900 text-zinc-300 border-2 border-zinc-700 font-bold"
+                              className={`px-6 py-4 text-lg md:text-xl font-bold ${liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-200 border border-white/20 rounded-2xl' : 'bg-zinc-900 text-zinc-300 border-2 border-zinc-700 rounded-md'}`}
                             >
                               {domain}
                             </span>
@@ -402,7 +426,7 @@ export default function QuizReviewPage() {
                             {question.topics.map((topic, idx) => (
                               <span
                                 key={idx}
-                                className="px-6 py-4 rounded-md text-lg md:text-xl bg-zinc-900 text-zinc-200 border-2 border-zinc-700 font-medium"
+                                className={`px-6 py-4 text-lg md:text-xl font-medium ${liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-200 border border-white/20 rounded-2xl' : 'bg-zinc-900 text-zinc-200 border-2 border-zinc-700 rounded-md'}`}
                               >
                                 {topic}
                               </span>
@@ -414,10 +438,14 @@ export default function QuizReviewPage() {
                       {/* Difficulty */}
                       <div className="flex items-center gap-4 flex-wrap">
                         <span className="text-xl md:text-2xl text-white font-bold">Difficulty:</span>
-                        <span className={`px-6 py-4 rounded-md text-lg md:text-xl border-2 font-bold ${
-                          question.difficulty === 'easy' ? 'bg-green-900 text-green-200 border-green-700' :
-                          question.difficulty === 'medium' ? 'bg-yellow-900 text-yellow-200 border-yellow-700' :
-                          'bg-red-900 text-red-200 border-red-700'
+                        <span className={`px-6 py-4 text-lg md:text-xl border-2 font-bold ${
+                          liquidGlass
+                            ? question.difficulty === 'easy' ? 'bg-green-500/20 text-green-200 border-green-500/50 backdrop-blur-xl rounded-2xl' :
+                              question.difficulty === 'medium' ? 'bg-yellow-500/20 text-yellow-200 border-yellow-500/50 backdrop-blur-xl rounded-2xl' :
+                              'bg-red-500/20 text-red-200 border-red-500/50 backdrop-blur-xl rounded-2xl'
+                            : question.difficulty === 'easy' ? 'bg-green-900 text-green-200 border-green-700 rounded-md' :
+                              question.difficulty === 'medium' ? 'bg-yellow-900 text-yellow-200 border-yellow-700 rounded-md' :
+                              'bg-red-900 text-red-200 border-red-700 rounded-md'
                         }`}>
                           {question.difficulty.toUpperCase()}
                         </span>
@@ -426,7 +454,7 @@ export default function QuizReviewPage() {
                       {/* Question Type */}
                       <div className="flex items-center gap-4 flex-wrap">
                         <span className="text-xl md:text-2xl text-white font-bold">Type:</span>
-                        <span className="px-6 py-4 rounded-md text-lg md:text-xl bg-zinc-900 text-zinc-300 border-2 border-zinc-700 font-medium">
+                        <span className={`px-6 py-4 text-lg md:text-xl font-medium ${liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-300 border border-white/20 rounded-2xl' : 'bg-zinc-900 text-zinc-300 border-2 border-zinc-700 rounded-md'}`}>
                           {(() => {
                             const category = question.questionCategory || inferQuestionCategory(question.topics);
                             return category === 'single-domain-single-topic' ? 'Single Domain, Single Topic' :
