@@ -142,44 +142,44 @@ export default function CreateFlashcards() {
 
   return (
     <>
-      <div className={`fixed inset-0 text-white overflow-hidden flex flex-col relative ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
+      <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
       {liquidGlass && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-          <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
         </div>
       )}
-      <div className="container mx-auto px-4 py-4 max-w-4xl flex-1 flex flex-col min-h-0" style={{ overscrollBehavior: 'none' }}>
+      <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 py-8 max-w-5xl">
         {/* Header */}
-        <div className="mb-4 flex-shrink-0">
-          <div className="flex justify-between items-center mb-3">
+        <div className="mb-12 md:mb-16">
+          <div className="flex justify-between items-center mb-8">
             <button
               onClick={() => router.push('/cybersecurity/flashcards')}
-              className="text-slate-400 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 p-2 rounded-full"
+              className={`${liquidGlass ? 'text-zinc-400 hover:text-white' : 'text-slate-400 hover:text-white'} hover:bg-white/5 active:bg-white/10 transition-all duration-700 p-4 rounded-2xl`}
               title="Back to Flashcards"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
             </button>
 
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="text-slate-400 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-300 p-2 rounded-full"
+                className={`${liquidGlass ? 'text-zinc-400 hover:text-white' : 'text-slate-400 hover:text-white'} hover:bg-white/5 active:bg-white/10 transition-all duration-700 p-4 rounded-2xl`}
                 title="Menu"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
 
               {menuOpen && user && !user?.isAnonymous && (
-                <div className="absolute right-0 top-full mt-2 bg-slate-800/95 backdrop-blur-xl border border-slate-700/50 rounded-3xl shadow-2xl py-2 min-w-[200px] z-50">
+                <div className={`absolute right-0 top-full mt-2 ${liquidGlass ? 'bg-slate-900/95' : 'bg-slate-800/95'} backdrop-blur-xl border ${liquidGlass ? 'border-slate-600' : 'border-slate-700/50'} rounded-3xl shadow-2xl py-2 min-w-[200px] z-50`}>
                   <div className="px-4 py-2 text-sm text-slate-200 border-b border-slate-700/50">
                     <div className="flex items-center gap-2">
-                      <svg className="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
                       <span>{user?.displayName || 'User'}</span>
@@ -192,7 +192,7 @@ export default function CreateFlashcards() {
                         setMenuOpen(false);
                       }
                     }}
-                    className="w-full px-4 py-2 text-sm text-left text-slate-200 hover:bg-white/5 active:bg-white/10 transition-all duration-300 flex items-center gap-2"
+                    className="w-full px-4 py-2 text-sm text-left text-slate-200 hover:bg-white/5 active:bg-white/10 transition-all duration-700 flex items-center gap-2"
                   >
                     <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -203,24 +203,32 @@ export default function CreateFlashcards() {
               )}
             </div>
           </div>
-          <h1 className="text-4xl font-bold mb-2 text-slate-100 tracking-tight">Create Flashcards</h1>
-          <p className="text-slate-400 text-base">Make new flashcards for your study</p>
+
+          {/* Hero Section */}
+          <div className="text-center mb-12">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-tight mb-6">
+              <span className="block bg-gradient-to-br from-white via-zinc-100 to-zinc-300 bg-clip-text text-transparent">Create</span>
+              <span className="block bg-gradient-to-br from-cyan-400 via-blue-400 to-cyan-500 bg-clip-text text-transparent">Flashcards</span>
+            </h1>
+            <p className={`text-xl md:text-2xl font-light ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'} max-w-2xl mx-auto leading-relaxed`}>
+              Build your personal study collection
+            </p>
+          </div>
         </div>
 
-        {/* Flashcard Creation Form - Scrollable */}
-        <div className="flex-1 overflow-y-auto relative" style={{ overscrollBehavior: 'contain' }}>
-      <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-slate-800/95 backdrop-blur-xl rounded-[28px]'} p-6 mb-4 border ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} shadow-2xl`}>
+        {/* Flashcard Creation Form */}
+        <div className="mb-20">
+      <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px]' : 'bg-slate-800/95 backdrop-blur-xl rounded-3xl'} p-10 md:p-12 border ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} shadow-2xl overflow-hidden`}>
         {liquidGlass && (
-          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+          <>
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-transparent rounded-[40px] opacity-50" />
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
+          </>
         )}
-        <h2 className="relative text-2xl font-semibold mb-3 tracking-tight text-slate-100">✍️ Create Flashcard</h2>
-          <p className={`relative text-sm mb-6 leading-relaxed ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>
-            Enter a term/question and its definition to create a single flashcard.
-          </p>
 
-          <div className="space-y-5">
+          <div className="relative space-y-8">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2 tracking-wide">
+              <label className={`block text-lg font-medium mb-3 tracking-tight ${liquidGlass ? 'text-zinc-300' : 'text-slate-300'}`}>
                 Term / Question
               </label>
               <input
@@ -232,16 +240,16 @@ export default function CreateFlashcards() {
                   if (manualTermError) setManualTermError('');
                 }}
                 placeholder="e.g., What is Zero Trust?"
-                className="w-full bg-slate-900/60 text-slate-100 rounded-3xl p-4 border-2 border-slate-700/50 focus:border-violet-500/50 focus:outline-none focus:bg-slate-900/80 transition-all duration-300"
+                className={`w-full ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-lg ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} p-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} focus:border-cyan-500/50 focus:outline-none ${liquidGlass ? 'focus:bg-white/10' : 'focus:bg-slate-900/80'} transition-all duration-700 placeholder:text-zinc-500`}
                 disabled={generating}
               />
               {manualTermError && (
-                <p className="text-red-400 text-sm mt-2 ml-4">{manualTermError}</p>
+                <p className="text-red-400 text-base mt-3 ml-2">{manualTermError}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2 tracking-wide">
+              <label className={`block text-lg font-medium mb-3 tracking-tight ${liquidGlass ? 'text-zinc-300' : 'text-slate-300'}`}>
                 Definition / Answer
               </label>
               <textarea
@@ -252,23 +260,23 @@ export default function CreateFlashcards() {
                   if (manualDefinitionError) setManualDefinitionError('');
                 }}
                 placeholder="Enter the definition or answer here..."
-                className="w-full h-32 bg-slate-900/60 text-slate-100 rounded-3xl p-4 border-2 border-slate-700/50 focus:border-violet-500/50 focus:outline-none focus:bg-slate-900/80 resize-vertical transition-all duration-300"
+                className={`w-full h-40 ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-lg ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} p-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} focus:border-cyan-500/50 focus:outline-none ${liquidGlass ? 'focus:bg-white/10' : 'focus:bg-slate-900/80'} resize-vertical transition-all duration-700 placeholder:text-zinc-500`}
                 disabled={generating}
               />
               {manualDefinitionError && (
-                <p className="text-red-400 text-sm mt-2 ml-4">{manualDefinitionError}</p>
+                <p className="text-red-400 text-base mt-3 ml-2">{manualDefinitionError}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2 tracking-wide">
+              <label className={`block text-lg font-medium mb-3 tracking-tight ${liquidGlass ? 'text-zinc-300' : 'text-slate-300'}`}>
                 Security+ Domain
               </label>
               <select
                 id="domain-dropdown"
                 value={manualDomain}
                 onChange={(e) => setManualDomain(e.target.value)}
-                className="w-full bg-slate-900/60 text-slate-100 rounded-3xl p-4 border-2 border-slate-700/50 focus:border-violet-500/50 focus:outline-none focus:bg-slate-900/80 transition-all duration-300"
+                className={`w-full ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-lg ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} p-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} focus:border-cyan-500/50 focus:outline-none ${liquidGlass ? 'focus:bg-white/10' : 'focus:bg-slate-900/80'} transition-all duration-700`}
                 disabled={generating}
               >
                 <option value="General Security Concepts">General Security Concepts</option>
@@ -280,7 +288,7 @@ export default function CreateFlashcards() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2 tracking-wide">
+              <label className={`block text-lg font-medium mb-3 tracking-tight ${liquidGlass ? 'text-zinc-300' : 'text-slate-300'}`}>
                 Image (Optional)
               </label>
               {manualImagePreview ? (
@@ -288,15 +296,15 @@ export default function CreateFlashcards() {
                   <img
                     src={manualImagePreview}
                     alt="Preview"
-                    className="w-full max-h-48 object-contain rounded-3xl border-2 border-slate-700/50 bg-black/40"
+                    className={`w-full max-h-64 object-contain ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} border-2 ${liquidGlass ? 'border-white/20' : 'border-slate-700/50'} bg-black/40`}
                   />
                   <button
                     onClick={handleRemoveManualImage}
-                    className="absolute top-3 right-3 bg-red-600/90 hover:bg-red-700 active:bg-red-800 text-white p-2 rounded-full transition-all duration-300 shadow-lg"
+                    className="absolute top-4 right-4 bg-red-500/90 hover:bg-red-600 active:bg-red-700 text-white p-3 rounded-2xl transition-all duration-700 shadow-xl hover:scale-110"
                     disabled={generating}
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>
@@ -306,19 +314,19 @@ export default function CreateFlashcards() {
                   type="file"
                   accept="image/*"
                   onChange={handleManualImageChange}
-                  className="w-full bg-slate-900/60 text-slate-100 rounded-3xl p-4 border-2 border-slate-700/50 focus:border-violet-500/50 focus:outline-none transition-all duration-300 file:mr-4 file:py-2 file:px-5 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-600 file:text-white hover:file:bg-violet-700 file:cursor-pointer file:transition-all file:duration-300"
+                  className={`w-full ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-base ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} p-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} focus:border-cyan-500/50 focus:outline-none transition-all duration-700 file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-base file:font-semibold file:bg-cyan-600 file:text-white hover:file:bg-cyan-700 file:cursor-pointer file:transition-all file:duration-700`}
                   disabled={generating}
                 />
               )}
-              <p className="text-xs text-slate-500 mt-2 ml-4">Max 5MB, JPG/PNG/GIF/WebP</p>
+              <p className={`text-sm ${liquidGlass ? 'text-zinc-500' : 'text-slate-500'} mt-3 ml-2`}>Max 5MB, JPG/PNG/GIF/WebP</p>
             </div>
 
-            <div className="flex items-center justify-end pt-2">
+            <div className="flex items-center justify-end pt-6">
               <button
                 id="create-flashcard"
                 onClick={handleManualCreate}
                 disabled={generating}
-                className="bg-violet-600 hover:bg-violet-700 active:bg-violet-800 disabled:bg-slate-700 disabled:cursor-not-allowed text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-violet-600/30 disabled:shadow-none"
+                className={`relative ${liquidGlass ? 'bg-cyan-600 hover:bg-cyan-700' : 'bg-cyan-600 hover:bg-cyan-700'} active:bg-cyan-800 disabled:bg-slate-700 disabled:cursor-not-allowed text-white px-10 py-5 rounded-full text-xl font-bold transition-all duration-700 hover:shadow-2xl hover:shadow-cyan-600/50 disabled:shadow-none hover:scale-105`}
               >
                 {generating ? 'Creating...' : 'Create Flashcard'}
               </button>
