@@ -686,7 +686,11 @@ export default function FlashcardsPage() {
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
               )}
               <div className="relative text-center space-y-4">
-                <div className="text-7xl">📖</div>
+                <div className={`w-20 h-20 md:w-24 md:h-24 mx-auto flex items-center justify-center ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10' : 'bg-zinc-800 rounded-2xl'} transition-all duration-700`}>
+                  <svg className="w-12 h-12 md:w-14 md:h-14 text-violet-400 transition-all duration-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                  </svg>
+                </div>
                 <h2 className="text-3xl font-bold text-white tracking-tight">Study</h2>
                 <p className="text-zinc-400 text-lg leading-relaxed">Review with spaced repetition</p>
               </div>
@@ -702,7 +706,11 @@ export default function FlashcardsPage() {
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
               )}
               <div className="relative text-center space-y-4">
-                <div className="text-7xl">✍️</div>
+                <div className={`w-20 h-20 md:w-24 md:h-24 mx-auto flex items-center justify-center ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10' : 'bg-zinc-800 rounded-2xl'} transition-all duration-700`}>
+                  <svg className="w-12 h-12 md:w-14 md:h-14 text-cyan-400 transition-all duration-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                  </svg>
+                </div>
                 <h2 className="text-3xl font-bold text-white tracking-tight">Create</h2>
                 <p className="text-zinc-400 text-lg leading-relaxed">Make new flashcards</p>
               </div>
@@ -718,7 +726,11 @@ export default function FlashcardsPage() {
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
               )}
               <div className="relative text-center space-y-4">
-                <div className="text-7xl">🔍</div>
+                <div className={`w-20 h-20 md:w-24 md:h-24 mx-auto flex items-center justify-center ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10' : 'bg-zinc-800 rounded-2xl'} transition-all duration-700`}>
+                  <svg className="w-12 h-12 md:w-14 md:h-14 text-emerald-400 transition-all duration-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                  </svg>
+                </div>
                 <h2 className="text-3xl font-bold text-white tracking-tight">Search</h2>
                 <p className="text-zinc-400 text-lg leading-relaxed">Find and manage cards</p>
                 <p className="text-zinc-500 text-base mt-3">{flashcards.length} total cards</p>
@@ -735,7 +747,11 @@ export default function FlashcardsPage() {
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
               )}
               <div className="relative text-center space-y-4">
-                <div className="text-7xl">📊</div>
+                <div className={`w-20 h-20 md:w-24 md:h-24 mx-auto flex items-center justify-center ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10' : 'bg-zinc-800 rounded-2xl'} transition-all duration-700`}>
+                  <svg className="w-12 h-12 md:w-14 md:h-14 text-amber-400 transition-all duration-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                  </svg>
+                </div>
                 <h2 className="text-3xl font-bold text-white tracking-tight">Performance</h2>
                 <p className="text-zinc-400 text-lg leading-relaxed">View your statistics</p>
               </div>
@@ -922,7 +938,11 @@ export default function FlashcardsPage() {
 
           {flashcards.length === 0 && (
             <div className="text-center py-12">
-              <div className="text-6xl mb-4">📊</div>
+              <div className={`w-24 h-24 mx-auto flex items-center justify-center mb-6 ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10' : 'bg-zinc-800 rounded-2xl'}`}>
+                <svg className="w-16 h-16 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                </svg>
+              </div>
               <p className="text-slate-300 text-lg font-medium">No flashcards yet</p>
               <p className="text-slate-500 text-sm mt-2">
                 Create your first flashcard to start tracking performance
