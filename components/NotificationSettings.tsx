@@ -14,7 +14,7 @@ import {
 import { useApp } from './AppProvider';
 
 export default function NotificationSettings() {
-  const { userId } = useApp();
+  const { userId, liquidGlass } = useApp();
   const [isSupported, setIsSupported] = useState(false);
   const [permission, setPermission] = useState<NotificationPermission>('default');
   const [enabled, setEnabled] = useState(false);
@@ -79,12 +79,19 @@ export default function NotificationSettings() {
 
   if (!isSupported) {
     return (
-      <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-        <div className="flex items-center gap-3">
-          <div className="text-yellow-400">⚠️</div>
-          <div>
-            <h3 className="font-medium text-gray-300">Notifications Not Supported</h3>
-            <p className="text-sm text-gray-400 mt-1">
+      <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px]' : 'bg-zinc-900 rounded-3xl'} p-8 border ${liquidGlass ? 'border-white/10' : 'border-zinc-800'}`}>
+        {liquidGlass && (
+          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50 pointer-events-none" />
+        )}
+        <div className="relative flex items-center gap-4">
+          <div className={`flex-shrink-0 w-12 h-12 flex items-center justify-center ${liquidGlass ? 'bg-yellow-500/10 rounded-[20px]' : 'bg-yellow-900/20 rounded-2xl'}`}>
+            <svg className="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <h3 className="text-lg font-bold text-white tracking-tight">Notifications Not Supported</h3>
+            <p className={`text-sm ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'} mt-1 leading-relaxed`}>
               Your browser does not support web notifications.
             </p>
           </div>
@@ -94,18 +101,24 @@ export default function NotificationSettings() {
   }
 
   return (
-    <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-      <div className="flex items-center justify-between">
+    <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px]' : 'bg-zinc-900 rounded-3xl'} p-8 border ${liquidGlass ? 'border-white/10' : 'border-zinc-800'} transition-all duration-700`}>
+      {liquidGlass && (
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50 pointer-events-none" />
+      )}
+      <div className="relative flex items-center justify-between gap-6">
         <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <h3 className="font-medium text-gray-300">Flashcard Reminders</h3>
+          <div className="flex items-center gap-3 mb-2">
+            <svg className="w-6 h-6 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+            </svg>
+            <h3 className="text-xl font-bold text-white tracking-tight">Flashcard Reminders</h3>
             {permission === 'granted' && enabled && (
-              <span className="text-xs bg-green-900/30 text-green-400 px-2 py-1 rounded-full">
+              <span className={`text-xs font-semibold ${liquidGlass ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-900/30 text-emerald-400'} px-3 py-1.5 ${liquidGlass ? 'rounded-[12px]' : 'rounded-full'} border ${liquidGlass ? 'border-emerald-500/20' : 'border-emerald-900/50'}`}>
                 Active
               </span>
             )}
           </div>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className={`text-base ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'} leading-relaxed`}>
             {permission === 'granted' && enabled
               ? 'You will be notified when flashcards are due for review.'
               : permission === 'denied'
@@ -117,37 +130,55 @@ export default function NotificationSettings() {
         <button
           onClick={handleToggle}
           disabled={requesting || permission === 'denied'}
-          className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 ${
+          className={`relative inline-flex h-10 w-[72px] items-center ${liquidGlass ? 'rounded-[24px]' : 'rounded-full'} transition-all duration-700 focus:outline-none focus:ring-4 ${
             enabled && permission === 'granted'
-              ? 'bg-blue-600'
-              : 'bg-gray-600'
+              ? liquidGlass ? 'focus:ring-violet-500/30' : 'focus:ring-violet-500/30'
+              : 'focus:ring-white/10'
+          } ${
+            enabled && permission === 'granted'
+              ? 'bg-violet-500'
+              : liquidGlass ? 'bg-white/10' : 'bg-zinc-700'
           } ${
             requesting || permission === 'denied'
               ? 'opacity-50 cursor-not-allowed'
-              : 'cursor-pointer'
+              : 'cursor-pointer hover:shadow-lg'
+          } ${
+            enabled && permission === 'granted' && !requesting
+              ? 'hover:bg-violet-600'
+              : ''
           }`}
         >
           <span
-            className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
-              enabled && permission === 'granted' ? 'translate-x-7' : 'translate-x-1'
+            className={`inline-block h-8 w-8 transform rounded-full bg-white transition-all duration-700 shadow-lg ${
+              enabled && permission === 'granted' ? 'translate-x-[34px]' : 'translate-x-1'
             }`}
           />
         </button>
       </div>
 
       {permission === 'denied' && (
-        <div className="mt-3 pt-3 border-t border-gray-700">
-          <p className="text-xs text-yellow-400">
-            To enable notifications, go to your browser settings and allow notifications for this site.
-          </p>
+        <div className={`mt-5 pt-5 border-t ${liquidGlass ? 'border-white/10' : 'border-zinc-800'}`}>
+          <div className="flex items-start gap-3">
+            <svg className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+            </svg>
+            <p className="text-sm text-yellow-400 leading-relaxed">
+              To enable notifications, go to your browser settings and allow notifications for this site.
+            </p>
+          </div>
         </div>
       )}
 
       {enabled && permission === 'granted' && (
-        <div className="mt-3 pt-3 border-t border-gray-700">
-          <p className="text-xs text-gray-400">
-            Notifications will be checked every hour while your browser is open.
-          </p>
+        <div className={`mt-5 pt-5 border-t ${liquidGlass ? 'border-white/10' : 'border-zinc-800'}`}>
+          <div className="flex items-start gap-3">
+            <svg className="w-5 h-5 text-violet-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+            </svg>
+            <p className={`text-sm ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'} leading-relaxed`}>
+              Notifications will be checked every hour while your browser is open.
+            </p>
+          </div>
         </div>
       )}
     </div>
