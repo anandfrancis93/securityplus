@@ -379,7 +379,7 @@ export default function QuizPerformance() {
                 <>
                   <span className="text-zinc-700">•</span>
                   <span
-                    className={`relative text-xs font-semibold cursor-help ${
+                    className={`relative text-sm md:text-base font-semibold cursor-help ${
                       confidenceInfo.color === 'emerald' ? 'text-emerald-500' :
                       confidenceInfo.color === 'yellow' ? 'text-yellow-500' :
                       confidenceInfo.color === 'orange' ? 'text-orange-500' :
