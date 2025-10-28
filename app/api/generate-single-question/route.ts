@@ -3,7 +3,8 @@ import { generateQuestionWithTopics, selectQuestionType } from '@/lib/questionGe
 import { selectQuestionCategory, selectTopicsForQuestion } from '@/lib/quizPregeneration';
 import { authenticateRequest, authenticateAndAuthorize } from '@/lib/apiAuth';
 import { GenerateSingleQuestionSchema, safeValidateRequestBody } from '@/lib/apiValidation';
-import { addQuestionToSession, sanitizeQuestionForClient, createQuizSession } from '@/lib/quizStateManager';
+import { addQuestionToSession, sanitizeQuestionForClient, createQuizSession, getQuizSession } from '@/lib/quizStateManager';
+import { generateUniqueQuestion } from '@/lib/similarityCheck';
 
 export async function POST(request: NextRequest) {
   try {
@@ -38,6 +39,19 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Get existing questions from session for similarity checking
+    let existingQuestions: any[] = [];
+    if (userId && quizSessionId) {
+      try {
+        const session = await getQuizSession(userId, quizSessionId);
+        existingQuestions = session?.questions || [];
+        console.log(`Found ${existingQuestions.length} existing questions in session for similarity check`);
+      } catch (error) {
+        console.warn('Could not retrieve existing questions for similarity check:', error);
+        // Continue without similarity checking if session retrieval fails
+      }
+    }
+
     // Select question type (single or multiple choice)
     const questionType = selectQuestionType();
 
@@ -50,10 +64,18 @@ export async function POST(request: NextRequest) {
 
     console.log(`Generating question ${questionNumber}: ${questionCategory} ${questionType}-choice, Topics: ${selectedTopics.join(', ')}`);
 
-    const question = await generateQuestionWithTopics(
-      selectedTopics,
-      questionCategory,
-      questionType
+    // Generate question with similarity checking and retry logic
+    const question = await generateUniqueQuestion(
+      async () => {
+        return await generateQuestionWithTopics(
+          selectedTopics,
+          questionCategory,
+          questionType
+        );
+      },
+      existingQuestions,
+      3, // Max 3 retries
+      0.85 // 85% similarity threshold
     );
 
     console.log(`Question ${questionNumber} generated successfully: ${question.difficulty} difficulty`);

@@ -16,7 +16,8 @@
       "Bash(git revert:*)",
       "Bash(git rm:*)",
       "Bash(dir \"C:\\Users\\anand\\securityplus\\app\\cybersecurity\\flashcards\")",
-      "Bash(dir \"C:\\Users\\anand\\securityplus\\app\\cybersecurity\\flashcards\\study\")"
+      "Bash(dir \"C:\\Users\\anand\\securityplus\\app\\cybersecurity\\flashcards\\study\")",
+      "Bash(awk:*)"
     ],
     "deny": [],
     "ask": []
