@@ -231,6 +231,11 @@ export default function QuizPerformance() {
   const estimatedAbility = userProgress?.estimatedAbility || 0;
   const accuracy = totalAnswered > 0 ? ((correctAnswers / totalAnswered) * 100).toFixed(1) : 0;
 
+  // Minimum questions needed for reliable IRT prediction
+  const MIN_QUESTIONS_FOR_PREDICTION = 10;
+  const hasEnoughQuestions = totalAnswered >= MIN_QUESTIONS_FOR_PREDICTION;
+  const questionsNeeded = MIN_QUESTIONS_FOR_PREDICTION - totalAnswered;
+
   // Color logic based on Ability Level (matches IRT progress bar)
   const isGoodPerformance = estimatedAbility >= 1.0;
   const isNeedsWork = estimatedAbility < -1.0;
@@ -281,62 +286,93 @@ export default function QuizPerformance() {
             <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'} mb-8`}>
               Based on {totalAnswered} question{totalAnswered !== 1 ? 's' : ''} attempted
             </p>
-            <div className="relative group cursor-help inline-block">
-              <div className={`text-8xl md:text-9xl font-bold mb-6 transition-all duration-700 ${
-                totalAnswered === 0 ? 'text-zinc-400' :
-                isGoodPerformance ? 'text-emerald-400' :
-                isNeedsWork ? 'text-red-400' :
-                'text-yellow-400'
-              }`}>
-                {predictedScore}
-              </div>
-              {/* Hover tooltip */}
-              <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 ${liquidGlass ? 'bg-black/80 backdrop-blur-xl border-white/20 rounded-2xl' : 'bg-black border-zinc-800 rounded-md'} border p-3 z-50 pointer-events-none opacity-0 group-hover:opacity-100 ${liquidGlass ? 'transition-opacity duration-500' : 'transition-opacity duration-150'}`}>
-                <div className="space-y-1 text-sm text-zinc-300 font-mono">
-                  <div>
-                    <span className="text-emerald-400 font-medium">Green:</span> 750 - 900
+
+            {hasEnoughQuestions ? (
+              <>
+                <div className="relative group cursor-help inline-block">
+                  <div className={`text-8xl md:text-9xl font-bold mb-6 transition-all duration-700 ${
+                    totalAnswered === 0 ? 'text-zinc-400' :
+                    isGoodPerformance ? 'text-emerald-400' :
+                    isNeedsWork ? 'text-red-400' :
+                    'text-yellow-400'
+                  }`}>
+                    {predictedScore}
                   </div>
-                  <div>
-                    <span className="text-yellow-400 font-medium">Yellow:</span> 600 - 749
-                  </div>
-                  <div>
-                    <span className="text-red-400 font-medium">Red:</span> 100 - 599
+                  {/* Hover tooltip */}
+                  <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 ${liquidGlass ? 'bg-black/80 backdrop-blur-xl border-white/20 rounded-2xl' : 'bg-black border-zinc-800 rounded-md'} border p-3 z-50 pointer-events-none opacity-0 group-hover:opacity-100 ${liquidGlass ? 'transition-opacity duration-500' : 'transition-opacity duration-150'}`}>
+                    <div className="space-y-1 text-sm text-zinc-300 font-mono">
+                      <div>
+                        <span className="text-emerald-400 font-medium">Green:</span> 750 - 900
+                      </div>
+                      <div>
+                        <span className="text-yellow-400 font-medium">Yellow:</span> 600 - 749
+                      </div>
+                      <div>
+                        <span className="text-red-400 font-medium">Red:</span> 100 - 599
+                      </div>
+                    </div>
+                    <p className={`text-xs text-zinc-400 mt-3 pt-2 border-t ${liquidGlass ? 'border-zinc-700' : 'border-zinc-700 font-mono'}`}>Color is based on your Ability Level from IRT analysis, which correlates with predicted exam score.</p>
                   </div>
                 </div>
-                <p className={`text-xs text-zinc-400 mt-3 pt-2 border-t ${liquidGlass ? 'border-zinc-700' : 'border-zinc-700 font-mono'}`}>Color is based on your Ability Level from IRT analysis, which correlates with predicted exam score.</p>
-              </div>
-            </div>
-            <div className={`text-xl md:text-2xl text-zinc-500 mb-8 ${liquidGlass ? '' : 'font-mono'}`}>out of 900</div>
-            <div>
-              {totalAnswered > 0 ? (
-                <div className={`inline-block px-10 py-4 text-xl md:text-2xl font-bold transition-all duration-700 ${
-                  isGoodPerformance
-                    ? liquidGlass
-                      ? 'bg-emerald-500/20 backdrop-blur-xl text-emerald-300 border border-emerald-500/50 rounded-3xl'
-                      : 'bg-black text-emerald-400 border border-emerald-500/50 rounded-md font-mono'
-                    : isNeedsWork
-                      ? liquidGlass
-                        ? 'bg-red-500/20 backdrop-blur-xl text-red-300 border border-red-500/50 rounded-3xl'
-                        : 'bg-black text-red-400 border border-red-500/50 rounded-md font-mono'
-                      : liquidGlass
-                        ? 'bg-yellow-500/20 backdrop-blur-xl text-yellow-300 border border-yellow-500/50 rounded-3xl'
-                        : 'bg-black text-yellow-400 border border-yellow-500/50 rounded-md font-mono'
-                }`}>
-                  {isGoodPerformance ? 'On track to pass' :
-                   isNeedsWork ? 'Needs significant improvement' :
-                   'More practice needed'}
+                <div className={`text-xl md:text-2xl text-zinc-500 mb-8 ${liquidGlass ? '' : 'font-mono'}`}>out of 900</div>
+                <div>
+                  {totalAnswered > 0 ? (
+                    <div className={`inline-block px-10 py-4 text-xl md:text-2xl font-bold transition-all duration-700 ${
+                      isGoodPerformance
+                        ? liquidGlass
+                          ? 'bg-emerald-500/20 backdrop-blur-xl text-emerald-300 border border-emerald-500/50 rounded-3xl'
+                          : 'bg-black text-emerald-400 border border-emerald-500/50 rounded-md font-mono'
+                        : isNeedsWork
+                          ? liquidGlass
+                            ? 'bg-red-500/20 backdrop-blur-xl text-red-300 border border-red-500/50 rounded-3xl'
+                            : 'bg-black text-red-400 border border-red-500/50 rounded-md font-mono'
+                          : liquidGlass
+                            ? 'bg-yellow-500/20 backdrop-blur-xl text-yellow-300 border border-yellow-500/50 rounded-3xl'
+                            : 'bg-black text-yellow-400 border border-yellow-500/50 rounded-md font-mono'
+                    }`}>
+                      {isGoodPerformance ? 'On track to pass' :
+                       isNeedsWork ? 'Needs significant improvement' :
+                       'More practice needed'}
+                    </div>
+                  ) : (
+                    <div className={`text-zinc-500 text-xl ${liquidGlass ? '' : 'font-mono'}`}>Start answering questions to see your prediction</div>
+                  )}
                 </div>
-              ) : (
-                <div className={`text-zinc-500 text-xl ${liquidGlass ? '' : 'font-mono'}`}>Start answering questions to see your prediction</div>
-              )}
-            </div>
+              </>
+            ) : (
+              <div className="space-y-6">
+                <div className={`relative p-8 ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10' : 'bg-zinc-900 rounded-2xl border border-zinc-800'}`}>
+                  {liquidGlass && (
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-3xl" />
+                  )}
+                  <div className="relative">
+                    <svg className="w-16 h-16 mx-auto mb-4 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+                    </svg>
+                    <h3 className={`text-2xl md:text-3xl font-bold text-white mb-3 ${liquidGlass ? '' : 'font-mono'}`}>
+                      Insufficient Data
+                    </h3>
+                    <p className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'} mb-4`}>
+                      {totalAnswered === 0 ? (
+                        <>Start answering questions to generate your predicted score</>
+                      ) : (
+                        <>Answer <span className="text-cyan-400 font-bold">{questionsNeeded} more</span> {questionsNeeded === 1 ? 'question' : 'questions'} for a reliable IRT prediction</>
+                      )}
+                    </p>
+                    <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'}`}>
+                      Minimum {MIN_QUESTIONS_FOR_PREDICTION} questions required for accurate analysis
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="relative mt-12">
             <div className={`w-full h-6 relative overflow-hidden ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl' : 'bg-zinc-900 border border-zinc-800 rounded-md'}`}>
               {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-2xl" />}
-              {/* Progress bar fill - only show if totalAnswered > 0 */}
-              {totalAnswered > 0 && (
+              {/* Progress bar fill - only show if enough questions answered */}
+              {hasEnoughQuestions && (
                 <div
                   className={`h-6 relative transition-all duration-700 ${
                     isGoodPerformance
@@ -376,8 +412,8 @@ export default function QuizPerformance() {
               <span>900</span>
             </div>
 
-            {/* Current score indicator - only show if totalAnswered > 0 */}
-            {totalAnswered > 0 && predictedScore >= 100 && predictedScore <= 900 && (
+            {/* Current score indicator - only show if enough questions answered */}
+            {hasEnoughQuestions && predictedScore >= 100 && predictedScore <= 900 && (
               <div className="relative mt-2">
                 <div
                   className={`absolute px-3 py-1 ${liquidGlass ? 'rounded-2xl' : 'rounded-md'} text-sm font-medium ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-150 font-mono'} ${
