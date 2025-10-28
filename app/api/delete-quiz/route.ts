@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebaseAdmin';
 import { authenticateAndAuthorize } from '@/lib/apiAuth';
-import { calculateIRTMetrics } from '@/lib/irt';
+import { estimateAbility, calculateIRTScore } from '@/lib/irt';
+import { UserProgress } from '@/lib/types';
 
 export async function POST(request: NextRequest) {
   try {
@@ -58,9 +59,22 @@ export async function POST(request: NextRequest) {
     let predictedScore = 0;
 
     if (totalQuestions > 0) {
-      const irtMetrics = calculateIRTMetrics(allAttempts);
-      estimatedAbility = irtMetrics.estimatedAbility;
-      predictedScore = irtMetrics.predictedScore;
+      estimatedAbility = estimateAbility(allAttempts);
+
+      // Calculate predicted score using IRT
+      const tempProgress: UserProgress = {
+        userId,
+        quizHistory,
+        answeredQuestions: [],
+        correctAnswers: 0,
+        totalQuestions,
+        totalPoints: 0,
+        maxPossiblePoints: 0,
+        estimatedAbility,
+        lastUpdated: Date.now(),
+      };
+
+      predictedScore = calculateIRTScore(tempProgress);
     }
 
     // Get answered questions (question IDs)
