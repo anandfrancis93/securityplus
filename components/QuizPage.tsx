@@ -47,7 +47,7 @@ export default function Quiz() {
     console.log('Auth complete, initializing quiz...');
     setHasInitialized(true);
     initQuiz();
-  }, [authLoading, user, hasInitialized]);
+  }, [authLoading, user]); // Don't include hasInitialized - it triggers re-runs!
 
   // Automatically generate next question in background whenever a new question is added
   useEffect(() => {
