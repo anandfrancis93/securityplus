@@ -258,35 +258,60 @@ export default function StudyFlashcards() {
         <div className="mb-8" style={{ perspective: '1000px' }}>
           <div
             id="flip-card"
-            className={`relative ${liquidGlass ? 'bg-white/5' : 'bg-slate-800/95'} backdrop-blur-2xl ${liquidGlass ? 'rounded-3xl' : 'rounded-[28px]'} p-6 sm:p-10 border-2 cursor-pointer transition-all duration-500 ease-in-out shadow-2xl ${
-              isFlipped
-                ? liquidGlass
-                  ? 'bg-white/10 border-white/30 shadow-violet-500/30'
-                  : 'bg-violet-900/20 border-violet-500/40 shadow-violet-500/20'
-                : liquidGlass
-                  ? 'border-white/10 shadow-black/50'
-                  : 'border-slate-700 shadow-slate-900/50'
-            }`}
+            className="relative cursor-pointer"
             style={{
               minHeight: '400px',
               transformStyle: 'preserve-3d',
               transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+              transition: 'transform 0.6s',
             }}
             onClick={handleFlip}
           >
+            {/* Front of card */}
             <div
-              className="flex items-center justify-center min-h-[350px] px-2 sm:px-0"
+              className={`absolute inset-0 ${liquidGlass ? 'bg-white/5' : 'bg-slate-800/95'} backdrop-blur-2xl ${liquidGlass ? 'rounded-3xl' : 'rounded-[28px]'} p-6 sm:p-10 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700'} shadow-2xl ${liquidGlass ? 'shadow-black/50' : 'shadow-slate-900/50'}`}
               style={{
-                transform: isFlipped ? 'rotateY(-180deg)' : 'rotateY(0deg)',
                 backfaceVisibility: 'hidden',
+                WebkitBackfaceVisibility: 'hidden',
               }}
             >
-              {!isFlipped ? (
+              <div className="flex items-center justify-center min-h-[350px] px-2 sm:px-0">
                 <div className="text-center w-full">
                   <h2 className="text-2xl sm:text-3xl font-bold mb-4 px-2 tracking-tight leading-tight">{currentCard.term}</h2>
                   <p className="text-slate-400 text-sm mt-8 tracking-wide">Click to reveal definition</p>
                 </div>
-              ) : (
+              </div>
+
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+                <div className="flex items-center gap-2 text-slate-400">
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                  </svg>
+                  <span className="text-sm tracking-wide font-medium">Flip</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Back of card */}
+            <div
+              className={`absolute inset-0 ${liquidGlass ? 'bg-white/10' : 'bg-violet-900/20'} backdrop-blur-2xl ${liquidGlass ? 'rounded-3xl' : 'rounded-[28px]'} p-6 sm:p-10 border-2 ${liquidGlass ? 'border-white/30' : 'border-violet-500/40'} shadow-2xl ${liquidGlass ? 'shadow-violet-500/30' : 'shadow-violet-500/20'}`}
+              style={{
+                backfaceVisibility: 'hidden',
+                WebkitBackfaceVisibility: 'hidden',
+                transform: 'rotateY(180deg)',
+              }}
+            >
+              <div className="flex items-center justify-center min-h-[350px] px-2 sm:px-0">
                 <div className="text-left w-full">
                   <p className="text-lg sm:text-xl leading-relaxed mb-6 whitespace-pre-wrap px-2 text-slate-200 tracking-wide">{currentCard.definition}</p>
                   {currentCard.imageUrl && (
@@ -310,29 +335,8 @@ export default function StudyFlashcards() {
                     </div>
                   )}
                 </div>
-              )}
-            </div>
-
-            {!isFlipped && (
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-                <div className="flex items-center gap-2 text-slate-400">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    />
-                  </svg>
-                  <span className="text-sm tracking-wide font-medium">Flip</span>
-                </div>
               </div>
-            )}
+            </div>
           </div>
         </div>
 
