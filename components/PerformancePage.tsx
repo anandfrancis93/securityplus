@@ -172,6 +172,8 @@ export default function QuizPerformance() {
   const router = useRouter();
   const [irtExpanded, setIrtExpanded] = useState(false);
   const [recentQuizzesExpanded, setRecentQuizzesExpanded] = useState(false);
+  const [showReliabilityTooltip, setShowReliabilityTooltip] = useState(false);
+  const [tooltipDismissTimeout, setTooltipDismissTimeout] = useState<NodeJS.Timeout | null>(null);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -179,6 +181,41 @@ export default function QuizPerformance() {
       router.push('/');
     }
   }, [user, loading, router]);
+
+  // Handle reliability tooltip hover
+  const handleReliabilityHover = () => {
+    setShowReliabilityTooltip(true);
+
+    // Clear any existing timeout
+    if (tooltipDismissTimeout) {
+      clearTimeout(tooltipDismissTimeout);
+    }
+
+    // Set new timeout to auto-dismiss after 5 seconds
+    const timeout = setTimeout(() => {
+      setShowReliabilityTooltip(false);
+    }, 5000);
+
+    setTooltipDismissTimeout(timeout);
+  };
+
+  const handleReliabilityLeave = () => {
+    // Clear timeout when user moves away
+    if (tooltipDismissTimeout) {
+      clearTimeout(tooltipDismissTimeout);
+      setTooltipDismissTimeout(null);
+    }
+    setShowReliabilityTooltip(false);
+  };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (tooltipDismissTimeout) {
+        clearTimeout(tooltipDismissTimeout);
+      }
+    };
+  }, [tooltipDismissTimeout]);
 
   const handleResetProgress = async () => {
     console.log('[DEBUG] Reset button clicked');
@@ -296,13 +333,49 @@ export default function QuizPerformance() {
             <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'} mb-8 flex items-center justify-center gap-2 flex-wrap`}>
               <span>Based on {totalAnswered} question{totalAnswered !== 1 ? 's' : ''}</span>
               <span className="text-zinc-700">•</span>
-              <span className={`text-xs font-semibold ${
-                reliabilityInfo.color === 'emerald' ? 'text-emerald-500' :
-                reliabilityInfo.color === 'cyan' ? 'text-cyan-500' :
-                reliabilityInfo.color === 'yellow' ? 'text-yellow-500' :
-                'text-orange-500'
-              }`}>
+              <span
+                className={`relative text-xs font-semibold cursor-help ${
+                  reliabilityInfo.color === 'emerald' ? 'text-emerald-500' :
+                  reliabilityInfo.color === 'cyan' ? 'text-cyan-500' :
+                  reliabilityInfo.color === 'yellow' ? 'text-yellow-500' :
+                  'text-orange-500'
+                }`}
+                onMouseEnter={handleReliabilityHover}
+                onMouseLeave={handleReliabilityLeave}
+              >
                 {reliabilityInfo.label}
+
+                {/* Tooltip */}
+                {showReliabilityTooltip && (
+                  <div className={`absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 w-72 ${liquidGlass ? 'bg-black/90 backdrop-blur-xl border-white/20 rounded-2xl' : 'bg-black border-zinc-700 rounded-xl'} border p-4 z-50 ${liquidGlass ? 'transition-opacity duration-500' : 'transition-opacity duration-150'}`}>
+                    <h4 className={`text-sm font-bold text-white mb-3 ${liquidGlass ? '' : 'font-mono'}`}>
+                      Prediction Reliability Tiers
+                    </h4>
+                    <div className="space-y-2 text-xs">
+                      <div className="flex items-start gap-2">
+                        <span className="text-emerald-400 font-bold min-w-[80px]">50+ questions:</span>
+                        <span className={`text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>High reliability - Very stable predictions</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="text-cyan-400 font-bold min-w-[80px]">30-50 questions:</span>
+                        <span className={`text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>Good reliability - Stable estimates</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="text-yellow-400 font-bold min-w-[80px]">20-30 questions:</span>
+                        <span className={`text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>Moderate reliability - Reasonable confidence</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="text-orange-400 font-bold min-w-[80px]">10-19 questions:</span>
+                        <span className={`text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>Basic estimate - High uncertainty</span>
+                      </div>
+                    </div>
+                    <div className={`mt-3 pt-3 border-t ${liquidGlass ? 'border-zinc-700' : 'border-zinc-800'}`}>
+                      <p className={`text-xs ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600 font-mono'}`}>
+                        You currently have <span className="text-white font-bold">{totalAnswered}</span> {totalAnswered === 1 ? 'question' : 'questions'}
+                      </p>
+                    </div>
+                  </div>
+                )}
               </span>
             </p>
 
