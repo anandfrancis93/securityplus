@@ -53,7 +53,7 @@ export default function Home() {
         </section>
 
         {/* Featured Subject - Cybersecurity */}
-        <section className="mb-32">
+        <section className="mb-16">
           <div className="max-w-6xl mx-auto">
             <button
               id="cybersecurity"
@@ -117,7 +117,7 @@ export default function Home() {
         </section>
 
         {/* Coming Soon Subjects */}
-        <section className="mb-20">
+        <section className="mb-8">
           <div className="max-w-6xl mx-auto">
             {/* Section Header */}
             <div className="text-center mb-16">

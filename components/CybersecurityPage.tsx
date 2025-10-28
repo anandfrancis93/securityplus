@@ -66,7 +66,7 @@ export default function Cybersecurity() {
         <Header showBackButton backButtonPath="/home" backButtonLabel="Back to Subjects" className="mb-20" />
 
         {/* Hero Section - Apple Style */}
-        <section className="text-center mb-32 md:mb-40">
+        <section className="text-center mb-16 md:mb-20">
           <div className="max-w-5xl mx-auto space-y-8">
             {/* Main Headline */}
             <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight leading-[0.95]">
@@ -86,7 +86,7 @@ export default function Cybersecurity() {
         </section>
 
         {/* Primary Study Methods - Featured Cards */}
-        <section className="mb-32">
+        <section className="mb-16">
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Quiz Card */}
             <button
