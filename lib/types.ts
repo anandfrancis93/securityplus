@@ -173,6 +173,7 @@ export interface QuizGenerationMetadata {
   allTopicsCoveredOnce: boolean; // Phase 1 complete flag
   questionHistory: { [questionId: string]: QuestionHistory };
   topicCoverage: { [topicName: string]: TopicCoverageStatus };
+  topicPerformance?: { [topicName: string]: TopicPerformance }; // Performance tracking per topic
 
   // FSRS and Phase tracking
   currentPhase?: 1 | 2 | 3; // Learning phase
