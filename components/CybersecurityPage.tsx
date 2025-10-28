@@ -177,7 +177,7 @@ export default function Cybersecurity() {
               {/* Badge for due flashcards */}
               {dueFlashcardsCount > 0 && (
                 <div className="absolute top-6 right-6">
-                  <div className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold ${
+                  <div className={`flex items-center gap-2 px-4 py-2 text-sm md:text-base font-semibold ${
                     liquidGlass ? 'bg-white/10 backdrop-blur-xl border border-white/20 rounded-full text-cyan-300' : 'bg-cyan-900 border border-cyan-800 rounded-full text-cyan-300'
                   }`}>
                     <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
@@ -246,11 +246,11 @@ export default function Cybersecurity() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <h4 className="text-xl font-bold">Performance-Based Questions</h4>
-                  <p className={`text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600'}`}>
+                  <h4 className="text-xl md:text-2xl font-bold">Performance-Based Questions</h4>
+                  <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600'}`}>
                     Hands-on scenario simulations
                   </p>
-                  <div className={`inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 ${
+                  <div className={`inline-flex items-center gap-2 text-xs md:text-sm font-medium px-3 py-1.5 ${
                     liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-400 rounded-full border border-white/20' : 'bg-zinc-800 text-zinc-500 rounded-full border border-zinc-700'
                   }`}>
                     <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
@@ -274,11 +274,11 @@ export default function Cybersecurity() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <h4 className="text-xl font-bold">Simulate Exam</h4>
-                  <p className={`text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600'}`}>
+                  <h4 className="text-xl md:text-2xl font-bold">Simulate Exam</h4>
+                  <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600'}`}>
                     Full-length 90-minute practice exam
                   </p>
-                  <div className={`inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 ${
+                  <div className={`inline-flex items-center gap-2 text-xs md:text-sm font-medium px-3 py-1.5 ${
                     liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-400 rounded-full border border-white/20' : 'bg-zinc-800 text-zinc-500 rounded-full border border-zinc-700'
                   }`}>
                     <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />

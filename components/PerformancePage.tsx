@@ -400,10 +400,10 @@ export default function QuizPerformance() {
                         )}
 
                         <div className="relative">
-                          <h4 className={`text-base font-bold text-white mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>
+                          <h4 className={`text-base md:text-lg font-bold text-white mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>
                             Confidence Level Guide
                           </h4>
-                          <div className="space-y-3 text-sm">
+                          <div className="space-y-3 text-sm md:text-base">
                             <div className="flex items-start gap-3">
                               <span className="text-emerald-400 font-bold min-w-[110px]">High confidence:</span>
                               <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>CI width ≤50 points - Very precise estimate</span>
@@ -421,7 +421,7 @@ export default function QuizPerformance() {
                               <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>CI width &gt;150 points - Very uncertain</span>
                             </div>
                           </div>
-                          <p className={`mt-4 text-xs ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600 font-mono'} leading-relaxed`}>
+                          <p className={`mt-4 text-xs md:text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600 font-mono'} leading-relaxed`}>
                             Answer more questions to narrow the confidence interval and increase precision.
                           </p>
                         </div>
@@ -473,10 +473,10 @@ export default function QuizPerformance() {
                     )}
 
                     <div className="relative">
-                      <h4 className={`text-base font-bold text-white mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>
+                      <h4 className={`text-base md:text-lg font-bold text-white mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>
                         Score Color Ranges
                       </h4>
-                      <div className="space-y-3 text-sm">
+                      <div className="space-y-3 text-sm md:text-base">
                         <div className="flex items-center justify-between">
                           <span className="text-emerald-400 font-bold w-16">Green</span>
                           <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} ${liquidGlass ? '' : 'font-mono'}`}>750 - 900</span>

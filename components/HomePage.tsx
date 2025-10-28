@@ -150,11 +150,11 @@ export default function Home() {
                       <ellipse cx="12" cy="12" rx="4" ry="10" strokeLinecap="round" />
                     </svg>
                   </div>
-                  <h4 className="text-xl font-bold">Networking</h4>
-                  <p className={`text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600'}`}>
+                  <h4 className="text-xl md:text-2xl font-bold">Networking</h4>
+                  <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600'}`}>
                     Network protocols and infrastructure
                   </p>
-                  <div className={`inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 ${
+                  <div className={`inline-flex items-center gap-2 text-xs md:text-sm font-medium px-3 py-1.5 ${
                     liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-400 rounded-full border border-white/20' : 'bg-zinc-800 text-zinc-500 rounded-full border border-zinc-700'
                   }`}>
                     <span className="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-pulse" />
@@ -180,11 +180,11 @@ export default function Home() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M14 9h3" />
                     </svg>
                   </div>
-                  <h4 className="text-xl font-bold">Maths</h4>
-                  <p className={`text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600'}`}>
+                  <h4 className="text-xl md:text-2xl font-bold">Maths</h4>
+                  <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600'}`}>
                     Mathematical problem solving
                   </p>
-                  <div className={`inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 ${
+                  <div className={`inline-flex items-center gap-2 text-xs md:text-sm font-medium px-3 py-1.5 ${
                     liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-400 rounded-full border border-white/20' : 'bg-zinc-800 text-zinc-500 rounded-full border border-zinc-700'
                   }`}>
                     <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
@@ -211,11 +211,11 @@ export default function Home() {
                       <ellipse cx="12" cy="12" rx="9" ry="4.5" strokeLinecap="round" transform="rotate(-60 12 12)" />
                     </svg>
                   </div>
-                  <h4 className="text-xl font-bold">Physics</h4>
-                  <p className={`text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600'}`}>
+                  <h4 className="text-xl md:text-2xl font-bold">Physics</h4>
+                  <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600'}`}>
                     Physical laws and principles
                   </p>
-                  <div className={`inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 ${
+                  <div className={`inline-flex items-center gap-2 text-xs md:text-sm font-medium px-3 py-1.5 ${
                     liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-400 rounded-full border border-white/20' : 'bg-zinc-800 text-zinc-500 rounded-full border border-zinc-700'
                   }`}>
                     <span className="w-1.5 h-1.5 bg-rose-500 rounded-full animate-pulse" />
@@ -240,11 +240,11 @@ export default function Home() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
                     </svg>
                   </div>
-                  <h4 className="text-xl font-bold">English</h4>
-                  <p className={`text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600'}`}>
+                  <h4 className="text-xl md:text-2xl font-bold">English</h4>
+                  <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600'}`}>
                     Language arts and literature
                   </p>
-                  <div className={`inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 ${
+                  <div className={`inline-flex items-center gap-2 text-xs md:text-sm font-medium px-3 py-1.5 ${
                     liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-400 rounded-full border border-white/20' : 'bg-zinc-800 text-zinc-500 rounded-full border border-zinc-700'
                   }`}>
                     <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />
