@@ -109,27 +109,51 @@ export default function QuestionCard({
                   {/* Checkbox or Radio indicator */}
                   {question.questionType === 'multiple' ? (
                     <div className={`${showExplanation ? 'w-6 h-6' : 'w-8 h-8'} ${showExplanation ? 'rounded' : 'rounded-xl'} border-2 flex items-center justify-center transition-all duration-700 shrink-0 ${
-                      isSelected
-                        ? liquidGlass && !showExplanation
-                          ? 'bg-violet-500/30 border-violet-400'
-                          : 'bg-zinc-700 border-zinc-600'
-                        : liquidGlass
-                          ? 'border-white/30'
-                          : 'border-zinc-600'
+                      showExplanation
+                        ? // Review mode - neutral colors
+                          isSelected
+                            ? liquidGlass
+                              ? 'bg-white/10 border-white/40'
+                              : 'bg-zinc-700 border-zinc-500'
+                            : liquidGlass
+                              ? 'border-white/30'
+                              : 'border-zinc-600'
+                        : // Active mode - violet colors
+                          isSelected
+                            ? liquidGlass
+                              ? 'bg-violet-500/30 border-violet-400'
+                              : 'bg-zinc-700 border-zinc-600'
+                            : liquidGlass
+                              ? 'border-white/30'
+                              : 'border-zinc-600'
                     }`}>
                       {isSelected && <span className={`text-white ${showExplanation ? 'text-sm' : 'text-lg'} font-bold`}>✓</span>}
                     </div>
                   ) : (
                     <div className={`${showExplanation ? 'w-6 h-6' : 'w-8 h-8'} rounded-full border-2 flex items-center justify-center transition-all duration-700 shrink-0 ${
-                      isSelected
-                        ? liquidGlass && !showExplanation
-                          ? 'border-violet-400'
-                          : 'border-zinc-600'
-                        : liquidGlass
-                          ? 'border-white/30'
-                          : 'border-zinc-600'
+                      showExplanation
+                        ? // Review mode - neutral colors
+                          isSelected
+                            ? liquidGlass
+                              ? 'border-white/40'
+                              : 'border-zinc-500'
+                            : liquidGlass
+                              ? 'border-white/30'
+                              : 'border-zinc-600'
+                        : // Active mode - violet colors
+                          isSelected
+                            ? liquidGlass
+                              ? 'border-violet-400'
+                              : 'border-zinc-600'
+                            : liquidGlass
+                              ? 'border-white/30'
+                              : 'border-zinc-600'
                     }`}>
-                      {isSelected && <div className={`${showExplanation ? 'w-4 h-4' : 'w-5 h-5'} rounded-full ${liquidGlass && !showExplanation ? 'bg-violet-400' : 'bg-zinc-700'}`}></div>}
+                      {isSelected && <div className={`${showExplanation ? 'w-4 h-4' : 'w-5 h-5'} rounded-full ${
+                        showExplanation
+                          ? liquidGlass ? 'bg-white/40' : 'bg-zinc-500'
+                          : liquidGlass ? 'bg-violet-400' : 'bg-zinc-700'
+                      }`}></div>}
                     </div>
                   )}
                   <span className={`font-bold ${showExplanation ? 'text-xl' : 'text-2xl'} text-zinc-400`}>
@@ -139,8 +163,6 @@ export default function QuestionCard({
                 <span className={`text-white ${showExplanation ? 'text-xl md:text-2xl' : 'text-xl md:text-2xl'} leading-relaxed inline align-top`}>
                   {option}
                 </span>
-                {showCorrect && <span className="ml-3 text-green-400 text-3xl align-top">✓</span>}
-                {showIncorrect && <span className="ml-3 text-red-400 text-3xl align-top">✗</span>}
               </div>
             </ButtonElement>
           );

@@ -105,7 +105,8 @@ export default function ExplanationSection({
           <h4 className="font-bold text-white mb-8 text-3xl md:text-4xl relative">Why Other Answers Are Incorrect:</h4>
           <div className="space-y-6 relative">
             {question.incorrectExplanations.map((explanation, index) => {
-              if (correctAnswers.includes(index)) return null;
+              // Skip if this is a correct answer or if explanation is empty
+              if (correctAnswers.includes(index) || !explanation || explanation.trim() === '') return null;
 
               return (
                 <div key={index} className="text-xl md:text-2xl">
