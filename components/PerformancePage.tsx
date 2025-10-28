@@ -336,8 +336,20 @@ export default function QuizPerformance() {
 
           <div className="relative text-center mb-10">
             <h2 className={`text-3xl md:text-4xl text-white mb-2 tracking-tight font-bold ${liquidGlass ? '' : 'font-mono'}`}>Predicted Exam Score</h2>
-            <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'} mb-8`}>
-              Based on {totalAnswered} question{totalAnswered !== 1 ? 's' : ''}
+            <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'} mb-8 flex items-center justify-center gap-2 flex-wrap`}>
+              <span>Based on {totalAnswered} question{totalAnswered !== 1 ? 's' : ''}</span>
+              {confidenceInfo.margin > 0 && (
+                <>
+                  <span className="text-zinc-700">•</span>
+                  <span className={`font-semibold ${
+                    confidenceInfo.color === 'emerald' ? 'text-emerald-400' :
+                    confidenceInfo.color === 'yellow' ? 'text-yellow-400' :
+                    confidenceInfo.color === 'orange' ? 'text-orange-400' :
+                    confidenceInfo.color === 'red' ? 'text-red-400' :
+                    'text-zinc-400'
+                  }`}>{confidenceInfo.label}</span>
+                </>
+              )}
             </p>
 
             {hasEnoughQuestions ? (
@@ -354,15 +366,8 @@ export default function QuizPerformance() {
                       }`}>
                         {scoreCI.lower} - {scoreCI.upper}
                       </div>
-                      <div className={`text-xl md:text-2xl mb-6 flex items-center justify-center gap-2 flex-wrap`}>
-                        <span className={liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}>Predicted Score Range</span>
-                        <span className={`font-semibold ${
-                          confidenceInfo.color === 'emerald' ? 'text-emerald-400' :
-                          confidenceInfo.color === 'yellow' ? 'text-yellow-400' :
-                          confidenceInfo.color === 'orange' ? 'text-orange-400' :
-                          confidenceInfo.color === 'red' ? 'text-red-400' :
-                          'text-zinc-400'
-                        }`}>({confidenceInfo.label})</span>
+                      <div className={`text-xl md:text-2xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'} mb-6`}>
+                        Predicted Score Range
                       </div>
                     </>
                   ) : (
