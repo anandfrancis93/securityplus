@@ -383,7 +383,7 @@ export default function StudyFlashcards() {
                 id="again"
                 onClick={() => handleAnswer('again')}
                 disabled={answering}
-                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px]' : 'bg-red-600 rounded-3xl'} ${liquidGlass ? 'hover:bg-white/10 hover:scale-105' : 'hover:bg-red-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-red-400/60' : 'border-transparent hover:border-red-400'} shadow-xl ${liquidGlass ? 'hover:shadow-2xl hover:shadow-red-500/50' : 'hover:shadow-red-500/50'} transition-all duration-700`}
+                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px]' : 'bg-red-600 rounded-3xl'} ${liquidGlass ? 'hover:bg-white/10 hover:scale-105' : 'hover:bg-red-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-red-400/60' : 'border-transparent hover:border-red-400'} ${liquidGlass ? 'shadow-lg hover:shadow-2xl hover:shadow-red-500/50' : 'shadow-xl hover:shadow-red-500/50'} transition-all duration-700`}
               >
                 {liquidGlass && (
                   <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-[32px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -406,7 +406,7 @@ export default function StudyFlashcards() {
                 id="hard"
                 onClick={() => handleAnswer('hard')}
                 disabled={answering}
-                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px]' : 'bg-yellow-600 rounded-3xl'} ${liquidGlass ? 'hover:bg-white/10 hover:scale-105' : 'hover:bg-yellow-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-yellow-400/60' : 'border-transparent hover:border-yellow-400'} shadow-xl ${liquidGlass ? 'hover:shadow-2xl hover:shadow-yellow-500/50' : 'hover:shadow-yellow-500/50'} transition-all duration-700`}
+                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px]' : 'bg-yellow-600 rounded-3xl'} ${liquidGlass ? 'hover:bg-white/10 hover:scale-105' : 'hover:bg-yellow-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-yellow-400/60' : 'border-transparent hover:border-yellow-400'} ${liquidGlass ? 'shadow-lg hover:shadow-2xl hover:shadow-yellow-500/50' : 'shadow-xl hover:shadow-yellow-500/50'} transition-all duration-700`}
               >
                 {liquidGlass && (
                   <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 via-transparent to-transparent rounded-[32px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -429,7 +429,7 @@ export default function StudyFlashcards() {
                 id="good"
                 onClick={() => handleAnswer('good')}
                 disabled={answering}
-                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px]' : 'bg-green-600 rounded-3xl'} ${liquidGlass ? 'hover:bg-white/10 hover:scale-105' : 'hover:bg-green-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-green-400/60' : 'border-transparent hover:border-green-400'} shadow-xl ${liquidGlass ? 'hover:shadow-2xl hover:shadow-green-500/50' : 'hover:shadow-green-500/50'} transition-all duration-700`}
+                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px]' : 'bg-green-600 rounded-3xl'} ${liquidGlass ? 'hover:bg-white/10 hover:scale-105' : 'hover:bg-green-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-green-400/60' : 'border-transparent hover:border-green-400'} ${liquidGlass ? 'shadow-lg hover:shadow-2xl hover:shadow-green-500/50' : 'shadow-xl hover:shadow-green-500/50'} transition-all duration-700`}
               >
                 {liquidGlass && (
                   <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-transparent to-transparent rounded-[32px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -452,7 +452,7 @@ export default function StudyFlashcards() {
                 id="easy"
                 onClick={() => handleAnswer('easy')}
                 disabled={answering}
-                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px]' : 'bg-blue-600 rounded-3xl'} ${liquidGlass ? 'hover:bg-white/10 hover:scale-105' : 'hover:bg-blue-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-blue-400/60' : 'border-transparent hover:border-blue-400'} shadow-xl ${liquidGlass ? 'hover:shadow-2xl hover:shadow-blue-500/50' : 'hover:shadow-blue-500/50'} transition-all duration-700`}
+                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px]' : 'bg-blue-600 rounded-3xl'} ${liquidGlass ? 'hover:bg-white/10 hover:scale-105' : 'hover:bg-blue-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-blue-400/60' : 'border-transparent hover:border-blue-400'} ${liquidGlass ? 'shadow-lg hover:shadow-2xl hover:shadow-blue-500/50' : 'shadow-xl hover:shadow-blue-500/50'} transition-all duration-700`}
               >
                 {liquidGlass && (
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-transparent rounded-[32px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
