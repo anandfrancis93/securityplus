@@ -113,13 +113,21 @@ export async function POST(request: NextRequest) {
       `Answer verified: user=${userId}, question=${questionId}, correct=${isCorrect}, points=${pointsEarned}/${question.maxPoints}`
     );
 
-    // SECURITY: Return verification result WITHOUT correct answer
+    // Return verification result WITH correct answer and full explanation
+    // User has already submitted their answer, so they should see the correct answer and learn
     return NextResponse.json({
       isCorrect,
       pointsEarned,
       maxPoints: question.maxPoints || 10,
-      // Only include explanation if answer was correct (don't help cheaters)
-      explanation: isCorrect ? question.explanation : undefined,
+      // Return correct answer so UI can highlight correct/incorrect options
+      correctAnswer: question.correctAnswer,
+      // Return full explanation for learning (whether correct or incorrect)
+      explanation: question.explanation,
+      // Return incorrect explanations so "Why Other Answers Are Incorrect" section can be shown
+      incorrectExplanations: question.incorrectExplanations,
+      // Return question text and options for display
+      question: question.question,
+      options: question.options,
       // Return sanitized question data for display
       questionData: {
         id: question.id,
@@ -128,6 +136,7 @@ export async function POST(request: NextRequest) {
         questionType: question.questionType,
         irtDifficulty: question.irtDifficulty,
         irtDiscrimination: question.irtDiscrimination,
+        questionCategory: question.questionCategory,
       },
     });
   } catch (error: any) {

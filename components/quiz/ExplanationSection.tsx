@@ -26,29 +26,12 @@ export default function ExplanationSection({
     ? question.correctAnswer
     : [question.correctAnswer];
 
-  // Warn in development if correctAnswer is missing
-  if (correctAnswers.length === 0 || correctAnswers.includes(null as any) || correctAnswers.includes(undefined as any)) {
-    console.warn('⚠️ ExplanationSection: question.correctAnswer is undefined or null!', {
-      questionText: question.question?.substring(0, 50),
-      correctAnswer: question.correctAnswer,
-      questionObject: question
-    });
-  }
-
   // Filter out correct answers and empty explanations from incorrect explanations
   const hasIncorrectExplanations = question.incorrectExplanations &&
     correctAnswers.length > 0 &&
     question.incorrectExplanations.some((explanation, index) =>
       !correctAnswers.includes(index) && explanation && explanation.trim() !== ''
     );
-
-  console.log('ExplanationSection Debug:', {
-    correctAnswers,
-    correctAnswersStringified: JSON.stringify(correctAnswers),
-    questionCorrectAnswer: question.correctAnswer,
-    incorrectExplanationsLength: question.incorrectExplanations?.length,
-    hasIncorrectExplanations
-  });
 
   return (
     <div className="space-y-8">
@@ -136,21 +119,9 @@ export default function ExplanationSection({
               const isCorrect = correctAnswers.includes(index);
               const isEmpty = !explanation || explanation.trim() === '';
 
-              console.log(`Option ${String.fromCharCode(65 + index)} (index ${index}):`, {
-                index,
-                isCorrect,
-                isEmpty,
-                correctAnswersArray: correctAnswers,
-                includesCheck: correctAnswers.includes(index),
-                explanation: explanation?.substring(0, 50)
-              });
-
               if (isCorrect || isEmpty) {
-                console.log(`  -> FILTERED OUT (isCorrect: ${isCorrect}, isEmpty: ${isEmpty})`);
                 return null;
               }
-
-              console.log(`  -> SHOWING THIS OPTION`);
 
               return (
                 <div key={index} className="text-xl md:text-2xl">

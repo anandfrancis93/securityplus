@@ -32,7 +32,7 @@ interface AppContextType {
   liquidGlass: boolean;
   toggleLiquidGlass: () => void;
   startNewQuiz: (quizSessionId?: string) => void;
-  answerQuestion: (question: Question, answer: number | number[], quizSessionId?: string) => void;
+  answerQuestion: (question: Question, answer: number | number[], quizSessionId?: string) => Promise<{ correctAnswer: number | number[], explanation: string, incorrectExplanations: string[] } | undefined>;
   endQuiz: (unusedQuestions?: Question[]) => Promise<void>;
   refreshProgress: () => Promise<void>;
   resetProgress: () => Promise<void>;
@@ -230,11 +230,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setCurrentQuiz(newQuiz);
   };
 
-  const answerQuestion = async (question: Question, answer: number | number[], quizSessionId?: string) => {
+  const answerQuestion = async (question: Question, answer: number | number[], quizSessionId?: string): Promise<{ correctAnswer: number | number[], explanation: string, incorrectExplanations: string[] } | undefined> => {
     if (!currentQuiz || !userId) {
       console.error('Cannot answer question: missing currentQuiz or userId');
       alert('Error: Quiz session not initialized. Please refresh the page and try again.');
-      return;
+      return undefined;
     }
 
     // Use provided quizSessionId or fall back to currentQuiz.quizSessionId
@@ -245,7 +245,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       console.error('currentQuiz:', currentQuiz);
       console.error('Provided quizSessionId:', quizSessionId);
       alert('Error: Quiz session ID is missing. Please refresh the page and try again.');
-      return;
+      return undefined;
     }
 
     try {
@@ -258,11 +258,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
         questionNumber: currentQuiz.questions.length + 1,
       });
 
-      const { isCorrect, pointsEarned, maxPoints } = verificationResult;
+      const { isCorrect, pointsEarned, maxPoints, correctAnswer, explanation, incorrectExplanations } = verificationResult;
+
+      // Merge verification result with question data for display
+      const questionWithAnswer = {
+        ...question,
+        correctAnswer: correctAnswer !== undefined ? correctAnswer : question.correctAnswer,
+        explanation: explanation || question.explanation,
+        incorrectExplanations: incorrectExplanations || question.incorrectExplanations,
+      };
 
       const attempt: QuestionAttempt = {
         questionId: question.id,
-        question,
+        question: questionWithAnswer,
         userAnswer: answer,
         isCorrect,
         pointsEarned,
@@ -288,10 +296,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
         isCorrect,
         partialCredit: pointsEarned < maxPoints && pointsEarned > 0
       });
+
+      // Return the answer data so QuizPage can update its local state
+      return {
+        correctAnswer: correctAnswer !== undefined ? correctAnswer : question.correctAnswer,
+        explanation: explanation || question.explanation,
+        incorrectExplanations: incorrectExplanations || question.incorrectExplanations,
+      };
     } catch (error) {
       console.error('Error verifying answer:', error);
       // Handle error - show user feedback
       alert('Failed to submit answer. Please try again.');
+      return undefined;
     }
   };
 

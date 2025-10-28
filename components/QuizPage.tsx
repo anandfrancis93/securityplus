@@ -171,12 +171,27 @@ export default function Quiz() {
 
     const currentQuestion = questions[currentQuestionIndex];
 
+    let answerData: { correctAnswer: number | number[], explanation: string, incorrectExplanations: string[] } | undefined;
     if (currentQuestion.questionType === 'multiple') {
       if (selectedAnswers.length === 0) return;
-      await answerQuestion(currentQuestion, selectedAnswers, quizSessionId || undefined);
+      answerData = await answerQuestion(currentQuestion, selectedAnswers, quizSessionId || undefined);
     } else {
       if (selectedAnswer === null) return;
-      await answerQuestion(currentQuestion, selectedAnswer, quizSessionId || undefined);
+      answerData = await answerQuestion(currentQuestion, selectedAnswer, quizSessionId || undefined);
+    }
+
+    // Update the question with the returned answer data
+    if (answerData && answerData.correctAnswer !== undefined) {
+      setQuestions(prev => {
+        const updated = [...prev];
+        updated[currentQuestionIndex] = {
+          ...updated[currentQuestionIndex],
+          correctAnswer: answerData.correctAnswer,
+          explanation: answerData.explanation,
+          incorrectExplanations: answerData.incorrectExplanations,
+        };
+        return updated;
+      });
     }
 
     setShowExplanation(true);
