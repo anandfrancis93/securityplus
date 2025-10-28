@@ -9,7 +9,7 @@ import { authenticatedPost } from '@/lib/apiClient';
 import Header from './Header';
 
 export default function Quiz() {
-  const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, user, loading: authLoading, liquidGlass } = useApp();
+  const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, user, loading: authLoading, liquidGlass, handleSignOut } = useApp();
   const router = useRouter();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -141,8 +141,10 @@ export default function Quiz() {
       console.error('Error generating question:', error);
       if (error instanceof TypeError && error.message.includes('fetch')) {
         setErrorMessage('Network error. Please check your internet connection and try again.');
+      } else if (error instanceof Error && error.message.includes('Invalid authentication token')) {
+        setErrorMessage('Your session has expired. Please sign out and sign in again to continue.');
       } else {
-        setErrorMessage('An unexpected error occurred. Please try again.');
+        setErrorMessage((error instanceof Error ? error.message : null) || 'An unexpected error occurred. Please try again.');
       }
     } finally {
       setLoading(false);
@@ -299,24 +301,38 @@ export default function Quiz() {
                 </p>
               </div>
               <div className="flex gap-6 justify-center flex-wrap">
-                <button
-                  onClick={() => {
-                    setErrorMessage('');
-                    router.push('/cybersecurity');
-                  }}
-                  className={`px-12 py-5 font-bold text-xl ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 rounded-3xl text-white transition-all duration-700 hover:scale-105 shadow-lg hover:shadow-2xl hover:shadow-white/20' : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-md transition-all duration-150'}`}
-                >
-                  Back to Cybersecurity
-                </button>
-                <button
-                  onClick={() => {
-                    setErrorMessage('');
-                    window.location.reload();
-                  }}
-                  className={`px-12 py-5 font-bold text-xl ${liquidGlass ? 'bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl text-white transition-all duration-700 hover:scale-105 shadow-lg hover:shadow-2xl hover:shadow-white/20' : 'bg-zinc-700 hover:bg-zinc-600 text-white rounded-md transition-all duration-150'}`}
+                {errorMessage?.includes('session has expired') || errorMessage?.includes('Invalid authentication') ? (
+                  <button
+                    onClick={async () => {
+                      await handleSignOut();
+                      router.push('/');
+                    }}
+                    className={`px-12 py-5 font-bold text-xl ${liquidGlass ? 'bg-red-500/20 hover:bg-red-500/30 backdrop-blur-xl border border-red-500/50 rounded-3xl text-red-300 transition-all duration-700 hover:scale-105 shadow-lg hover:shadow-2xl hover:shadow-red-500/30' : 'bg-red-900 hover:bg-red-800 text-red-200 rounded-md transition-all duration-150'}`}
+                  >
+                    Sign Out and Return to Login
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => {
+                        setErrorMessage('');
+                        router.push('/cybersecurity');
+                      }}
+                      className={`px-12 py-5 font-bold text-xl ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 rounded-3xl text-white transition-all duration-700 hover:scale-105 shadow-lg hover:shadow-2xl hover:shadow-white/20' : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-md transition-all duration-150'}`}
+                    >
+                      Back to Cybersecurity
+                    </button>
+                    <button
+                      onClick={() => {
+                        setErrorMessage('');
+                        window.location.reload();
+                      }}
+                      className={`px-12 py-5 font-bold text-xl ${liquidGlass ? 'bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl text-white transition-all duration-700 hover:scale-105 shadow-lg hover:shadow-2xl hover:shadow-white/20' : 'bg-zinc-700 hover:bg-zinc-600 text-white rounded-md transition-all duration-150'}`}
                 >
                   Try Again
                 </button>
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -42,10 +42,16 @@ export async function authenticatedFetch(
         headers,
       });
 
+      // If retry also fails with 401, throw error
+      if (retryResponse.status === 401) {
+        console.error('Token refresh succeeded but request still unauthorized');
+        throw new Error('Invalid authentication token. Please sign in again.');
+      }
+
       return retryResponse;
     } catch (error) {
       console.error('Token refresh failed:', error);
-      throw new Error('Authentication failed. Please sign in again.');
+      throw new Error('Invalid authentication token. Please sign in again.');
     }
   }
 
