@@ -293,8 +293,17 @@ export default function QuizPerformance() {
 
           <div className="relative text-center mb-10">
             <h2 className={`text-3xl md:text-4xl text-white mb-2 tracking-tight font-bold ${liquidGlass ? '' : 'font-mono'}`}>Predicted Exam Score</h2>
-            <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'} mb-8`}>
-              Based on {totalAnswered} question{totalAnswered !== 1 ? 's' : ''}
+            <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'} mb-8 flex items-center justify-center gap-2 flex-wrap`}>
+              <span>Based on {totalAnswered} question{totalAnswered !== 1 ? 's' : ''}</span>
+              <span className="text-zinc-700">•</span>
+              <span className={`text-xs font-semibold ${
+                reliabilityInfo.color === 'emerald' ? 'text-emerald-500' :
+                reliabilityInfo.color === 'cyan' ? 'text-cyan-500' :
+                reliabilityInfo.color === 'yellow' ? 'text-yellow-500' :
+                'text-orange-500'
+              }`}>
+                {reliabilityInfo.label}
+              </span>
             </p>
 
             {hasEnoughQuestions ? (
@@ -324,33 +333,7 @@ export default function QuizPerformance() {
                     <p className={`text-xs text-zinc-400 mt-3 pt-2 border-t ${liquidGlass ? 'border-zinc-700' : 'border-zinc-700 font-mono'}`}>Color is based on your Ability Level from IRT analysis, which correlates with predicted exam score.</p>
                   </div>
                 </div>
-                <div className={`text-xl md:text-2xl text-zinc-500 ${liquidGlass ? '' : 'font-mono'}`}>out of 900</div>
-
-                {/* Dynamic Reliability Indicator */}
-                <div className={`inline-flex flex-col items-center gap-1 mt-4 mb-8 px-6 py-3 ${liquidGlass ? 'rounded-2xl backdrop-blur-xl' : 'rounded-xl'} border ${
-                  reliabilityInfo.color === 'emerald' ? 'bg-emerald-500/10 border-emerald-500/30' :
-                  reliabilityInfo.color === 'cyan' ? 'bg-cyan-500/10 border-cyan-500/30' :
-                  reliabilityInfo.color === 'yellow' ? 'bg-yellow-500/10 border-yellow-500/30' :
-                  'bg-orange-500/10 border-orange-500/30'
-                }`}>
-                  <p className={`text-sm font-bold ${
-                    reliabilityInfo.color === 'emerald' ? 'text-emerald-400' :
-                    reliabilityInfo.color === 'cyan' ? 'text-cyan-400' :
-                    reliabilityInfo.color === 'yellow' ? 'text-yellow-400' :
-                    'text-orange-400'
-                  } ${liquidGlass ? '' : 'font-mono'}`}>
-                    {reliabilityInfo.label}
-                  </p>
-                  <p className={`text-xs ${
-                    reliabilityInfo.color === 'emerald' ? liquidGlass ? 'text-emerald-300/80' : 'text-emerald-400/80' :
-                    reliabilityInfo.color === 'cyan' ? liquidGlass ? 'text-cyan-300/80' : 'text-cyan-400/80' :
-                    reliabilityInfo.color === 'yellow' ? liquidGlass ? 'text-yellow-300/80' : 'text-yellow-400/80' :
-                    liquidGlass ? 'text-orange-300/80' : 'text-orange-400/80'
-                  } ${liquidGlass ? '' : 'font-mono'}`}>
-                    {reliabilityInfo.sublabel}
-                  </p>
-                </div>
-
+                <div className={`text-xl md:text-2xl text-zinc-500 mb-8 ${liquidGlass ? '' : 'font-mono'}`}>out of 900</div>
                 <div>
                   {totalAnswered > 0 ? (
                     <div className={`inline-block px-10 py-4 text-xl md:text-2xl font-bold transition-all duration-700 ${
