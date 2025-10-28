@@ -174,7 +174,7 @@ export default function PerformancePage() {
               )}
             </div>
           </div>
-          <h1 className="text-4xl font-bold mb-2 text-slate-100 tracking-tight">Performance</h1>
+          <h1 className="text-4xl font-bold mb-2 text-slate-100 tracking-tight">Flashcard Performance</h1>
           <p className="text-slate-400 text-base">View your progress and statistics</p>
         </div>
 

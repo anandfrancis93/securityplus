@@ -203,8 +203,8 @@ export default function CreateFlashcardPage() {
               )}
             </div>
           </div>
-          <h1 className="text-4xl font-bold mb-2 text-slate-100 tracking-tight">Create Flashcard</h1>
-          <p className="text-slate-400 text-base">Make a new flashcard for your study</p>
+          <h1 className="text-4xl font-bold mb-2 text-slate-100 tracking-tight">Create Flashcards</h1>
+          <p className="text-slate-400 text-base">Make new flashcards for your study</p>
         </div>
 
         {/* Flashcard Creation Form - Scrollable */}
