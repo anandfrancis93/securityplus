@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateQuestionWithTopics, selectQuestionType } from '@/lib/questionGenerator';
-import { selectQuestionCategory, selectTopicsForQuestion, initializeQuizMetadata } from '@/lib/quizPregeneration';
+import { selectQuestionCategory, selectTopicsForQuestion } from '@/lib/quizPregeneration';
 import { authenticateRequest, authenticateAndAuthorize } from '@/lib/apiAuth';
 import { GenerateSingleQuestionSchema, safeValidateRequestBody } from '@/lib/apiValidation';
 import { addQuestionToSession, sanitizeQuestionForClient, createQuizSession, getQuizSession } from '@/lib/quizStateManager';
 import { generateUniqueQuestion } from '@/lib/similarityCheck';
 import { selectTopicsWithFSRS, determineCurrentPhase } from '@/lib/topicSelectionFSRS';
+import { ensureMetadataInitialized } from '@/lib/fsrsMetadataUpdate';
 import { getUserProgress } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
@@ -63,7 +64,7 @@ export async function POST(request: NextRequest) {
     if (userId) {
       try {
         userProgress = await getUserProgress(userId);
-        metadata = userProgress?.quizMetadata || initializeQuizMetadata();
+        metadata = ensureMetadataInitialized(userProgress);
 
         // Determine how many topics to select based on category
         const topicCount = questionCategory === 'single-domain-single-topic' ? 1 :

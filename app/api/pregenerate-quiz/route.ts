@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebaseAdmin';
 import { UserProgress, CachedQuiz, Question } from '@/lib/types';
-import { pregenerateQuiz, initializeQuizMetadata, updateMetadataAfterQuiz } from '@/lib/quizPregeneration';
+import { pregenerateQuiz, initializeQuizMetadata } from '@/lib/quizPregeneration';
+import { ensureMetadataInitialized, updateMetadataAfterQuiz, syncTopicPerformanceToUserProgress } from '@/lib/fsrsMetadataUpdate';
 import { authenticateAndAuthorize } from '@/lib/apiAuth';
 import { PregenerateQuizSchema, safeValidateRequestBody } from '@/lib/apiValidation';
 import { createQuizSession, sanitizeQuestionsForClient } from '@/lib/quizStateManager';
@@ -43,19 +44,20 @@ export async function POST(request: NextRequest) {
 
     const userProgress = userDoc.data() as UserProgress;
 
-    // Initialize quiz metadata if it doesn't exist
-    if (!userProgress.quizMetadata) {
-      console.log('Initializing quiz metadata for new user');
-      userProgress.quizMetadata = initializeQuizMetadata();
-    }
+    // Initialize/ensure quiz metadata with FSRS support
+    console.log('Ensuring FSRS metadata is initialized');
+    userProgress.quizMetadata = ensureMetadataInitialized(userProgress);
 
-    // If completedQuestions provided, update metadata first
+    // If completedQuestions provided, update metadata with FSRS tracking
     if (completedQuestions && Array.isArray(completedQuestions)) {
-      console.log(`Updating metadata with ${completedQuestions.length} completed questions`);
+      console.log(`Updating FSRS metadata with ${completedQuestions.length} completed questions`);
       userProgress.quizMetadata = updateMetadataAfterQuiz(
         userProgress.quizMetadata,
         completedQuestions
       );
+
+      // Sync topic performance back to UserProgress for global tracking
+      userProgress.topicPerformance = syncTopicPerformanceToUserProgress(userProgress.quizMetadata);
     }
 
     // Pre-generate the next quiz
@@ -85,6 +87,7 @@ export async function POST(request: NextRequest) {
     await userRef.update({
       cachedQuiz: secureCache,
       quizMetadata: userProgress.quizMetadata,
+      topicPerformance: userProgress.topicPerformance, // Sync topic performance
     });
 
     console.log('Cached quiz saved to Firebase (without correct answers)');
