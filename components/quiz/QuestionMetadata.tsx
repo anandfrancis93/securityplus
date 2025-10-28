@@ -26,7 +26,7 @@ export default function QuestionMetadata({ question, liquidGlass = true }: Quest
                 key={index}
                 className={`px-6 py-4 text-lg md:text-xl font-bold ${liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-200 border border-white/20 rounded-2xl' : 'bg-zinc-900 text-zinc-300 border-2 border-zinc-700 rounded-md'}`}
               >
-                {domain}
+                {domain.replace('.0', '.')}
               </span>
             ))}
           </div>
