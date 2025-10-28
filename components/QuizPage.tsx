@@ -60,7 +60,15 @@ export default function Quiz() {
         console.log(`  Quiz session ID: ${quizSessionId}`);
 
         // Initialize quiz with quizSessionId BEFORE clearing cache
+        if (!quizSessionId) {
+          console.error('⚠️ WARNING: quizSessionId is missing from cached quiz!');
+          setErrorMessage('Quiz session is missing. Reloading...');
+          window.location.reload();
+          return;
+        }
+
         startNewQuiz(quizSessionId);
+        console.log('✅ Quiz initialized with session ID:', quizSessionId);
 
         // SECURITY: Questions are sanitized (no correctAnswer), cast to Question[]
         setQuestions(userProgress.cachedQuiz.questions as Question[]);
@@ -75,7 +83,15 @@ export default function Quiz() {
         console.log(`  Quiz session ID: ${quizSessionId}`);
 
         // Initialize quiz with quizSessionId BEFORE clearing cache
+        if (!quizSessionId) {
+          console.error('⚠️ WARNING: quizSessionId is missing from cached quiz!');
+          setErrorMessage('Quiz session is missing. Reloading...');
+          window.location.reload();
+          return;
+        }
+
         startNewQuiz(quizSessionId);
+        console.log('✅ Quiz initialized with session ID:', quizSessionId);
 
         // SECURITY: Questions are sanitized (no correctAnswer), cast to Question[]
         setQuestions(userProgress.cachedQuiz.questions as Question[]);
@@ -150,7 +166,7 @@ export default function Quiz() {
 
       const data = await authenticatedPost('/api/generate-single-question', {
         userId: user?.uid,
-        quizSessionId: userProgress?.cachedQuiz?.quizSessionId,
+        quizSessionId: currentQuiz?.quizSessionId,
         excludeTopics: userProgress?.answeredQuestions || [],
         questionNumber,
         currentAbility,
