@@ -63,15 +63,23 @@ export async function POST(request: NextRequest) {
       predictedScore = irtMetrics.predictedScore;
     }
 
-    // Get answered questions (topics covered)
-    const answeredQuestions = allAttempts.flatMap((attempt: any) =>
-      attempt.question?.topics || []
-    );
+    // Get answered questions (question IDs)
+    const answeredQuestions = allAttempts.map((attempt: any) =>
+      attempt.questionId
+    ).filter(Boolean);
+
+    // Recalculate all score metrics
+    const correctAnswers = allAttempts.filter((attempt: any) => attempt.isCorrect).length;
+    const totalPoints = allAttempts.reduce((sum: number, attempt: any) => sum + (attempt.pointsEarned || 0), 0);
+    const maxPossiblePoints = allAttempts.reduce((sum: number, attempt: any) => sum + (attempt.maxPoints || 100), 0);
 
     // Update user document
     await userRef.update({
       quizHistory,
       totalQuestions,
+      correctAnswers,
+      totalPoints,
+      maxPossiblePoints,
       estimatedAbility,
       predictedScore,
       answeredQuestions,
