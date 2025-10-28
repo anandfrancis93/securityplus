@@ -293,7 +293,7 @@ export default function QuizPerformance() {
 
       <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 py-8 max-w-7xl">
         {/* Header */}
-        <header className="mb-16">
+        <header className="mb-8">
           <Header showBackButton backButtonPath="/cybersecurity/quiz" backButtonLabel="Back to Quiz" className="mb-12" />
 
           {/* Hero Section - Apple Style */}
