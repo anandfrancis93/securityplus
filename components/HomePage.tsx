@@ -49,26 +49,6 @@ export default function HomePage() {
             <p className={`text-xl sm:text-2xl md:text-3xl font-light max-w-3xl mx-auto leading-relaxed ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'}`}>
               Your adaptive learning companion powered by AI and spaced repetition.
             </p>
-
-            {/* CTA Button */}
-            <div className="pt-4">
-              <button
-                onClick={() => router.push('/cybersecurity')}
-                className={`group relative inline-flex items-center gap-3 px-10 py-5 text-lg font-semibold ${
-                  liquidGlass
-                    ? 'bg-white/10 backdrop-blur-2xl rounded-full border border-white/20 hover:bg-white/15 hover:border-white/30'
-                    : 'bg-violet-600 rounded-full hover:bg-violet-700'
-                } transition-all duration-500 shadow-2xl ${liquidGlass ? 'hover:shadow-violet-500/30' : 'hover:shadow-violet-600/50'} hover:scale-105`}
-              >
-                {liquidGlass && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-full opacity-50" />
-                )}
-                <span className="relative">Get Started</span>
-                <svg className="relative w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </button>
-            </div>
           </div>
         </section>
 
