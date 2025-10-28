@@ -67,13 +67,13 @@ export default function QuestionCard({
           const showIncorrect = showExplanation && isSelected && !isCorrectAnswer;
 
           const buttonClasses = showExplanation
-            ? // Review mode - not interactive, match ExplanationSection styling
+            ? // Review mode - not interactive, more prominent green/red styling
               `relative w-full text-left p-8 md:p-10 border-2 ${
                 liquidGlass
                   ? showCorrect
-                    ? 'bg-white/5 backdrop-blur-2xl border-green-500/50 rounded-[40px] shadow-2xl shadow-green-500/20'
+                    ? 'bg-green-500/10 backdrop-blur-2xl border-green-500/60 rounded-[40px] shadow-2xl shadow-green-500/30'
                     : showIncorrect
-                    ? 'bg-white/5 backdrop-blur-2xl border-red-500/50 rounded-[40px] shadow-2xl shadow-red-500/20'
+                    ? 'bg-red-500/10 backdrop-blur-2xl border-red-500/60 rounded-[40px] shadow-2xl shadow-red-500/30'
                     : isSelected
                     ? 'bg-white/10 backdrop-blur-2xl border-white/40 rounded-3xl shadow-lg'
                     : 'bg-white/5 backdrop-blur-2xl border-white/25 rounded-3xl'
@@ -106,13 +106,13 @@ export default function QuestionCard({
             >
               {liquidGlass && showExplanation && showCorrect && (
                 <>
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-transparent to-transparent rounded-[40px]" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/30 via-green-500/10 to-transparent rounded-[40px]" />
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
                 </>
               )}
               {liquidGlass && showExplanation && showIncorrect && (
                 <>
-                  <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-[40px]" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-red-500/30 via-red-500/10 to-transparent rounded-[40px]" />
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
                 </>
               )}

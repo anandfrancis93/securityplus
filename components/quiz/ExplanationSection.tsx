@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Question } from '@/lib/types';
 
 interface ExplanationSectionProps {
@@ -19,6 +20,7 @@ export default function ExplanationSection({
   difficulty,
   showDifficultyBadge = false,
 }: ExplanationSectionProps) {
+  const [isIncorrectExpanded, setIsIncorrectExpanded] = useState(false);
   // Ensure correctAnswers is always an array of numbers, handle undefined/null
   const correctAnswers: number[] = question.correctAnswer === undefined || question.correctAnswer === null
     ? []
@@ -110,31 +112,55 @@ export default function ExplanationSection({
         </div>
       </div>
 
-      {/* Why Other Answers Are Wrong */}
+      {/* Why Other Options Are Incorrect - Collapsible */}
       {hasIncorrectExplanations && (
-        <div className={`relative p-12 md:p-16 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'}`}>
+        <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'} overflow-hidden`}>
           {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
-          <h4 className="font-bold text-white mb-8 text-3xl md:text-4xl relative">Why Other Answers Are Incorrect:</h4>
-          <div className="space-y-6 relative">
-            {question.incorrectExplanations?.map((explanation, index) => {
-              // Skip if this is a correct answer or if explanation is empty
-              const isCorrect = correctAnswers.includes(index);
-              const isEmpty = !explanation || explanation.trim() === '';
 
-              if (isCorrect || isEmpty) {
-                return null;
-              }
+          {/* Collapsible Header */}
+          <button
+            onClick={() => setIsIncorrectExpanded(!isIncorrectExpanded)}
+            className="relative w-full p-12 md:p-16 text-left transition-all duration-300 hover:bg-white/5"
+          >
+            <div className="flex items-center justify-between gap-4">
+              <h4 className="font-bold text-white text-3xl md:text-4xl relative">Why Other Options Are Incorrect</h4>
+              <svg
+                className={`w-8 h-8 md:w-10 md:h-10 text-white transition-transform duration-300 flex-shrink-0 ${
+                  isIncorrectExpanded ? 'rotate-180' : ''
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={2.5}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </button>
 
-              return (
-                <div key={index} className="text-xl md:text-2xl">
-                  <span className="font-bold text-zinc-400">
-                    {String.fromCharCode(65 + index)}.
-                  </span>
-                  <span className="text-zinc-200 ml-4 leading-relaxed">{explanation}</span>
-                </div>
-              );
-            })}
-          </div>
+          {/* Collapsible Content */}
+          {isIncorrectExpanded && (
+            <div className="px-12 md:px-16 pb-12 md:pb-16 space-y-6 relative animate-slideDown">
+              {question.incorrectExplanations?.map((explanation, index) => {
+                // Skip if this is a correct answer or if explanation is empty
+                const isCorrect = correctAnswers.includes(index);
+                const isEmpty = !explanation || explanation.trim() === '';
+
+                if (isCorrect || isEmpty) {
+                  return null;
+                }
+
+                return (
+                  <div key={index} className="text-xl md:text-2xl">
+                    <span className="font-bold text-zinc-400">
+                      {String.fromCharCode(65 + index)}.
+                    </span>
+                    <span className="text-zinc-200 ml-4 leading-relaxed">{explanation}</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
     </div>
