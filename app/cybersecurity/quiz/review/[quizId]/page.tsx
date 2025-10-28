@@ -168,8 +168,6 @@ export default function QuizReviewPage() {
                   isCorrect={attempt.isCorrect}
                   isPartiallyCorrect={isPartiallyCorrect}
                   liquidGlass={liquidGlass}
-                  difficulty={question.difficulty}
-                  showDifficultyBadge={true}
                 />
 
                 {/* Question Metadata */}
