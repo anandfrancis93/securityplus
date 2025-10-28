@@ -47,13 +47,13 @@ export default function QuestionCard({
         </>
       )}
 
-      <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-16 leading-tight text-white relative">
+      <h2 className="text-xl md:text-2xl lg:text-3xl font-bold mb-16 leading-tight text-white relative">
         {question.question}
       </h2>
 
       {/* Multiple-response instruction */}
       {question.questionType === 'multiple' && !showExplanation && (
-        <div className={`mb-12 text-xl md:text-2xl text-zinc-200 p-10 relative ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border-2 border-white/20 rounded-3xl shadow-lg' : 'bg-zinc-900 border-2 border-zinc-700 rounded-md'}`}>
+        <div className={`mb-12 text-base md:text-lg text-zinc-200 p-10 relative ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border-2 border-white/20 rounded-3xl shadow-lg' : 'bg-zinc-900 border-2 border-zinc-700 rounded-md'}`}>
           {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 via-transparent to-transparent rounded-3xl" />}
           <strong className="font-bold relative">Select all that apply</strong> <span className="relative">- This question has multiple correct answers</span>
         </div>
@@ -186,11 +186,11 @@ export default function QuestionCard({
                       }`}></div>}
                     </div>
                   )}
-                  <span className={`font-bold ${showExplanation ? 'text-2xl' : 'text-2xl md:text-3xl'} text-zinc-300`}>
+                  <span className={`font-bold ${showExplanation ? 'text-lg' : 'text-lg md:text-xl'} text-zinc-300`}>
                     {String.fromCharCode(65 + index)}.
                   </span>
                 </div>
-                <span className={`text-white ${showExplanation ? 'text-xl md:text-2xl lg:text-3xl' : 'text-2xl md:text-3xl'} leading-relaxed inline align-top`}>
+                <span className={`text-white ${showExplanation ? 'text-base md:text-lg lg:text-xl' : 'text-base md:text-lg'} leading-relaxed inline align-top`}>
                   {option}
                 </span>
                 {/* Visual indicators for correct/incorrect in review mode - only for multiple choice */}
