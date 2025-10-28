@@ -294,6 +294,16 @@ export default function QuizPerformance() {
   const isGoodPerformance = predictedScore >= 750;
   const isNeedsWork = predictedScore < 600;
 
+  // Helper function to get color for a specific score
+  const getScoreColor = (score: number) => {
+    if (score >= 750) return 'emerald';
+    if (score >= 600) return 'yellow';
+    return 'red';
+  };
+
+  const lowerColor = getScoreColor(scoreCI.lower);
+  const upperColor = getScoreColor(scoreCI.upper);
+
   return (
     <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black font-mono'}`}>
       {/* Animated Background Gradients */}
@@ -359,13 +369,22 @@ export default function QuizPerformance() {
                   {/* Score Range Display */}
                   {isFinite(abilityStandardError) && totalAnswered >= 5 ? (
                     <>
-                      <div className={`text-7xl md:text-8xl font-bold transition-all duration-700 ${
-                        totalAnswered === 0 ? 'text-zinc-400' :
-                        isGoodPerformance ? 'text-emerald-400' :
-                        isNeedsWork ? 'text-red-400' :
-                        'text-yellow-400'
-                      }`}>
-                        {scoreCI.lower} - {scoreCI.upper}
+                      <div className={`text-7xl md:text-8xl font-bold transition-all duration-700 flex items-center justify-center gap-4`}>
+                        <span className={
+                          lowerColor === 'emerald' ? 'text-emerald-400' :
+                          lowerColor === 'yellow' ? 'text-yellow-400' :
+                          'text-red-400'
+                        }>
+                          {scoreCI.lower}
+                        </span>
+                        <span className="text-zinc-500">-</span>
+                        <span className={
+                          upperColor === 'emerald' ? 'text-emerald-400' :
+                          upperColor === 'yellow' ? 'text-yellow-400' :
+                          'text-red-400'
+                        }>
+                          {scoreCI.upper}
+                        </span>
                       </div>
                     </>
                   ) : (
@@ -471,28 +490,71 @@ export default function QuizPerformance() {
               {/* Progress bar fill - show range if CI available, otherwise point estimate */}
               {hasEnoughQuestions && (
                 isFinite(abilityStandardError) && totalAnswered >= 5 ? (
-                  // Show range (confidence interval)
-                  <div
-                    className={`h-6 absolute transition-all duration-700 ${
-                      isGoodPerformance
-                        ? liquidGlass
-                          ? 'bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-600 rounded-2xl'
-                          : 'bg-emerald-500 rounded-md'
-                      : isNeedsWork
-                        ? liquidGlass
-                          ? 'bg-gradient-to-r from-red-500 via-red-400 to-red-600 rounded-2xl'
-                          : 'bg-red-500 rounded-md'
-                      : liquidGlass
-                        ? 'bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 rounded-2xl'
-                        : 'bg-yellow-500 rounded-md'
-                    }`}
-                    style={{
-                      left: `${Math.max(0, ((scoreCI.lower - 100) / 800) * 100)}%`,
-                      width: `${Math.min(100, ((scoreCI.upper - scoreCI.lower) / 800) * 100)}%`
-                    }}
-                  >
-                    {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-2xl" />}
-                  </div>
+                  // Show range (confidence interval) with multiple color segments
+                  <>
+                    {/* Red segment: 100-599 */}
+                    {scoreCI.lower < 600 && (
+                      <div
+                        className={`h-6 absolute transition-all duration-700 ${
+                          liquidGlass
+                            ? 'bg-gradient-to-r from-red-500 via-red-400 to-red-600'
+                            : 'bg-red-500'
+                        }`}
+                        style={{
+                          left: `${Math.max(0, ((scoreCI.lower - 100) / 800) * 100)}%`,
+                          width: `${((Math.min(scoreCI.upper, 599) - scoreCI.lower) / 800) * 100}%`,
+                          borderTopLeftRadius: liquidGlass ? '1rem' : '0.375rem',
+                          borderBottomLeftRadius: liquidGlass ? '1rem' : '0.375rem',
+                          borderTopRightRadius: scoreCI.upper < 600 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                          borderBottomRightRadius: scoreCI.upper < 600 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                        }}
+                      >
+                        {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" style={{ borderTopLeftRadius: '1rem', borderBottomLeftRadius: '1rem', borderTopRightRadius: scoreCI.upper < 600 ? '1rem' : '0', borderBottomRightRadius: scoreCI.upper < 600 ? '1rem' : '0' }} />}
+                      </div>
+                    )}
+
+                    {/* Yellow segment: 600-749 */}
+                    {scoreCI.lower < 750 && scoreCI.upper >= 600 && (
+                      <div
+                        className={`h-6 absolute transition-all duration-700 ${
+                          liquidGlass
+                            ? 'bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600'
+                            : 'bg-yellow-500'
+                        }`}
+                        style={{
+                          left: `${((Math.max(scoreCI.lower, 600) - 100) / 800) * 100}%`,
+                          width: `${((Math.min(scoreCI.upper, 749) - Math.max(scoreCI.lower, 600)) / 800) * 100}%`,
+                          borderTopLeftRadius: scoreCI.lower >= 600 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                          borderBottomLeftRadius: scoreCI.lower >= 600 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                          borderTopRightRadius: scoreCI.upper < 750 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                          borderBottomRightRadius: scoreCI.upper < 750 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                        }}
+                      >
+                        {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" style={{ borderTopLeftRadius: scoreCI.lower >= 600 ? '1rem' : '0', borderBottomLeftRadius: scoreCI.lower >= 600 ? '1rem' : '0', borderTopRightRadius: scoreCI.upper < 750 ? '1rem' : '0', borderBottomRightRadius: scoreCI.upper < 750 ? '1rem' : '0' }} />}
+                      </div>
+                    )}
+
+                    {/* Green segment: 750-900 */}
+                    {scoreCI.upper >= 750 && (
+                      <div
+                        className={`h-6 absolute transition-all duration-700 ${
+                          liquidGlass
+                            ? 'bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-600'
+                            : 'bg-emerald-500'
+                        }`}
+                        style={{
+                          left: `${((Math.max(scoreCI.lower, 750) - 100) / 800) * 100}%`,
+                          width: `${((scoreCI.upper - Math.max(scoreCI.lower, 750)) / 800) * 100}%`,
+                          borderTopLeftRadius: scoreCI.lower >= 750 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                          borderBottomLeftRadius: scoreCI.lower >= 750 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                          borderTopRightRadius: liquidGlass ? '1rem' : '0.375rem',
+                          borderBottomRightRadius: liquidGlass ? '1rem' : '0.375rem',
+                        }}
+                      >
+                        {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" style={{ borderTopLeftRadius: scoreCI.lower >= 750 ? '1rem' : '0', borderBottomLeftRadius: scoreCI.lower >= 750 ? '1rem' : '0', borderTopRightRadius: '1rem', borderBottomRightRadius: '1rem' }} />}
+                      </div>
+                    )}
+                  </>
                 ) : (
                   // Show point estimate
                   <div
