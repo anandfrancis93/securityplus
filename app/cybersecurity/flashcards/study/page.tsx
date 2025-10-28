@@ -127,13 +127,14 @@ export default function StudyFlashcards() {
       <div className={`flex items-center justify-center min-h-screen ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
         {liquidGlass && (
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+            <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+            <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
           </div>
         )}
         <div className="relative text-center">
-          <div className={`animate-spin rounded-full h-16 w-16 border-4 ${liquidGlass ? 'border-white/10 border-t-white/40' : 'border-transparent border-b-2 border-b-violet-500'} mx-auto`}></div>
-          <p className="mt-4 text-slate-300 text-base tracking-wide">Loading flashcards...</p>
+          <div className={`animate-spin rounded-2xl h-32 w-32 md:h-40 md:w-40 border-4 ${liquidGlass ? 'border-white/10 border-t-cyan-400/80' : 'border-white/10 border-t-violet-500'} mx-auto`}></div>
+          <p className={`mt-8 text-2xl md:text-3xl font-light tracking-tight ${liquidGlass ? 'text-zinc-400' : 'text-slate-300'}`}>Loading flashcards...</p>
         </div>
       </div>
     );
@@ -144,21 +145,30 @@ export default function StudyFlashcards() {
       <div className={`flex items-center justify-center min-h-screen ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
         {liquidGlass && (
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-            <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+            <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+            <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
           </div>
         )}
-        <div className="relative text-center">
-          <div className="text-6xl mb-6">✅</div>
-          <h2 className="text-3xl font-bold text-white mb-4 tracking-tight">All Done!</h2>
-          <p className="text-slate-300 mb-8 text-base tracking-wide">No flashcards due right now.</p>
-          <button
-            onClick={() => router.push('/cybersecurity/flashcards')}
-            className={`${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl rounded-3xl' : 'bg-violet-600 hover:bg-violet-700 rounded-full'} text-white px-8 py-4 font-medium text-base tracking-wide ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-300'} shadow-lg ${liquidGlass ? 'border border-white/20' : 'hover:shadow-violet-500/50'}`}
-          >
-            Back to Flashcards
-          </button>
+        <div className="relative max-w-2xl mx-auto px-6">
+          <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px]' : 'bg-zinc-900 rounded-3xl'} p-12 md:p-16 border ${liquidGlass ? 'border-white/10' : 'border-zinc-800'} overflow-hidden`}>
+            {/* Light Reflection */}
+            {liquidGlass && (
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
+            )}
+
+            <div className="relative text-center space-y-6">
+              <div className="text-7xl md:text-8xl mb-8">✅</div>
+              <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">All Done!</h2>
+              <p className={`text-xl md:text-2xl font-light leading-relaxed ${liquidGlass ? 'text-zinc-400' : 'text-slate-300'}`}>No flashcards due right now.</p>
+              <button
+                onClick={() => router.push('/cybersecurity/flashcards')}
+                className={`relative mt-8 ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl rounded-3xl' : 'bg-violet-600 hover:bg-violet-700 rounded-3xl'} text-white px-10 py-5 font-medium text-lg tracking-tight transition-all duration-700 shadow-xl ${liquidGlass ? 'border border-white/20 hover:shadow-2xl hover:shadow-emerald-500/30' : 'hover:shadow-violet-500/50'}`}
+              >
+                Back to Flashcards
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -182,37 +192,37 @@ export default function StudyFlashcards() {
       <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
         {liquidGlass && (
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-            <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+            <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+            <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
           </div>
         )}
-        <div className="relative container mx-auto px-4 py-8 max-w-3xl">
+        <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 py-8 max-w-5xl">
           {/* Header */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-6">
+        <div className="mb-12 md:mb-16">
+          <div className="flex justify-between items-center mb-8">
             <button
               onClick={() => router.push('/cybersecurity/flashcards')}
-              className="text-slate-300 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-500 p-3 rounded-full"
+              className={`${liquidGlass ? 'text-zinc-400 hover:text-white' : 'text-slate-300 hover:text-white'} hover:bg-white/5 active:bg-white/10 transition-all duration-700 p-4 rounded-2xl`}
               title="Back to Flashcards"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
             </button>
 
-            <p className="text-slate-300 text-sm tracking-wide font-medium">
-              Card {currentCardIndex + 1} of {dueCardIds.length}
+            <p className={`text-xl md:text-2xl font-medium tracking-tight ${liquidGlass ? 'text-zinc-300' : 'text-slate-300'}`}>
+              {currentCardIndex + 1} <span className={liquidGlass ? 'text-zinc-500' : 'text-slate-500'}>of</span> {dueCardIds.length}
             </p>
 
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="text-slate-300 hover:text-white hover:bg-white/5 active:bg-white/10 transition-all duration-500 p-3 rounded-full"
+                className={`${liquidGlass ? 'text-zinc-400 hover:text-white' : 'text-slate-300 hover:text-white'} hover:bg-white/5 active:bg-white/10 transition-all duration-700 p-4 rounded-2xl`}
                 title="Menu"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
 
@@ -246,76 +256,100 @@ export default function StudyFlashcards() {
           </div>
 
           {/* Progress Bar */}
-          <div className={`w-full ${liquidGlass ? 'bg-white/5 rounded-3xl' : 'bg-slate-800 rounded-full'} h-2 overflow-hidden border ${liquidGlass ? 'border-white/10' : 'border-transparent'}`}>
-            <div
-              className={`bg-violet-500 h-2 ${liquidGlass ? 'rounded-3xl' : 'rounded-full'} transition-all duration-500 shadow-lg shadow-violet-500/50`}
-              style={{ width: `${progress}%` }}
-            ></div>
+          <div className="relative">
+            <div className={`w-full h-6 relative overflow-hidden ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl' : 'bg-slate-800 border border-transparent rounded-full'}`}>
+              {liquidGlass && (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-2xl" />
+              )}
+              <div
+                className={`h-6 relative transition-all duration-700 ${liquidGlass ? 'bg-gradient-to-r from-violet-500 via-purple-500 to-violet-600 rounded-2xl' : 'bg-violet-500 rounded-full'} ${liquidGlass ? 'shadow-2xl shadow-violet-500/50' : 'shadow-lg shadow-violet-500/30'}`}
+                style={{ width: `${progress}%` }}
+              >
+                {liquidGlass && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-2xl" />
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Flashcard */}
-        <div className="mb-8" style={{ perspective: '1000px' }}>
+        <div className="mb-12" style={{ perspective: '1000px' }}>
           <div
             id="flip-card"
             className="relative cursor-pointer"
             style={{
-              minHeight: '400px',
+              minHeight: '480px',
               transformStyle: 'preserve-3d',
               transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-              transition: 'transform 0.6s',
+              transition: 'transform 0.7s',
             }}
             onClick={handleFlip}
           >
             {/* Front of card */}
             <div
-              className={`absolute inset-0 ${liquidGlass ? 'bg-white/5' : 'bg-slate-800/95'} backdrop-blur-2xl ${liquidGlass ? 'rounded-3xl' : 'rounded-[28px]'} p-6 sm:p-10 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700'} shadow-2xl ${liquidGlass ? 'shadow-black/50' : 'shadow-slate-900/50'}`}
+              className={`absolute inset-0 ${liquidGlass ? 'bg-white/5' : 'bg-slate-800/95'} backdrop-blur-2xl ${liquidGlass ? 'rounded-[40px]' : 'rounded-[28px]'} p-10 sm:p-12 md:p-16 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700'} shadow-2xl ${liquidGlass ? 'shadow-black/50' : 'shadow-slate-900/50'} overflow-hidden`}
               style={{
                 backfaceVisibility: 'hidden',
                 WebkitBackfaceVisibility: 'hidden',
               }}
             >
-              <div className="flex items-center justify-center min-h-[350px] px-2 sm:px-0">
-                <div className="text-center w-full">
-                  <h2 className="text-2xl sm:text-3xl font-bold mb-4 px-2 tracking-tight leading-tight">{currentCard.term}</h2>
-                  <p className="text-slate-400 text-sm mt-8 tracking-wide">Click to reveal definition</p>
+              {/* Light Reflection */}
+              {liquidGlass && (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
+              )}
+
+              <div className="relative flex items-center justify-center min-h-[400px] px-2 sm:px-0">
+                <div className="text-center w-full space-y-6">
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight">{currentCard.term}</h2>
+                  <p className={`text-lg md:text-xl font-light mt-8 tracking-tight ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>Click to reveal definition</p>
                 </div>
               </div>
 
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-                <div className="flex items-center gap-2 text-slate-400">
+              <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
+                <div className={`flex items-center gap-2 ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>
                   <svg
-                    className="w-5 h-5"
+                    className="w-6 h-6"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    strokeWidth={1.5}
                   >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
                       d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                     />
                   </svg>
-                  <span className="text-sm tracking-wide font-medium">Flip</span>
+                  <span className="text-base md:text-lg tracking-tight font-medium">Flip</span>
                 </div>
               </div>
             </div>
 
             {/* Back of card */}
             <div
-              className={`absolute inset-0 ${liquidGlass ? 'bg-white/10' : 'bg-violet-900/20'} backdrop-blur-2xl ${liquidGlass ? 'rounded-3xl' : 'rounded-[28px]'} p-6 sm:p-10 border-2 ${liquidGlass ? 'border-white/30' : 'border-violet-500/40'} shadow-2xl ${liquidGlass ? 'shadow-violet-500/30' : 'shadow-violet-500/20'}`}
+              className={`absolute inset-0 ${liquidGlass ? 'bg-white/10' : 'bg-violet-900/20'} backdrop-blur-2xl ${liquidGlass ? 'rounded-[40px]' : 'rounded-[28px]'} p-10 sm:p-12 md:p-16 border-2 ${liquidGlass ? 'border-white/30' : 'border-violet-500/40'} shadow-2xl ${liquidGlass ? 'shadow-violet-500/30' : 'shadow-violet-500/20'} overflow-hidden`}
               style={{
                 backfaceVisibility: 'hidden',
                 WebkitBackfaceVisibility: 'hidden',
                 transform: 'rotateY(180deg)',
               }}
             >
-              <div className="flex items-center justify-center min-h-[350px] px-2 sm:px-0">
-                <div className="text-left w-full">
-                  <p className="text-lg sm:text-xl leading-relaxed mb-6 whitespace-pre-wrap px-2 text-slate-200 tracking-wide">{currentCard.definition}</p>
+              {/* Gradient Overlay */}
+              {liquidGlass && (
+                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 via-purple-500/10 to-transparent rounded-[40px] opacity-80" />
+              )}
+
+              {/* Light Reflection */}
+              {liquidGlass && (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
+              )}
+
+              <div className="relative flex items-center justify-center min-h-[400px] px-2 sm:px-0">
+                <div className="text-left w-full space-y-6">
+                  <p className={`text-xl sm:text-2xl leading-relaxed whitespace-pre-wrap ${liquidGlass ? 'text-white' : 'text-slate-200'} tracking-tight font-light`}>{currentCard.definition}</p>
                   {currentCard.imageUrl && (
-                    <div className="mt-6">
+                    <div className="mt-8">
                       <img
                         src={currentCard.imageUrl}
                         alt="Flashcard visual"
@@ -323,15 +357,15 @@ export default function StudyFlashcards() {
                           e.stopPropagation();
                           setImageEnlarged(true);
                         }}
-                        className="max-w-full max-h-64 mx-auto rounded-3xl border-2 border-slate-600 cursor-pointer hover:border-violet-500 transition-all duration-500 shadow-lg hover:shadow-violet-500/50"
+                        className={`max-w-full max-h-64 mx-auto ${liquidGlass ? 'rounded-[32px]' : 'rounded-3xl'} border-2 ${liquidGlass ? 'border-white/20' : 'border-slate-600'} cursor-pointer hover:border-violet-400 transition-all duration-700 shadow-xl hover:shadow-violet-500/50`}
                         title="Click to enlarge"
                       />
-                      <p className="text-xs text-slate-400 mt-2 text-center tracking-wide">Click image to enlarge</p>
+                      <p className={`text-sm ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'} mt-3 text-center tracking-tight`}>Click image to enlarge</p>
                     </div>
                   )}
                   {currentCard.context && (
-                    <div className="mt-6 pt-6 border-t border-slate-700">
-                      <p className="text-sm text-slate-300 italic whitespace-pre-wrap tracking-wide">{currentCard.context}</p>
+                    <div className={`mt-8 pt-8 border-t ${liquidGlass ? 'border-white/20' : 'border-slate-700'}`}>
+                      <p className={`text-lg ${liquidGlass ? 'text-zinc-300' : 'text-slate-300'} italic whitespace-pre-wrap tracking-tight font-light`}>{currentCard.context}</p>
                     </div>
                   )}
                 </div>
@@ -342,27 +376,27 @@ export default function StudyFlashcards() {
 
         {/* Answer Buttons - Show when flipped */}
         {isFlipped && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-6 mb-12">
             {/* Again Button */}
             <div className="relative group">
               <button
                 id="again"
                 onClick={() => handleAnswer('again')}
                 disabled={answering}
-                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-red-600 rounded-full'} ${liquidGlass ? 'hover:bg-white/10' : 'hover:bg-red-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-5 px-4 font-medium min-h-[56px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-red-400/50' : 'border-transparent hover:border-red-400'} active:translate-y-0 shadow-lg ${liquidGlass ? 'hover:shadow-2xl hover:shadow-red-500/30' : 'hover:shadow-red-500/50'} ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-500'}`}
+                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-red-600 rounded-full'} ${liquidGlass ? 'hover:bg-white/10' : 'hover:bg-red-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-6 px-5 font-medium min-h-[64px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-red-400/50' : 'border-transparent hover:border-red-400'} active:translate-y-0 shadow-xl ${liquidGlass ? 'hover:shadow-2xl hover:shadow-red-500/40' : 'hover:shadow-red-500/50'} transition-all duration-700`}
               >
                 {liquidGlass && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 )}
                 {liquidGlass && (
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
                 )}
-                <div className="relative text-lg font-bold tracking-wide">Again</div>
-                <div className="relative text-xs opacity-75 tracking-wide">1 day</div>
+                <div className="relative text-xl font-bold tracking-tight">Again</div>
+                <div className="relative text-sm opacity-75 tracking-tight mt-1">1 day</div>
               </button>
               {/* Hover tooltip */}
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                <p className="text-sm text-slate-200 tracking-wide">Couldn&apos;t remember or got it wrong. Card will be reviewed in 1 day.</p>
+              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-slate-900/95 backdrop-blur border border-slate-600' : 'bg-slate-800/95 backdrop-blur border border-slate-700'} rounded-3xl p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
+                <p className="text-base text-slate-200 tracking-tight">Couldn&apos;t remember or got it wrong. Card will be reviewed in 1 day.</p>
               </div>
             </div>
 
@@ -372,20 +406,20 @@ export default function StudyFlashcards() {
                 id="hard"
                 onClick={() => handleAnswer('hard')}
                 disabled={answering}
-                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-yellow-600 rounded-full'} ${liquidGlass ? 'hover:bg-white/10' : 'hover:bg-yellow-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-5 px-4 font-medium min-h-[56px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-yellow-400/50' : 'border-transparent hover:border-yellow-400'} active:translate-y-0 shadow-lg ${liquidGlass ? 'hover:shadow-2xl hover:shadow-yellow-500/30' : 'hover:shadow-yellow-500/50'} ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-500'}`}
+                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-yellow-600 rounded-full'} ${liquidGlass ? 'hover:bg-white/10' : 'hover:bg-yellow-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-6 px-5 font-medium min-h-[64px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-yellow-400/50' : 'border-transparent hover:border-yellow-400'} active:translate-y-0 shadow-xl ${liquidGlass ? 'hover:shadow-2xl hover:shadow-yellow-500/40' : 'hover:shadow-yellow-500/50'} transition-all duration-700`}
               >
                 {liquidGlass && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 via-transparent to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 via-transparent to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 )}
                 {liquidGlass && (
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
                 )}
-                <div className="relative text-lg font-bold tracking-wide">Hard</div>
-                <div className="relative text-xs opacity-75 tracking-wide">1 day</div>
+                <div className="relative text-xl font-bold tracking-tight">Hard</div>
+                <div className="relative text-sm opacity-75 tracking-tight mt-1">1 day</div>
               </button>
               {/* Hover tooltip */}
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                <p className="text-sm text-slate-200 tracking-wide">Difficult to recall, needed time. Card will be reviewed in 1 day.</p>
+              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-slate-900/95 backdrop-blur border border-slate-600' : 'bg-slate-800/95 backdrop-blur border border-slate-700'} rounded-3xl p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
+                <p className="text-base text-slate-200 tracking-tight">Difficult to recall, needed time. Card will be reviewed in 1 day.</p>
               </div>
             </div>
 
@@ -395,20 +429,20 @@ export default function StudyFlashcards() {
                 id="good"
                 onClick={() => handleAnswer('good')}
                 disabled={answering}
-                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-green-600 rounded-full'} ${liquidGlass ? 'hover:bg-white/10' : 'hover:bg-green-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-5 px-4 font-medium min-h-[56px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-green-400/50' : 'border-transparent hover:border-green-400'} active:translate-y-0 shadow-lg ${liquidGlass ? 'hover:shadow-2xl hover:shadow-green-500/30' : 'hover:shadow-green-500/50'} ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-500'}`}
+                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-green-600 rounded-full'} ${liquidGlass ? 'hover:bg-white/10' : 'hover:bg-green-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-6 px-5 font-medium min-h-[64px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-green-400/50' : 'border-transparent hover:border-green-400'} active:translate-y-0 shadow-xl ${liquidGlass ? 'hover:shadow-2xl hover:shadow-green-500/40' : 'hover:shadow-green-500/50'} transition-all duration-700`}
               >
                 {liquidGlass && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-transparent to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-transparent to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 )}
                 {liquidGlass && (
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
                 )}
-                <div className="relative text-lg font-bold tracking-wide">Good</div>
-                <div className="relative text-xs opacity-75 tracking-wide">3 days</div>
+                <div className="relative text-xl font-bold tracking-tight">Good</div>
+                <div className="relative text-sm opacity-75 tracking-tight mt-1">3 days</div>
               </button>
               {/* Hover tooltip */}
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                <p className="text-sm text-slate-200 tracking-wide">Recalled with some effort. Card will be reviewed in 3 days.</p>
+              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-slate-900/95 backdrop-blur border border-slate-600' : 'bg-slate-800/95 backdrop-blur border border-slate-700'} rounded-3xl p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
+                <p className="text-base text-slate-200 tracking-tight">Recalled with some effort. Card will be reviewed in 3 days.</p>
               </div>
             </div>
 
@@ -418,20 +452,20 @@ export default function StudyFlashcards() {
                 id="easy"
                 onClick={() => handleAnswer('easy')}
                 disabled={answering}
-                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-blue-600 rounded-full'} ${liquidGlass ? 'hover:bg-white/10' : 'hover:bg-blue-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-5 px-4 font-medium min-h-[56px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-blue-400/50' : 'border-transparent hover:border-blue-400'} active:translate-y-0 shadow-lg ${liquidGlass ? 'hover:shadow-2xl hover:shadow-blue-500/30' : 'hover:shadow-blue-500/50'} ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-500'}`}
+                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-blue-600 rounded-full'} ${liquidGlass ? 'hover:bg-white/10' : 'hover:bg-blue-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-6 px-5 font-medium min-h-[64px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-blue-400/50' : 'border-transparent hover:border-blue-400'} active:translate-y-0 shadow-xl ${liquidGlass ? 'hover:shadow-2xl hover:shadow-blue-500/40' : 'hover:shadow-blue-500/50'} transition-all duration-700`}
               >
                 {liquidGlass && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 )}
                 {liquidGlass && (
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
                 )}
-                <div className="relative text-lg font-bold tracking-wide">Easy</div>
-                <div className="relative text-xs opacity-75 tracking-wide">7 days</div>
+                <div className="relative text-xl font-bold tracking-tight">Easy</div>
+                <div className="relative text-sm opacity-75 tracking-tight mt-1">7 days</div>
               </button>
               {/* Hover tooltip */}
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-900/95 backdrop-blur border border-slate-600 rounded-3xl p-3 shadow-xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                <p className="text-sm text-slate-200 tracking-wide">Instant recall, confident. Card will be reviewed in 7 days.</p>
+              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-slate-900/95 backdrop-blur border border-slate-600' : 'bg-slate-800/95 backdrop-blur border border-slate-700'} rounded-3xl p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
+                <p className="text-base text-slate-200 tracking-tight">Instant recall, confident. Card will be reviewed in 7 days.</p>
               </div>
             </div>
           </div>
@@ -442,24 +476,27 @@ export default function StudyFlashcards() {
       {/* Image Lightbox */}
       {imageEnlarged && currentCard?.imageUrl && (
         <div
-          className="fixed inset-0 bg-black/95 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/95 backdrop-blur-xl flex items-center justify-center z-50 p-6"
           onClick={() => setImageEnlarged(false)}
         >
           <div className="relative max-w-7xl max-h-full">
             <button
               onClick={() => setImageEnlarged(false)}
-              className="absolute top-4 right-4 bg-red-600 hover:bg-red-700 hover:bg-white/5 active:bg-white/10 text-white p-4 rounded-full transition-all duration-500 z-10 shadow-lg hover:shadow-red-500/50"
+              className={`absolute -top-4 -right-4 ${liquidGlass ? 'bg-red-500/90 hover:bg-red-600' : 'bg-red-600 hover:bg-red-700'} text-white p-5 rounded-2xl transition-all duration-700 z-10 shadow-2xl hover:shadow-red-500/50 hover:scale-110`}
               title="Close"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            <div className="bg-white p-6 rounded-3xl shadow-2xl">
+            <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10' : 'bg-white'} p-8 ${liquidGlass ? 'rounded-[40px]' : 'rounded-3xl'} shadow-2xl overflow-hidden`}>
+              {liquidGlass && (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
+              )}
               <img
                 src={currentCard.imageUrl}
                 alt="Enlarged flashcard visual"
-                className="max-w-full max-h-[85vh] object-contain"
+                className={`relative max-w-full max-h-[85vh] object-contain ${liquidGlass ? 'rounded-[32px]' : 'rounded-2xl'}`}
                 onClick={(e) => e.stopPropagation()}
               />
             </div>
