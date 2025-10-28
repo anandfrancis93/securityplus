@@ -19,7 +19,8 @@ export default function ExplanationSection({
   difficulty,
   showDifficultyBadge = false,
 }: ExplanationSectionProps) {
-  const correctAnswers = Array.isArray(question.correctAnswer)
+  // Ensure correctAnswers is always an array of numbers
+  const correctAnswers: number[] = Array.isArray(question.correctAnswer)
     ? question.correctAnswer
     : [question.correctAnswer];
 
@@ -28,6 +29,12 @@ export default function ExplanationSection({
     question.incorrectExplanations.some((explanation, index) =>
       !correctAnswers.includes(index) && explanation && explanation.trim() !== ''
     );
+
+  console.log('ExplanationSection Debug:', {
+    correctAnswers,
+    incorrectExplanationsLength: question.incorrectExplanations?.length,
+    hasIncorrectExplanations
+  });
 
   return (
     <div className="space-y-8">
@@ -112,7 +119,16 @@ export default function ExplanationSection({
           <div className="space-y-6 relative">
             {question.incorrectExplanations?.map((explanation, index) => {
               // Skip if this is a correct answer or if explanation is empty
-              if (correctAnswers.includes(index) || !explanation || explanation.trim() === '') return null;
+              const isCorrect = correctAnswers.includes(index);
+              const isEmpty = !explanation || explanation.trim() === '';
+
+              console.log(`Option ${String.fromCharCode(65 + index)} (index ${index}):`, {
+                isCorrect,
+                isEmpty,
+                explanation: explanation?.substring(0, 50)
+              });
+
+              if (isCorrect || isEmpty) return null;
 
               return (
                 <div key={index} className="text-xl md:text-2xl">

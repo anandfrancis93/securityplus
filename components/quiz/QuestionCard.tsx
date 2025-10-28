@@ -67,16 +67,24 @@ export default function QuestionCard({
               `relative w-full text-left p-6 md:p-8 border-2 ${
                 liquidGlass
                   ? showCorrect
-                    ? 'bg-white/10 backdrop-blur-xl border-green-500/50 rounded-3xl'
+                    ? question.questionType === 'single'
+                      ? 'bg-green-500/20 backdrop-blur-xl border-green-500/60 rounded-3xl shadow-lg shadow-green-500/20'
+                      : 'bg-white/10 backdrop-blur-xl border-green-500/50 rounded-3xl'
                     : showIncorrect
-                    ? 'bg-white/10 backdrop-blur-xl border-red-500/50 rounded-3xl'
+                    ? question.questionType === 'single'
+                      ? 'bg-red-500/20 backdrop-blur-xl border-red-500/60 rounded-3xl shadow-lg shadow-red-500/20'
+                      : 'bg-white/10 backdrop-blur-xl border-red-500/50 rounded-3xl'
                     : isSelected
                     ? 'bg-white/10 backdrop-blur-xl border-white/30 rounded-3xl'
                     : 'bg-white/5 backdrop-blur-xl border-white/20 rounded-3xl'
                   : showCorrect
-                  ? 'border-green-500 bg-zinc-900 rounded-md'
+                  ? question.questionType === 'single'
+                    ? 'border-green-500 bg-green-950 rounded-md'
+                    : 'border-green-500 bg-zinc-900 rounded-md'
                   : showIncorrect
-                  ? 'border-red-500 bg-zinc-900 rounded-md'
+                  ? question.questionType === 'single'
+                    ? 'border-red-500 bg-red-950 rounded-md'
+                    : 'border-red-500 bg-zinc-900 rounded-md'
                   : isSelected
                   ? 'border-zinc-600 bg-zinc-900 rounded-md'
                   : 'border-zinc-700 bg-zinc-950 rounded-md'
@@ -100,8 +108,20 @@ export default function QuestionCard({
               onClick={() => handleClick(index)}
               className={buttonClasses}
             >
-              {liquidGlass && showExplanation && showCorrect && <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-transparent to-transparent rounded-3xl" />}
-              {liquidGlass && showExplanation && showIncorrect && <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-3xl" />}
+              {liquidGlass && showExplanation && showCorrect && (
+                <div className={`absolute inset-0 bg-gradient-to-br rounded-3xl ${
+                  question.questionType === 'single'
+                    ? 'from-green-500/30 via-green-500/10 to-transparent'
+                    : 'from-green-500/20 via-transparent to-transparent'
+                }`} />
+              )}
+              {liquidGlass && showExplanation && showIncorrect && (
+                <div className={`absolute inset-0 bg-gradient-to-br rounded-3xl ${
+                  question.questionType === 'single'
+                    ? 'from-red-500/30 via-red-500/10 to-transparent'
+                    : 'from-red-500/20 via-transparent to-transparent'
+                }`} />
+              )}
               {liquidGlass && !showExplanation && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />}
 
               <div className="relative">
@@ -163,8 +183,8 @@ export default function QuestionCard({
                 <span className={`text-white ${showExplanation ? 'text-xl md:text-2xl' : 'text-xl md:text-2xl'} leading-relaxed inline align-top`}>
                   {option}
                 </span>
-                {/* Visual indicators for correct/incorrect in review mode */}
-                {showExplanation && (
+                {/* Visual indicators for correct/incorrect in review mode - only for multiple choice */}
+                {showExplanation && question.questionType === 'multiple' && (
                   <>
                     {showCorrect && (
                       <span className={`ml-4 px-4 py-2 text-sm font-bold rounded-xl inline-block align-top ${liquidGlass ? 'bg-green-500/20 text-green-300 border border-green-500/50' : 'bg-green-900 text-green-200 border border-green-500'}`}>
