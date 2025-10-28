@@ -17,249 +17,262 @@ export default function HomePage() {
     }
   }, [user, loading, router]);
 
-  // SVG Icon Components with Glow
-  const getSubjectIcon = (subjectId: string, isHovered: boolean) => {
-    const baseClasses = `w-20 h-20 md:w-24 md:h-24 transition-all duration-500 ${liquidGlass && isHovered ? 'scale-110 drop-shadow-[0_0_15px_currentColor]' : ''}`;
-
-    switch (subjectId) {
-      case 'cybersecurity':
-        return (
-          <svg className={`${baseClasses} text-violet-400`} viewBox="0 -1 24 26" fill="none" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z" />
-            <circle cx="12" cy="12" r="3" strokeWidth={1.5} />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6M9 12h6" />
-          </svg>
-        );
-      case 'networking':
-        return (
-          <svg className={`${baseClasses} text-cyan-400`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-            <circle cx="12" cy="12" r="10" strokeLinecap="round" />
-            <path strokeLinecap="round" d="M2 12h20" />
-            <ellipse cx="12" cy="12" rx="4" ry="10" strokeLinecap="round" />
-          </svg>
-        );
-      case 'maths':
-        return (
-          <svg className={`${baseClasses} text-emerald-400`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-            <rect x="3" y="3" width="18" height="18" rx="2" strokeLinecap="round" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M7 9h3M8.5 7.5v3" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M14 9h3" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6.5 14.5l2 2M8.5 14.5l-2 2" />
-            <circle cx="15.5" cy="13.5" r="0.2" fill="currentColor" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M14 15.5h3" />
-            <circle cx="15.5" cy="17.5" r="0.2" fill="currentColor" />
-          </svg>
-        );
-      case 'physics':
-        return (
-          <svg className={`${baseClasses} text-rose-400`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={0.9}>
-            <circle cx="12" cy="12" r="1.2" fill="currentColor" />
-            <ellipse cx="12" cy="12" rx="9" ry="4.5" strokeLinecap="round" />
-            <ellipse cx="12" cy="12" rx="9" ry="4.5" strokeLinecap="round" transform="rotate(60 12 12)" />
-            <ellipse cx="12" cy="12" rx="9" ry="4.5" strokeLinecap="round" transform="rotate(-60 12 12)" />
-            <circle cx="3" cy="12" r="1.3" fill="currentColor" />
-            <circle cx="16.5" cy="19.8" r="1.3" fill="currentColor" />
-            <circle cx="16.5" cy="4.2" r="1.3" fill="currentColor" />
-          </svg>
-        );
-      case 'english':
-        return (
-          <svg className={`${baseClasses} text-amber-400`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4 19.5A2.5 2.5 0 016.5 17H20" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10 14l2-5 2 5M10.5 12.5h3" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 17h6" strokeWidth={1} />
-          </svg>
-        );
-      default:
-        return null;
-    }
-  };
-
-  const subjects = [
-    {
-      id: 'cybersecurity',
-      name: 'Cybersecurity',
-      description: 'Master security concepts and best practices',
-      path: '/cybersecurity',
-      disabled: false,
-      clickable: true,
-      gradient: 'from-violet-500/20 to-purple-500/20',
-      glowColor: 'shadow-violet-500/50',
-    },
-    {
-      id: 'networking',
-      name: 'Networking',
-      description: 'Network protocols and infrastructure',
-      path: '/networking',
-      disabled: false,
-      clickable: false,
-      gradient: 'from-cyan-500/20 to-blue-500/20',
-      glowColor: 'shadow-cyan-500/50',
-    },
-    {
-      id: 'maths',
-      name: 'Maths',
-      description: 'Mathematical concepts and problem solving',
-      path: '/maths',
-      disabled: false,
-      clickable: false,
-      gradient: 'from-emerald-500/20 to-teal-500/20',
-      glowColor: 'shadow-emerald-500/50',
-    },
-    {
-      id: 'physics',
-      name: 'Physics',
-      description: 'Physical laws and scientific principles',
-      path: '/physics',
-      disabled: false,
-      clickable: false,
-      gradient: 'from-rose-500/20 to-pink-500/20',
-      glowColor: 'shadow-rose-500/50',
-    },
-    {
-      id: 'english',
-      name: 'English',
-      description: 'Language arts and literature',
-      path: '/english',
-      disabled: false,
-      clickable: false,
-      gradient: 'from-amber-500/20 to-orange-500/20',
-      glowColor: 'shadow-amber-500/50',
-    },
-  ];
-
   return (
     <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
-      {/* Animated Background Gradients (Liquid Glass only) */}
+      {/* Animated Background Gradients */}
       {liquidGlass && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-          <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
         </div>
       )}
 
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl">
+      <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 py-8 max-w-7xl">
         {/* Header */}
-        <header className="mb-16 md:mb-20">
-          <Header className="mb-12" />
+        <Header className="mb-20" />
 
-          {/* Hero Section */}
-          <div className="text-center max-w-4xl mx-auto">
-            {liquidGlass ? (
-              <div className="relative">
-                {/* Glow effect behind title */}
-                <div className="absolute inset-0 bg-gradient-to-r from-violet-500/20 via-cyan-500/20 to-emerald-500/20 blur-3xl" />
+        {/* Hero Section - Apple Style */}
+        <section className="text-center mb-32 md:mb-40">
+          <div className="max-w-5xl mx-auto space-y-8">
+            {/* Main Headline */}
+            <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight leading-[0.95]">
+              <span className="block bg-gradient-to-br from-white via-zinc-100 to-zinc-300 bg-clip-text text-transparent">
+                Learn without
+              </span>
+              <span className="block bg-gradient-to-br from-violet-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+                limits.
+              </span>
+            </h1>
 
-                <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-12 shadow-2xl">
-                  {/* Light reflection overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />
+            {/* Tagline */}
+            <p className={`text-xl sm:text-2xl md:text-3xl font-light max-w-3xl mx-auto leading-relaxed ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'}`}>
+              Your adaptive learning companion powered by AI and spaced repetition.
+            </p>
 
-                  <h1 className="relative text-6xl sm:text-7xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-white via-zinc-100 to-white bg-clip-text text-transparent tracking-tight">
-                    Learning Hub
-                  </h1>
-                  <p className="relative text-zinc-400 text-base md:text-lg tracking-wide">
-                    Select a subject to begin your learning journey
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <>
-                <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold mb-6 text-white tracking-tight">
-                  Learning Hub
-                </h1>
-                <p className="text-zinc-500 text-base md:text-lg">
-                  Select a subject to begin your learning journey
-                </p>
-              </>
-            )}
+            {/* CTA Button */}
+            <div className="pt-4">
+              <button
+                onClick={() => router.push('/cybersecurity')}
+                className={`group relative inline-flex items-center gap-3 px-10 py-5 text-lg font-semibold ${
+                  liquidGlass
+                    ? 'bg-white/10 backdrop-blur-2xl rounded-full border border-white/20 hover:bg-white/15 hover:border-white/30'
+                    : 'bg-violet-600 rounded-full hover:bg-violet-700'
+                } transition-all duration-500 shadow-2xl ${liquidGlass ? 'hover:shadow-violet-500/30' : 'hover:shadow-violet-600/50'} hover:scale-105`}
+              >
+                {liquidGlass && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-full opacity-50" />
+                )}
+                <span className="relative">Get Started</span>
+                <svg className="relative w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </button>
+            </div>
           </div>
-        </header>
+        </section>
 
-        {/* Subject Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 pb-12">
-          {subjects.map((subject) => (
+        {/* Featured Subject - Cybersecurity */}
+        <section className="mb-32">
+          <div className="max-w-6xl mx-auto">
             <button
-              key={subject.id}
-              id={subject.id}
-              onClick={() => subject.clickable && router.push(subject.path)}
-              disabled={subject.disabled}
-              onMouseEnter={() => subject.clickable && setHoveredCard(subject.id)}
+              id="cybersecurity"
+              onClick={() => router.push('/cybersecurity')}
+              onMouseEnter={() => setHoveredCard('cybersecurity')}
               onMouseLeave={() => setHoveredCard(null)}
-              className={`group relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-zinc-950 rounded-md'} p-8 border transform
-                       ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-300'}
-                       ${subject.disabled
-                         ? liquidGlass ? 'border-white/5 opacity-40 cursor-not-allowed' : 'border-zinc-900 opacity-40 cursor-not-allowed'
-                         : subject.clickable
-                           ? hoveredCard === subject.id
-                             ? liquidGlass
-                               ? `border-white/20 bg-white/10 scale-105 shadow-2xl ${subject.glowColor}`
-                               : 'border-zinc-700 bg-zinc-900'
-                             : liquidGlass
-                               ? 'border-white/10 hover:border-white/20'
-                               : 'border-zinc-800 hover:border-zinc-700'
-                           : liquidGlass
-                             ? 'border-white/10 cursor-default'
-                             : 'border-zinc-800 cursor-default'
-                       }
-                       ${liquidGlass ? 'focus:outline-none focus:ring-2 focus:ring-white/30' : 'focus:outline-none focus:ring-2 focus:ring-zinc-700'}`}
+              className={`group relative w-full ${
+                liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px]' : 'bg-zinc-900 rounded-3xl'
+              } p-12 md:p-16 border ${
+                hoveredCard === 'cybersecurity'
+                  ? liquidGlass
+                    ? 'border-white/30 bg-white/10 shadow-2xl shadow-violet-500/30'
+                    : 'border-violet-500/50 bg-zinc-800'
+                  : liquidGlass
+                    ? 'border-white/10'
+                    : 'border-zinc-800'
+              } transition-all duration-700 hover:scale-[1.02] overflow-hidden`}
             >
-              {/* Gradient overlay on hover (Liquid Glass only) */}
-              {liquidGlass && hoveredCard === subject.id && subject.clickable && (
-                <div className={`absolute inset-0 bg-gradient-to-br ${subject.gradient} rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+              {/* Gradient Overlay on Hover */}
+              {liquidGlass && hoveredCard === 'cybersecurity' && (
+                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 via-purple-500/10 to-transparent rounded-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               )}
 
-              {/* Light reflection (Liquid Glass only) */}
+              {/* Light Reflection */}
               {liquidGlass && (
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
               )}
 
-              {/* Content */}
-              <div className="relative">
+              <div className="relative flex flex-col md:flex-row items-center gap-12">
                 {/* Icon */}
-                <div className={`flex justify-center items-center mb-6 ${subject.disabled ? 'opacity-30' : ''}`}>
-                  {getSubjectIcon(subject.id, hoveredCard === subject.id && subject.clickable)}
+                <div className={`flex-shrink-0 transition-all duration-700 ${hoveredCard === 'cybersecurity' ? 'scale-110' : ''}`}>
+                  <div className={`w-32 h-32 md:w-40 md:h-40 flex items-center justify-center ${
+                    liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10' : 'bg-zinc-800 rounded-2xl'
+                  } ${hoveredCard === 'cybersecurity' && liquidGlass ? 'shadow-2xl shadow-violet-500/50' : ''} transition-all duration-700`}>
+                    <svg className={`w-20 h-20 md:w-24 md:h-24 text-violet-400 ${hoveredCard === 'cybersecurity' && liquidGlass ? 'drop-shadow-[0_0_20px_currentColor]' : ''} transition-all duration-700`} viewBox="0 -1 24 26" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z" />
+                      <circle cx="12" cy="12" r="3" strokeWidth={1.5} />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6M9 12h6" />
+                    </svg>
+                  </div>
                 </div>
 
-                {/* Subject Name */}
-                <h2 className="text-xl md:text-2xl font-bold mb-3 text-white tracking-tight">
-                  {subject.name}
-                </h2>
+                {/* Content */}
+                <div className="flex-1 text-center md:text-left space-y-4">
+                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+                    Cybersecurity
+                  </h2>
+                  <p className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed max-w-2xl`}>
+                    Master security concepts and best practices with AI-powered quizzes, adaptive flashcards, and comprehensive learning tools.
+                  </p>
+                  <div className="flex items-center gap-3 text-violet-400 font-medium pt-2 justify-center md:justify-start">
+                    <span>Start Learning</span>
+                    <svg className={`w-5 h-5 transition-transform duration-300 ${hoveredCard === 'cybersecurity' ? 'translate-x-2' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </button>
+          </div>
+        </section>
 
-                {/* Description */}
-                <p className={`text-sm md:text-base min-h-[3rem] ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'}`}>
-                  {subject.description}
-                </p>
+        {/* Coming Soon Subjects */}
+        <section className="mb-20">
+          <div className="max-w-6xl mx-auto">
+            {/* Section Header */}
+            <div className="text-center mb-16">
+              <h3 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+                More subjects coming soon
+              </h3>
+              <p className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600'}`}>
+                Expanding your learning possibilities
+              </p>
+            </div>
+
+            {/* Subject Cards Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Networking */}
+              <div className={`relative ${
+                liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-zinc-900 rounded-2xl'
+              } p-8 border ${liquidGlass ? 'border-white/10' : 'border-zinc-800'} opacity-60`}>
+                {liquidGlass && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-3xl" />
+                )}
+                <div className="relative space-y-4">
+                  <div className={`w-16 h-16 flex items-center justify-center ${
+                    liquidGlass ? 'bg-white/5 rounded-2xl' : 'bg-zinc-800 rounded-xl'
+                  }`}>
+                    <svg className="w-10 h-10 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                      <circle cx="12" cy="12" r="10" strokeLinecap="round" />
+                      <path strokeLinecap="round" d="M2 12h20" />
+                      <ellipse cx="12" cy="12" rx="4" ry="10" strokeLinecap="round" />
+                    </svg>
+                  </div>
+                  <h4 className="text-xl font-bold">Networking</h4>
+                  <p className={`text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600'}`}>
+                    Network protocols and infrastructure
+                  </p>
+                  <div className={`inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 ${
+                    liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-400 rounded-full border border-white/20' : 'bg-zinc-800 text-zinc-500 rounded-full border border-zinc-700'
+                  }`}>
+                    <span className="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-pulse" />
+                    Coming Soon
+                  </div>
+                </div>
               </div>
 
-              {/* Coming Soon Badge */}
-              {subject.disabled && (
-                <div className="absolute top-4 right-4">
-                  <span className={`inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 ${liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-400 rounded-full border border-white/20' : 'bg-zinc-900 text-zinc-500 rounded-md border border-zinc-800'}`}>
-                    <span className={`${liquidGlass ? 'w-1.5 h-1.5 bg-zinc-500 animate-pulse' : 'w-1 h-1 bg-zinc-600'} rounded-full`} />
+              {/* Maths */}
+              <div className={`relative ${
+                liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-zinc-900 rounded-2xl'
+              } p-8 border ${liquidGlass ? 'border-white/10' : 'border-zinc-800'} opacity-60`}>
+                {liquidGlass && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-3xl" />
+                )}
+                <div className="relative space-y-4">
+                  <div className={`w-16 h-16 flex items-center justify-center ${
+                    liquidGlass ? 'bg-white/5 rounded-2xl' : 'bg-zinc-800 rounded-xl'
+                  }`}>
+                    <svg className="w-10 h-10 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                      <rect x="3" y="3" width="18" height="18" rx="2" strokeLinecap="round" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M7 9h3M8.5 7.5v3" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M14 9h3" />
+                    </svg>
+                  </div>
+                  <h4 className="text-xl font-bold">Maths</h4>
+                  <p className={`text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600'}`}>
+                    Mathematical problem solving
+                  </p>
+                  <div className={`inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 ${
+                    liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-400 rounded-full border border-white/20' : 'bg-zinc-800 text-zinc-500 rounded-full border border-zinc-700'
+                  }`}>
+                    <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
                     Coming Soon
-                  </span>
+                  </div>
                 </div>
-              )}
+              </div>
 
-              {/* Active Indicator Arrow */}
-              {subject.clickable && hoveredCard === subject.id && (
-                <div className={`absolute bottom-6 right-6 ${liquidGlass ? 'text-white/80 animate-pulse' : 'text-zinc-600'}`}>
-                  <svg
-                    className={`${liquidGlass ? 'w-6 h-6 drop-shadow-[0_0_8px_currentColor]' : 'w-5 h-5'}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
+              {/* Physics */}
+              <div className={`relative ${
+                liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-zinc-900 rounded-2xl'
+              } p-8 border ${liquidGlass ? 'border-white/10' : 'border-zinc-800'} opacity-60`}>
+                {liquidGlass && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-3xl" />
+                )}
+                <div className="relative space-y-4">
+                  <div className={`w-16 h-16 flex items-center justify-center ${
+                    liquidGlass ? 'bg-white/5 rounded-2xl' : 'bg-zinc-800 rounded-xl'
+                  }`}>
+                    <svg className="w-10 h-10 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={0.9}>
+                      <circle cx="12" cy="12" r="1.2" fill="currentColor" />
+                      <ellipse cx="12" cy="12" rx="9" ry="4.5" strokeLinecap="round" />
+                      <ellipse cx="12" cy="12" rx="9" ry="4.5" strokeLinecap="round" transform="rotate(60 12 12)" />
+                      <ellipse cx="12" cy="12" rx="9" ry="4.5" strokeLinecap="round" transform="rotate(-60 12 12)" />
+                    </svg>
+                  </div>
+                  <h4 className="text-xl font-bold">Physics</h4>
+                  <p className={`text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600'}`}>
+                    Physical laws and principles
+                  </p>
+                  <div className={`inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 ${
+                    liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-400 rounded-full border border-white/20' : 'bg-zinc-800 text-zinc-500 rounded-full border border-zinc-700'
+                  }`}>
+                    <span className="w-1.5 h-1.5 bg-rose-500 rounded-full animate-pulse" />
+                    Coming Soon
+                  </div>
                 </div>
-              )}
-            </button>
-          ))}
-        </div>
+              </div>
+
+              {/* English */}
+              <div className={`relative ${
+                liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-zinc-900 rounded-2xl'
+              } p-8 border ${liquidGlass ? 'border-white/10' : 'border-zinc-800'} opacity-60`}>
+                {liquidGlass && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-3xl" />
+                )}
+                <div className="relative space-y-4">
+                  <div className={`w-16 h-16 flex items-center justify-center ${
+                    liquidGlass ? 'bg-white/5 rounded-2xl' : 'bg-zinc-800 rounded-xl'
+                  }`}>
+                    <svg className="w-10 h-10 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 19.5A2.5 2.5 0 016.5 17H20" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
+                    </svg>
+                  </div>
+                  <h4 className="text-xl font-bold">English</h4>
+                  <p className={`text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600'}`}>
+                    Language arts and literature
+                  </p>
+                  <div className={`inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 ${
+                    liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-400 rounded-full border border-white/20' : 'bg-zinc-800 text-zinc-500 rounded-full border border-zinc-700'
+                  }`}>
+                    <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />
+                    Coming Soon
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );
