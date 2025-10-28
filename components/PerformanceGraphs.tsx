@@ -241,7 +241,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
         <button
           onClick={() => setIsAbilityGraphOpen(!isAbilityGraphOpen)}
-          className="relative w-full p-10 md:p-12 flex items-center justify-between text-left"
+          className="relative w-full p-10 md:p-12 flex items-center justify-between text-left focus:outline-none"
         >
           <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Ability Level Over Time</h3>
           <svg
@@ -292,7 +292,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
         <button
           onClick={() => setIsPredictedScoreGraphOpen(!isPredictedScoreGraphOpen)}
-          className="relative w-full p-10 md:p-12 flex items-center justify-between text-left"
+          className="relative w-full p-10 md:p-12 flex items-center justify-between text-left focus:outline-none"
         >
           <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Predicted Score Over Time</h3>
           <svg
@@ -342,7 +342,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
         <button
           onClick={() => setIsAccuracyByDifficultyOpen(!isAccuracyByDifficultyOpen)}
-          className="relative w-full p-10 md:p-12 flex items-center justify-between text-left"
+          className="relative w-full p-10 md:p-12 flex items-center justify-between text-left focus:outline-none"
         >
           <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Accuracy by Difficulty Level</h3>
           <svg
@@ -392,7 +392,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
           <button
             onClick={() => setIsPerformanceByDomainOpen(!isPerformanceByDomainOpen)}
-            className="relative w-full p-10 md:p-12 flex items-center justify-between text-left"
+            className="relative w-full p-10 md:p-12 flex items-center justify-between text-left focus:outline-none"
           >
             <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Performance by SY0-701 Domain</h3>
             <svg
@@ -442,7 +442,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
         <button
           onClick={() => setIsTopicCoverageOpen(!isTopicCoverageOpen)}
-          className="relative w-full p-10 md:p-12 flex items-center justify-between text-left"
+          className="relative w-full p-10 md:p-12 flex items-center justify-between text-left focus:outline-none"
         >
           <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Topic Coverage by Domain</h3>
           <svg
@@ -474,7 +474,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-3xl" />
                   <button
                     onClick={() => toggleDomainTable(domain)}
-                    className="relative w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/5 transition-all duration-700"
+                    className="relative w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/5 transition-all duration-700 focus:outline-none"
                   >
                     <h4 className="text-2xl md:text-3xl font-bold text-cyan-400 tracking-tight">
                       <span className="mr-2">{domainNum}</span>{domainName}
