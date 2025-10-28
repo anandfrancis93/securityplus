@@ -517,7 +517,16 @@ export default function Quiz() {
 
         {/* Explanation */}
         {showExplanation && (
-          <div className="space-y-12 mb-16">
+          <div className="space-y-20 mb-16">
+            {/* Question Number Header */}
+            <div className="flex items-center gap-5">
+              <div className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 flex items-center justify-center text-white font-bold text-2xl md:text-3xl relative ${liquidGlass ? 'bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl' : 'bg-zinc-800 border-2 border-zinc-700 rounded-md'}`}>
+                {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl" />}
+                <span className="relative">{currentQuestionIndex + 1}</span>
+              </div>
+              <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">Question {currentQuestionIndex + 1}</h3>
+            </div>
+
             <ExplanationSection
               question={currentQuestion}
               isCorrect={isCorrect}
