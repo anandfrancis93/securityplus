@@ -658,7 +658,7 @@ export default function QuizPerformance() {
                       </div>
                     </div>
                     {isFinite(abilityStandardError) && totalAnswered >= 5 ? (
-                      <div className={`text-6xl md:text-7xl font-bold transition-all duration-700 flex items-center justify-center gap-2 sm:gap-4`}>
+                      <div className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold transition-all duration-700 flex items-center justify-center gap-1 sm:gap-2 md:gap-4`}>
                         <span className={
                           lowerAbilityColor === 'emerald' ? 'text-emerald-400' :
                           lowerAbilityColor === 'yellow' ? 'text-yellow-400' :
@@ -676,7 +676,7 @@ export default function QuizPerformance() {
                         </span>
                       </div>
                     ) : (
-                      <div className={`text-6xl md:text-7xl font-bold transition-all duration-700 ${
+                      <div className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold transition-all duration-700 ${
                         estimatedAbility >= 1.0 ? 'text-emerald-400' :
                         estimatedAbility >= -1.0 ? 'text-yellow-400' :
                         'text-red-400'
