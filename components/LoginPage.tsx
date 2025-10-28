@@ -66,49 +66,62 @@ export default function Login() {
     <div className={`text-white overflow-hidden flex flex-col relative ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`} style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
       {liquidGlass && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-          <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
         </div>
       )}
-      <div className="relative flex items-center justify-center px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1 overflow-auto">
-        <div className="max-w-2xl w-full my-auto">
-          {/* Logo/Title Section */}
-          <div className="text-center mb-6 sm:mb-8 md:mb-12">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-3 sm:mb-3 md:mb-4 text-white tracking-tight leading-tight">
-              Learning Hub
-            </h1>
-            <p className="text-zinc-500 text-base sm:text-lg md:text-xl">
-              Master your skills with adaptive learning
-            </p>
+      <div className="relative flex items-center justify-center px-6 sm:px-8 lg:px-12 py-8 flex-1 overflow-auto">
+        <div className="max-w-3xl w-full my-auto">
+          {/* Hero Section - Apple Style */}
+          <div className="text-center mb-16 md:mb-20">
+            <div className="space-y-8">
+              <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight leading-[0.95]">
+                <span className="block bg-gradient-to-br from-white via-zinc-100 to-zinc-300 bg-clip-text text-transparent">
+                  Learn without
+                </span>
+                <span className="block bg-gradient-to-br from-violet-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+                  limits.
+                </span>
+              </h1>
+              <p className={`text-xl sm:text-2xl md:text-3xl font-light max-w-3xl mx-auto leading-relaxed ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                Your adaptive learning companion powered by AI
+              </p>
+            </div>
           </div>
 
           {/* Login Card */}
-          <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-3xl' : 'bg-zinc-950 rounded-md'} p-6 sm:p-12 md:p-16 border ${liquidGlass ? 'border-white/10' : 'border-zinc-800'} ${liquidGlass ? 'shadow-2xl' : ''}`}>
+          <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px]' : 'bg-zinc-950 rounded-md'} p-10 sm:p-12 md:p-16 border ${liquidGlass ? 'border-white/10' : 'border-zinc-800'} ${liquidGlass ? 'shadow-2xl' : ''} transition-all duration-700`}>
             {liquidGlass && (
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-50" />
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
             )}
-            <div className="relative mb-6 sm:mb-8">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 sm:mb-4 text-center leading-tight">
-                Welcome
+            <div className="relative mb-10">
+              <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 text-center tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>
+                Welcome Back
               </h2>
-              <p className="text-zinc-400 text-center text-sm leading-snug sm:text-lg md:text-xl">
-                Sign in with your Google account to save your progress and sync across devices
+              <p className={`text-center text-lg md:text-xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed`}>
+                Sign in to continue your learning journey
               </p>
             </div>
 
             {error && (
-              <div className={`relative bg-red-900/20 border border-red-800 text-red-400 ${liquidGlass ? 'rounded-3xl backdrop-blur-xl' : 'rounded-md'} p-3 text-sm sm:text-sm mb-4 sm:mb-6`}>
-                {error}
+              <div className={`relative bg-red-500/20 border border-red-500/50 text-red-300 ${liquidGlass ? 'rounded-3xl backdrop-blur-xl' : 'rounded-md'} p-4 text-base mb-6 transition-all duration-700`}>
+                {liquidGlass && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 via-transparent to-transparent rounded-3xl" />
+                )}
+                <span className="relative">{error}</span>
               </div>
             )}
 
             <button
               onClick={handleGoogleSignIn}
               disabled={loading}
-              className={`relative w-full ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl rounded-3xl border-white/20' : 'bg-blue-600 hover:bg-blue-700 rounded-md border-blue-600'} active:bg-blue-800 disabled:bg-blue-300 disabled:cursor-not-allowed text-white py-3.5 sm:py-4 px-4 sm:px-6 font-medium text-base sm:text-lg ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-150'} flex items-center justify-center gap-2 sm:gap-3 border ${liquidGlass ? 'shadow-xl' : ''}`}
+              className={`relative w-full group ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl rounded-3xl border border-white/20 hover:border-white/30' : 'bg-blue-600 hover:bg-blue-700 rounded-md border border-blue-600'} disabled:opacity-50 disabled:cursor-not-allowed text-white py-5 md:py-6 px-6 font-bold text-lg md:text-xl transition-all duration-700 flex items-center justify-center gap-3 ${liquidGlass ? 'shadow-xl hover:shadow-2xl hover:shadow-white/10 hover:scale-[1.02]' : ''}`}
             >
-              <svg className="w-5 h-5 sm:w-5 sm:h-5" viewBox="0 0 24 24">
+              {liquidGlass && (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              )}
+              <svg className="w-6 h-6 relative z-10" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -126,10 +139,10 @@ export default function Login() {
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                 />
               </svg>
-              {loading ? 'Signing in...' : 'Continue with Google'}
+              <span className="relative z-10">{loading ? 'Signing in...' : 'Continue with Google'}</span>
             </button>
 
-            <p className="text-zinc-600 text-xs sm:text-sm md:text-base text-center mt-4 sm:mt-6 leading-tight">
+            <p className={`text-center mt-6 leading-relaxed ${liquidGlass ? 'text-zinc-500 text-sm md:text-base' : 'text-zinc-600 text-xs md:text-sm'}`}>
               By signing in, you agree to our Terms of Service and Privacy Policy
             </p>
           </div>
