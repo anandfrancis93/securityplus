@@ -89,14 +89,12 @@ export default function Quiz() {
 
       if (data.success) {
         console.log('✅ Quiz session created with', data.questionsCount, 'pre-generated questions');
+
         // Refresh progress to get the cached quiz with quizSessionId
         await refreshProgress();
 
-        // Small delay to ensure state updates propagate
-        await new Promise(resolve => setTimeout(resolve, 100));
-
-        // userProgress will be updated by refreshProgress, reload page to reinitialize
-        router.push('/cybersecurity/quiz');
+        // Reload the page to reinitialize with fresh data
+        window.location.reload();
       } else {
         setErrorMessage('Failed to initialize quiz session. Please try again.');
         setLoading(false);
