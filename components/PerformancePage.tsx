@@ -358,16 +358,13 @@ export default function QuizPerformance() {
                   {/* Score Range Display */}
                   {isFinite(abilityStandardError) && totalAnswered >= 5 ? (
                     <>
-                      <div className={`text-7xl md:text-8xl font-bold mb-4 transition-all duration-700 ${
+                      <div className={`text-7xl md:text-8xl font-bold transition-all duration-700 ${
                         totalAnswered === 0 ? 'text-zinc-400' :
                         isGoodPerformance ? 'text-emerald-400' :
                         isNeedsWork ? 'text-red-400' :
                         'text-yellow-400'
                       }`}>
                         {scoreCI.lower} - {scoreCI.upper}
-                      </div>
-                      <div className={`text-xl md:text-2xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'} mb-6`}>
-                        Predicted Score Range
                       </div>
                     </>
                   ) : (
