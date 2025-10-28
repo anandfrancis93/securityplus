@@ -388,42 +388,42 @@ export default function Quiz() {
 
       {/* Celebration Modal */}
       {showCelebration && (
-        <div className={`fixed inset-0 flex items-center justify-center z-50 p-6 overflow-y-auto ${liquidGlass ? 'bg-black/80 backdrop-blur-xl' : 'bg-black/90'}`}>
-          <div className={`p-12 sm:p-16 md:p-20 max-w-3xl w-full my-auto border relative ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border-white/20 rounded-[40px] shadow-2xl' : 'bg-zinc-950 border-zinc-800 rounded-md'}`}>
+        <div className={`fixed inset-0 flex items-center justify-center z-50 p-4 overflow-y-auto ${liquidGlass ? 'bg-black/80 backdrop-blur-xl' : 'bg-black/90'}`}>
+          <div className={`p-8 sm:p-12 md:p-16 max-w-2xl w-full my-auto border relative ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border-white/20 rounded-[40px] shadow-2xl' : 'bg-zinc-950 border-zinc-800 rounded-md'}`}>
             {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
             {liquidGlass && isPassing && <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-transparent rounded-[40px]" />}
             {liquidGlass && !isPassing && <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-transparent rounded-[40px]" />}
-            <div className="text-center relative space-y-10">
-              <h2 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white">
+            <div className="text-center relative space-y-8">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white">
                 Quiz Complete!
               </h2>
 
               <div className="space-y-4">
-                <div className="text-7xl sm:text-8xl md:text-9xl font-bold text-white">
+                <div className="text-6xl sm:text-7xl md:text-8xl font-bold text-white">
                   {correctAnswers}/{totalAnswered}
                 </div>
-                <div className="text-3xl sm:text-4xl md:text-5xl text-zinc-200 font-bold">{accuracy}% Accuracy</div>
+                <div className="text-2xl sm:text-3xl md:text-4xl text-zinc-200 font-bold">{accuracy}% Accuracy</div>
               </div>
 
               {isPassing ? (
-                <div className={`border-2 border-green-500/50 p-10 relative ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl' : 'bg-zinc-900 rounded-md'}`}>
+                <div className={`border-2 border-green-500/50 p-6 sm:p-8 relative ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl' : 'bg-zinc-900 rounded-md'}`}>
                   {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-transparent to-transparent rounded-3xl" />}
-                  <p className="text-green-400 font-bold text-2xl md:text-3xl mb-4 relative">Great Job!</p>
-                  <p className="text-zinc-200 text-xl md:text-2xl leading-relaxed relative">
+                  <p className="text-green-400 font-bold text-xl sm:text-2xl md:text-3xl mb-3 relative">Great Job!</p>
+                  <p className="text-zinc-200 text-lg sm:text-xl md:text-2xl leading-relaxed relative">
                     You&apos;re showing strong understanding of Security+ concepts. Keep up the excellent work!
                   </p>
                 </div>
               ) : (
-                <div className={`border-2 border-yellow-500/50 p-10 relative ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl' : 'bg-zinc-900 rounded-md'}`}>
+                <div className={`border-2 border-yellow-500/50 p-6 sm:p-8 relative ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl' : 'bg-zinc-900 rounded-md'}`}>
                   {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 via-transparent to-transparent rounded-3xl" />}
-                  <p className="text-yellow-400 font-bold text-2xl md:text-3xl mb-4 relative">Keep Practicing!</p>
-                  <p className="text-zinc-200 text-xl md:text-2xl leading-relaxed relative">
+                  <p className="text-yellow-400 font-bold text-xl sm:text-2xl md:text-3xl mb-3 relative">Keep Practicing!</p>
+                  <p className="text-zinc-200 text-lg sm:text-xl md:text-2xl leading-relaxed relative">
                     Review the explanations and try again. Each quiz helps you improve!
                   </p>
                 </div>
               )}
 
-              <div className="space-y-3 text-xl md:text-2xl text-zinc-300">
+              <div className="space-y-2 text-lg sm:text-xl md:text-2xl text-zinc-300">
                 <p>✓ Progress saved to your account</p>
                 <p>✓ IRT score updated</p>
                 <p>✓ Predicted exam score recalculated</p>
@@ -431,7 +431,7 @@ export default function Quiz() {
 
               <button
                 onClick={handleCelebrationClose}
-                className={`w-full font-bold py-6 text-2xl ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 rounded-3xl text-white transition-all duration-700 hover:scale-105 shadow-xl hover:shadow-2xl' : 'bg-zinc-800 hover:bg-zinc-700 text-white rounded-md transition-all duration-150'}`}
+                className={`w-full font-bold py-5 text-xl sm:text-2xl ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 rounded-3xl text-white transition-all duration-700 hover:scale-105 shadow-xl hover:shadow-2xl' : 'bg-zinc-800 hover:bg-zinc-700 text-white rounded-md transition-all duration-150'}`}
               >
                 Done
               </button>
