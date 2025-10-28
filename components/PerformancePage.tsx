@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from './AppProvider';
 import { useRouter } from 'next/navigation';
-import { hasSufficientData } from '@/lib/irt';
 import PerformanceGraphs from './PerformanceGraphs';
 import { UserProgress } from '@/lib/types';
 import Header from './Header';
@@ -545,33 +544,6 @@ export default function QuizPerformance() {
             )}
           </div>
         </div>
-
-        {/* Phase 1: Insufficient Data Warning */}
-        {totalAnswered > 0 && !hasSufficientData(totalAnswered) && (
-          <div className={`relative p-10 md:p-12 mb-12 border-2 border-yellow-500/50 transition-all duration-700 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px] shadow-2xl shadow-yellow-500/20' : 'bg-black rounded-md'}`}>
-            {/* Light reflection */}
-            {liquidGlass && (
-              <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-transparent rounded-[40px]" />
-            )}
-            {liquidGlass && (
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
-            )}
-            <div className="relative flex items-start gap-6">
-              <svg className="w-10 h-10 text-yellow-400 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-              <div>
-                <p className={`text-yellow-400 font-bold mb-4 tracking-tight text-2xl md:text-3xl ${liquidGlass ? '' : 'font-mono'}`}>Preliminary Estimates</p>
-                <p className={`text-yellow-300 text-xl md:text-2xl leading-relaxed mb-4 ${liquidGlass ? '' : 'font-mono'}`}>
-                  Answer at least 15 questions for reliable IRT analysis. Your current estimates are capped and may not reflect true ability.
-                </p>
-                <p className={`text-yellow-400/80 text-lg mt-4 ${liquidGlass ? '' : 'font-mono'}`}>
-                  Progress: {totalAnswered}/15 questions
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
