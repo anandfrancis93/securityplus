@@ -403,15 +403,15 @@ export default function QuizPerformance() {
                         Score Color Ranges
                       </h4>
                       <div className="space-y-3 text-sm">
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-8">
                           <span className="text-emerald-400 font-bold">Green</span>
                           <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} ${liquidGlass ? '' : 'font-mono'}`}>750 - 900</span>
                         </div>
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-8">
                           <span className="text-yellow-400 font-bold">Yellow</span>
                           <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} ${liquidGlass ? '' : 'font-mono'}`}>600 - 749</span>
                         </div>
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-8">
                           <span className="text-red-400 font-bold">Red</span>
                           <span className={`${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} ${liquidGlass ? '' : 'font-mono'}`}>100 - 599</span>
                         </div>
