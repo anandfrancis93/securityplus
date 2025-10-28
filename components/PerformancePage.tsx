@@ -440,30 +440,7 @@ export default function QuizPerformance() {
                     </div>
                   </div>
                 </div>
-                <div className={`text-xl md:text-2xl text-zinc-500 mb-8 ${liquidGlass ? '' : 'font-mono'}`}>out of 900</div>
-                <div>
-                  {totalAnswered > 0 ? (
-                    <div className={`inline-block px-10 py-4 text-xl md:text-2xl font-bold transition-all duration-700 ${
-                      isGoodPerformance
-                        ? liquidGlass
-                          ? 'bg-emerald-500/20 backdrop-blur-xl text-emerald-300 border border-emerald-500/50 rounded-3xl'
-                          : 'bg-black text-emerald-400 border border-emerald-500/50 rounded-md font-mono'
-                        : isNeedsWork
-                          ? liquidGlass
-                            ? 'bg-red-500/20 backdrop-blur-xl text-red-300 border border-red-500/50 rounded-3xl'
-                            : 'bg-black text-red-400 border border-red-500/50 rounded-md font-mono'
-                          : liquidGlass
-                            ? 'bg-yellow-500/20 backdrop-blur-xl text-yellow-300 border border-yellow-500/50 rounded-3xl'
-                            : 'bg-black text-yellow-400 border border-yellow-500/50 rounded-md font-mono'
-                    }`}>
-                      {isGoodPerformance ? 'On track to pass' :
-                       isNeedsWork ? 'Needs significant improvement' :
-                       'More practice needed'}
-                    </div>
-                  ) : (
-                    <div className={`text-zinc-500 text-xl ${liquidGlass ? '' : 'font-mono'}`}>Start answering questions to see your prediction</div>
-                  )}
-                </div>
+                <div className={`text-xl md:text-2xl text-zinc-500 ${liquidGlass ? '' : 'font-mono'}`}>out of 900</div>
               </>
             ) : (
               <div className="space-y-6">
