@@ -596,24 +596,6 @@ export default function QuizPerformance() {
               </span>
               <span>900</span>
             </div>
-
-            {/* Current score indicator - only show if enough questions answered */}
-            {hasEnoughQuestions && predictedScore >= 100 && predictedScore <= 900 && (
-              <div className="relative mt-2">
-                <div
-                  className={`absolute px-3 py-1 ${liquidGlass ? 'rounded-2xl' : 'rounded-md'} text-sm font-medium ${liquidGlass ? 'transition-all duration-500' : 'transition-all duration-150 font-mono'} ${
-                    isGoodPerformance ? 'bg-black text-emerald-400 border border-emerald-500/50' :
-                    isNeedsWork ? 'bg-black text-red-400 border border-red-500/50' :
-                    'bg-black text-yellow-400 border border-yellow-500/50'
-                  }`}
-                  style={{ left: `${((predictedScore - 100) / 800) * 100}%`, transform: 'translateX(-50%)' }}
-                >
-                  {isFinite(abilityStandardError) && totalAnswered >= 5
-                    ? `${scoreCI.lower}-${scoreCI.upper}`
-                    : predictedScore}
-                </div>
-              </div>
-            )}
           </div>
         </div>
 
