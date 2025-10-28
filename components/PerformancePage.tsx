@@ -809,7 +809,7 @@ export default function QuizPerformance() {
 
         {/* Reset Progress - Destructive Action */}
         {totalAnswered > 0 && (
-          <div className="mt-20 text-center pb-20">
+          <div className="mt-20 text-center pb-8">
             <button
               id="reset-progress"
               onClick={handleResetProgress}
