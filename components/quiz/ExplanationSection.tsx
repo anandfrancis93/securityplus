@@ -19,13 +19,25 @@ export default function ExplanationSection({
   difficulty,
   showDifficultyBadge = false,
 }: ExplanationSectionProps) {
-  // Ensure correctAnswers is always an array of numbers
-  const correctAnswers: number[] = Array.isArray(question.correctAnswer)
+  // Ensure correctAnswers is always an array of numbers, handle undefined/null
+  const correctAnswers: number[] = question.correctAnswer === undefined || question.correctAnswer === null
+    ? []
+    : Array.isArray(question.correctAnswer)
     ? question.correctAnswer
     : [question.correctAnswer];
 
+  // Warn in development if correctAnswer is missing
+  if (correctAnswers.length === 0 || correctAnswers.includes(null as any) || correctAnswers.includes(undefined as any)) {
+    console.warn('⚠️ ExplanationSection: question.correctAnswer is undefined or null!', {
+      questionText: question.question?.substring(0, 50),
+      correctAnswer: question.correctAnswer,
+      questionObject: question
+    });
+  }
+
   // Filter out correct answers and empty explanations from incorrect explanations
   const hasIncorrectExplanations = question.incorrectExplanations &&
+    correctAnswers.length > 0 &&
     question.incorrectExplanations.some((explanation, index) =>
       !correctAnswers.includes(index) && explanation && explanation.trim() !== ''
     );
