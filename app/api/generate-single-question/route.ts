@@ -3,7 +3,7 @@ import { generateQuestionWithTopics, selectQuestionType } from '@/lib/questionGe
 import { selectQuestionCategory, selectTopicsForQuestion } from '@/lib/quizPregeneration';
 import { authenticateRequest, authenticateAndAuthorize } from '@/lib/apiAuth';
 import { GenerateSingleQuestionSchema, safeValidateRequestBody } from '@/lib/apiValidation';
-import { addQuestionToSession, sanitizeQuestionForClient } from '@/lib/quizStateManager';
+import { addQuestionToSession, sanitizeQuestionForClient, createQuizSession } from '@/lib/quizStateManager';
 
 export async function POST(request: NextRequest) {
   try {
