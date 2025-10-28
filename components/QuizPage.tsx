@@ -20,6 +20,7 @@ export default function Quiz() {
   const [generatingNext, setGeneratingNext] = useState(false);
   const [totalQuestions] = useState(10);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [hasInitialized, setHasInitialized] = useState(false);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -37,9 +38,16 @@ export default function Quiz() {
       return;
     }
 
+    // Prevent multiple initializations
+    if (hasInitialized) {
+      console.log('Already initialized, skipping...');
+      return;
+    }
+
     console.log('Auth complete, initializing quiz...');
+    setHasInitialized(true);
     initQuiz();
-  }, [authLoading, user]);
+  }, [authLoading, user, hasInitialized]);
 
   // Automatically generate next question in background whenever a new question is added
   useEffect(() => {
