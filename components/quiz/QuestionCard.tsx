@@ -67,28 +67,20 @@ export default function QuestionCard({
           const showIncorrect = showExplanation && isSelected && !isCorrectAnswer;
 
           const buttonClasses = showExplanation
-            ? // Review mode - not interactive
+            ? // Review mode - not interactive, match ExplanationSection styling
               `relative w-full text-left p-8 md:p-10 border-2 ${
                 liquidGlass
                   ? showCorrect
-                    ? question.questionType === 'single'
-                      ? 'bg-green-500/25 backdrop-blur-2xl border-green-500/70 rounded-3xl shadow-2xl shadow-green-500/30'
-                      : 'bg-white/10 backdrop-blur-2xl border-green-500/60 rounded-3xl shadow-lg shadow-green-500/20'
+                    ? 'bg-white/5 backdrop-blur-2xl border-green-500/50 rounded-[40px] shadow-2xl shadow-green-500/20'
                     : showIncorrect
-                    ? question.questionType === 'single'
-                      ? 'bg-red-500/25 backdrop-blur-2xl border-red-500/70 rounded-3xl shadow-2xl shadow-red-500/30'
-                      : 'bg-white/10 backdrop-blur-2xl border-red-500/60 rounded-3xl shadow-lg shadow-red-500/20'
+                    ? 'bg-white/5 backdrop-blur-2xl border-red-500/50 rounded-[40px] shadow-2xl shadow-red-500/20'
                     : isSelected
                     ? 'bg-white/10 backdrop-blur-2xl border-white/40 rounded-3xl shadow-lg'
                     : 'bg-white/5 backdrop-blur-2xl border-white/25 rounded-3xl'
                   : showCorrect
-                  ? question.questionType === 'single'
-                    ? 'border-green-500 bg-green-950 rounded-md'
-                    : 'border-green-500 bg-zinc-900 rounded-md'
+                  ? 'border-green-500 bg-zinc-950 rounded-md'
                   : showIncorrect
-                  ? question.questionType === 'single'
-                    ? 'border-red-500 bg-red-950 rounded-md'
-                    : 'border-red-500 bg-zinc-900 rounded-md'
+                  ? 'border-red-500 bg-zinc-950 rounded-md'
                   : isSelected
                   ? 'border-zinc-600 bg-zinc-900 rounded-md'
                   : 'border-zinc-700 bg-zinc-950 rounded-md'
@@ -113,18 +105,16 @@ export default function QuestionCard({
               className={buttonClasses}
             >
               {liquidGlass && showExplanation && showCorrect && (
-                <div className={`absolute inset-0 bg-gradient-to-br rounded-3xl ${
-                  question.questionType === 'single'
-                    ? 'from-green-500/40 via-green-500/15 to-transparent'
-                    : 'from-green-500/25 via-transparent to-transparent'
-                }`} />
+                <>
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-transparent to-transparent rounded-[40px]" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
+                </>
               )}
               {liquidGlass && showExplanation && showIncorrect && (
-                <div className={`absolute inset-0 bg-gradient-to-br rounded-3xl ${
-                  question.questionType === 'single'
-                    ? 'from-red-500/40 via-red-500/15 to-transparent'
-                    : 'from-red-500/25 via-transparent to-transparent'
-                }`} />
+                <>
+                  <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-[40px]" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
+                </>
               )}
               {liquidGlass && !showExplanation && (
                 <>
