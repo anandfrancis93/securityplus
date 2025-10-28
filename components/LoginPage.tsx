@@ -71,10 +71,10 @@ export default function Login() {
           <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
         </div>
       )}
-      <div className="relative flex items-center justify-center px-6 sm:px-8 lg:px-12 py-8 flex-1 overflow-auto">
+      <div className="relative flex items-center justify-center px-6 sm:px-8 lg:px-12 py-4 flex-1 overflow-auto">
         <div className="max-w-3xl w-full my-auto">
           {/* Hero Section - Apple Style */}
-          <div className="text-center mb-16 md:mb-20">
+          <div className="text-center mb-8 md:mb-10">
             <div className="space-y-8">
               <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight leading-[0.95]">
                 <span className="block bg-gradient-to-br from-white via-zinc-100 to-zinc-300 bg-clip-text text-transparent">
@@ -97,7 +97,7 @@ export default function Login() {
             )}
             <div className="relative mb-10">
               <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 text-center tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>
-                Welcome Back
+                Welcome
               </h2>
               <p className={`text-center text-lg md:text-xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed`}>
                 Sign in to continue your learning journey
