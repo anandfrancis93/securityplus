@@ -529,22 +529,17 @@ export default function QuizPerformance() {
           </div>
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          <div className={`relative p-10 md:p-12 transition-all duration-700 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 hover:border-white/30 rounded-[40px] hover:shadow-2xl hover:shadow-white/10' : 'bg-black border border-zinc-800 hover:border-zinc-700 rounded-md'}`}>
-            {liquidGlass && (
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
-            )}
-            <div className="relative">
+        {/* Combined Stats Box */}
+        <div className={`relative p-10 md:p-12 transition-all duration-700 mb-12 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 hover:border-white/30 rounded-[40px] hover:shadow-2xl hover:shadow-white/10' : 'bg-black border border-zinc-800 hover:border-zinc-700 rounded-md'}`}>
+          {liquidGlass && (
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
+          )}
+          <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+            <div className="text-center">
               <div className={`text-zinc-400 text-xl md:text-2xl mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Questions Attempted</div>
               <div className={`text-5xl md:text-6xl font-bold transition-all duration-700 ${totalAnswered === 0 ? 'text-zinc-400' : 'text-white'}`}>{totalAnswered}</div>
             </div>
-          </div>
-          <div className={`relative p-10 md:p-12 transition-all duration-700 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 hover:border-white/30 rounded-[40px] hover:shadow-2xl hover:shadow-white/10' : 'bg-black border border-zinc-800 hover:border-zinc-700 rounded-md'}`}>
-            {liquidGlass && (
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
-            )}
-            <div className="relative">
+            <div className="text-center">
               <div className={`text-zinc-400 text-xl md:text-2xl mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Correct Answers</div>
               <div className={`text-5xl md:text-6xl font-bold transition-all duration-700 ${
                 totalAnswered === 0 ? 'text-zinc-400' :
@@ -553,12 +548,7 @@ export default function QuizPerformance() {
                 'text-yellow-400'
               }`}>{correctAnswers}</div>
             </div>
-          </div>
-          <div className={`relative p-10 md:p-12 transition-all duration-700 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 hover:border-white/30 rounded-[40px] hover:shadow-2xl hover:shadow-white/10' : 'bg-black border border-zinc-800 hover:border-zinc-700 rounded-md'}`}>
-            {liquidGlass && (
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
-            )}
-            <div className="relative">
+            <div className="text-center">
               <div className={`text-zinc-400 text-xl md:text-2xl mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Accuracy</div>
               <div className={`text-5xl md:text-6xl font-bold transition-all duration-700 ${
                 totalAnswered === 0 ? 'text-zinc-400' :
