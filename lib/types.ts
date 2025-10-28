@@ -57,6 +57,7 @@ export interface QuizSession {
   totalPoints: number; // Total points earned in this session
   maxPoints: number; // Max points possible in this session
   completed: boolean;
+  quizSessionId?: string; // Server-side quiz session ID for answer verification
 }
 
 export interface QuestionAttempt {

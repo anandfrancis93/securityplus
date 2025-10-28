@@ -31,7 +31,7 @@ interface AppContextType {
   predictedScore: number;
   liquidGlass: boolean;
   toggleLiquidGlass: () => void;
-  startNewQuiz: () => void;
+  startNewQuiz: (quizSessionId?: string) => void;
   answerQuestion: (question: Question, answer: number | number[]) => void;
   endQuiz: (unusedQuestions?: Question[]) => Promise<void>;
   refreshProgress: () => Promise<void>;
@@ -216,7 +216,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const startNewQuiz = () => {
+  const startNewQuiz = (quizSessionId?: string) => {
     const newQuiz: QuizSession = {
       id: `quiz_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       startedAt: Date.now(),
@@ -225,6 +225,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       totalPoints: 0,
       maxPoints: 0,
       completed: false,
+      quizSessionId, // Store the server-side session ID
     };
     setCurrentQuiz(newQuiz);
   };
@@ -236,10 +237,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    if (!userProgress?.cachedQuiz?.quizSessionId) {
+    if (!currentQuiz.quizSessionId) {
       console.error('Cannot answer question: missing quizSessionId');
-      console.error('userProgress:', userProgress);
-      alert('Error: Quiz session data is corrupted or missing. Please reset your progress on the Performance page and try again.');
+      console.error('currentQuiz:', currentQuiz);
+      alert('Error: Quiz session ID is missing. Please refresh the page and try again.');
       return;
     }
 
@@ -247,7 +248,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       // SECURITY: Verify answer server-side
       const verificationResult = await authenticatedPost('/api/verify-answer', {
         userId,
-        quizSessionId: userProgress.cachedQuiz.quizSessionId,
+        quizSessionId: currentQuiz.quizSessionId,
         questionId: question.id,
         userAnswer: answer,
         questionNumber: currentQuiz.questions.length + 1,

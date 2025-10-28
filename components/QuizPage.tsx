@@ -47,19 +47,21 @@ export default function Quiz() {
   }, [loading, questions.length, generatingNext]); // Watch generatingNext too
 
   const initQuiz = async () => {
-    if (!currentQuiz) {
-      startNewQuiz();
-    }
-
     // Check if there's a cached quiz available
     if (userProgress?.cachedQuiz && userProgress.cachedQuiz.questions.length > 0) {
       const cachedCount = userProgress.cachedQuiz.questions.length;
+      const quizSessionId = userProgress.cachedQuiz.quizSessionId;
 
       if (cachedCount === totalQuestions) {
         // Full cache - use all questions
         console.log('✅ Using full pre-generated cached quiz (10 questions)!');
         console.log(`  Phase: ${userProgress.quizMetadata?.allTopicsCoveredOnce ? 2 : 1}`);
         console.log(`  Generated ${(Date.now() - userProgress.cachedQuiz.generatedAt) / 1000}s ago`);
+        console.log(`  Quiz session ID: ${quizSessionId}`);
+
+        // Initialize quiz with quizSessionId BEFORE clearing cache
+        startNewQuiz(quizSessionId);
+
         // SECURITY: Questions are sanitized (no correctAnswer), cast to Question[]
         setQuestions(userProgress.cachedQuiz.questions as Question[]);
         setLoading(false);
@@ -70,6 +72,11 @@ export default function Quiz() {
         console.log(`✅ Using partial cached quiz (${cachedCount} questions)!`);
         console.log(`  Will generate ${totalQuestions - cachedCount} more questions`);
         console.log(`  Generated ${(Date.now() - userProgress.cachedQuiz.generatedAt) / 1000}s ago`);
+        console.log(`  Quiz session ID: ${quizSessionId}`);
+
+        // Initialize quiz with quizSessionId BEFORE clearing cache
+        startNewQuiz(quizSessionId);
+
         // SECURITY: Questions are sanitized (no correctAnswer), cast to Question[]
         setQuestions(userProgress.cachedQuiz.questions as Question[]);
         setLoading(false);
@@ -77,6 +84,11 @@ export default function Quiz() {
         // The useEffect will automatically generate remaining questions in background
         return;
       }
+    }
+
+    // No cached quiz exists - initialize without quizSessionId (will be created)
+    if (!currentQuiz) {
+      startNewQuiz();
     }
 
     // No cached quiz - need to trigger pre-generation first to create session
