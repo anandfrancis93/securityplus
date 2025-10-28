@@ -94,7 +94,7 @@ export default function FlashcardsPage() {
       )}
       <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 py-8 max-w-7xl">
         {/* Header */}
-        <div className="mb-20">
+        <div className="mb-12">
           <div className="flex justify-between items-center mb-8">
             <button
               onClick={() => router.push('/cybersecurity')}
