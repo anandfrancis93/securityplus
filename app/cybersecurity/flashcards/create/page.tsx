@@ -9,7 +9,7 @@ import { getUserFlashcards, saveFlashcards } from '@/lib/flashcardDb';
 import { uploadFlashcardImage, validateImageFile } from '@/lib/imageUpload';
 import { Flashcard } from '@/lib/types';
 
-export default function CreateFlashcardPage() {
+export default function CreateFlashcards() {
   const { userId, user, loading: authLoading, handleSignOut, liquidGlass } = useApp();
   const router = useRouter();
 

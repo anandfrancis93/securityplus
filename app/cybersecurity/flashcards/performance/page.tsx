@@ -9,7 +9,7 @@ import { getUserFlashcards, getUserReviews } from '@/lib/flashcardDb';
 import { getDeckStats } from '@/lib/spacedRepetition';
 import { Flashcard, FlashcardReview } from '@/lib/types';
 
-export default function PerformancePage() {
+export default function FlashcardPerformance() {
   const { userId, user, loading: authLoading, handleSignOut, liquidGlass } = useApp();
   const router = useRouter();
 

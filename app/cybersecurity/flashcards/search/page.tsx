@@ -9,7 +9,7 @@ import { getUserFlashcards } from '@/lib/flashcardDb';
 import { uploadFlashcardImage, validateImageFile } from '@/lib/imageUpload';
 import { Flashcard } from '@/lib/types';
 
-export default function SearchFlashcardsPage() {
+export default function SearchFlashcards() {
   const { userId, user, loading: authLoading, handleSignOut, liquidGlass } = useApp();
   const router = useRouter();
 
