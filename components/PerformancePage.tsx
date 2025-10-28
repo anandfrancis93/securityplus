@@ -99,11 +99,11 @@ function generatePerformanceInsights(userProgress: UserProgress | null, estimate
 
   // 2. Strength/Weakness by Difficulty
   if (byDifficulty.easy.total >= 3 && byDifficulty.easy.correct / byDifficulty.easy.total < 0.7) {
-    insights.push('⚠️ Struggling with easy questions - review fundamental concepts');
+    insights.push('Struggling with easy questions - review fundamental concepts');
   } else if (byDifficulty.hard.total >= 3 && byDifficulty.hard.correct / byDifficulty.hard.total >= 0.75) {
-    insights.push('💪 Strong performance on hard questions - excellent mastery');
+    insights.push('Strong performance on hard questions - excellent mastery');
   } else if (byDifficulty.medium.total >= 5 && byDifficulty.medium.correct / byDifficulty.medium.total >= 0.8) {
-    insights.push('✅ Solid grasp of medium difficulty concepts');
+    insights.push('Solid grasp of medium difficulty concepts');
   }
 
   // 3. Category Performance Insight
@@ -111,9 +111,9 @@ function generatePerformanceInsights(userProgress: UserProgress | null, estimate
   if (multiDomain.total >= 3) {
     const acc = (multiDomain.correct / multiDomain.total) * 100;
     if (acc >= 75) {
-      insights.push(`🎯 Excelling at cross-domain synthesis (${acc.toFixed(0)}% accuracy)`);
+      insights.push(`Excelling at cross-domain synthesis (${acc.toFixed(0)}% accuracy)`);
     } else if (acc < 50) {
-      insights.push(`📚 Improve cross-domain integration (currently ${acc.toFixed(0)}%)`);
+      insights.push(`Improve cross-domain integration (currently ${acc.toFixed(0)}%)`);
     }
   }
 
@@ -121,7 +121,7 @@ function generatePerformanceInsights(userProgress: UserProgress | null, estimate
   if (multiTopic.total >= 3) {
     const acc = (multiTopic.correct / multiTopic.total) * 100;
     if (acc < 60) {
-      insights.push(`⚡ Focus on connecting multiple concepts within domains (${acc.toFixed(0)}%)`);
+      insights.push(`Focus on connecting multiple concepts within domains (${acc.toFixed(0)}%)`);
     }
   }
 
@@ -146,22 +146,22 @@ function generatePerformanceInsights(userProgress: UserProgress | null, estimate
 
     if (recentAccuracies.length === 3) {
       if (recentAccuracies[2] > recentAccuracies[0] + 10) {
-        insights.push('📈 Improving trend - keep up the momentum!');
+        insights.push('Improving trend - keep up the momentum!');
       } else if (recentAccuracies[2] < recentAccuracies[0] - 10) {
-        insights.push('📉 Recent dip in performance - consider reviewing recent topics');
+        insights.push('Recent dip in performance - consider reviewing recent topics');
       }
     }
   }
 
   // 6. Overall recommendation based on ability
   if (estimatedAbility >= 1.5) {
-    insights.push('🚀 Exam-ready performance - consider scheduling your test');
+    insights.push('Exam-ready performance - consider scheduling your test');
   } else if (estimatedAbility >= 1.0) {
-    insights.push('✅ On track for passing - continue building confidence');
+    insights.push('On track for passing - continue building confidence');
   } else if (estimatedAbility >= 0) {
-    insights.push('📖 Moderate understanding - increase practice volume');
+    insights.push('Moderate understanding - increase practice volume');
   } else {
-    insights.push('🎯 Focus on fundamentals - start with easier questions');
+    insights.push('Focus on fundamentals - start with easier questions');
   }
 
   return insights.length > 0 ? insights : ['Continue taking quizzes for more detailed insights'];
@@ -558,11 +558,13 @@ export default function QuizPerformance() {
                     <ul className="space-y-4 text-lg md:text-xl">
                       {generatePerformanceInsights(userProgress, estimatedAbility).map((insight, index) => (
                         <li key={index} className="flex items-start gap-4">
-                          <span className={`mt-1 text-xl ${
+                          <svg className={`w-5 h-5 mt-1 flex-shrink-0 ${
                             estimatedAbility >= 1.0 ? 'text-cyan-400' :
                             estimatedAbility >= -1 ? 'text-yellow-400' :
                             'text-red-400'
-                          }`}>▸</span>
+                          }`} fill="currentColor" viewBox="0 0 20 20">
+                            <circle cx="10" cy="10" r="3" />
+                          </svg>
                           <span>{insight}</span>
                         </li>
                       ))}
