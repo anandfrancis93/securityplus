@@ -43,9 +43,9 @@ export default function Header({
       <div className="flex justify-between items-center px-6 sm:px-8 lg:px-12">
         {/* Logo - Top Left */}
         <button
-          onClick={() => router.push('/cybersecurity')}
+          onClick={() => router.push('/')}
           className={`flex items-center gap-3 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 ${liquidGlass ? 'focus:ring-cyan-400/50' : 'focus:ring-blue-500/50'} rounded-2xl p-2`}
-          title="Security+ Quiz Home"
+          title="Home"
         >
           {/* Shield Icon */}
           <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center ${liquidGlass ? 'bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-400/30 backdrop-blur-xl' : 'bg-gradient-to-br from-blue-600 to-blue-800 border border-blue-500'} shadow-lg`}>
