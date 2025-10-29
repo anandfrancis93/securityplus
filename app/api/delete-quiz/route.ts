@@ -50,6 +50,39 @@ export async function POST(request: NextRequest) {
     // Remove the quiz from history
     quizHistory.splice(quizIndex, 1);
 
+    // Check if this was the last quiz - if so, reset all progress like the reset button does
+    if (quizHistory.length === 0) {
+      console.log(`[DELETE QUIZ] Last quiz deleted - clearing all progress data`);
+
+      // Clear all progress data (same as reset progress button)
+      await userRef.update({
+        quizHistory: [],
+        answeredQuestions: [],
+        correctAnswers: 0,
+        totalQuestions: 0,
+        totalPoints: 0,
+        maxPossiblePoints: 0,
+        estimatedAbility: 0,
+        abilityStandardError: Infinity,
+        predictedScore: 0,
+        topicPerformance: {}, // Clear topic tracking data
+        quizMetadata: null, // Clear quiz metadata
+        cachedQuiz: null, // Clear any cached quiz
+        lastUpdated: Date.now(),
+      });
+
+      console.log(`[DELETE QUIZ] All progress cleared for user ${userId}`);
+
+      return NextResponse.json({
+        success: true,
+        remainingQuizzes: 0,
+        totalQuestions: 0,
+        estimatedAbility: 0,
+        predictedScore: 0,
+        progressCleared: true
+      });
+    }
+
     // Recalculate all metrics based on remaining quizzes
     const allAttempts = quizHistory.flatMap((quiz: any) => quiz.questions || []);
     const totalQuestions = allAttempts.length;
@@ -91,7 +124,7 @@ export async function POST(request: NextRequest) {
     const totalPoints = allAttempts.reduce((sum: number, attempt: any) => sum + (attempt.pointsEarned || 0), 0);
     const maxPossiblePoints = allAttempts.reduce((sum: number, attempt: any) => sum + (attempt.maxPoints || 100), 0);
 
-    // Update user document
+    // Update user document with recalculated metrics
     await userRef.update({
       quizHistory,
       totalQuestions,
