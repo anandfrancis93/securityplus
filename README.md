@@ -355,6 +355,41 @@ Choose from predefined Security+ domains when creating flashcards:
 - Efficient Firebase queries with proper indexing
 - Client-side calculation caching for IRT and performance metrics
 
+## Developer Documentation
+
+**Before implementing new features, read these guides to prevent code duplication:**
+
+### 📖 Essential Reading
+
+1. **[CODING_GUIDELINES.md](./CODING_GUIDELINES.md)** - **READ THIS FIRST**
+   - Workflow to prevent duplicate code
+   - When to create shared components vs. inline code
+   - Pre-implementation checklist
+   - Common patterns reference
+
+2. **[COMPONENT_LIBRARY.md](./COMPONENT_LIBRARY.md)** - **CHECK BEFORE CODING**
+   - All available shared components, hooks, and utilities
+   - Usage examples for each component
+   - Props documentation
+   - Quick search commands
+
+3. **[REFACTORING_GUIDE.md](./REFACTORING_GUIDE.md)**
+   - How to refactor duplicate code
+   - Step-by-step refactoring process
+   - Examples and benefits
+
+### 🚀 Quick Start for Developers
+
+**Before implementing any feature:**
+1. ✅ Read [CODING_GUIDELINES.md](./CODING_GUIDELINES.md)
+2. ✅ Search [COMPONENT_LIBRARY.md](./COMPONENT_LIBRARY.md) for existing implementations
+3. ✅ Use grep/Glob to search codebase for similar patterns
+4. ✅ Reuse existing components or create shared ones
+
+**Golden Rule:** Search before you code. If a pattern exists, reuse it. If it will be used 2+ times, make it shared.
+
+---
+
 ## License
 
 MIT
