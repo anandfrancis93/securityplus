@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useApp } from '@/components/AppProvider';
 import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
@@ -33,6 +33,8 @@ export default function SearchFlashcards() {
   const [editDomain, setEditDomain] = useState('General Security Concepts');
   const [editImage, setEditImage] = useState<File | null>(null);
   const [editImagePreview, setEditImagePreview] = useState<string | null>(null);
+  const [editDomainDropdownOpen, setEditDomainDropdownOpen] = useState(false);
+  const editDomainDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (userId) {
@@ -49,6 +51,22 @@ export default function SearchFlashcards() {
       console.log('Modal should be hidden');
     }
   }, [editingCard]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (editDomainDropdownRef.current && !editDomainDropdownRef.current.contains(event.target as Node)) {
+        setEditDomainDropdownOpen(false);
+      }
+    }
+
+    if (editDomainDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [editDomainDropdownOpen]);
 
   const loadFlashcards = async () => {
     if (!userId) return;
@@ -70,6 +88,7 @@ export default function SearchFlashcards() {
     setEditDomain('General Security Concepts');
     setEditImage(null);
     setEditImagePreview(null);
+    setEditDomainDropdownOpen(false);
   };
 
   const handleEditImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -354,41 +373,117 @@ export default function SearchFlashcards() {
                 <label style={{ display: 'block', marginBottom: '14px', fontSize: '16px', fontWeight: '700', color: '#fff', letterSpacing: '0.01em' }}>
                   Security+ Domain
                 </label>
-                <select
-                  value={editDomain}
-                  onChange={(e) => setEditDomain(e.target.value)}
-                  disabled={generating}
-                  style={{
-                    width: '100%',
-                    padding: '18px 24px',
-                    fontSize: '18px',
-                    borderRadius: liquidGlass ? '24px' : '28px',
-                    border: liquidGlass ? '2px solid rgba(52, 211, 153, 0.15)' : '2px solid rgba(148, 163, 184, 0.2)',
-                    backgroundColor: liquidGlass ? 'rgba(255, 255, 255, 0.03)' : 'rgba(15, 23, 42, 0.6)',
-                    color: '#fff',
-                    outline: 'none',
-                    cursor: 'pointer',
-                    boxSizing: 'border-box',
-                    transition: 'all 700ms cubic-bezier(0.4, 0, 0.2, 1)',
-                    backdropFilter: liquidGlass ? 'blur(8px)' : 'none'
-                  }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.6)';
-                    e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.06)' : 'rgba(15, 23, 42, 0.8)';
-                    e.currentTarget.style.boxShadow = '0 0 0 4px rgba(52, 211, 153, 0.1)';
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.borderColor = liquidGlass ? 'rgba(52, 211, 153, 0.15)' : 'rgba(148, 163, 184, 0.2)';
-                    e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.03)' : 'rgba(15, 23, 42, 0.6)';
-                    e.currentTarget.style.boxShadow = 'none';
-                  }}
-                >
-                  <option value="General Security Concepts" style={{ background: '#1e293b', color: '#fff' }}>General Security Concepts</option>
-                  <option value="Threats, Vulnerabilities, and Mitigations" style={{ background: '#1e293b', color: '#fff' }}>Threats, Vulnerabilities, and Mitigations</option>
-                  <option value="Security Architecture" style={{ background: '#1e293b', color: '#fff' }}>Security Architecture</option>
-                  <option value="Security Operations" style={{ background: '#1e293b', color: '#fff' }}>Security Operations</option>
-                  <option value="Security Program Management and Oversight" style={{ background: '#1e293b', color: '#fff' }}>Security Program Management and Oversight</option>
-                </select>
+                <div style={{ position: 'relative' }} ref={editDomainDropdownRef}>
+                  <button
+                    type="button"
+                    onClick={() => !generating && setEditDomainDropdownOpen(!editDomainDropdownOpen)}
+                    disabled={generating}
+                    style={{
+                      width: '100%',
+                      padding: '18px 24px',
+                      fontSize: '18px',
+                      borderRadius: liquidGlass ? '24px' : '28px',
+                      border: liquidGlass ? '2px solid rgba(52, 211, 153, 0.15)' : '2px solid rgba(148, 163, 184, 0.2)',
+                      backgroundColor: liquidGlass ? 'rgba(255, 255, 255, 0.03)' : 'rgba(15, 23, 42, 0.6)',
+                      color: '#fff',
+                      outline: 'none',
+                      cursor: generating ? 'not-allowed' : 'pointer',
+                      boxSizing: 'border-box',
+                      transition: 'all 700ms cubic-bezier(0.4, 0, 0.2, 1)',
+                      backdropFilter: liquidGlass ? 'blur(8px)' : 'none',
+                      textAlign: 'left',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      opacity: generating ? 0.5 : 1
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!generating) {
+                        e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.06)' : 'rgba(15, 23, 42, 0.8)';
+                        e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.3)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.03)' : 'rgba(15, 23, 42, 0.6)';
+                      e.currentTarget.style.borderColor = liquidGlass ? 'rgba(52, 211, 153, 0.15)' : 'rgba(148, 163, 184, 0.2)';
+                    }}
+                  >
+                    <span>{editDomain}</span>
+                    <svg
+                      style={{
+                        width: '20px',
+                        height: '20px',
+                        transition: 'transform 300ms',
+                        transform: editDomainDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+                      }}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {/* Custom Dropdown Menu */}
+                  {editDomainDropdownOpen && (
+                    <div style={{
+                      position: 'absolute',
+                      zIndex: 1000000,
+                      width: '100%',
+                      marginTop: '8px',
+                      backgroundColor: liquidGlass ? 'rgba(0, 0, 0, 0.95)' : 'rgba(30, 41, 59, 0.95)',
+                      backdropFilter: 'blur(24px)',
+                      border: liquidGlass ? '2px solid rgba(255, 255, 255, 0.2)' : '2px solid rgba(148, 163, 184, 0.2)',
+                      borderRadius: liquidGlass ? '24px' : '28px',
+                      boxShadow: '0 20px 40px rgba(0, 0, 0, 0.6)',
+                      overflow: 'hidden'
+                    }}>
+                      {[
+                        'General Security Concepts',
+                        'Threats, Vulnerabilities, and Mitigations',
+                        'Security Architecture',
+                        'Security Operations',
+                        'Security Program Management and Oversight'
+                      ].map((domain) => (
+                        <button
+                          key={domain}
+                          type="button"
+                          onClick={() => {
+                            setEditDomain(domain);
+                            setEditDomainDropdownOpen(false);
+                          }}
+                          style={{
+                            width: '100%',
+                            textAlign: 'left',
+                            padding: '16px 20px',
+                            fontSize: '16px',
+                            border: 'none',
+                            backgroundColor: editDomain === domain
+                              ? (liquidGlass ? 'rgba(16, 185, 129, 0.3)' : 'rgba(52, 211, 153, 0.2)')
+                              : 'transparent',
+                            color: '#fff',
+                            cursor: 'pointer',
+                            transition: 'all 300ms',
+                            outline: 'none'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (editDomain !== domain) {
+                              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (editDomain !== domain) {
+                              e.currentTarget.style.backgroundColor = 'transparent';
+                            }
+                          }}
+                        >
+                          {domain}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Buttons */}
