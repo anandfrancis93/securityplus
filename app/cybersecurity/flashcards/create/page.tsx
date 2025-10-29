@@ -125,6 +125,17 @@ export default function CreateFlashcards() {
 
   return (
     <>
+      {/* Global styles for hidden scrollbar */}
+      <style jsx global>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+
       <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
       {liquidGlass && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -197,7 +208,7 @@ export default function CreateFlashcards() {
                   if (manualDefinitionError) setManualDefinitionError('');
                 }}
                 placeholder="Enter the definition or answer here..."
-                className={`w-full h-40 ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-lg ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} p-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} focus:border-cyan-500/50 focus:outline-none ${liquidGlass ? 'focus:bg-white/10' : 'focus:bg-slate-900/80'} resize-vertical transition-all duration-700 placeholder:text-zinc-500`}
+                className={`no-scrollbar w-full h-40 ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-lg ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} p-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} focus:border-cyan-500/50 focus:outline-none ${liquidGlass ? 'focus:bg-white/10' : 'focus:bg-slate-900/80'} resize-vertical transition-all duration-700 placeholder:text-zinc-500`}
                 disabled={generating}
               />
               {manualDefinitionError && (
