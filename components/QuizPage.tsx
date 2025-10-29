@@ -9,6 +9,8 @@ import Header from './Header';
 import QuestionCard from './quiz/QuestionCard';
 import ExplanationSection from './quiz/ExplanationSection';
 import QuestionMetadata from './quiz/QuestionMetadata';
+import { LoadingScreen } from '@/components/ui/LoadingScreen';
+import { AdaptiveBackground } from '@/components/ui/LiquidGlassBackground';
 
 export default function Quiz() {
   const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, user, loading: authLoading, liquidGlass, handleSignOut, refreshProgress } = useApp();
@@ -266,13 +268,7 @@ export default function Quiz() {
 
   if (loading) {
     return (
-      <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black font-mono'}`}>
-        {liquidGlass && (
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-          </div>
-        )}
+      <AdaptiveBackground liquidGlass={liquidGlass}>
         <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
           <Header />
         </div>
@@ -313,19 +309,13 @@ export default function Quiz() {
             </div>
           </div>
         </div>
-      </div>
+      </AdaptiveBackground>
     );
   }
 
   if (questions.length === 0) {
     return (
-      <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black font-mono'}`}>
-        {liquidGlass && (
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-red-500/10 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-red-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-          </div>
-        )}
+      <AdaptiveBackground liquidGlass={liquidGlass} colors={{ top: 'bg-red-500/10', bottom: 'bg-red-500/10' }}>
         <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
           <Header />
         </div>
@@ -380,7 +370,7 @@ export default function Quiz() {
             </div>
           </div>
         </div>
-      </div>
+      </AdaptiveBackground>
     );
   }
 
@@ -419,16 +409,7 @@ export default function Quiz() {
   }
 
   return (
-    <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black font-mono'}`}>
-      {/* Animated Background Gradients */}
-      {liquidGlass && (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-          <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-        </div>
-      )}
-
+    <AdaptiveBackground liquidGlass={liquidGlass} colors={{ top: 'bg-violet-500/10', bottom: 'bg-cyan-500/10', center: 'bg-emerald-500/5' }}>
       {/* Celebration Modal */}
       {showCelebration && (
         <div className={`fixed inset-0 flex items-center justify-center z-50 p-4 overflow-y-auto ${liquidGlass ? 'bg-black/80 backdrop-blur-xl' : 'bg-black/90'}`}>
@@ -626,6 +607,6 @@ export default function Quiz() {
           </button>
         </div>
       </div>
-    </div>
+    </AdaptiveBackground>
   );
 }
