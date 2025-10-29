@@ -263,7 +263,7 @@ export default function FlashcardPerformance() {
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
             )}
             <div className="relative">
-              <h3 className={`text-2xl font-bold mb-6 ${liquidGlass ? 'text-white' : 'text-slate-100'}`}>📅 Review Schedule</h3>
+              <h3 className={`text-2xl font-bold mb-6 ${liquidGlass ? 'text-white' : 'text-slate-100'}`}>Review Schedule</h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
@@ -358,7 +358,7 @@ export default function FlashcardPerformance() {
               </div>
               {reviews.length > 0 && (
                 <div className={`mt-6 text-sm ${liquidGlass ? 'text-zinc-500' : 'text-slate-500'}`}>
-                  <p>💡 <strong>Tip:</strong> Cards with intervals less than 1 day were created before the FSRS fix. Review them once more to get proper multi-day intervals.</p>
+                  <p><strong>Tip:</strong> Cards with intervals less than 1 day were created before the FSRS fix. Review them once more to get proper multi-day intervals.</p>
                 </div>
               )}
             </div>
