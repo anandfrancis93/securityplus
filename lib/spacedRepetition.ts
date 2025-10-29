@@ -69,7 +69,13 @@ export function getReviewedDueFlashcards(
 }
 
 /**
- * Get statistics about flashcard deck
+ * Get statistics about flashcard deck using FSRS state
+ *
+ * Categories based on FSRS algorithm:
+ * - New: Cards never reviewed yet
+ * - Learning: Cards in learning/relearning state, or cards with recent lapses
+ * - Review: Cards being actively reviewed (State.Review) with 1-2 successful reps
+ * - Mastered: Cards with 3+ successful reviews and no recent struggles
  */
 export function getDeckStats(
   reviews: FlashcardReview[],
@@ -91,11 +97,26 @@ export function getDeckStats(
   let mastered = 0;
 
   for (const r of reviews) {
-    if (r.repetitions === 0) {
+    // Use FSRS state for better categorization
+    // State: 0=New, 1=Learning, 2=Review, 3=Relearning
+    const state = r.state ?? 0;
+    const reps = r.reps ?? r.repetitions ?? 0;
+    const lapses = r.lapses ?? 0;
+
+    if (state === 0) {
+      // State.New - brand new card (shouldn't normally be in reviews)
       learning++;
-    } else if (r.repetitions < 3) {
+    } else if (state === 1 || state === 3) {
+      // State.Learning (1) or State.Relearning (3) - actively learning/struggling
+      learning++;
+    } else if (lapses > 0 && reps < 3) {
+      // Has failed before and not yet mastered
+      learning++;
+    } else if (reps < 3) {
+      // State.Review but less than 3 successful reviews
       review++;
     } else {
+      // State.Review with 3+ successful reviews
       mastered++;
     }
   }
