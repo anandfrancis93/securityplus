@@ -235,39 +235,62 @@ export default function StudyFlashcards() {
 
         {/* Answer Buttons */}
         {isFlipped && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <button
-              onClick={() => handleAnswer('again')}
-              disabled={answering}
-              className="bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-4 rounded-lg font-medium transition-all"
-              title="Couldn't remember or got it wrong"
-            >
-              <div className="text-lg font-bold">Again</div>
-            </button>
-            <button
-              onClick={() => handleAnswer('hard')}
-              disabled={answering}
-              className="bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-4 rounded-lg font-medium transition-all"
-              title="Difficult to recall, needed time"
-            >
-              <div className="text-lg font-bold">Hard</div>
-            </button>
-            <button
-              onClick={() => handleAnswer('good')}
-              disabled={answering}
-              className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-4 rounded-lg font-medium transition-all"
-              title="Recalled with some effort"
-            >
-              <div className="text-lg font-bold">Good</div>
-            </button>
-            <button
-              onClick={() => handleAnswer('easy')}
-              disabled={answering}
-              className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-4 rounded-lg font-medium transition-all"
-              title="Instant recall, confident"
-            >
-              <div className="text-lg font-bold">Easy</div>
-            </button>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-6">
+            {/* Again Button */}
+            <div className="relative group">
+              <button
+                onClick={() => handleAnswer('again')}
+                disabled={answering}
+                className="relative w-full bg-white/5 backdrop-blur-2xl rounded-[32px] hover:bg-white/10 hover:scale-105 active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 border-white/10 hover:border-red-400/60 shadow-lg hover:shadow-2xl hover:shadow-red-500/50 transition-all duration-700"
+                title="Couldn't remember or got it wrong"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-[32px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] opacity-50" />
+                <div className="relative text-2xl font-bold tracking-tight">Again</div>
+              </button>
+            </div>
+
+            {/* Hard Button */}
+            <div className="relative group">
+              <button
+                onClick={() => handleAnswer('hard')}
+                disabled={answering}
+                className="relative w-full bg-white/5 backdrop-blur-2xl rounded-[32px] hover:bg-white/10 hover:scale-105 active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 border-white/10 hover:border-yellow-400/60 shadow-lg hover:shadow-2xl hover:shadow-yellow-500/50 transition-all duration-700"
+                title="Difficult to recall, needed time"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 via-transparent to-transparent rounded-[32px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] opacity-50" />
+                <div className="relative text-2xl font-bold tracking-tight">Hard</div>
+              </button>
+            </div>
+
+            {/* Good Button */}
+            <div className="relative group">
+              <button
+                onClick={() => handleAnswer('good')}
+                disabled={answering}
+                className="relative w-full bg-white/5 backdrop-blur-2xl rounded-[32px] hover:bg-white/10 hover:scale-105 active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 border-white/10 hover:border-green-400/60 shadow-lg hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-700"
+                title="Recalled with some effort"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-transparent to-transparent rounded-[32px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] opacity-50" />
+                <div className="relative text-2xl font-bold tracking-tight">Good</div>
+              </button>
+            </div>
+
+            {/* Easy Button */}
+            <div className="relative group">
+              <button
+                onClick={() => handleAnswer('easy')}
+                disabled={answering}
+                className="relative w-full bg-white/5 backdrop-blur-2xl rounded-[32px] hover:bg-white/10 hover:scale-105 active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 border-white/10 hover:border-blue-400/60 shadow-lg hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-700"
+                title="Instant recall, confident"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-transparent rounded-[32px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] opacity-50" />
+                <div className="relative text-2xl font-bold tracking-tight">Easy</div>
+              </button>
+            </div>
           </div>
         )}
 
