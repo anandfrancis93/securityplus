@@ -7,7 +7,15 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { previousReview, difficulty, flashcardId, userId } = body;
 
+    console.log('[API] Flashcard review request:', {
+      flashcardId,
+      userId,
+      difficulty,
+      hasPreviousReview: !!previousReview
+    });
+
     if (!flashcardId || !userId || !difficulty) {
+      console.error('[API] Missing required fields:', { flashcardId, userId, difficulty });
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -21,11 +29,13 @@ export async function POST(request: NextRequest) {
       userId
     );
 
+    console.log('[API] Calculated review:', newReview);
+
     return NextResponse.json(newReview);
   } catch (error) {
-    console.error('Error calculating flashcard review:', error);
+    console.error('[API] Error calculating flashcard review:', error);
     return NextResponse.json(
-      { error: 'Failed to calculate review' },
+      { error: 'Failed to calculate review', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

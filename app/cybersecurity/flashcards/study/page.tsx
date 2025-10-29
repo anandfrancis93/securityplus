@@ -82,6 +82,13 @@ export default function StudyFlashcards() {
       const previousReview = reviews.find((r) => r.flashcardId === currentCard.id) || null;
 
       // Calculate next review via API
+      console.log('[Client] Requesting review calculation:', {
+        flashcardId: currentCard.id,
+        userId,
+        difficulty,
+        hasPreviousReview: !!previousReview
+      });
+
       const response = await fetch('/api/flashcard-review', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -94,13 +101,18 @@ export default function StudyFlashcards() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to calculate review');
+        const errorData = await response.json();
+        console.error('[Client] API error:', errorData);
+        throw new Error(`Failed to calculate review: ${errorData.details || errorData.error}`);
       }
 
       const newReview = await response.json();
+      console.log('[Client] Received new review:', newReview);
 
       // Save review
+      console.log('[Client] Saving review to Firebase...');
       await saveFlashcardReview(newReview);
+      console.log('[Client] Review saved successfully');
 
       // Move to next card
       if (currentCardIndex < dueCardIds.length - 1) {
