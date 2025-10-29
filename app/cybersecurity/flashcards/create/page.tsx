@@ -208,7 +208,7 @@ export default function CreateFlashcards() {
                   if (manualDefinitionError) setManualDefinitionError('');
                 }}
                 placeholder="Enter the definition or answer here..."
-                className={`no-scrollbar w-full h-40 ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-lg ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} p-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} focus:border-cyan-500/50 focus:outline-none ${liquidGlass ? 'focus:bg-white/10' : 'focus:bg-slate-900/80'} resize-vertical transition-all duration-700 placeholder:text-zinc-500`}
+                className={`no-scrollbar w-full h-40 ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-lg ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} p-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} focus:border-cyan-500/50 focus:outline-none ${liquidGlass ? 'focus:bg-white/10' : 'focus:bg-slate-900/80'} resize-none transition-all duration-700 placeholder:text-zinc-500`}
                 disabled={generating}
               />
               {manualDefinitionError && (
