@@ -96,31 +96,6 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
   const dueNowCount = topicsWithSchedule.filter(t => t.status === 'due-now').length;
   const dueSoonCount = topicsWithSchedule.filter(t => t.status === 'due-soon').length;
 
-  // Export function
-  const exportScheduleData = () => {
-    const data = {
-      currentQuizNumber,
-      nextQuizNumber,
-      exportDate: new Date().toISOString(),
-      statistics: {
-        totalTopics: topicsWithSchedule.length,
-        overdueCount,
-        dueNowCount,
-        dueSoonCount,
-      },
-      topicsWithSchedule,
-      nextQuizTopics,
-    };
-
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `topic-schedule-quiz-${nextQuizNumber}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
   return (
     <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'} overflow-hidden`}>
       {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
@@ -360,16 +335,6 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
                 }`}
               >
                 Future Reviews
-              </button>
-              <button
-                onClick={exportScheduleData}
-                className={`ml-auto px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
-                  liquidGlass
-                    ? 'bg-violet-500/20 text-violet-200 border border-violet-500/50 hover:bg-violet-500/30'
-                    : 'bg-violet-900 text-violet-200 border border-violet-700 hover:bg-violet-800'
-                }`}
-              >
-                📥 Export Data
               </button>
             </div>
           </div>
