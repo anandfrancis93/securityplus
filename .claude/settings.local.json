@@ -26,7 +26,8 @@
       "Bash(dir:*)",
       "Bash(npm uninstall:*)",
       "WebFetch(domain:open-spaced-repetition.github.io)",
-      "WebFetch(domain:www.npmjs.com)"
+      "WebFetch(domain:www.npmjs.com)",
+      "Bash(node test-intervals.js:*)"
     ],
     "deny": [],
     "ask": []

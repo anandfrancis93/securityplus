@@ -302,6 +302,100 @@ export default function FlashcardsPage() {
               </div>
             </div>
 
+            {/* Review Schedule Table */}
+            {reviews.length > 0 && (
+              <div className="bg-zinc-900 rounded-lg p-6 mb-8 border border-zinc-700">
+                <h3 className="text-lg font-bold mb-4">📅 Review Schedule</h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-zinc-700">
+                        <th className="text-left py-2 px-3 text-zinc-400 font-medium">Term</th>
+                        <th className="text-left py-2 px-3 text-zinc-400 font-medium">Last Review</th>
+                        <th className="text-left py-2 px-3 text-zinc-400 font-medium">Last Rating</th>
+                        <th className="text-left py-2 px-3 text-zinc-400 font-medium">Next Review</th>
+                        <th className="text-left py-2 px-3 text-zinc-400 font-medium">Interval</th>
+                        <th className="text-left py-2 px-3 text-zinc-400 font-medium">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {reviews
+                        .sort((a, b) => a.nextReviewDate - b.nextReviewDate)
+                        .map((review) => {
+                          const card = flashcards.find(f => f.id === review.flashcardId);
+                          if (!card) return null;
+
+                          const now = Date.now();
+                          const isDue = review.nextReviewDate <= now;
+                          const nextReviewDate = new Date(review.nextReviewDate);
+                          const lastReviewDate = new Date(review.reviewedAt);
+                          const intervalHours = Math.round((review.nextReviewDate - review.reviewedAt) / (1000 * 60 * 60));
+                          const intervalDays = Math.round(intervalHours / 24);
+
+                          // Calculate time until/since due
+                          const timeDiff = Math.abs(review.nextReviewDate - now);
+                          const hoursUntil = Math.round(timeDiff / (1000 * 60 * 60));
+                          const daysUntil = Math.round(hoursUntil / 24);
+
+                          return (
+                            <tr key={review.flashcardId} className="border-b border-zinc-800 hover:bg-zinc-800/50">
+                              <td className="py-3 px-3">
+                                <div className="font-medium truncate max-w-[200px]" title={card.term}>
+                                  {card.term}
+                                </div>
+                              </td>
+                              <td className="py-3 px-3 text-zinc-400">
+                                <div>{lastReviewDate.toLocaleDateString()}</div>
+                                <div className="text-xs text-zinc-500">
+                                  {lastReviewDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </div>
+                              </td>
+                              <td className="py-3 px-3">
+                                <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${
+                                  review.difficulty === 'again' ? 'bg-red-900/30 text-red-400 border border-red-700/50' :
+                                  review.difficulty === 'hard' ? 'bg-yellow-900/30 text-yellow-400 border border-yellow-700/50' :
+                                  review.difficulty === 'good' ? 'bg-green-900/30 text-green-400 border border-green-700/50' :
+                                  'bg-blue-900/30 text-blue-400 border border-blue-700/50'
+                                }`}>
+                                  {review.difficulty.charAt(0).toUpperCase() + review.difficulty.slice(1)}
+                                </span>
+                              </td>
+                              <td className="py-3 px-3 text-zinc-400">
+                                <div>{nextReviewDate.toLocaleDateString()}</div>
+                                <div className="text-xs text-zinc-500">
+                                  {nextReviewDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </div>
+                              </td>
+                              <td className="py-3 px-3 text-zinc-400">
+                                {intervalDays > 0 ? (
+                                  <span>{intervalDays} day{intervalDays !== 1 ? 's' : ''}</span>
+                                ) : (
+                                  <span className="text-yellow-400">{intervalHours} hour{intervalHours !== 1 ? 's' : ''}</span>
+                                )}
+                              </td>
+                              <td className="py-3 px-3">
+                                {isDue ? (
+                                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-900/30 text-red-400 border border-red-700/50">
+                                    Due now
+                                  </span>
+                                ) : (
+                                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-zinc-800 text-zinc-400 border border-zinc-700">
+                                    {daysUntil > 0 ? `In ${daysUntil} day${daysUntil !== 1 ? 's' : ''}` : `In ${hoursUntil}h`}
+                                  </span>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="mt-4 text-xs text-zinc-500">
+                  <p>💡 <strong>Tip:</strong> Cards with intervals less than 1 day were created before the FSRS fix. Review them once more to get proper multi-day intervals.</p>
+                </div>
+              </div>
+            )}
+
             {/* Study Button */}
             <div className="text-center mb-8">
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
