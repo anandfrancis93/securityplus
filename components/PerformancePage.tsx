@@ -305,7 +305,7 @@ export default function QuizPerformance() {
 
   // Confidence level based on CI width
   const getConfidenceInfo = () => {
-    if (!isFinite(abilityStandardError) || totalAnswered < 5) {
+    if (!isFinite(abilityStandardError) || totalAnswered < 1) {
       return { label: 'Insufficient data', margin: 0, color: 'zinc', tooltip: 'Not enough data to calculate confidence interval. Answer more questions for a reliable prediction.' };
     }
 
@@ -418,7 +418,7 @@ export default function QuizPerformance() {
               <>
                 <div className="relative group cursor-help">
                   {/* Score Range Display */}
-                  {isFinite(abilityStandardError) && totalAnswered >= 5 ? (
+                  {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
                     <>
                       <div className={`text-7xl md:text-8xl font-bold transition-all duration-700 flex items-center justify-center gap-2 sm:gap-4`}>
                         <span className={
@@ -517,7 +517,7 @@ export default function QuizPerformance() {
               {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-2xl" />}
               {/* Progress bar fill - show range if CI available, otherwise point estimate */}
               {hasEnoughQuestions && (
-                isFinite(abilityStandardError) && totalAnswered >= 5 ? (
+                isFinite(abilityStandardError) && totalAnswered >= 1 ? (
                   // Show range (confidence interval) with multiple color segments
                   <>
                     {/* Red segment: 100-599 */}
@@ -689,7 +689,7 @@ export default function QuizPerformance() {
                         <p className={`text-base text-zinc-300 leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
                       </div>
                     </div>
-                    {isFinite(abilityStandardError) && totalAnswered >= 5 ? (
+                    {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
                       <div className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold transition-all duration-700 flex items-center justify-center gap-2`}>
                         <span className={
                           lowerAbilityColor === 'emerald' ? 'text-emerald-400' :
@@ -721,7 +721,7 @@ export default function QuizPerformance() {
                     <div className={`h-6 relative overflow-hidden ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl' : 'bg-zinc-900 border border-zinc-800 rounded-md'}`}>
                       {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-2xl" />}
                       {/* Show range if CI available, otherwise point estimate */}
-                      {isFinite(abilityStandardError) && totalAnswered >= 5 ? (
+                      {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
                         // Show range (confidence interval) with multiple color segments
                         <>
                           {/* Red segment: -3 to -1 */}
