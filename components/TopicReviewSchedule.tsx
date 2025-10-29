@@ -254,11 +254,11 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
                 return (
                   <div
                     key={index}
-                    className={`${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10' : 'bg-zinc-900 rounded-md border border-zinc-800'} p-4`}
+                    className={`${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10' : 'bg-zinc-900 rounded-md border border-zinc-800'} p-6`}
                   >
-                    <div className="text-sm font-bold text-white">{topic.topicName}</div>
+                    <div className="text-base md:text-lg font-bold text-white">{topic.topicName}</div>
                     <div
-                      className="text-xs font-bold mt-1"
+                      className="text-sm md:text-base font-bold mt-2"
                       style={{ color: domainColor }}
                     >
                       {topic.domain.replace('.0', '.')}
