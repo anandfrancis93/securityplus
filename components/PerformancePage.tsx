@@ -1050,20 +1050,27 @@ export default function QuizPerformance() {
           </div>
         )}
 
-        {/* Reset Progress - Destructive Action */}
-        {totalAnswered > 0 && (
-          <div className="mt-12 text-center pb-8">
-            <button
-              id="reset-progress"
-              onClick={handleResetProgress}
-              className={`relative px-12 md:px-16 py-5 md:py-6 text-xl md:text-2xl font-bold transition-all duration-700 ${liquidGlass ? 'bg-red-500/20 hover:bg-red-500/30 backdrop-blur-xl border border-red-500/50 hover:border-red-500/80 text-red-300 hover:text-red-200 rounded-3xl hover:scale-105 shadow-xl hover:shadow-2xl hover:shadow-red-500/30' : 'bg-black hover:bg-zinc-900 text-red-400 border border-red-500/30 hover:border-red-500 rounded-md font-mono'}`}
-            >
-              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-3xl opacity-0 hover:opacity-100 transition-opacity duration-700" />}
-              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />}
-              <span className="relative">Reset Progress</span>
-            </button>
-          </div>
-        )}
+        {/* Reset Progress - Destructive Action (Always visible, disabled when no data) */}
+        <div className="mt-12 text-center pb-8">
+          <button
+            id="reset-progress"
+            onClick={handleResetProgress}
+            disabled={totalAnswered === 0}
+            className={`relative px-12 md:px-16 py-5 md:py-6 text-xl md:text-2xl font-bold transition-all duration-700 ${
+              totalAnswered === 0
+                ? liquidGlass
+                  ? 'bg-zinc-800/30 backdrop-blur-xl border border-zinc-700/30 text-zinc-600 rounded-3xl cursor-not-allowed opacity-50'
+                  : 'bg-zinc-900 text-zinc-700 border border-zinc-800 rounded-md font-mono cursor-not-allowed opacity-50'
+                : liquidGlass
+                ? 'bg-red-500/20 hover:bg-red-500/30 backdrop-blur-xl border border-red-500/50 hover:border-red-500/80 text-red-300 hover:text-red-200 rounded-3xl hover:scale-105 shadow-xl hover:shadow-2xl hover:shadow-red-500/30'
+                : 'bg-black hover:bg-zinc-900 text-red-400 border border-red-500/30 hover:border-red-500 rounded-md font-mono'
+            }`}
+          >
+            {liquidGlass && totalAnswered > 0 && <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-3xl opacity-0 hover:opacity-100 transition-opacity duration-700" />}
+            {liquidGlass && totalAnswered > 0 && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />}
+            <span className="relative">Reset Progress</span>
+          </button>
+        </div>
       </div>
     </div>
   );
