@@ -438,22 +438,23 @@ import { useRequireAuth } from '@/lib/hooks/useRequireAuth';
 - [x] Create flashcards page - Commit 76325ca (~76 lines eliminated)
 - [x] Search flashcards page - Commit 76325ca (~180 lines eliminated)
 - [x] Study flashcards page - Commit 76325ca (~90 lines eliminated)
-- [ ] Other flashcard pages
-- [ ] Quiz pages (if applicable)
+- [x] FlashcardsPage component - Commit 5d84d1f (~65 lines eliminated)
+- [x] QuizPage component - Commit 5d84d1f (~30 lines eliminated)
+
+**Status:** ✅ All major pages refactored successfully!
 
 ---
 
 ## Benefits Achieved
 
-After refactoring 4 pages (performance, create, search, study):
-- **~460 lines of duplicate code eliminated** (actual: -401 net lines in commit 76325ca)
+After refactoring 6 pages/components (performance, create, search, study, FlashcardsPage, QuizPage):
+- **~473 lines of duplicate code eliminated** (actual: -401 lines in 76325ca, -72 lines in 5d84d1f)
 - **Single source of truth for UI patterns**
 - **Consistent styling across all pages**
 - **Easier to maintain and update**
 - **Smaller bundle size**
 - **Better developer experience**
-
-**Remaining potential**: ~240 more lines could be eliminated from other flashcard/quiz pages
+- **All pages use centralized components** (useRequireAuth, LoadingScreen, AdaptiveBackground)
 
 ---
 
