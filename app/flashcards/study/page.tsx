@@ -192,14 +192,14 @@ export default function StudyFlashcards() {
               </div>
             </div>
 
-            <div className="flex items-center justify-center min-h-[350px]">
+            <div className={`${isFlipped ? 'overflow-y-auto overflow-x-hidden max-h-[350px]' : 'flex items-center justify-center'} min-h-[350px]`}>
               {!isFlipped ? (
                 <div className="text-center">
                   <h2 className="text-3xl font-bold mb-4">{currentCard.term}</h2>
                   <p className="text-gray-400 text-sm mt-8">Click to reveal definition</p>
                 </div>
               ) : (
-                <div className="text-center">
+                <div className="text-center py-4">
                   <p className="text-xl leading-relaxed mb-6 whitespace-pre-wrap">{currentCard.definition}</p>
                   {currentCard.context && (
                     <div className="mt-6 pt-6 border-t border-gray-700">

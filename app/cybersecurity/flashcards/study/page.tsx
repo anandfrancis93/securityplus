@@ -300,7 +300,7 @@ export default function StudyFlashcards() {
 
             {/* Back of card */}
             <div
-              className={`absolute inset-0 ${liquidGlass ? 'bg-white/10' : 'bg-violet-900/20'} backdrop-blur-2xl ${liquidGlass ? 'rounded-[40px]' : 'rounded-[28px]'} p-10 sm:p-12 md:p-16 border-2 ${liquidGlass ? 'border-white/30' : 'border-violet-500/40'} shadow-2xl ${liquidGlass ? 'shadow-violet-500/30' : 'shadow-violet-500/20'} overflow-hidden`}
+              className={`absolute inset-0 ${liquidGlass ? 'bg-white/10' : 'bg-violet-900/20'} backdrop-blur-2xl ${liquidGlass ? 'rounded-[40px]' : 'rounded-[28px]'} border-2 ${liquidGlass ? 'border-white/30' : 'border-violet-500/40'} shadow-2xl ${liquidGlass ? 'shadow-violet-500/30' : 'shadow-violet-500/20'} overflow-hidden`}
               style={{
                 backfaceVisibility: 'hidden',
                 WebkitBackfaceVisibility: 'hidden',
@@ -309,16 +309,17 @@ export default function StudyFlashcards() {
             >
               {/* Gradient Overlay */}
               {liquidGlass && (
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 via-purple-500/10 to-transparent rounded-[40px] opacity-80" />
+                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 via-purple-500/10 to-transparent rounded-[40px] opacity-80 pointer-events-none" />
               )}
 
               {/* Light Reflection */}
               {liquidGlass && (
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50 pointer-events-none" />
               )}
 
-              <div className="relative flex items-center justify-center min-h-[400px] px-2 sm:px-0">
-                <div className="text-left w-full space-y-6">
+              {/* Scrollable Content Container */}
+              <div className="relative h-full overflow-y-auto overflow-x-hidden p-10 sm:p-12 md:p-16 flex items-start">
+                <div className="text-left w-full space-y-6 my-auto">
                   <p className={`text-xl sm:text-2xl leading-relaxed whitespace-pre-wrap ${liquidGlass ? 'text-white' : 'text-slate-200'} tracking-tight font-light`}>{currentCard.definition}</p>
                   {currentCard.imageUrl && (
                     <div className="mt-8">
