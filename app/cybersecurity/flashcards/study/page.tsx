@@ -292,7 +292,7 @@ export default function StudyFlashcards() {
           >
             {/* Front of card */}
             <div
-              className={`absolute inset-0 ${liquidGlass ? 'bg-white/5' : 'bg-slate-800/95'} backdrop-blur-2xl ${liquidGlass ? 'rounded-[40px]' : 'rounded-[28px]'} p-10 sm:p-12 md:p-16 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700'} shadow-2xl ${liquidGlass ? 'shadow-black/50' : 'shadow-slate-900/50'} overflow-hidden`}
+              className={`absolute inset-0 ${liquidGlass ? 'bg-white/5' : 'bg-slate-800/95'} backdrop-blur-2xl ${liquidGlass ? 'rounded-[40px]' : 'rounded-[28px]'} border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700'} shadow-2xl ${liquidGlass ? 'shadow-black/50' : 'shadow-slate-900/50'} overflow-hidden`}
               style={{
                 backfaceVisibility: 'hidden',
                 WebkitBackfaceVisibility: 'hidden',
@@ -303,8 +303,9 @@ export default function StudyFlashcards() {
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
               )}
 
-              <div className="relative flex items-center justify-center min-h-[400px] px-2 sm:px-0">
-                <div className="text-center w-full space-y-6">
+              {/* Scrollable Content Container */}
+              <div className="flashcard-scroll relative h-full overflow-y-auto overflow-x-hidden p-10 sm:p-12 md:p-16 flex items-center justify-center">
+                <div className="text-center w-full space-y-6 my-auto">
                   <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight">{currentCard.term}</h2>
                   <p className={`text-lg md:text-xl font-light mt-8 tracking-tight ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>Click to reveal definition</p>
                 </div>
