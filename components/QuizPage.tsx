@@ -56,7 +56,8 @@ export default function Quiz() {
 
   // Automatically generate next question in background whenever a new question is added
   useEffect(() => {
-    if (!loading && questions.length > 0 && questions.length < totalQuestions && !generatingNext) {
+    // Don't generate if quiz has ended (celebration modal is showing)
+    if (!loading && !showCelebration && questions.length > 0 && questions.length < totalQuestions && !generatingNext) {
       // Generate the next question immediately after the current one is added
       console.log(`Auto-generating question ${questions.length + 1} in background...`);
       setGeneratingNext(true);
@@ -64,7 +65,7 @@ export default function Quiz() {
         setGeneratingNext(false);
       });
     }
-  }, [loading, questions.length, generatingNext]); // Watch generatingNext too
+  }, [loading, showCelebration, questions.length, generatingNext]); // Watch showCelebration to stop generation
 
   const initQuiz = async () => {
     console.log('Starting fresh quiz - generating first question...');
