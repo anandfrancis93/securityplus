@@ -594,19 +594,10 @@ export default function QuizPerformance() {
           {liquidGlass && (
             <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
           )}
-          <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+          <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
             <div className="text-center">
               <div className={`text-zinc-400 text-xl md:text-2xl mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Questions Attempted</div>
               <div className={`text-5xl md:text-6xl font-bold transition-all duration-700 ${totalAnswered === 0 ? 'text-zinc-400' : 'text-white'}`}>{totalAnswered}</div>
-            </div>
-            <div className="text-center">
-              <div className={`text-zinc-400 text-xl md:text-2xl mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Points Earned</div>
-              <div className={`text-5xl md:text-6xl font-bold transition-all duration-700 ${
-                totalAnswered === 0 ? 'text-zinc-400' :
-                isGoodPerformance ? 'text-emerald-400' :
-                isNeedsWork ? 'text-red-400' :
-                'text-yellow-400'
-              }`}>{totalPoints} / {maxPossiblePoints}</div>
             </div>
             <div className="text-center">
               <div className={`text-zinc-400 text-xl md:text-2xl mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Accuracy</div>
