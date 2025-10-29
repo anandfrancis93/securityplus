@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { authenticateRequest } from '@/lib/apiAuth';
 import { ExtractFlashcardsSchema, safeValidateRequestBody } from '@/lib/apiValidation';
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
+const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
 
 // Next.js 15 App Router configuration
 export const maxDuration = 60; // 60 seconds timeout
@@ -19,14 +18,13 @@ async function processTermsBatch(
   batchText: string,
   termCount: number
 ): Promise<Array<{ term: string; definition: string; context?: string }>> {
-  const message = await anthropic.messages.create({
-    model: 'claude-sonnet-4-5-20250929',
-    max_tokens: 8000,
-    temperature: 0.3,
-    messages: [
+  const apiResult = await model.generateContent({
+    contents: [
       {
         role: 'user',
-        content: `You are a CompTIA Security+ SY0-701 expert. I will provide you with ${termCount} Security+ terms (one per line). Create EXACTLY ${termCount} flashcards.
+        parts: [
+          {
+            text: `You are a CompTIA Security+ SY0-701 expert. I will provide you with ${termCount} Security+ terms (one per line). Create EXACTLY ${termCount} flashcards.
 
 CRITICAL: Create ONE flashcard for EACH LINE. Input has ${termCount} lines → Output MUST have ${termCount} flashcards.
 
@@ -45,17 +43,20 @@ Return ONLY valid JSON:
 
 Terms:
 ${batchText}`,
+          },
+        ],
       },
     ],
+    generationConfig: {
+      maxOutputTokens: 8000,
+      temperature: 0.3,
+    },
   });
 
-  const content = message.content[0];
-  if (content.type !== 'text') {
-    throw new Error('Unexpected response type from Claude');
-  }
+  const response = apiResult.response;
 
   // Parse JSON response
-  let jsonContent = content.text.trim();
+  let jsonContent = response.text().trim();
   jsonContent = jsonContent.replace(/```json\s*/gi, '').replace(/```\s*/g, '');
   const jsonMatch = jsonContent.match(/\{[\s\S]*\}/);
   if (jsonMatch) {
