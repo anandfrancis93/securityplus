@@ -680,14 +680,36 @@ ${prompt}`;
       shuffledData.explanation
     );
 
-    // Fallback to requested topics if AI extraction fails
-    // Also filter out any null/undefined values
-    const finalTopics = (extractedTopics.length > 0 ? extractedTopics : topicStrings)
-      .filter((topic): topic is string => topic != null && typeof topic === 'string' && topic.trim() !== '');
+    // Get all valid topics from the predefined topic list
+    const allValidTopics = Object.values(ALL_SECURITY_PLUS_TOPICS).flat();
 
-    // Log if AI couldn't identify any topics (shouldn't happen)
-    if (extractedTopics.length === 0) {
-      console.warn(`⚠️ AI topic identification failed, falling back to requested topics: ${topicStrings.join(', ')}`);
+    // Filter extracted topics to ONLY include topics from our predefined list
+    // This prevents the AI from creating creative topic names
+    const validExtractedTopics = extractedTopics.filter((topic): topic is string =>
+      topic != null &&
+      typeof topic === 'string' &&
+      topic.trim() !== '' &&
+      allValidTopics.includes(topic)
+    );
+
+    // Log if AI created non-standard topics
+    if (extractedTopics.length > validExtractedTopics.length) {
+      const invalidTopics = extractedTopics.filter(t => !allValidTopics.includes(t));
+      console.warn(`⚠️ AI generated non-standard topics (filtered out): ${invalidTopics.join(', ')}`);
+    }
+
+    // Fallback to requested topics if AI extraction fails or returns no valid topics
+    const finalTopics = validExtractedTopics.length > 0 ? validExtractedTopics : topicStrings
+      .filter((topic): topic is string =>
+        topic != null &&
+        typeof topic === 'string' &&
+        topic.trim() !== '' &&
+        allValidTopics.includes(topic)
+      );
+
+    // Log if AI couldn't identify any valid topics
+    if (validExtractedTopics.length === 0) {
+      console.warn(`⚠️ AI topic identification returned no valid topics, falling back to requested topics: ${topicStrings.join(', ')}`);
     }
 
     // Determine domains from extracted topics

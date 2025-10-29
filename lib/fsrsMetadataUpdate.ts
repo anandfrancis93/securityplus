@@ -136,25 +136,10 @@ export function updateMetadataAfterQuiz(
           return;
         }
 
-        // Initialize topic coverage if it doesn't exist (for unknown/new topics)
+        // Skip topics not in our predefined list (should never happen with validation)
         if (!updatedMetadata.topicCoverage[topicName]) {
-          // Determine domain from ALL_SECURITY_PLUS_TOPICS or use default
-          let domain = '1.0 General Security Concepts';
-          for (const [domainName, topicsList] of Object.entries(ALL_SECURITY_PLUS_TOPICS)) {
-            if (topicsList.includes(topicName)) {
-              domain = domainName;
-              break;
-            }
-          }
-
-          updatedMetadata.topicCoverage[topicName] = {
-            topicName,
-            domain,
-            firstCoveredQuiz: currentQuizNumber,
-            timesCovered: 0,
-            lastCoveredQuiz: null,
-          };
-          console.log(`[FSRS Update] Initialized new topic coverage: ${topicName} (${domain})`);
+          console.warn(`[FSRS Update] Skipping unknown topic not in predefined list: ${topicName}`);
+          return;
         }
 
         // Update topic coverage
