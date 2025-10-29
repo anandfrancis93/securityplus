@@ -7,16 +7,17 @@
  * - Manages review intervals at the quiz level (not days)
  */
 
-import { FSRS, Card, Rating, State, RecordLog, DateInput, fsrs, generatorParameters } from 'fsrs';
+import { fsrs, FSRS, Card, Rating, State, RecordLog, DateInput, generatorParameters, createEmptyCard, FSRSParameters, Grade } from 'ts-fsrs';
 import { QuestionHistory, TopicPerformance, QuizGenerationMetadata } from './types';
 
 /**
  * Initialize FSRS scheduler with default or custom parameters
  */
-export function createFSRSScheduler(parameters?: number[]): FSRS {
+export function createFSRSScheduler(parameters?: number[]) {
   if (parameters && parameters.length > 0) {
     // Use user-specific optimized parameters
-    return new FSRS(generatorParameters({ w: parameters }));
+    const params: FSRSParameters = generatorParameters({ w: parameters });
+    return fsrs(params);
   }
   // Use default FSRS parameters
   return fsrs();
@@ -53,17 +54,7 @@ export function quizPerformanceToRating(
  * Create a new FSRS card for a question or topic
  */
 export function createNewCard(): Card {
-  return {
-    due: new Date(),
-    stability: 0,
-    difficulty: 0,
-    elapsed_days: 0,
-    scheduled_days: 0,
-    reps: 0,
-    lapses: 0,
-    state: State.New,
-    last_review: new Date(),
-  };
+  return createEmptyCard();
 }
 
 /**
@@ -75,7 +66,9 @@ export function questionHistoryToCard(history: QuestionHistory): Card {
     return createNewCard();
   }
 
+  const card = createEmptyCard(new Date(history.lastAskedDate));
   return {
+    ...card,
     due: history.nextReviewDate ? new Date(history.nextReviewDate) : new Date(),
     stability: history.stability,
     difficulty: history.difficulty || 0,
@@ -97,7 +90,9 @@ export function topicPerformanceToCard(topic: TopicPerformance): Card {
     return createNewCard();
   }
 
+  const card = createEmptyCard(new Date(topic.lastReviewDate || topic.lastTested));
   return {
+    ...card,
     due: topic.nextReviewQuiz ? new Date() : new Date(), // We use quiz numbers, not dates
     stability: topic.stability,
     difficulty: topic.difficulty || 0,
@@ -220,7 +215,7 @@ export function processQuestionReview(
   const schedulingInfo = scheduler.repeat(card, currentDate);
 
   // Get the card for this rating
-  const updatedCard = schedulingInfo[rating].card;
+  const updatedCard = schedulingInfo[rating as Grade].card;
 
   // Convert scheduled days to quiz offset
   const nextReviewQuizOffset = scheduledDaysToQuizOffset(updatedCard.scheduled_days);
@@ -265,7 +260,7 @@ export function processTopicReview(
   const schedulingInfo = scheduler.repeat(card, currentDate);
 
   // Get the card for this rating
-  const updatedCard = schedulingInfo[rating].card;
+  const updatedCard = schedulingInfo[rating as Grade].card;
 
   // Convert scheduled days to quiz offset
   const nextReviewQuizOffset = scheduledDaysToQuizOffset(updatedCard.scheduled_days);
@@ -379,7 +374,7 @@ export function initializeFSRSMetadata(metadata: QuizGenerationMetadata): QuizGe
   return {
     ...metadata,
     currentPhase: metadata.currentPhase || 1,
-    fsrsParameters: metadata.fsrsParameters || generatorParameters().w, // Use default FSRS params
+    fsrsParameters: metadata.fsrsParameters || Array.from(generatorParameters().w), // Use default FSRS params
     lastParameterUpdate: metadata.lastParameterUpdate || Date.now(),
   };
 }

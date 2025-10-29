@@ -5,26 +5,26 @@
  * Server-side only to avoid bundling FSRS in client components.
  */
 
-import { FSRS, Card, Rating, State } from 'fsrs';
+import { fsrs, Card, Rating, State, createEmptyCard, Grade } from 'ts-fsrs';
 import { FlashcardReview } from './types';
 
 /**
  * Create FSRS scheduler instance
  */
-function createScheduler(): FSRS {
-  return new FSRS();
+function createScheduler() {
+  return fsrs();
 }
 
 /**
  * Map user difficulty rating to FSRS Rating
- * FSRS Ratings: 1 = Again, 2 = Hard, 3 = Good, 4 = Easy
+ * FSRS Ratings: Again = 1, Hard = 2, Good = 3, Easy = 4
  */
 function difficultyToRating(difficulty: 'again' | 'hard' | 'good' | 'easy'): Rating {
   const ratingMap: Record<string, Rating> = {
-    'again': 1 as Rating, // 1 - Failed to recall
-    'hard': 2 as Rating,   // 2 - Recalled with difficulty
-    'good': 3 as Rating,   // 3 - Recalled with some effort
-    'easy': 4 as Rating,   // 4 - Recalled easily
+    'again': Rating.Again,  // 1 - Failed to recall
+    'hard': Rating.Hard,    // 2 - Recalled with difficulty
+    'good': Rating.Good,    // 3 - Recalled with some effort
+    'easy': Rating.Easy,    // 4 - Recalled easily
   };
   return ratingMap[difficulty];
 }
@@ -35,20 +35,12 @@ function difficultyToRating(difficulty: 'again' | 'hard' | 'good' | 'easy'): Rat
 function reviewToCard(review: FlashcardReview): Card {
   if (!review.stability) {
     // No FSRS data yet, create new card
-    return {
-      due: new Date(),
-      stability: 0,
-      difficulty: 0,
-      elapsed_days: 0,
-      scheduled_days: 0,
-      reps: 0,
-      lapses: 0,
-      state: State.New,
-      last_review: new Date(),
-    };
+    return createEmptyCard();
   }
 
+  const card = createEmptyCard(new Date(review.reviewedAt));
   return {
+    ...card,
     due: new Date(review.nextReviewDate),
     stability: review.stability || 0,
     difficulty: review.fsrsDifficulty || 0,
@@ -81,21 +73,11 @@ export function calculateNextReview(
   // Get current card state
   const currentCard: Card = previousReview
     ? reviewToCard(previousReview)
-    : {
-        due: new Date(),
-        stability: 0,
-        difficulty: 0,
-        elapsed_days: 0,
-        scheduled_days: 0,
-        reps: 0,
-        lapses: 0,
-        state: State.New,
-        last_review: new Date(),
-      };
+    : createEmptyCard(new Date(now));
 
   // Calculate next review using FSRS
   const schedulingInfo = scheduler.repeat(currentCard, new Date(now));
-  const updatedCard = schedulingInfo[rating].card;
+  const updatedCard = schedulingInfo[rating as Grade].card;
 
   // Convert FSRS card back to FlashcardReview
   return {
