@@ -852,32 +852,33 @@ export default function QuizPerformance() {
             )}
             <div className="relative flex items-center justify-between">
               <h3 className={`text-3xl md:text-4xl font-bold tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Recent Quizzes ({userProgress.quizHistory.length})</h3>
-              <button
-                id="toggle-recent-quizzes"
-                onClick={() => setRecentQuizzesExpanded(!recentQuizzesExpanded)}
-                className={`p-4 hover:bg-white/5 active:bg-white/10 transition-all duration-700 ${liquidGlass ? 'rounded-3xl' : 'rounded-md'}`}
-                aria-label="Toggle Recent Quizzes"
-              >
-                <svg
-                  className={`w-8 h-8 text-zinc-400 transition-transform duration-700 ${recentQuizzesExpanded ? 'rotate-180' : ''}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
+              {userProgress.quizHistory.length > 0 && (
+                <button
+                  id="toggle-recent-quizzes"
+                  onClick={() => setRecentQuizzesExpanded(!recentQuizzesExpanded)}
+                  className={`p-4 hover:bg-white/5 active:bg-white/10 transition-all duration-700 ${liquidGlass ? 'rounded-3xl' : 'rounded-md'}`}
+                  aria-label="Toggle Recent Quizzes"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+                  <svg
+                    className={`w-8 h-8 text-zinc-400 transition-transform duration-700 ${recentQuizzesExpanded ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              )}
             </div>
 
-            {recentQuizzesExpanded ? (
+            {userProgress.quizHistory.length === 0 ? (
+              <div className={`relative text-center py-12 mt-6 text-xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
+                No quizzes taken yet. Take a quiz to see your history here.
+              </div>
+            ) : recentQuizzesExpanded ? (
               <div className="space-y-4 mt-6">
-                {userProgress.quizHistory.length === 0 ? (
-                  <div className={`relative text-center py-12 text-xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
-                    No quizzes taken yet. Take a quiz to see your history here.
-                  </div>
-                ) : (
-                  userProgress.quizHistory.slice(-5).reverse().map((quiz) => {
+                {userProgress.quizHistory.slice(-5).reverse().map((quiz) => {
                   const date = new Date(quiz.startedAt);
                   const formattedDate = date.toLocaleDateString('en-US', {
                     month: 'short',
@@ -993,8 +994,7 @@ export default function QuizPerformance() {
                       )}
                     </div>
                   );
-                })
-                )}
+                })}
 
                 {/* Show More button if there are more than 5 quizzes */}
                 {userProgress.quizHistory.length > 5 && (

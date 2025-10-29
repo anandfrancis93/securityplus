@@ -20,7 +20,8 @@
       "Bash(awk:*)",
       "WebSearch",
       "WebFetch(domain:expertium.github.io)",
-      "Bash(dir \"C:\\Users\\anand\\securityplus\\app\\api\\generate-quiz\")"
+      "Bash(dir \"C:\\Users\\anand\\securityplus\\app\\api\\generate-quiz\")",
+      "Bash(timeout 120 npm run build:*)"
     ],
     "deny": [],
     "ask": []
