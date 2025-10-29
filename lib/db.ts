@@ -17,6 +17,32 @@ import { ensureMetadataInitialized, updateMetadataAfterQuiz, syncTopicPerformanc
 const USERS_COLLECTION = 'users';
 const QUESTIONS_COLLECTION = 'questions';
 
+/**
+ * Remove undefined values from an object recursively
+ * Firestore doesn't allow undefined values
+ */
+function removeUndefinedValues(obj: any): any {
+  if (obj === null || obj === undefined) {
+    return null;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map(item => removeUndefinedValues(item)).filter(item => item !== undefined);
+  }
+
+  if (typeof obj === 'object') {
+    const cleaned: any = {};
+    for (const [key, value] of Object.entries(obj)) {
+      if (value !== undefined) {
+        cleaned[key] = removeUndefinedValues(value);
+      }
+    }
+    return cleaned;
+  }
+
+  return obj;
+}
+
 export async function getUserProgress(userId: string): Promise<UserProgress | null> {
   try {
     const docRef = doc(db, USERS_COLLECTION, userId);
@@ -164,8 +190,11 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
       quizHistoryCount: updatedProgress.quizHistory.length
     });
 
+    // Clean undefined values before saving to Firestore
+    const cleanedProgress = removeUndefinedValues(updatedProgress) as UserProgress;
+
     // Use setDoc to create or update the document
-    await setDoc(userRef, updatedProgress);
+    await setDoc(userRef, cleanedProgress);
     console.log('Progress saved successfully to Firestore');
   } catch (error) {
     console.error('Error saving quiz session:', error);
