@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from './AppProvider';
 import { useRouter } from 'next/navigation';
 import PerformanceGraphs from './PerformanceGraphs';
+import TopicReviewSchedule from './TopicReviewSchedule';
 import { UserProgress } from '@/lib/types';
 import Header from './Header';
 import { authenticatedPost } from '@/lib/apiClient';
@@ -825,6 +826,13 @@ export default function QuizPerformance() {
                 Click to view detailed performance analysis
               </div>
             )}
+          </div>
+        )}
+
+        {/* Topic Review Schedule - Verification Tool */}
+        {userProgress && userProgress.quizHistory.length > 0 && userProgress.topicPerformance && (
+          <div className="mt-16">
+            <TopicReviewSchedule userProgress={userProgress} liquidGlass={liquidGlass} />
           </div>
         )}
 

@@ -1,0 +1,383 @@
+'use client';
+
+import React, { useState } from 'react';
+import { UserProgress, TopicPerformance } from '@/lib/types';
+import { ALL_SECURITY_PLUS_TOPICS } from '@/lib/topicData';
+
+interface TopicReviewScheduleProps {
+  userProgress: UserProgress;
+  liquidGlass?: boolean;
+}
+
+// Domain color mapping
+const DOMAIN_COLORS: { [key: string]: string } = {
+  '1.0 General Security Concepts': '#9333ea',
+  '2.0 Threats, Vulnerabilities, and Mitigations': '#ff4500',
+  '3.0 Security Architecture': '#06b6d4',
+  '4.0 Security Operations': '#fbbf24',
+  '5.0 Security Program Management and Oversight': '#22c55e',
+};
+
+function getDomainColor(domain: string): string {
+  return DOMAIN_COLORS[domain] || '#ffffff';
+}
+
+export default function TopicReviewSchedule({ userProgress, liquidGlass = true }: TopicReviewScheduleProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [filterStatus, setFilterStatus] = useState<'all' | 'overdue' | 'due-soon' | 'future'>('all');
+
+  const topicPerformance = userProgress.topicPerformance || {};
+  const quizMetadata = userProgress.quizMetadata;
+  const currentQuizNumber = quizMetadata?.totalQuizzesCompleted || userProgress.quizHistory.length;
+  const nextQuizNumber = currentQuizNumber + 1;
+
+  // Get all topics with their review schedule
+  const topicsWithSchedule = Object.entries(topicPerformance)
+    .map(([topicName, perf]: [string, TopicPerformance]) => {
+      const nextReviewQuiz = perf.nextReviewQuiz || 0;
+      const lastReviewQuiz = perf.lastReviewQuiz || 0;
+      const quizzesUntilDue = nextReviewQuiz - nextQuizNumber;
+
+      let status: 'overdue' | 'due-now' | 'due-soon' | 'future' | 'never-tested';
+      if (perf.questionsAnswered === 0) {
+        status = 'never-tested';
+      } else if (quizzesUntilDue < 0) {
+        status = 'overdue';
+      } else if (quizzesUntilDue === 0) {
+        status = 'due-now';
+      } else if (quizzesUntilDue <= 3) {
+        status = 'due-soon';
+      } else {
+        status = 'future';
+      }
+
+      return {
+        topicName,
+        domain: perf.domain,
+        accuracy: perf.accuracy,
+        questionsAnswered: perf.questionsAnswered,
+        nextReviewQuiz,
+        lastReviewQuiz,
+        quizzesUntilDue,
+        status,
+        stability: perf.stability || 0,
+        isStruggling: perf.isStruggling || false,
+        isMastered: perf.isMastered || false,
+      };
+    })
+    .sort((a, b) => {
+      // Sort by status priority, then by quizzesUntilDue
+      const statusOrder = { 'overdue': 0, 'due-now': 1, 'due-soon': 2, 'future': 3, 'never-tested': 4 };
+      const statusDiff = statusOrder[a.status] - statusOrder[b.status];
+      if (statusDiff !== 0) return statusDiff;
+
+      // Within same status, sort by how overdue/soon
+      return a.quizzesUntilDue - b.quizzesUntilDue;
+    });
+
+  // Filter topics based on selected filter
+  const filteredTopics = topicsWithSchedule.filter(topic => {
+    if (filterStatus === 'all') return true;
+    if (filterStatus === 'overdue') return topic.status === 'overdue' || topic.status === 'due-now';
+    if (filterStatus === 'due-soon') return topic.status === 'due-soon';
+    if (filterStatus === 'future') return topic.status === 'future';
+    return true;
+  });
+
+  // Get topics that will appear in next quiz (overdue + due now + high priority)
+  const nextQuizTopics = topicsWithSchedule.filter(topic =>
+    topic.status === 'overdue' || topic.status === 'due-now' ||
+    (topic.isStruggling && topic.quizzesUntilDue <= 2)
+  ).slice(0, 15); // Typical quiz has ~10 questions, but could have more topics
+
+  // Statistics
+  const overdueCount = topicsWithSchedule.filter(t => t.status === 'overdue').length;
+  const dueNowCount = topicsWithSchedule.filter(t => t.status === 'due-now').length;
+  const dueSoonCount = topicsWithSchedule.filter(t => t.status === 'due-soon').length;
+
+  // Export function
+  const exportScheduleData = () => {
+    const data = {
+      currentQuizNumber,
+      nextQuizNumber,
+      exportDate: new Date().toISOString(),
+      statistics: {
+        totalTopics: topicsWithSchedule.length,
+        overdueCount,
+        dueNowCount,
+        dueSoonCount,
+      },
+      topicsWithSchedule,
+      nextQuizTopics,
+    };
+
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `topic-schedule-quiz-${nextQuizNumber}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'} overflow-hidden`}>
+      {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
+
+      {/* Header */}
+      <div className="relative p-8 md:p-10">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h3 className={`text-3xl md:text-4xl font-bold text-white tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>
+              Topic Review Schedule
+            </h3>
+            <p className={`text-lg md:text-xl mt-2 ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
+              Verify when topics are scheduled for review
+            </p>
+          </div>
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className={`p-4 hover:bg-white/5 active:bg-white/10 transition-all duration-700 ${liquidGlass ? 'rounded-3xl' : 'rounded-md'}`}
+            aria-label="Toggle Topic Review Schedule"
+          >
+            <svg
+              className={`w-8 h-8 text-zinc-400 transition-transform duration-700 ${isExpanded ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Statistics Summary */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className={`${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10' : 'bg-zinc-900 rounded-md border border-zinc-800'} p-4`}>
+            <div className="text-sm text-zinc-400 mb-1">Current Quiz</div>
+            <div className="text-2xl font-bold text-white">#{currentQuizNumber}</div>
+          </div>
+          <div className={`${liquidGlass ? 'bg-red-500/20 backdrop-blur-xl rounded-2xl border-2 border-red-500/50' : 'bg-red-900 rounded-md border-2 border-red-700'} p-4`}>
+            <div className="text-sm text-red-200 mb-1">Overdue</div>
+            <div className="text-2xl font-bold text-red-300">{overdueCount}</div>
+          </div>
+          <div className={`${liquidGlass ? 'bg-yellow-500/20 backdrop-blur-xl rounded-2xl border-2 border-yellow-500/50' : 'bg-yellow-900 rounded-md border-2 border-yellow-700'} p-4`}>
+            <div className="text-sm text-yellow-200 mb-1">Due Now</div>
+            <div className="text-2xl font-bold text-yellow-300">{dueNowCount}</div>
+          </div>
+          <div className={`${liquidGlass ? 'bg-cyan-500/20 backdrop-blur-xl rounded-2xl border-2 border-cyan-500/50' : 'bg-cyan-900 rounded-md border-2 border-cyan-700'} p-4`}>
+            <div className="text-sm text-cyan-200 mb-1">Due Soon</div>
+            <div className="text-2xl font-bold text-cyan-300">{dueSoonCount}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Expanded Content */}
+      {isExpanded && (
+        <div className="relative border-t border-white/10">
+          {/* Next Quiz Preview */}
+          <div className="p-8 md:p-10 border-b border-white/10">
+            <h4 className={`text-2xl md:text-3xl font-bold text-white mb-4 ${liquidGlass ? '' : 'font-mono'}`}>
+              Expected Topics in Quiz #{nextQuizNumber}
+            </h4>
+            <p className={`text-base md:text-lg mb-6 ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
+              Based on FSRS scheduling, these {nextQuizTopics.length} topics are likely to appear in your next quiz:
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {nextQuizTopics.slice(0, 10).map((topic, index) => (
+                <div
+                  key={index}
+                  className={`${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10' : 'bg-zinc-900 rounded-md border border-zinc-800'} p-4`}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-bold text-white truncate">{topic.topicName}</div>
+                      <div className="text-xs text-zinc-400 mt-1">
+                        {topic.domain.replace('.0', '.')}
+                      </div>
+                    </div>
+                    <div className={`px-2 py-1 text-xs font-bold rounded-lg ${
+                      topic.status === 'overdue' ? 'bg-red-500/20 text-red-300 border border-red-500/50' :
+                      topic.status === 'due-now' ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/50' :
+                      'bg-cyan-500/20 text-cyan-300 border border-cyan-500/50'
+                    }`}>
+                      {topic.status === 'overdue' ? `${Math.abs(topic.quizzesUntilDue)} overdue` :
+                       topic.status === 'due-now' ? 'Due now' :
+                       topic.isStruggling ? 'Struggling' : 'Priority'}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 mt-3 text-xs text-zinc-400">
+                    <span>Accuracy: <span className={topic.accuracy >= 80 ? 'text-emerald-400' : topic.accuracy >= 60 ? 'text-yellow-400' : 'text-red-400'}>{topic.accuracy.toFixed(0)}%</span></span>
+                    <span>•</span>
+                    <span>Tested: {topic.questionsAnswered}×</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {nextQuizTopics.length > 10 && (
+              <p className={`mt-4 text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600 font-mono'}`}>
+                + {nextQuizTopics.length - 10} more topics may appear
+              </p>
+            )}
+          </div>
+
+          {/* Filter Buttons */}
+          <div className="p-8 md:p-10 border-b border-white/10">
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={() => setFilterStatus('all')}
+                className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
+                  filterStatus === 'all'
+                    ? liquidGlass
+                      ? 'bg-white/20 text-white border-2 border-white/30'
+                      : 'bg-zinc-700 text-white border-2 border-zinc-600'
+                    : liquidGlass
+                      ? 'bg-white/5 text-zinc-400 border border-white/10 hover:bg-white/10'
+                      : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:bg-zinc-800'
+                }`}
+              >
+                All Topics ({topicsWithSchedule.length})
+              </button>
+              <button
+                onClick={() => setFilterStatus('overdue')}
+                className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
+                  filterStatus === 'overdue'
+                    ? 'bg-red-500/30 text-red-200 border-2 border-red-500/50'
+                    : liquidGlass
+                      ? 'bg-white/5 text-zinc-400 border border-white/10 hover:bg-red-500/20'
+                      : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:bg-red-900'
+                }`}
+              >
+                Overdue & Due ({overdueCount + dueNowCount})
+              </button>
+              <button
+                onClick={() => setFilterStatus('due-soon')}
+                className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
+                  filterStatus === 'due-soon'
+                    ? 'bg-cyan-500/30 text-cyan-200 border-2 border-cyan-500/50'
+                    : liquidGlass
+                      ? 'bg-white/5 text-zinc-400 border border-white/10 hover:bg-cyan-500/20'
+                      : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:bg-cyan-900'
+                }`}
+              >
+                Due Soon ({dueSoonCount})
+              </button>
+              <button
+                onClick={() => setFilterStatus('future')}
+                className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
+                  filterStatus === 'future'
+                    ? 'bg-emerald-500/30 text-emerald-200 border-2 border-emerald-500/50'
+                    : liquidGlass
+                      ? 'bg-white/5 text-zinc-400 border border-white/10 hover:bg-emerald-500/20'
+                      : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:bg-emerald-900'
+                }`}
+              >
+                Future Reviews
+              </button>
+              <button
+                onClick={exportScheduleData}
+                className={`ml-auto px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
+                  liquidGlass
+                    ? 'bg-violet-500/20 text-violet-200 border border-violet-500/50 hover:bg-violet-500/30'
+                    : 'bg-violet-900 text-violet-200 border border-violet-700 hover:bg-violet-800'
+                }`}
+              >
+                📥 Export Data
+              </button>
+            </div>
+          </div>
+
+          {/* Topics Table */}
+          <div className="p-8 md:p-10 overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-white/10">
+                  <th className="text-left px-4 py-3 text-sm md:text-base font-bold text-white">Topic</th>
+                  <th className="text-left px-4 py-3 text-sm md:text-base font-bold text-white">Domain</th>
+                  <th className="text-center px-4 py-3 text-sm md:text-base font-bold text-white">Status</th>
+                  <th className="text-center px-4 py-3 text-sm md:text-base font-bold text-white">Next Review</th>
+                  <th className="text-center px-4 py-3 text-sm md:text-base font-bold text-white">Quizzes Until Due</th>
+                  <th className="text-center px-4 py-3 text-sm md:text-base font-bold text-white">Accuracy</th>
+                  <th className="text-center px-4 py-3 text-sm md:text-base font-bold text-white">Tested</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/10">
+                {filteredTopics.slice(0, 50).map((topic, index) => {
+                  const domainColor = getDomainColor(topic.domain);
+                  return (
+                    <tr key={index} className="hover:bg-white/5 transition-all duration-300">
+                      <td className="px-4 py-3 text-sm md:text-base text-zinc-300">{topic.topicName}</td>
+                      <td className="px-4 py-3">
+                        <span
+                          className="text-xs font-medium px-3 py-1 rounded-full"
+                          style={{
+                            backgroundColor: liquidGlass ? `${domainColor}40` : domainColor,
+                            color: '#ffffff',
+                            border: `1px solid ${domainColor}`,
+                          }}
+                        >
+                          {topic.domain.replace('.0', '.')}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <span className={`text-xs font-bold px-3 py-1 rounded-full ${
+                          topic.status === 'overdue' ? 'bg-red-500/20 text-red-300 border border-red-500/50' :
+                          topic.status === 'due-now' ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/50' :
+                          topic.status === 'due-soon' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/50' :
+                          topic.status === 'future' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50' :
+                          'bg-zinc-500/20 text-zinc-400 border border-zinc-500/50'
+                        }`}>
+                          {topic.status === 'overdue' ? 'Overdue' :
+                           topic.status === 'due-now' ? 'Due Now' :
+                           topic.status === 'due-soon' ? 'Due Soon' :
+                           topic.status === 'future' ? 'Future' :
+                           'Never Tested'}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-center text-sm md:text-base font-bold text-white">
+                        {topic.questionsAnswered === 0 ? '-' : `Quiz #${topic.nextReviewQuiz}`}
+                      </td>
+                      <td className="px-4 py-3 text-center text-sm md:text-base font-bold">
+                        {topic.questionsAnswered === 0 ? (
+                          <span className="text-zinc-500">-</span>
+                        ) : topic.quizzesUntilDue < 0 ? (
+                          <span className="text-red-400">{topic.quizzesUntilDue} (overdue)</span>
+                        ) : topic.quizzesUntilDue === 0 ? (
+                          <span className="text-yellow-400">Now</span>
+                        ) : (
+                          <span className="text-cyan-400">+{topic.quizzesUntilDue}</span>
+                        )}
+                      </td>
+                      <td className={`px-4 py-3 text-center text-sm md:text-base font-bold ${
+                        topic.questionsAnswered === 0 ? 'text-zinc-500' :
+                        topic.accuracy >= 80 ? 'text-emerald-400' :
+                        topic.accuracy >= 60 ? 'text-yellow-400' :
+                        'text-red-400'
+                      }`}>
+                        {topic.questionsAnswered === 0 ? '-' : `${topic.accuracy.toFixed(0)}%`}
+                      </td>
+                      <td className="px-4 py-3 text-center text-sm md:text-base font-bold text-white">
+                        {topic.questionsAnswered === 0 ? '-' : `${topic.questionsAnswered}×`}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+            {filteredTopics.length > 50 && (
+              <p className={`mt-4 text-center text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600 font-mono'}`}>
+                Showing first 50 topics. Use filters to narrow down or export full data.
+              </p>
+            )}
+            {filteredTopics.length === 0 && (
+              <p className={`text-center py-8 text-lg ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
+                No topics match this filter.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
