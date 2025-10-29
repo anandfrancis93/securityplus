@@ -183,7 +183,7 @@ export default function CreateFlashcards() {
         </div>
 
         {/* Flashcard Creation Form */}
-        <div className="mb-20">
+        <div className="mb-8">
       <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px]' : 'bg-slate-800/95 backdrop-blur-xl rounded-3xl'} p-10 md:p-12 border ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} shadow-2xl overflow-hidden`}>
         {liquidGlass && (
           <>
