@@ -141,7 +141,8 @@ export default function StudyFlashcards() {
 
   if (dueCardIds.length === 0 || !currentCard) {
     return (
-      <div className={`flex items-center justify-center min-h-screen ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
+      <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
+        {/* Animated Background Gradients */}
         {liquidGlass && (
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
@@ -149,24 +150,29 @@ export default function StudyFlashcards() {
             <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
           </div>
         )}
-        <div className="relative max-w-2xl mx-auto px-6">
-          <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px]' : 'bg-zinc-900 rounded-3xl'} p-12 md:p-16 border ${liquidGlass ? 'border-white/10' : 'border-zinc-800'} overflow-hidden`}>
-            {/* Light Reflection */}
-            {liquidGlass && (
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
-            )}
 
-            <div className="relative text-center space-y-6">
-              <div className="text-7xl md:text-8xl mb-8">✅</div>
-              <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">All Done!</h2>
-              <p className={`text-xl md:text-2xl font-light leading-relaxed ${liquidGlass ? 'text-zinc-400' : 'text-slate-300'}`}>No flashcards due right now.</p>
-              <button
-                onClick={() => router.push('/cybersecurity/flashcards')}
-                className={`relative mt-8 ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl rounded-3xl' : 'bg-violet-600 hover:bg-violet-700 rounded-3xl'} text-white px-10 py-5 font-medium text-lg tracking-tight transition-all duration-700 shadow-xl ${liquidGlass ? 'border border-white/20 hover:shadow-2xl hover:shadow-emerald-500/30' : 'hover:shadow-violet-500/50'}`}
-              >
-                Back to Flashcards
-              </button>
-            </div>
+        {/* Header - Full width */}
+        <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
+          <Header />
+        </div>
+
+        <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-5xl flex items-center justify-center min-h-[calc(100vh-200px)]">
+          <div className="max-w-3xl mx-auto text-center space-y-8">
+            <div className="text-7xl md:text-8xl mb-8">✅</div>
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.95]">
+              <span className="block bg-gradient-to-br from-white via-zinc-100 to-zinc-300 bg-clip-text text-transparent">
+                All Done!
+              </span>
+            </h1>
+            <p className={`text-2xl md:text-3xl font-light leading-relaxed ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'}`}>
+              No flashcards due right now.
+            </p>
+            <button
+              onClick={() => router.push('/cybersecurity/flashcards')}
+              className={`relative mt-8 ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl rounded-[40px]' : 'bg-violet-600 hover:bg-violet-700 rounded-3xl'} text-white px-12 py-6 font-medium text-xl tracking-tight transition-all duration-700 shadow-xl ${liquidGlass ? 'border border-white/20 hover:shadow-2xl hover:shadow-emerald-500/30 hover:scale-105' : 'hover:shadow-violet-500/50'}`}
+            >
+              Back to Flashcards
+            </button>
           </div>
         </div>
       </div>
@@ -204,43 +210,40 @@ export default function StudyFlashcards() {
         </div>
 
         <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-5xl">
-          {/* Progress Section */}
-          <div className="mb-12 md:mb-16">
-            <div className="flex justify-between items-center mb-6">
-              <button
-                onClick={() => router.push('/cybersecurity/flashcards')}
-                className={`${liquidGlass ? 'text-zinc-400 hover:text-white' : 'text-slate-300 hover:text-white'} hover:bg-white/5 active:bg-white/10 transition-all duration-700 p-4 rounded-2xl`}
-                title="Back to Flashcards"
-              >
-                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-
-              <p className={`text-xl md:text-2xl font-medium tracking-tight ${liquidGlass ? 'text-zinc-300' : 'text-slate-300'}`}>
-                {currentCardIndex + 1} <span className={liquidGlass ? 'text-zinc-500' : 'text-slate-500'}>of</span> {dueCardIds.length}
-              </p>
-
-              <div className="w-16" /> {/* Spacer for alignment */}
+          {/* Hero Section - Apple Style */}
+          <section className="text-center mb-8 md:mb-12">
+            <div className="max-w-4xl mx-auto space-y-6">
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.95]">
+                <span className="block bg-gradient-to-br from-white via-zinc-100 to-zinc-300 bg-clip-text text-transparent">
+                  Study
+                </span>
+              </h1>
+              <div className="flex items-center justify-center gap-4">
+                <p className={`text-2xl md:text-3xl font-light tracking-tight ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                  Card {currentCardIndex + 1} <span className={liquidGlass ? 'text-zinc-600' : 'text-zinc-700'}>of</span> {dueCardIds.length}
+                </p>
+              </div>
             </div>
+          </section>
 
           {/* Progress Bar */}
-          <div className="relative">
-            <div className={`w-full h-6 relative overflow-hidden ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl' : 'bg-slate-800 border border-transparent rounded-full'}`}>
-              {liquidGlass && (
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-2xl" />
-              )}
-              <div
-                className={`h-6 relative transition-all duration-700 ${liquidGlass ? 'bg-gradient-to-r from-violet-500 via-purple-500 to-violet-600 rounded-2xl' : 'bg-violet-500 rounded-full'} ${liquidGlass ? 'shadow-2xl shadow-violet-500/50' : 'shadow-lg shadow-violet-500/30'}`}
-                style={{ width: `${progress}%` }}
-              >
+          <div className="mb-12 md:mb-16">
+            <div className="relative max-w-3xl mx-auto">
+              <div className={`w-full h-3 relative overflow-hidden ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-full' : 'bg-slate-800 border border-transparent rounded-full'}`}>
                 {liquidGlass && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-2xl" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-full" />
                 )}
+                <div
+                  className={`h-3 relative transition-all duration-700 ${liquidGlass ? 'bg-gradient-to-r from-violet-500 via-purple-500 to-violet-600 rounded-full' : 'bg-violet-500 rounded-full'} ${liquidGlass ? 'shadow-2xl shadow-violet-500/50' : 'shadow-lg shadow-violet-500/30'}`}
+                  style={{ width: `${progress}%` }}
+                >
+                  {liquidGlass && (
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-full" />
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
         {/* Flashcard */}
         <div className="mb-12" style={{ perspective: '1000px' }}>
