@@ -22,7 +22,20 @@ export async function getUserProgress(userId: string): Promise<UserProgress | nu
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      return docSnap.data() as UserProgress;
+      const data = docSnap.data() as UserProgress;
+
+      // Ensure abilityStandardError exists (for backwards compatibility with existing users)
+      if (data.abilityStandardError === undefined && data.quizHistory && data.quizHistory.length > 0) {
+        const allAttempts: QuestionAttempt[] = data.quizHistory.flatMap(quiz => quiz.questions);
+        const { standardError } = allAttempts.length > 0
+          ? estimateAbilityWithError(allAttempts)
+          : { theta: 0, standardError: Infinity };
+        data.abilityStandardError = standardError;
+      } else if (data.abilityStandardError === undefined) {
+        data.abilityStandardError = Infinity;
+      }
+
+      return data;
     }
 
     // Create new user progress
@@ -34,6 +47,7 @@ export async function getUserProgress(userId: string): Promise<UserProgress | nu
       totalPoints: 0,
       maxPossiblePoints: 0,
       estimatedAbility: 0,
+      abilityStandardError: Infinity,
       lastUpdated: Date.now(),
       quizHistory: [],
     };
