@@ -846,7 +846,7 @@ export default function QuizPerformance() {
 
         {/* Recent Activity - Collapsible */}
         {userProgress && (
-          <div className={`relative mt-16 p-10 md:p-12 transition-all duration-700 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl' : 'bg-black border border-zinc-800 rounded-md'}`}>
+          <div className={`relative mt-16 mb-16 p-10 md:p-12 transition-all duration-700 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl' : 'bg-black border border-zinc-800 rounded-md'}`}>
             {liquidGlass && (
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
             )}
