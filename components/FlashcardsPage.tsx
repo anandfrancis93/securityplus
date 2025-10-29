@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { getUserFlashcards, getUserReviews } from '@/lib/flashcardDb';
 import { getDueFlashcards } from '@/lib/spacedRepetition';
 import Header from './Header';
-import NotificationSettings from './NotificationSettings';
 
 export default function FlashcardsPage() {
   const { user, loading, userId, liquidGlass } = useApp();
@@ -391,15 +390,6 @@ export default function FlashcardsPage() {
             </button>
           </div>
         </section>
-
-        {/* Notification Settings */}
-        {flashcardsCount > 0 && (
-          <section className="mb-8">
-            <div className="max-w-6xl mx-auto">
-              <NotificationSettings />
-            </div>
-          </section>
-        )}
       </div>
     </div>
   );

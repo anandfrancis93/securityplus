@@ -6,21 +6,8 @@ import { User, onAuthStateChanged } from 'firebase/auth';
 import { getUserProgress, saveQuizSession, calculatePredictedScore, resetUserProgress, saveUnusedQuestionsToCache } from '@/lib/db';
 import { UserProgress, QuizSession, Question, QuestionAttempt, CachedQuiz } from '@/lib/types';
 import { authenticatedPost } from '@/lib/apiClient';
-import {
-  getEffectiveUserId,
-  createPairingCode,
-  validatePairingCode,
-  setPairedUserId,
-  getPairedUserId
-} from '@/lib/pairing';
 import { calculatePartialCredit } from '@/lib/irt';
 import AuthModal from './AuthModal';
-import {
-  schedulePeriodicCheck,
-  checkAndNotifyDueFlashcards,
-} from '@/lib/notifications';
-import { getUserReviews } from '@/lib/flashcardDb';
-import { getNotificationPreference } from '@/lib/db';
 
 interface AppContextType {
   userId: string | null;
@@ -36,9 +23,6 @@ interface AppContextType {
   endQuiz: (unusedQuestions?: Question[]) => Promise<void>;
   refreshProgress: () => Promise<void>;
   resetProgress: () => Promise<void>;
-  generatePairingCode: () => Promise<string>;
-  enterPairingCode: (code: string) => Promise<boolean>;
-  isPaired: boolean;
   showAuthModal: () => void;
   handleSignOut: () => Promise<void>;
 }
@@ -53,7 +37,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [currentQuiz, setCurrentQuiz] = useState<QuizSession | null>(null);
   const [loading, setLoading] = useState(true);
   const [predictedScore, setPredictedScore] = useState(0);
-  const [isPaired, setIsPaired] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isPregenerating, setIsPregenerating] = useState(false);
   const [liquidGlass, setLiquidGlass] = useState(() => {
@@ -131,41 +114,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [userId]);
   */
 
-  // Initialize notifications and periodic checks
-  useEffect(() => {
-    if (!userId) return;
-
-    let intervalId: number | null = null;
-
-    const setupNotifications = async () => {
-      // Set up periodic checking if notifications are enabled in Firebase
-      const notifEnabled = await getNotificationPreference(userId);
-      if (notifEnabled) {
-        const checkFlashcards = async () => {
-          try {
-            const reviews = await getUserReviews(userId);
-            await checkAndNotifyDueFlashcards(reviews);
-          } catch (error) {
-            console.error('Error checking due flashcards:', error);
-          }
-        };
-
-        // Schedule checks every hour
-        intervalId = schedulePeriodicCheck(checkFlashcards, 60);
-      }
-    };
-
-    setupNotifications();
-
-    // Cleanup
-    return () => {
-      if (intervalId !== null) {
-        const { clearPeriodicCheck } = require('@/lib/notifications');
-        clearPeriodicCheck(intervalId);
-      }
-    };
-  }, [userId]);
-
   const initAuth = async () => {
     try {
       // Listen for auth state changes
@@ -173,21 +121,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
         if (firebaseUser) {
           setUser(firebaseUser);
           setAuthUserId(firebaseUser.uid);
-
-          // Check if there's a paired user ID
-          const effectiveId = getEffectiveUserId(firebaseUser.uid);
-          setUserId(effectiveId);
-          setIsPaired(effectiveId !== firebaseUser.uid);
+          setUserId(firebaseUser.uid);
 
           console.log('Auth initialized:', {
-            authUserId: firebaseUser.uid,
-            effectiveUserId: effectiveId,
-            isPaired: effectiveId !== firebaseUser.uid,
+            userId: firebaseUser.uid,
             isAnonymous: firebaseUser.isAnonymous,
             email: firebaseUser.email
           });
 
-          await loadUserProgress(effectiveId);
+          await loadUserProgress(firebaseUser.uid);
           setLoading(false);
         } else {
           // No user signed in - don't show modal, let route handle it
@@ -459,54 +401,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const generatePairingCode = async (): Promise<string> => {
-    if (!userId) {
-      throw new Error('User not authenticated');
-    }
-
-    try {
-      const code = await createPairingCode(userId);
-      return code;
-    } catch (error) {
-      console.error('Error generating pairing code:', error);
-      throw error;
-    }
-  };
-
-  const enterPairingCode = async (code: string): Promise<boolean> => {
-    if (!authUserId) {
-      throw new Error('User not authenticated');
-    }
-
-    try {
-      const pairedUserId = await validatePairingCode(code);
-
-      if (!pairedUserId) {
-        return false;
-      }
-
-      // Store paired user ID in localStorage
-      setPairedUserId(pairedUserId);
-
-      // Update state
-      setUserId(pairedUserId);
-      setIsPaired(true);
-
-      // Load progress from paired account
-      await loadUserProgress(pairedUserId);
-
-      console.log('Device paired successfully:', {
-        authUserId,
-        pairedUserId
-      });
-
-      return true;
-    } catch (error) {
-      console.error('Error entering pairing code:', error);
-      throw error;
-    }
-  };
-
   const showAuthModal = () => {
     setIsAuthModalOpen(true);
   };
@@ -553,9 +447,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     endQuiz,
     refreshProgress,
     resetProgress,
-    generatePairingCode,
-    enterPairingCode,
-    isPaired,
     showAuthModal,
     handleSignOut,
   };
