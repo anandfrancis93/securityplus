@@ -981,6 +981,18 @@ export default function QuizPerformance() {
                     </div>
                   );
                 })}
+
+                {/* Show More button if there are more than 5 quizzes */}
+                {userProgress.quizHistory.length > 5 && (
+                  <div className="mt-6">
+                    <button
+                      onClick={() => router.push('/cybersecurity/quiz/history')}
+                      className={`w-full py-5 md:py-6 text-xl md:text-2xl font-bold transition-all duration-700 ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl rounded-3xl border border-white/20 hover:border-white/30 hover:scale-[1.01]' : 'bg-zinc-800 hover:bg-zinc-700 rounded-md border border-zinc-700'} text-white`}
+                    >
+                      Show More ({userProgress.quizHistory.length - 5} older quizzes)
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <div className={`relative mt-8 text-xl text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>
