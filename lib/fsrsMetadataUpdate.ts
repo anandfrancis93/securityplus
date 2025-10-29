@@ -136,23 +136,40 @@ export function updateMetadataAfterQuiz(
           return;
         }
 
-        // Update topic coverage
-        if (updatedMetadata.topicCoverage[topicName]) {
-          const coverage = updatedMetadata.topicCoverage[topicName];
-
-          if (coverage.firstCoveredQuiz === null) {
-            coverage.firstCoveredQuiz = currentQuizNumber;
-            console.log(`[FSRS Update] First coverage of topic: ${topicName}`);
+        // Initialize topic coverage if it doesn't exist (for unknown/new topics)
+        if (!updatedMetadata.topicCoverage[topicName]) {
+          // Determine domain from ALL_SECURITY_PLUS_TOPICS or use default
+          let domain = '1.0 General Security Concepts';
+          for (const [domainName, topicsList] of Object.entries(ALL_SECURITY_PLUS_TOPICS)) {
+            if (topicsList.includes(topicName)) {
+              domain = domainName;
+              break;
+            }
           }
 
-          coverage.timesCovered += 1;
-          coverage.lastCoveredQuiz = currentQuizNumber;
+          updatedMetadata.topicCoverage[topicName] = {
+            topicName,
+            domain,
+            firstCoveredQuiz: currentQuizNumber,
+            timesCovered: 0,
+            lastCoveredQuiz: null,
+          };
+          console.log(`[FSRS Update] Initialized new topic coverage: ${topicName} (${domain})`);
         }
+
+        // Update topic coverage
+        const coverage = updatedMetadata.topicCoverage[topicName];
+        if (coverage.firstCoveredQuiz === null) {
+          coverage.firstCoveredQuiz = currentQuizNumber;
+          console.log(`[FSRS Update] First coverage of topic: ${topicName}`);
+        }
+        coverage.timesCovered += 1;
+        coverage.lastCoveredQuiz = currentQuizNumber;
 
         // Update topic performance
         if (!updatedMetadata.topicPerformance![topicName]) {
           // Initialize if doesn't exist
-          const domain = updatedMetadata.topicCoverage[topicName]?.domain || '1.0 General Security Concepts';
+          const domain = updatedMetadata.topicCoverage[topicName].domain;
           updatedMetadata.topicPerformance![topicName] = initializeTopicPerformance(topicName, domain);
         }
 
