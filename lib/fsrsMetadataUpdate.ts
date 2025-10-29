@@ -51,58 +51,64 @@ function initializeTopicPerformance(topicName: string, domain: string): TopicPer
 export function ensureMetadataInitialized(
   userProgress: UserProgress | null
 ): QuizGenerationMetadata {
-  if (userProgress?.quizMetadata) {
-    // Ensure topicPerformance exists
-    if (!userProgress.quizMetadata.topicPerformance) {
-      userProgress.quizMetadata.topicPerformance = {};
-    }
-    return userProgress.quizMetadata;
+  // Get existing metadata or create new
+  const metadata = userProgress?.quizMetadata || {
+    totalQuizzesCompleted: userProgress?.quizHistory?.length || 0,
+    allTopicsCoveredOnce: false,
+    questionHistory: {},
+    topicCoverage: {},
+    topicPerformance: {},
+    currentPhase: 1,
+    fsrsParameters: undefined,
+    lastParameterUpdate: Date.now(),
+  };
+
+  // Ensure topicCoverage and topicPerformance exist
+  if (!metadata.topicCoverage) {
+    metadata.topicCoverage = {};
+  }
+  if (!metadata.topicPerformance) {
+    metadata.topicPerformance = {};
   }
 
-  // Initialize new metadata
-  const topicCoverage: { [topicName: string]: TopicCoverageStatus } = {};
-  const topicPerformance: { [topicName: string]: TopicPerformance } = {};
-
-  // Initialize all topics
+  // Ensure ALL topics from ALL_SECURITY_PLUS_TOPICS are initialized
+  // This handles cases where new topics are added or user has old metadata
   Object.entries(ALL_SECURITY_PLUS_TOPICS).forEach(([domain, topics]) => {
     topics.forEach(topicName => {
-      topicCoverage[topicName] = {
-        topicName,
-        domain,
-        firstCoveredQuiz: null,
-        timesCovered: 0,
-        lastCoveredQuiz: null,
-      };
-
-      // Initialize performance from UserProgress.topicPerformance if exists
-      const existingPerf = userProgress?.topicPerformance?.[topicName];
-      if (existingPerf) {
-        topicPerformance[topicName] = {
-          ...existingPerf,
-          // Ensure FSRS fields exist
-          stability: existingPerf.stability || 0,
-          difficulty: existingPerf.difficulty || 0,
-          reps: existingPerf.reps || 0,
-          lapses: existingPerf.lapses || 0,
-          state: existingPerf.state || 0,
-          isStruggling: existingPerf.accuracy < 60 && existingPerf.questionsAnswered >= 2,
+      // Add missing topic coverage
+      if (!metadata.topicCoverage[topicName]) {
+        metadata.topicCoverage[topicName] = {
+          topicName,
+          domain,
+          firstCoveredQuiz: null,
+          timesCovered: 0,
+          lastCoveredQuiz: null,
         };
-      } else {
-        topicPerformance[topicName] = initializeTopicPerformance(topicName, domain);
+      }
+
+      // Add missing topic performance
+      if (!metadata.topicPerformance![topicName]) {
+        // Try to get from old UserProgress.topicPerformance if exists
+        const existingPerf = userProgress?.topicPerformance?.[topicName];
+        if (existingPerf) {
+          metadata.topicPerformance![topicName] = {
+            ...existingPerf,
+            // Ensure FSRS fields exist
+            stability: existingPerf.stability || 0,
+            difficulty: existingPerf.difficulty || 0,
+            reps: existingPerf.reps || 0,
+            lapses: existingPerf.lapses || 0,
+            state: existingPerf.state || 0,
+            isStruggling: existingPerf.accuracy < 60 && existingPerf.questionsAnswered >= 2,
+          };
+        } else {
+          metadata.topicPerformance![topicName] = initializeTopicPerformance(topicName, domain);
+        }
       }
     });
   });
 
-  return {
-    totalQuizzesCompleted: userProgress?.quizHistory?.length || 0,
-    allTopicsCoveredOnce: false,
-    questionHistory: {},
-    topicCoverage,
-    topicPerformance,
-    currentPhase: 1,
-    fsrsParameters: undefined, // Will use default FSRS params
-    lastParameterUpdate: Date.now(),
-  };
+  return metadata;
 }
 
 /**
