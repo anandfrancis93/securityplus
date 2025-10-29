@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebaseAdmin';
 import { UserProgress, CachedQuiz, Question } from '@/lib/types';
 import { pregenerateQuiz, initializeQuizMetadata } from '@/lib/quizPregeneration';
-import { ensureMetadataInitialized, updateMetadataAfterQuiz } from '@/lib/fsrsMetadataUpdate';
+import { ensureMetadataInitialized } from '@/lib/fsrsMetadataUpdate';
 import { authenticateAndAuthorize } from '@/lib/apiAuth';
 import { PregenerateQuizSchema, safeValidateRequestBody } from '@/lib/apiValidation';
 import { createQuizSession, sanitizeQuestionsForClient } from '@/lib/quizStateManager';
@@ -48,17 +48,9 @@ export async function POST(request: NextRequest) {
     console.log('Ensuring FSRS metadata is initialized');
     userProgress.quizMetadata = ensureMetadataInitialized(userProgress);
 
-    // If completedQuestions provided, update metadata with FSRS tracking
-    if (completedQuestions && Array.isArray(completedQuestions)) {
-      console.log(`Updating FSRS metadata with ${completedQuestions.length} completed questions`);
-      userProgress.quizMetadata = updateMetadataAfterQuiz(
-        userProgress.quizMetadata,
-        completedQuestions
-      );
-
-      // Note: topicPerformance is stored in quizMetadata.topicPerformance
-      // We don't sync it to the flat topicPerformance field to avoid Firestore field path issues
-    }
+    // Note: Metadata is already updated by saveQuizSession() before this API is called
+    // We don't update it again here to avoid double-counting topics
+    // The completedQuestions parameter is kept for potential future use but not processed
 
     // Pre-generate the next quiz
     console.log('Generating next quiz...');
