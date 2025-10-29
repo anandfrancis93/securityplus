@@ -200,22 +200,24 @@ export default function FlashcardPerformance() {
             <div className="relative">
               <div className="flex items-center justify-between mb-6">
                 <h3 className={`text-2xl font-bold ${liquidGlass ? 'text-white' : 'text-slate-100'}`}>Review Schedule</h3>
-                <button
-                  onClick={() => setReviewScheduleOpen(!reviewScheduleOpen)}
-                  className="p-2 rounded-lg hover:bg-white/5 transition-colors"
-                  aria-label="Toggle review schedule"
-                >
-                  <svg
-                    className={`w-6 h-6 transition-transform duration-300 ${reviewScheduleOpen ? 'rotate-180' : ''} ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                {reviews.length > 0 && (
+                  <button
+                    onClick={() => setReviewScheduleOpen(!reviewScheduleOpen)}
+                    className="p-2 rounded-lg hover:bg-white/5 transition-colors"
+                    aria-label="Toggle review schedule"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
+                    <svg
+                      className={`w-6 h-6 transition-transform duration-300 ${reviewScheduleOpen ? 'rotate-180' : ''} ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                )}
               </div>
-              {reviewScheduleOpen && (
+              {(reviews.length === 0 || reviewScheduleOpen) && (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                   <thead>
