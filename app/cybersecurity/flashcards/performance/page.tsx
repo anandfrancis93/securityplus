@@ -264,20 +264,23 @@ export default function FlashcardPerformance() {
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
             )}
             <div className="relative">
-              <button
-                onClick={() => setReviewScheduleOpen(!reviewScheduleOpen)}
-                className="w-full flex items-center justify-between mb-6 group"
-              >
+              <div className="flex items-center justify-between mb-6">
                 <h3 className={`text-2xl font-bold ${liquidGlass ? 'text-white' : 'text-slate-100'}`}>Review Schedule</h3>
-                <svg
-                  className={`w-6 h-6 transition-transform duration-300 ${reviewScheduleOpen ? 'rotate-180' : ''} ${liquidGlass ? 'text-zinc-400 group-hover:text-white' : 'text-slate-400 group-hover:text-slate-100'}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+                <button
+                  onClick={() => setReviewScheduleOpen(!reviewScheduleOpen)}
+                  className="p-2 rounded-lg hover:bg-white/5 transition-colors"
+                  aria-label="Toggle review schedule"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+                  <svg
+                    className={`w-6 h-6 transition-transform duration-300 ${reviewScheduleOpen ? 'rotate-180' : ''} ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </div>
               {reviewScheduleOpen && (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
@@ -353,16 +356,8 @@ export default function FlashcardPerformance() {
                                   <span className="text-yellow-400 font-semibold">{intervalHours} hour{intervalHours !== 1 ? 's' : ''}</span>
                                 )}
                               </td>
-                              <td className="py-4 px-4">
-                                {isDue ? (
-                                  <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-red-900/30 text-red-400 border border-red-700/50">
-                                    Due now
-                                  </span>
-                                ) : (
-                                  <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${liquidGlass ? 'bg-white/5 text-zinc-400 border border-white/10' : 'bg-slate-800 text-slate-400 border border-slate-700'}`}>
-                                    {daysUntil > 0 ? `In ${daysUntil} day${daysUntil !== 1 ? 's' : ''}` : `In ${hoursUntil}h`}
-                                  </span>
-                                )}
+                              <td className={`py-4 px-4 ${isDue ? 'text-red-400 font-semibold' : liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>
+                                {isDue ? 'Due now' : (daysUntil > 0 ? `In ${daysUntil} day${daysUntil !== 1 ? 's' : ''}` : `In ${hoursUntil}h`)}
                               </td>
                             </tr>
                           );
