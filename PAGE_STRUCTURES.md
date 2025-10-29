@@ -798,64 +798,189 @@ PerformancePage
 
 ```
 FlashcardsPage
-├── Header
+├── Header (full width)
 ├── Animated Background Gradients
-├── Hero Section
-│   ├── Title: "Flashcards"
+│   ├── Top-left violet gradient blob
+│   ├── Bottom-right cyan gradient blob
+│   └── Center emerald gradient blob
+├── Hero Section (Apple-style)
+│   ├── Main Headline (gradient text, large)
+│   │   ├── "Master with" (white gradient)
+│   │   └── "Flashcards" (cyan gradient)
 │   └── Tagline
-└── Flashcard Options Grid (4 cards, 2x2)
-    ├── Study Flashcards Card (clickable)
-    │   ├── Background (glass morphism)
-    │   ├── Gradient overlay (violet on hover)
-    │   ├── Icon Container
-    │   │   ├── Cards/study icon
-    │   │   └── Glass background
-    │   ├── Content
-    │   │   ├── Title: "Study Flashcards"
-    │   │   ├── Description
-    │   │   └── CTA
-    │   │       ├── "Start Studying" text
-    │   │       └── Arrow icon
-    │   └── Hover effects
-    ├── Create Flashcards Card (clickable)
-    │   ├── Background (glass morphism)
-    │   ├── Gradient overlay (cyan on hover)
-    │   ├── Icon Container
-    │   │   ├── Plus/create icon
-    │   │   └── Glass background
-    │   ├── Content
-    │   │   ├── Title: "Create Flashcards"
-    │   │   ├── Description: "Generate from PDF"
-    │   │   └── CTA
-    │   │       ├── "Create from PDF" text
-    │   │       └── Arrow icon
-    │   └── Hover effects
-    ├── Search Flashcards Card (clickable)
-    │   ├── Background (glass morphism)
-    │   ├── Gradient overlay (emerald on hover)
-    │   ├── Icon Container
-    │   │   ├── Search/magnifying glass icon
-    │   │   └── Glass background
-    │   ├── Content
-    │   │   ├── Title: "Search Flashcards"
-    │   │   ├── Description
-    │   │   └── CTA
-    │   │       ├── "Search Now" text
-    │   │       └── Arrow icon
-    │   └── Hover effects
-    └── Performance Card (clickable)
-        ├── Background (glass morphism)
-        ├── Gradient overlay (yellow on hover)
-        ├── Icon Container
-        │   ├── Chart/stats icon
-        │   └── Glass background
-        ├── Content
-        │   ├── Title: "Performance"
-        │   ├── Description
-        │   └── CTA
-        │       ├── "View Stats" text
-        │       └── Arrow icon
-        └── Hover effects
+│       └── "Learn with spaced repetition and active recall."
+├── Primary Actions Section (2x1 grid on desktop)
+│   ├── Study Card (Large featured card, clickable)
+│   │   ├── Card Container
+│   │   │   ├── Background (glass morphism, rounded-[40px])
+│   │   │   ├── Border (white/10, changes on hover)
+│   │   │   ├── Padding (p-12 md:p-16)
+│   │   │   └── Hover effects (scale-[1.02], shadow-2xl)
+│   │   ├── Gradient Overlay (violet, visible on hover)
+│   │   │   ├── from-violet-500/20
+│   │   │   ├── via-purple-500/10
+│   │   │   └── Opacity transition (duration-700)
+│   │   ├── Light Reflection Overlay
+│   │   │   └── from-white/10 gradient
+│   │   ├── Due Cards Badge (top-right, if cards are due)
+│   │   │   ├── Badge Container (glass with border)
+│   │   │   ├── Pulsing violet dot indicator
+│   │   │   └── "X due" text
+│   │   ├── Icon Container
+│   │   │   ├── Size: w-20 h-20 md:w-24 md:h-24
+│   │   │   ├── Glass background with backdrop-blur
+│   │   │   ├── Border (white/10)
+│   │   │   ├── Book/study icon (violet-400)
+│   │   │   └── Hover glow effect (shadow-2xl, drop-shadow)
+│   │   └── Content Section
+│   │       ├── Title: "Study" (text-4xl md:text-5xl)
+│   │       ├── Description (text-lg md:text-xl)
+│   │       │   └── "Review with spaced repetition for long-term retention."
+│   │       └── CTA Row
+│   │           ├── "Start Studying" text (violet-400)
+│   │           └── Arrow icon (translates on hover)
+│   └── Create Card (Large featured card, clickable)
+│       ├── Card Container
+│       │   ├── Background (glass morphism, rounded-[40px])
+│       │   ├── Border (white/10, changes on hover)
+│       │   ├── Padding (p-12 md:p-16)
+│       │   └── Hover effects (scale-[1.02], shadow-2xl)
+│       ├── Gradient Overlay (cyan, visible on hover)
+│       │   ├── from-cyan-500/20
+│       │   ├── via-blue-500/10
+│       │   └── Opacity transition (duration-700)
+│       ├── Light Reflection Overlay
+│       │   └── from-white/10 gradient
+│       ├── Icon Container
+│       │   ├── Size: w-20 h-20 md:w-24 md:h-24
+│       │   ├── Glass background with backdrop-blur
+│       │   ├── Border (white/10)
+│       │   ├── Edit/pen icon (cyan-400)
+│       │   └── Hover glow effect (shadow-2xl, drop-shadow)
+│       └── Content Section
+│           ├── Title: "Create" (text-4xl md:text-5xl)
+│           ├── Description (text-lg md:text-xl)
+│           │   └── "Make new flashcards with AI assistance or manually."
+│           └── CTA Row
+│               ├── "Create Flashcard" text (cyan-400)
+│               └── Arrow icon (translates on hover)
+├── Secondary Actions Section (2x1 grid on desktop)
+│   ├── Search & Manage Card (Large featured card, clickable)
+│   │   ├── Card Container
+│   │   │   ├── Background (glass morphism, rounded-[40px])
+│   │   │   ├── Border (white/10, changes on hover)
+│   │   │   ├── Padding (p-12 md:p-16)
+│   │   │   └── Hover effects (scale-[1.02], shadow-2xl)
+│   │   ├── Gradient Overlay (emerald, visible on hover)
+│   │   │   ├── from-emerald-500/20
+│   │   │   ├── via-green-500/10
+│   │   │   └── Opacity transition (duration-700)
+│   │   ├── Light Reflection Overlay
+│   │   │   └── from-white/10 gradient
+│   │   ├── Flashcards Count Badge (top-right, if cards exist)
+│   │   │   ├── Badge Container (glass with border)
+│   │   │   └── "X cards" text (emerald-300)
+│   │   ├── Icon Container
+│   │   │   ├── Size: w-20 h-20 md:w-24 md:h-24
+│   │   │   ├── Glass background with backdrop-blur
+│   │   │   ├── Border (white/10)
+│   │   │   ├── Search icon (emerald-400)
+│   │   │   └── Hover glow effect (shadow-2xl, drop-shadow)
+│   │   └── Content Section
+│   │       ├── Title: "Search & Manage" (text-4xl md:text-5xl)
+│   │       ├── Description (text-lg md:text-xl)
+│   │       │   └── "Find and organize your flashcard collection."
+│   │       └── CTA Row
+│   │           ├── "Browse Cards" text (emerald-400)
+│   │           └── Arrow icon (translates on hover)
+│   └── Performance Card (Large featured card, clickable)
+│       ├── Card Container
+│       │   ├── Background (glass morphism, rounded-[40px])
+│       │   ├── Border (white/10, changes on hover)
+│       │   ├── Padding (p-12 md:p-16)
+│       │   └── Hover effects (scale-[1.02], shadow-2xl)
+│       ├── Gradient Overlay (amber, visible on hover)
+│       │   ├── from-amber-500/20
+│       │   ├── via-yellow-500/10
+│       │   └── Opacity transition (duration-700)
+│       ├── Light Reflection Overlay
+│       │   └── from-white/10 gradient
+│       ├── Icon Container
+│       │   ├── Size: w-20 h-20 md:w-24 md:h-24
+│       │   ├── Glass background with backdrop-blur
+│       │   ├── Border (white/10)
+│       │   ├── Bar chart icon (amber-400)
+│       │   └── Hover glow effect (shadow-2xl, drop-shadow)
+│       └── Content Section
+│           ├── Title: "Performance" (text-4xl md:text-5xl)
+│           ├── Description (text-lg md:text-xl)
+│           │   └── "View your learning statistics and progress."
+│           └── CTA Row
+│               ├── "View Stats" text (amber-400)
+│               └── Arrow icon (translates on hover)
+└── Flashcard Reminders Section (Large featured card, if flashcards exist)
+    ├── Card Container
+    │   ├── Background (glass morphism, rounded-[40px])
+    │   ├── Border (white/10)
+    │   ├── Padding (p-12 md:p-16)
+    │   └── Transition effects (duration-700)
+    ├── Light Reflection Overlay
+    │   └── from-white/10 gradient
+    ├── Active Badge (top-right, when notifications enabled)
+    │   ├── Badge Container (glass with border)
+    │   ├── Pulsing emerald dot indicator
+    │   └── "Active" text (emerald-300)
+    ├── Icon Container
+    │   ├── Size: w-20 h-20 md:w-24 md:h-24
+    │   ├── Glass background with backdrop-blur
+    │   ├── Border (white/10)
+    │   └── Bell icon (violet-400)
+    ├── Content Section
+    │   ├── Title: "Flashcard Reminders" (text-4xl md:text-5xl)
+    │   ├── Description (text-lg md:text-xl)
+    │   │   ├── Enabled: "You will be notified when flashcards are due for review."
+    │   │   ├── Denied: "Notifications blocked. Enable in browser settings."
+    │   │   └── Default: "Get notified when flashcards need reviewing."
+    │   └── Toggle Section
+    │       ├── Toggle Switch
+    │       │   ├── Switch Container (rounded-[28px])
+    │       │   │   ├── Height: h-12
+    │       │   │   ├── Width: w-[84px]
+    │       │   │   ├── Background: violet-500 (enabled) or white/10 (disabled)
+    │       │   │   └── Hover effects (shadow-lg)
+    │       │   └── Toggle Circle (h-9 w-9)
+    │       │       ├── White background
+    │       │       ├── Shadow effect
+    │       │       └── Translates based on state
+    │       └── Status Label
+    │           └── "Enabled" or "Disabled" text (text-base md:text-lg)
+    ├── Warning Section (if notifications denied)
+    │   ├── Divider (border-t, white/10)
+    │   ├── Warning Icon (yellow-400)
+    │   └── Warning Text (text-base md:text-lg)
+    │       └── "To enable notifications, go to your browser settings..."
+    └── Info Section (if notifications enabled)
+        ├── Divider (border-t, white/10)
+        ├── Info Icon (violet-400)
+        └── Info Text (text-base md:text-lg)
+            └── "Notifications will be checked every hour while your browser is open."
+
+Design System Notes:
+- All cards use liquid glass design: backdrop-blur-2xl, rounded-[40px]
+- Large featured cards use p-12 md:p-16 padding
+- Icons are w-20 h-20 md:w-24 md:h-24
+- Headings are text-4xl md:text-5xl
+- Descriptions are text-lg md:text-xl
+- All transitions use duration-700
+- Hover effects: scale-[1.02], shadow-2xl
+- Color themes:
+  - Study: Violet (violet-400, violet-500)
+  - Create: Cyan (cyan-400, cyan-500)
+  - Search: Emerald (emerald-400, emerald-500)
+  - Performance: Amber (amber-400, amber-500)
+  - Notifications: Violet (violet-400, violet-500) with emerald badge
+- Badges use glass backgrounds with backdrop-blur-xl, rounded-full
+- Algorithm: FSRS (Free Spaced Repetition Scheduler) - same as quiz system
 ```
 
 ---
