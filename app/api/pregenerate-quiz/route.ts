@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebaseAdmin';
 import { UserProgress, CachedQuiz, Question } from '@/lib/types';
 import { pregenerateQuiz, initializeQuizMetadata } from '@/lib/quizPregeneration';
-import { ensureMetadataInitialized, updateMetadataAfterQuiz, syncTopicPerformanceToUserProgress } from '@/lib/fsrsMetadataUpdate';
+import { ensureMetadataInitialized, updateMetadataAfterQuiz } from '@/lib/fsrsMetadataUpdate';
 import { authenticateAndAuthorize } from '@/lib/apiAuth';
 import { PregenerateQuizSchema, safeValidateRequestBody } from '@/lib/apiValidation';
 import { createQuizSession, sanitizeQuestionsForClient } from '@/lib/quizStateManager';
@@ -56,8 +56,8 @@ export async function POST(request: NextRequest) {
         completedQuestions
       );
 
-      // Sync topic performance back to UserProgress for global tracking
-      userProgress.topicPerformance = syncTopicPerformanceToUserProgress(userProgress.quizMetadata);
+      // Note: topicPerformance is stored in quizMetadata.topicPerformance
+      // We don't sync it to the flat topicPerformance field to avoid Firestore field path issues
     }
 
     // Pre-generate the next quiz
@@ -84,10 +84,12 @@ export async function POST(request: NextRequest) {
       quizSessionId, // Reference to server-side quiz session
     };
 
+    // Save cached quiz and quiz metadata
+    // Note: topicPerformance is already stored in quizMetadata.topicPerformance
+    // We don't save it as a flat field to avoid Firestore field path issues with topic names containing special characters
     await userRef.update({
       cachedQuiz: secureCache,
       quizMetadata: userProgress.quizMetadata,
-      topicPerformance: userProgress.topicPerformance, // Sync topic performance
     });
 
     console.log('Cached quiz saved to Firebase (without correct answers)');
