@@ -105,13 +105,16 @@ export default function FlashcardPerformance() {
           <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
         </div>
       )}
-      <div className="container mx-auto px-6 sm:px-8 lg:px-12 py-8 max-w-5xl">
-        {/* Header */}
-        <div className="mb-8 flex-shrink-0">
-          <Header />
 
-          {/* Hero Section */}
-          <div className="text-center mb-12 mt-8">
+      {/* Header - Full width */}
+      <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
+        <Header />
+      </div>
+
+      <div className="container mx-auto px-6 sm:px-8 lg:px-12 pb-8 max-w-5xl">
+        {/* Hero Section */}
+        <div className="mb-8 flex-shrink-0">
+          <div className="text-center mb-12">
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-tight mb-6">
               <span className="block bg-gradient-to-br from-white via-zinc-100 to-zinc-300 bg-clip-text text-transparent">Flashcard</span>
               <span className="block bg-gradient-to-br from-amber-400 via-orange-400 to-amber-500 bg-clip-text text-transparent">Performance</span>
