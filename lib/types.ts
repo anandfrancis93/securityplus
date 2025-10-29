@@ -111,9 +111,18 @@ export interface FlashcardReview {
   reviewedAt: number;
   difficulty: 'again' | 'hard' | 'good' | 'easy'; // User rating
   nextReviewDate: number; // Timestamp for next review
-  interval: number; // Days until next review
-  easeFactor: number; // SM-2 algorithm ease factor (default 2.5)
-  repetitions: number; // Number of successful reviews
+  interval: number; // Days until next review (scheduled_days in FSRS)
+  easeFactor: number; // Legacy SM-2 field, not used in FSRS (kept for backwards compatibility)
+  repetitions: number; // Number of successful reviews (reps in FSRS)
+
+  // FSRS-specific fields
+  stability?: number; // Memory stability (how long the card will be remembered)
+  fsrsDifficulty?: number; // FSRS difficulty rating (0-10, higher = harder)
+  elapsedDays?: number; // Days since last review
+  scheduledDays?: number; // Scheduled interval in days
+  reps?: number; // Number of reviews
+  lapses?: number; // Number of times forgotten
+  state?: number; // FSRS state: 0=New, 1=Learning, 2=Review, 3=Relearning
 }
 
 export interface FlashcardDeck {
