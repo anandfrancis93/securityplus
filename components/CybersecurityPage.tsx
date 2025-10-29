@@ -68,7 +68,7 @@ export default function Cybersecurity() {
 
       <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
         {/* Hero Section - Apple Style */}
-        <section className="text-center mb-16 md:mb-20">
+        <section className="text-center mb-8 md:mb-12">
           <div className="max-w-5xl mx-auto space-y-8">
             {/* Main Headline */}
             <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight leading-[0.95]">
