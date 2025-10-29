@@ -262,7 +262,7 @@ export default function CreateFlashcards() {
                   type="file"
                   accept="image/*"
                   onChange={handleManualImageChange}
-                  className={`w-full ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-base ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} p-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} focus:border-cyan-500/50 focus:outline-none transition-all duration-700 file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-base file:font-semibold file:bg-cyan-600 file:text-white hover:file:bg-cyan-700 file:cursor-pointer file:transition-all file:duration-700`}
+                  className={`w-full ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-base ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} p-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} focus:border-cyan-500/50 focus:outline-none transition-all duration-700 file:mr-4 file:py-3 file:px-6 ${liquidGlass ? 'file:rounded-full file:border-2 file:border-white/10 file:bg-white/5 file:backdrop-blur-2xl hover:file:bg-white/10 hover:file:border-cyan-400/60 hover:file:shadow-xl hover:file:shadow-cyan-500/50' : 'file:rounded-full file:border-0 file:bg-cyan-600 hover:file:bg-cyan-700'} file:text-base file:font-semibold file:text-white file:cursor-pointer file:transition-all file:duration-700`}
                   disabled={generating}
                 />
               )}
@@ -270,14 +270,22 @@ export default function CreateFlashcards() {
             </div>
 
             <div className="flex items-center justify-end pt-6">
-              <button
-                id="create-flashcard"
-                onClick={handleManualCreate}
-                disabled={generating}
-                className={`relative ${liquidGlass ? 'bg-cyan-600 hover:bg-cyan-700' : 'bg-cyan-600 hover:bg-cyan-700'} active:bg-cyan-800 disabled:bg-slate-700 disabled:cursor-not-allowed text-white px-10 py-5 rounded-full text-xl font-bold transition-all duration-700 hover:shadow-2xl hover:shadow-cyan-600/50 disabled:shadow-none hover:scale-105`}
-              >
-                {generating ? 'Creating...' : 'Create Flashcard'}
-              </button>
+              <div className="relative group">
+                <button
+                  id="create-flashcard"
+                  onClick={handleManualCreate}
+                  disabled={generating}
+                  className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px] hover:bg-white/10 border-2 border-white/10 hover:border-cyan-400/60 shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50' : 'bg-cyan-600 hover:bg-cyan-700 rounded-full shadow-xl hover:shadow-cyan-600/50'} active:bg-white/10 disabled:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50 text-white px-10 py-5 text-xl font-bold transition-all duration-700 disabled:shadow-none hover:scale-105`}
+                >
+                  {liquidGlass && (
+                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/50 via-transparent to-transparent rounded-[32px] group-hover:opacity-100 transition-opacity duration-700" />
+                  )}
+                  {liquidGlass && (
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] opacity-50" />
+                  )}
+                  <span className="relative">{generating ? 'Creating...' : 'Create Flashcard'}</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
