@@ -25,6 +25,7 @@ function getDomainColor(domain: string): string {
 export default function TopicReviewSchedule({ userProgress, liquidGlass = true }: TopicReviewScheduleProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [filterStatus, setFilterStatus] = useState<'all' | 'overdue' | 'due-soon' | 'future'>('all');
+  const [hoveredCard, setHoveredCard] = useState<'current' | 'overdue' | 'due-now' | 'due-soon' | null>(null);
 
   const topicPerformance = userProgress.topicPerformance || {};
   const quizMetadata = userProgress.quizMetadata;
@@ -154,33 +155,100 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
 
         {/* Statistics Summary */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {/* Current Quiz Card */}
           <div
-            className={`${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10' : 'bg-zinc-900 rounded-md border border-zinc-800'} p-4 cursor-help`}
-            title="The number of quizzes you have completed so far. Topics are scheduled based on this quiz number."
+            className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10' : 'bg-zinc-900 rounded-md border border-zinc-800'} p-4 cursor-help transition-all duration-300`}
+            onMouseEnter={() => setHoveredCard('current')}
+            onMouseLeave={() => setHoveredCard(null)}
           >
             <div className="text-sm text-zinc-400 mb-1">Current Quiz</div>
             <div className="text-2xl font-bold text-white">#{currentQuizNumber}</div>
+
+            {/* Tooltip */}
+            {hoveredCard === 'current' && (
+              <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 z-50 ${liquidGlass ? 'bg-black/90 backdrop-blur-2xl border border-white/20 rounded-2xl' : 'bg-zinc-900 border-2 border-zinc-700 rounded-md'} p-4 shadow-2xl`}>
+                {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl" />}
+                <div className="relative text-sm text-zinc-300 leading-relaxed">
+                  The number of quizzes you have completed so far. Topics are scheduled based on this quiz number.
+                </div>
+                {/* Arrow */}
+                <div className={`absolute top-full left-1/2 transform -translate-x-1/2 -mt-px`}>
+                  <div className={`w-0 h-0 border-l-8 border-r-8 border-t-8 ${liquidGlass ? 'border-l-transparent border-r-transparent border-t-white/20' : 'border-l-transparent border-r-transparent border-t-zinc-700'}`}></div>
+                </div>
+              </div>
+            )}
           </div>
+
+          {/* Overdue Card */}
           <div
-            className={`${liquidGlass ? 'bg-red-500/20 backdrop-blur-xl rounded-2xl border-2 border-red-500/50' : 'bg-red-900 rounded-md border-2 border-red-700'} p-4 cursor-help`}
-            title="Topics that were scheduled to be reviewed in previous quizzes but haven't appeared yet. These should be prioritized in your next quiz."
+            className={`relative ${liquidGlass ? 'bg-red-500/20 backdrop-blur-xl rounded-2xl border-2 border-red-500/50' : 'bg-red-900 rounded-md border-2 border-red-700'} p-4 cursor-help transition-all duration-300`}
+            onMouseEnter={() => setHoveredCard('overdue')}
+            onMouseLeave={() => setHoveredCard(null)}
           >
             <div className="text-sm text-red-200 mb-1">Overdue</div>
             <div className="text-2xl font-bold text-red-300">{overdueCount}</div>
+
+            {/* Tooltip */}
+            {hoveredCard === 'overdue' && (
+              <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 z-50 ${liquidGlass ? 'bg-black/90 backdrop-blur-2xl border border-red-500/40 rounded-2xl' : 'bg-zinc-900 border-2 border-red-700 rounded-md'} p-4 shadow-2xl shadow-red-500/20`}>
+                {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 via-transparent to-transparent rounded-2xl" />}
+                <div className="relative text-sm text-zinc-300 leading-relaxed">
+                  Topics that were scheduled to be reviewed in previous quizzes but haven't appeared yet. These should be prioritized in your next quiz.
+                </div>
+                {/* Arrow */}
+                <div className={`absolute top-full left-1/2 transform -translate-x-1/2 -mt-px`}>
+                  <div className={`w-0 h-0 border-l-8 border-r-8 border-t-8 ${liquidGlass ? 'border-l-transparent border-r-transparent border-t-red-500/40' : 'border-l-transparent border-r-transparent border-t-red-700'}`}></div>
+                </div>
+              </div>
+            )}
           </div>
+
+          {/* Due Now Card */}
           <div
-            className={`${liquidGlass ? 'bg-yellow-500/20 backdrop-blur-xl rounded-2xl border-2 border-yellow-500/50' : 'bg-yellow-900 rounded-md border-2 border-yellow-700'} p-4 cursor-help`}
-            title="Topics scheduled to be reviewed in your next quiz (Quiz #${nextQuizNumber}). These are ready for review based on FSRS optimal spacing."
+            className={`relative ${liquidGlass ? 'bg-yellow-500/20 backdrop-blur-xl rounded-2xl border-2 border-yellow-500/50' : 'bg-yellow-900 rounded-md border-2 border-yellow-700'} p-4 cursor-help transition-all duration-300`}
+            onMouseEnter={() => setHoveredCard('due-now')}
+            onMouseLeave={() => setHoveredCard(null)}
           >
             <div className="text-sm text-yellow-200 mb-1">Due Now</div>
             <div className="text-2xl font-bold text-yellow-300">{dueNowCount}</div>
+
+            {/* Tooltip */}
+            {hoveredCard === 'due-now' && (
+              <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 z-50 ${liquidGlass ? 'bg-black/90 backdrop-blur-2xl border border-yellow-500/40 rounded-2xl' : 'bg-zinc-900 border-2 border-yellow-700 rounded-md'} p-4 shadow-2xl shadow-yellow-500/20`}>
+                {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-transparent rounded-2xl" />}
+                <div className="relative text-sm text-zinc-300 leading-relaxed">
+                  Topics scheduled to be reviewed in your next quiz (Quiz #{nextQuizNumber}). These are ready for review based on FSRS optimal spacing.
+                </div>
+                {/* Arrow */}
+                <div className={`absolute top-full left-1/2 transform -translate-x-1/2 -mt-px`}>
+                  <div className={`w-0 h-0 border-l-8 border-r-8 border-t-8 ${liquidGlass ? 'border-l-transparent border-r-transparent border-t-yellow-500/40' : 'border-l-transparent border-r-transparent border-t-yellow-700'}`}></div>
+                </div>
+              </div>
+            )}
           </div>
+
+          {/* Due Soon Card */}
           <div
-            className={`${liquidGlass ? 'bg-cyan-500/20 backdrop-blur-xl rounded-2xl border-2 border-cyan-500/50' : 'bg-cyan-900 rounded-md border-2 border-cyan-700'} p-4 cursor-help`}
-            title="Topics scheduled to be reviewed within the next 1-3 quizzes. These will appear soon as you continue taking quizzes."
+            className={`relative ${liquidGlass ? 'bg-cyan-500/20 backdrop-blur-xl rounded-2xl border-2 border-cyan-500/50' : 'bg-cyan-900 rounded-md border-2 border-cyan-700'} p-4 cursor-help transition-all duration-300`}
+            onMouseEnter={() => setHoveredCard('due-soon')}
+            onMouseLeave={() => setHoveredCard(null)}
           >
             <div className="text-sm text-cyan-200 mb-1">Due Soon</div>
             <div className="text-2xl font-bold text-cyan-300">{dueSoonCount}</div>
+
+            {/* Tooltip */}
+            {hoveredCard === 'due-soon' && (
+              <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 z-50 ${liquidGlass ? 'bg-black/90 backdrop-blur-2xl border border-cyan-500/40 rounded-2xl' : 'bg-zinc-900 border-2 border-cyan-700 rounded-md'} p-4 shadow-2xl shadow-cyan-500/20`}>
+                {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-transparent rounded-2xl" />}
+                <div className="relative text-sm text-zinc-300 leading-relaxed">
+                  Topics scheduled to be reviewed within the next 1-3 quizzes. These will appear soon as you continue taking quizzes.
+                </div>
+                {/* Arrow */}
+                <div className={`absolute top-full left-1/2 transform -translate-x-1/2 -mt-px`}>
+                  <div className={`w-0 h-0 border-l-8 border-r-8 border-t-8 ${liquidGlass ? 'border-l-transparent border-r-transparent border-t-cyan-500/40' : 'border-l-transparent border-r-transparent border-t-cyan-700'}`}></div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
