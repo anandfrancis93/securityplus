@@ -256,6 +256,115 @@ export default function FlashcardPerformance() {
           </div>
         )}
 
+        {/* Review Schedule Table */}
+        {flashcards.length > 0 && (
+          <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px]' : 'bg-slate-800/95 backdrop-blur-xl rounded-3xl'} p-8 border ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} mb-8`}>
+            {liquidGlass && (
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
+            )}
+            <div className="relative">
+              <h3 className={`text-2xl font-bold mb-6 ${liquidGlass ? 'text-white' : 'text-slate-100'}`}>📅 Review Schedule</h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className={`border-b ${liquidGlass ? 'border-white/10' : 'border-slate-700'}`}>
+                      <th className={`text-left py-3 px-4 font-semibold ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>Term</th>
+                      <th className={`text-left py-3 px-4 font-semibold ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>Last Review</th>
+                      <th className={`text-left py-3 px-4 font-semibold ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>Last Rating</th>
+                      <th className={`text-left py-3 px-4 font-semibold ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>Next Review</th>
+                      <th className={`text-left py-3 px-4 font-semibold ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>Interval</th>
+                      <th className={`text-left py-3 px-4 font-semibold ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {reviews.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} className={`py-12 px-4 text-center ${liquidGlass ? 'text-zinc-500' : 'text-slate-500'}`}>
+                          No reviews yet. Start studying to see your review schedule here!
+                        </td>
+                      </tr>
+                    ) : (
+                      reviews
+                        .sort((a, b) => a.nextReviewDate - b.nextReviewDate)
+                        .map((review) => {
+                          const card = flashcards.find(f => f.id === review.flashcardId);
+                          if (!card) return null;
+
+                          const now = Date.now();
+                          const isDue = review.nextReviewDate <= now;
+                          const nextReviewDate = new Date(review.nextReviewDate);
+                          const lastReviewDate = new Date(review.reviewedAt);
+                          const intervalHours = Math.round((review.nextReviewDate - review.reviewedAt) / (1000 * 60 * 60));
+                          const intervalDays = Math.round(intervalHours / 24);
+
+                          // Calculate time until/since due
+                          const timeDiff = Math.abs(review.nextReviewDate - now);
+                          const hoursUntil = Math.round(timeDiff / (1000 * 60 * 60));
+                          const daysUntil = Math.round(hoursUntil / 24);
+
+                          return (
+                            <tr key={review.flashcardId} className={`border-b ${liquidGlass ? 'border-white/5 hover:bg-white/5' : 'border-slate-800 hover:bg-slate-800/50'} transition-all`}>
+                              <td className="py-4 px-4">
+                                <div className={`font-medium truncate max-w-[200px] ${liquidGlass ? 'text-white' : 'text-slate-200'}`} title={card.term}>
+                                  {card.term}
+                                </div>
+                              </td>
+                              <td className={`py-4 px-4 ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>
+                                <div>{lastReviewDate.toLocaleDateString()}</div>
+                                <div className={`text-xs ${liquidGlass ? 'text-zinc-500' : 'text-slate-500'}`}>
+                                  {lastReviewDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </div>
+                              </td>
+                              <td className="py-4 px-4">
+                                <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${
+                                  review.difficulty === 'again' ? 'bg-red-900/30 text-red-400 border border-red-700/50' :
+                                  review.difficulty === 'hard' ? 'bg-yellow-900/30 text-yellow-400 border border-yellow-700/50' :
+                                  review.difficulty === 'good' ? 'bg-green-900/30 text-green-400 border border-green-700/50' :
+                                  'bg-blue-900/30 text-blue-400 border border-blue-700/50'
+                                }`}>
+                                  {review.difficulty.charAt(0).toUpperCase() + review.difficulty.slice(1)}
+                                </span>
+                              </td>
+                              <td className={`py-4 px-4 ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>
+                                <div>{nextReviewDate.toLocaleDateString()}</div>
+                                <div className={`text-xs ${liquidGlass ? 'text-zinc-500' : 'text-slate-500'}`}>
+                                  {nextReviewDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </div>
+                              </td>
+                              <td className={`py-4 px-4 ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>
+                                {intervalDays > 0 ? (
+                                  <span>{intervalDays} day{intervalDays !== 1 ? 's' : ''}</span>
+                                ) : (
+                                  <span className="text-yellow-400 font-semibold">{intervalHours} hour{intervalHours !== 1 ? 's' : ''}</span>
+                                )}
+                              </td>
+                              <td className="py-4 px-4">
+                                {isDue ? (
+                                  <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-red-900/30 text-red-400 border border-red-700/50">
+                                    Due now
+                                  </span>
+                                ) : (
+                                  <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${liquidGlass ? 'bg-white/5 text-zinc-400 border border-white/10' : 'bg-slate-800 text-slate-400 border border-slate-700'}`}>
+                                    {daysUntil > 0 ? `In ${daysUntil} day${daysUntil !== 1 ? 's' : ''}` : `In ${hoursUntil}h`}
+                                  </span>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+              {reviews.length > 0 && (
+                <div className={`mt-6 text-sm ${liquidGlass ? 'text-zinc-500' : 'text-slate-500'}`}>
+                  <p>💡 <strong>Tip:</strong> Cards with intervals less than 1 day were created before the FSRS fix. Review them once more to get proper multi-day intervals.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Reset Progress Button */}
         {flashcards.length > 0 && (
           <div className="relative text-center mt-12">
