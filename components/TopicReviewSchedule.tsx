@@ -27,7 +27,9 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
   const [filterStatus, setFilterStatus] = useState<'all' | 'overdue' | 'due-soon' | 'future'>('all');
   const [hoveredCard, setHoveredCard] = useState<'current' | 'overdue' | 'due-now' | 'due-soon' | null>(null);
 
-  const topicPerformance = userProgress.topicPerformance || {};
+  // Use FSRS-enabled topic performance from quizMetadata (has proper scheduling)
+  // Falls back to legacy topicPerformance if quizMetadata doesn't exist yet
+  const topicPerformance = userProgress.quizMetadata?.topicPerformance || userProgress.topicPerformance || {};
   const quizMetadata = userProgress.quizMetadata;
   const currentQuizNumber = quizMetadata?.totalQuizzesCompleted || userProgress.quizHistory.length;
   const nextQuizNumber = currentQuizNumber + 1;

@@ -12,6 +12,7 @@ import {
 } from 'firebase/firestore';
 import { UserProgress, QuizSession, Question, QuestionAttempt, TopicPerformance, CachedQuiz } from './types';
 import { estimateAbility, estimateAbilityWithError, calculateIRTScore } from './irt';
+import { ensureMetadataInitialized, updateMetadataAfterQuiz, syncTopicPerformanceToUserProgress } from './fsrsMetadataUpdate';
 
 const USERS_COLLECTION = 'users';
 const QUESTIONS_COLLECTION = 'questions';
@@ -130,8 +131,14 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
       ? estimateAbilityWithError(allAttempts)
       : { theta: 0, standardError: Infinity };
 
-    // Update topic performance tracking
-    const topicPerformance = updateTopicPerformance(userData.topicPerformance || {}, session);
+    // Initialize or get quiz metadata
+    const quizMetadata = ensureMetadataInitialized(userData);
+
+    // Update FSRS metadata with this quiz session's questions
+    const updatedMetadata = updateMetadataAfterQuiz(quizMetadata, session.questions);
+
+    // Sync FSRS-enabled topic performance back to main topicPerformance
+    const topicPerformance = syncTopicPerformanceToUserProgress(updatedMetadata);
 
     const updatedProgress: UserProgress = {
       userId,
@@ -144,6 +151,7 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
       estimatedAbility,
       abilityStandardError,
       topicPerformance,
+      quizMetadata: updatedMetadata, // Include updated FSRS metadata
       lastUpdated: Date.now(),
     };
 
