@@ -380,7 +380,7 @@ export default function StudyFlashcards() {
               </button>
               {/* Hover tooltip */}
               <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-slate-900/95 backdrop-blur border border-slate-600' : 'bg-slate-800/95 backdrop-blur border border-slate-700'} rounded-3xl p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
-                <p className="text-base text-slate-200 tracking-tight">Couldn&apos;t remember or got it wrong.</p>
+                <p className="text-base text-slate-200 tracking-tight">Failed to recall. Goes to Learning with a 1-day interval.</p>
               </div>
             </div>
 
@@ -402,7 +402,7 @@ export default function StudyFlashcards() {
               </button>
               {/* Hover tooltip */}
               <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-slate-900/95 backdrop-blur border border-slate-600' : 'bg-slate-800/95 backdrop-blur border border-slate-700'} rounded-3xl p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
-                <p className="text-base text-slate-200 tracking-tight">Difficult to recall, needed time.</p>
+                <p className="text-base text-slate-200 tracking-tight">Difficult but recalled. Goes to Review with a 2-day interval.</p>
               </div>
             </div>
 
@@ -424,7 +424,7 @@ export default function StudyFlashcards() {
               </button>
               {/* Hover tooltip */}
               <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-slate-900/95 backdrop-blur border border-slate-600' : 'bg-slate-800/95 backdrop-blur border border-slate-700'} rounded-3xl p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
-                <p className="text-base text-slate-200 tracking-tight">Recalled with some effort.</p>
+                <p className="text-base text-slate-200 tracking-tight">Recalled correctly. Goes to Review with a 3-day interval.</p>
               </div>
             </div>
 
@@ -446,7 +446,7 @@ export default function StudyFlashcards() {
               </button>
               {/* Hover tooltip */}
               <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-slate-900/95 backdrop-blur border border-slate-600' : 'bg-slate-800/95 backdrop-blur border border-slate-700'} rounded-3xl p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
-                <p className="text-base text-slate-200 tracking-tight">Instant recall, confident.</p>
+                <p className="text-base text-slate-200 tracking-tight">Instant recall. Goes to Review with an 8-day interval.</p>
               </div>
             </div>
           </div>
