@@ -473,7 +473,7 @@ export default function QuizPerformance() {
                       )}
                     </p>
                     <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'}`}>
-                      Minimum {MIN_QUESTIONS_FOR_PREDICTION} questions required for accurate analysis
+                      Minimum {MIN_QUESTIONS_FOR_PREDICTION} questions required for analysis
                     </p>
                   </div>
                 </div>
