@@ -14,6 +14,19 @@ export default function CreateFlashcards() {
   const { userId, user, loading: authLoading, liquidGlass } = useApp();
   const router = useRouter();
 
+  const [generating, setGenerating] = useState(false);
+
+  // Manual mode states
+  const [manualTerm, setManualTerm] = useState('');
+  const [manualDefinition, setManualDefinition] = useState('');
+  const [manualDomain, setManualDomain] = useState('General Security Concepts');
+  const [manualImage, setManualImage] = useState<File | null>(null);
+  const [manualImagePreview, setManualImagePreview] = useState<string | null>(null);
+  const [manualTermError, setManualTermError] = useState('');
+  const [manualDefinitionError, setManualDefinitionError] = useState('');
+  const [domainDropdownOpen, setDomainDropdownOpen] = useState(false);
+  const domainDropdownRef = useRef<HTMLDivElement>(null);
+
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!authLoading && !user) {
@@ -36,19 +49,6 @@ export default function CreateFlashcards() {
       };
     }
   }, [domainDropdownOpen]);
-
-  const [generating, setGenerating] = useState(false);
-
-  // Manual mode states
-  const [manualTerm, setManualTerm] = useState('');
-  const [manualDefinition, setManualDefinition] = useState('');
-  const [manualDomain, setManualDomain] = useState('General Security Concepts');
-  const [manualImage, setManualImage] = useState<File | null>(null);
-  const [manualImagePreview, setManualImagePreview] = useState<string | null>(null);
-  const [manualTermError, setManualTermError] = useState('');
-  const [manualDefinitionError, setManualDefinitionError] = useState('');
-  const [domainDropdownOpen, setDomainDropdownOpen] = useState(false);
-  const domainDropdownRef = useRef<HTMLDivElement>(null);
 
   const handleManualImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
