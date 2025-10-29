@@ -381,12 +381,12 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
                         </span>
                       </td>
                       <td className="px-4 py-3 text-center">
-                        <span className={`text-xs font-bold px-3 py-1 rounded-full ${
-                          topic.status === 'overdue' ? 'bg-red-500/20 text-red-300 border border-red-500/50' :
-                          topic.status === 'due-now' ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/50' :
-                          topic.status === 'due-soon' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/50' :
-                          topic.status === 'future' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50' :
-                          'bg-zinc-500/20 text-zinc-400 border border-zinc-500/50'
+                        <span className={`text-sm ${
+                          topic.status === 'overdue' ? 'text-red-300' :
+                          topic.status === 'due-now' ? 'text-yellow-300' :
+                          topic.status === 'due-soon' ? 'text-cyan-300' :
+                          topic.status === 'future' ? 'text-emerald-300' :
+                          'text-zinc-400'
                         }`}>
                           {topic.status === 'overdue' ? 'Overdue' :
                            topic.status === 'due-now' ? 'Due Now' :
