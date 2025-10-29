@@ -10,6 +10,20 @@ import { getUserFlashcards } from '@/lib/flashcardDb';
 import { uploadFlashcardImage, validateImageFile } from '@/lib/imageUpload';
 import { Flashcard } from '@/lib/types';
 
+// Domain color mapping - same colors as QuizPage's QuestionMetadata
+const DOMAIN_COLORS: { [key: string]: string } = {
+  'General Security Concepts': '#9333ea', // Bright purple
+  'Threats, Vulnerabilities, and Mitigations': '#ff4500', // Bright orange-red
+  'Security Architecture': '#06b6d4', // Bright cyan
+  'Security Operations': '#fbbf24', // Bright yellow
+  'Security Program Management and Oversight': '#22c55e', // Bright green
+};
+
+// Helper function to get domain color
+function getDomainColor(domain: string): string {
+  return DOMAIN_COLORS[domain] || '#22c55e'; // Default to green
+}
+
 export default function SearchFlashcards() {
   const { userId, user, loading: authLoading, liquidGlass } = useApp();
   const router = useRouter();
@@ -715,7 +729,7 @@ export default function SearchFlashcards() {
                         </div>
                         {card.domain && (
                           <div className={`text-xs md:text-sm mt-3 flex items-center gap-2 flex-wrap`}>
-                            <span className="text-emerald-400">{card.domain}</span>
+                            <span style={{ color: getDomainColor(card.domain) }}>{card.domain}</span>
                           </div>
                         )}
                       </div>
