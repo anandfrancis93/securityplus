@@ -15,7 +15,6 @@ import { DomainDropdown } from '@/components/ui/DomainDropdown';
 
 export default function CreateFlashcards() {
   const { userId, user, loading: authLoading, liquidGlass } = useApp();
-  const router = useRouter();
 
   const [generating, setGenerating] = useState(false);
 
