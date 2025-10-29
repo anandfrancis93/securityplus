@@ -49,7 +49,7 @@ export default function Header({
         >
           {/* Learning Icon - Graduation Cap */}
           <svg
-            className={`w-8 h-8 sm:w-10 sm:h-10 ${liquidGlass ? 'text-violet-400' : 'text-violet-500'}`}
+            className="w-8 h-8 sm:w-10 sm:h-10 text-white"
             fill="currentColor"
             viewBox="0 0 24 24"
           >
@@ -60,10 +60,10 @@ export default function Header({
 
           {/* Logo Text */}
           <div className="hidden sm:block">
-            <div className={`text-xl md:text-2xl font-bold tracking-tight leading-tight ${liquidGlass ? 'bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent' : 'text-white'}`}>
+            <div className="text-xl md:text-2xl font-bold tracking-tight leading-tight text-white">
               LearnQuest
             </div>
-            <div className={`text-xs leading-tight ${liquidGlass ? 'text-zinc-500' : 'text-zinc-400'}`}>
+            <div className="text-xs leading-tight text-zinc-400">
               Master Your Skills
             </div>
           </div>
@@ -79,7 +79,7 @@ export default function Header({
           aria-label="Open menu"
         >
           <svg
-            className="w-5 h-5 text-zinc-300"
+            className="w-5 h-5 text-white"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
