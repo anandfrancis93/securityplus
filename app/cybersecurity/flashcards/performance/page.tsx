@@ -201,7 +201,7 @@ export default function FlashcardPerformance() {
               <div className="relative text-4xl font-bold text-amber-400">{stats.total}</div>
               {/* Hover tooltip */}
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-[28px] p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                <p className="text-sm text-slate-300 leading-relaxed">The total number of flashcards in your deck.</p>
+                <p className="text-sm text-slate-300 leading-relaxed">Total number of flashcards in your deck, including new and reviewed cards.</p>
               </div>
             </div>
             <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px]' : 'bg-slate-800/95 backdrop-blur-xl rounded-3xl'} p-6 border ${liquidGlass ? 'border-white/10 hover:border-white/20' : 'border-slate-700/50 hover:border-amber-500/30'} group cursor-help hover:bg-white/10 transition-all duration-700 hover:shadow-xl ${liquidGlass ? 'hover:shadow-orange-500/20' : ''}`}>
@@ -217,7 +217,7 @@ export default function FlashcardPerformance() {
               )}
               {/* Hover tooltip */}
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-[28px] p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                <p className="text-sm text-slate-300 leading-relaxed">Cards you&apos;ve attempted but got wrong or rated as &quot;Again&quot;. These cards have 0 successful repetitions and need daily practice.</p>
+                <p className="text-sm text-slate-300 leading-relaxed">Cards you&apos;re struggling with - rated as &quot;Again&quot; or have been forgotten after learning. These need more practice to master.</p>
               </div>
             </div>
             <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px]' : 'bg-slate-800/95 backdrop-blur-xl rounded-3xl'} p-6 border ${liquidGlass ? 'border-white/10 hover:border-white/20' : 'border-slate-700/50 hover:border-amber-500/30'} group cursor-help hover:bg-white/10 transition-all duration-700 hover:shadow-xl ${liquidGlass ? 'hover:shadow-yellow-500/20' : ''}`}>
@@ -233,7 +233,7 @@ export default function FlashcardPerformance() {
               )}
               {/* Hover tooltip */}
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-[28px] p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                <p className="text-sm text-slate-300 leading-relaxed">Cards you&apos;re actively learning and have reviewed correctly 1-2 times. These cards are in progress but not yet mastered.</p>
+                <p className="text-sm text-slate-300 leading-relaxed">Cards you&apos;re actively learning - rated as &quot;Hard&quot;, &quot;Good&quot;, or &quot;Easy&quot; with 1-2 successful reviews. Making good progress!</p>
               </div>
             </div>
             <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px]' : 'bg-slate-800/95 backdrop-blur-xl rounded-3xl'} p-6 border ${liquidGlass ? 'border-white/10 hover:border-white/20' : 'border-slate-700/50 hover:border-amber-500/30'} group cursor-help hover:bg-white/10 transition-all duration-700 hover:shadow-xl ${liquidGlass ? 'hover:shadow-amber-500/20' : ''}`}>
@@ -251,7 +251,7 @@ export default function FlashcardPerformance() {
               )}
               {/* Hover tooltip */}
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-[28px] p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]">
-                <p className="text-sm text-slate-300 leading-relaxed">Cards you&apos;ve successfully reviewed 3 or more times. These cards are well-learned and appear less frequently to maintain long-term retention.</p>
+                <p className="text-sm text-slate-300 leading-relaxed">Cards you&apos;ve successfully reviewed 3 or more times. Well-learned and scheduled with optimal intervals for long-term retention using FSRS.</p>
               </div>
             </div>
           </div>
