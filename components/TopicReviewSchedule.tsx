@@ -193,7 +193,7 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
               <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 z-50 ${liquidGlass ? 'bg-black/90 backdrop-blur-2xl border border-red-500/40 rounded-2xl' : 'bg-zinc-900 border-2 border-red-700 rounded-md'} p-4 shadow-2xl shadow-red-500/20`}>
                 {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 via-transparent to-transparent rounded-2xl" />}
                 <div className="relative text-sm text-zinc-300 leading-relaxed">
-                  Topics that were scheduled to be reviewed in previous quizzes but haven't appeared yet. These should be prioritized in your next quiz.
+                  Topics that were scheduled to be reviewed in previous quizzes but haven&apos;t appeared yet. These should be prioritized in your next quiz.
                 </div>
                 {/* Arrow */}
                 <div className={`absolute top-full left-1/2 transform -translate-x-1/2 -mt-px`}>
