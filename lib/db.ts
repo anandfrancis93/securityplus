@@ -277,8 +277,11 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
           .replace(/\//g, '_')  // Replace forward slashes
           .replace(/\*/g, '_')  // Replace asterisks
           .replace(/~/g, '_')   // Replace tildes
-          .replace(/\[/g, '_')  // Replace brackets
-          .replace(/\]/g, '_');
+          .replace(/\[/g, '_')  // Replace left brackets
+          .replace(/\]/g, '_')  // Replace right brackets
+          .replace(/\(/g, '_')  // Replace left parentheses
+          .replace(/\)/g, '_')  // Replace right parentheses
+          .replace(/\./g, '_'); // Replace dots (periods)
         topicUpdates[`topicPerformance.${sanitizedFieldName}`] = topicPerformance[topicName];
       }
     }
@@ -292,12 +295,14 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
       }
     }
 
-    // Update quiz metadata phase and completion counts
+    // Update quiz metadata including topicPerformance
+    // Store topicPerformance in quizMetadata where we can use original topic names
     try {
       await updateDoc(userRef, {
         'quizMetadata.totalQuizzesCompleted': updatedMetadata.totalQuizzesCompleted,
         'quizMetadata.currentPhase': updatedMetadata.currentPhase,
         'quizMetadata.allTopicsCoveredOnce': updatedMetadata.allTopicsCoveredOnce,
+        'quizMetadata.topicPerformance': updatedMetadata.topicPerformance || {},
       });
       console.log('Quiz metadata updated');
     } catch (metadataError) {
