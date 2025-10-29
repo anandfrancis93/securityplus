@@ -187,16 +187,12 @@ Return ONLY a valid JSON array of exact topic strings:
 No explanation, just the JSON array.`;
 
   try {
-    const result = await model.generateContent({
-      contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      generationConfig: {
-        maxOutputTokens: 1024,
-        temperature: 0, // Deterministic for consistency
-      },
+    // Use unified AI provider for topic identification
+    const textContent = await aiProvider.generateContent(prompt, {
+      maxOutputTokens: 1024,
+      temperature: 0, // Deterministic for consistency
+      useReasoning: false // Use non-reasoning model for faster topic identification
     });
-
-    const response = result.response;
-    const textContent = response.text().trim();
     const jsonContent = textContent.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
 
     const extractedTopics: string[] = JSON.parse(jsonContent);
