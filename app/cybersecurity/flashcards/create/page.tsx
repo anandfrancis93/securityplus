@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useApp } from '@/components/AppProvider';
 import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
@@ -21,6 +21,22 @@ export default function CreateFlashcards() {
     }
   }, [user, authLoading, router]);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (domainDropdownRef.current && !domainDropdownRef.current.contains(event.target as Node)) {
+        setDomainDropdownOpen(false);
+      }
+    }
+
+    if (domainDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [domainDropdownOpen]);
+
   const [generating, setGenerating] = useState(false);
 
   // Manual mode states
@@ -31,6 +47,8 @@ export default function CreateFlashcards() {
   const [manualImagePreview, setManualImagePreview] = useState<string | null>(null);
   const [manualTermError, setManualTermError] = useState('');
   const [manualDefinitionError, setManualDefinitionError] = useState('');
+  const [domainDropdownOpen, setDomainDropdownOpen] = useState(false);
+  const domainDropdownRef = useRef<HTMLDivElement>(null);
 
   const handleManualImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -220,19 +238,59 @@ export default function CreateFlashcards() {
               <label className={`block text-lg font-medium mb-3 tracking-tight ${liquidGlass ? 'text-zinc-300' : 'text-slate-300'}`}>
                 Security+ Domain
               </label>
-              <select
-                id="domain-dropdown"
-                value={manualDomain}
-                onChange={(e) => setManualDomain(e.target.value)}
-                className={`w-full ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-lg ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} p-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} focus:border-cyan-500/50 focus:outline-none ${liquidGlass ? 'focus:bg-white/10' : 'focus:bg-slate-900/80'} transition-all duration-700 ${liquidGlass ? '[&>option]:bg-zinc-900 [&>option]:text-white [&>option]:py-3' : ''}`}
-                disabled={generating}
-              >
-                <option value="General Security Concepts" className={liquidGlass ? 'bg-zinc-900 text-white hover:bg-cyan-600 hover:text-white' : ''}>General Security Concepts</option>
-                <option value="Threats, Vulnerabilities, and Mitigations" className={liquidGlass ? 'bg-zinc-900 text-white hover:bg-cyan-600 hover:text-white' : ''}>Threats, Vulnerabilities, and Mitigations</option>
-                <option value="Security Architecture" className={liquidGlass ? 'bg-zinc-900 text-white hover:bg-cyan-600 hover:text-white' : ''}>Security Architecture</option>
-                <option value="Security Operations" className={liquidGlass ? 'bg-zinc-900 text-white hover:bg-cyan-600 hover:text-white' : ''}>Security Operations</option>
-                <option value="Security Program Management and Oversight" className={liquidGlass ? 'bg-zinc-900 text-white hover:bg-cyan-600 hover:text-white' : ''}>Security Program Management and Oversight</option>
-              </select>
+              <div className="relative" ref={domainDropdownRef}>
+                <button
+                  id="domain-dropdown"
+                  type="button"
+                  onClick={() => !generating && setDomainDropdownOpen(!domainDropdownOpen)}
+                  className={`w-full ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-lg ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} p-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} ${liquidGlass ? 'hover:bg-white/10 hover:border-cyan-500/50' : 'hover:bg-slate-900/80'} focus:outline-none transition-all duration-700 disabled:opacity-50 disabled:cursor-not-allowed text-left flex items-center justify-between`}
+                  disabled={generating}
+                >
+                  <span>{manualDomain}</span>
+                  <svg
+                    className={`w-5 h-5 transition-transform duration-300 ${domainDropdownOpen ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {/* Custom Dropdown Menu */}
+                {domainDropdownOpen && (
+                  <div className={`absolute z-50 w-full mt-2 ${liquidGlass ? 'bg-black/80 backdrop-blur-2xl border border-white/20 rounded-[28px]' : 'bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-3xl'} shadow-2xl overflow-hidden`}>
+                    {[
+                      'General Security Concepts',
+                      'Threats, Vulnerabilities, and Mitigations',
+                      'Security Architecture',
+                      'Security Operations',
+                      'Security Program Management and Oversight'
+                    ].map((domain) => (
+                      <button
+                        key={domain}
+                        type="button"
+                        onClick={() => {
+                          setManualDomain(domain);
+                          setDomainDropdownOpen(false);
+                        }}
+                        className={`w-full text-left px-5 py-4 text-base transition-all duration-300 ${
+                          manualDomain === domain
+                            ? liquidGlass
+                              ? 'bg-cyan-500/30 text-white'
+                              : 'bg-cyan-600/50 text-white'
+                            : liquidGlass
+                            ? 'text-zinc-200 hover:bg-white/10'
+                            : 'text-slate-200 hover:bg-slate-800/60'
+                        }`}
+                      >
+                        {domain}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
             <div>
