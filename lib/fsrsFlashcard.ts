@@ -5,14 +5,21 @@
  * Server-side only to avoid bundling FSRS in client components.
  */
 
-import { fsrs, Card, Rating, State, createEmptyCard, Grade } from 'ts-fsrs';
+import { fsrs, Card, Rating, State, createEmptyCard, Grade, generatorParameters } from 'ts-fsrs';
 import { FlashcardReview } from './types';
 
 /**
- * Create FSRS scheduler instance
+ * Create FSRS scheduler instance with custom parameters
+ *
+ * We disable short-term learning steps because flashcards are studied
+ * in separate sessions, not all at once like in Anki. This gives more
+ * reasonable intervals (days instead of minutes).
  */
 function createScheduler() {
-  return fsrs();
+  const params = generatorParameters({
+    enable_short_term: false, // Disable learning steps (1min, 10min, etc)
+  });
+  return fsrs(params);
 }
 
 /**
