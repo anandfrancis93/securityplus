@@ -51,7 +51,7 @@ HomePage
 │   │   ├── "Learn without" (white gradient)
 │   │   └── "limits." (colored gradient)
 │   └── Tagline
-│       └── "Your adaptive learning companion powered by AI and spaced repetition"
+│       └── "Your adaptive learning companion powered by AI"
 ├── Featured Subject Section
 │   └── Cybersecurity Card (Large, clickable)
 │       ├── Background (glass morphism with border)

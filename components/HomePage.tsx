@@ -49,7 +49,7 @@ export default function Home() {
 
             {/* Tagline */}
             <p className={`text-xl sm:text-2xl md:text-3xl font-light max-w-3xl mx-auto leading-relaxed ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'}`}>
-              Your adaptive learning companion powered by AI and spaced repetition.
+              Your adaptive learning companion powered by AI.
             </p>
           </div>
         </section>
