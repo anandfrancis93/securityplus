@@ -256,30 +256,12 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
                     key={index}
                     className={`${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10' : 'bg-zinc-900 rounded-md border border-zinc-800'} p-4`}
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm font-bold text-white truncate">{topic.topicName}</div>
-                        <div
-                          className="text-xs font-bold mt-1"
-                          style={{ color: domainColor }}
-                        >
-                          {topic.domain.replace('.0', '.')}
-                        </div>
-                      </div>
-                      <div className={`px-2 py-1 text-xs font-bold rounded-lg ${
-                        topic.status === 'overdue' ? 'bg-red-500/20 text-red-300 border border-red-500/50' :
-                        topic.status === 'due-now' ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/50' :
-                        'bg-cyan-500/20 text-cyan-300 border border-cyan-500/50'
-                      }`}>
-                        {topic.status === 'overdue' ? `${Math.abs(topic.quizzesUntilDue)} overdue` :
-                         topic.status === 'due-now' ? 'Due now' :
-                         topic.isStruggling ? 'Struggling' : 'Priority'}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4 mt-3 text-xs text-zinc-400">
-                      <span>Accuracy: <span className={topic.accuracy >= 80 ? 'text-emerald-400' : topic.accuracy >= 60 ? 'text-yellow-400' : 'text-red-400'}>{topic.accuracy.toFixed(0)}%</span></span>
-                      <span>•</span>
-                      <span>Tested: {topic.questionsAnswered}×</span>
+                    <div className="text-sm font-bold text-white">{topic.topicName}</div>
+                    <div
+                      className="text-xs font-bold mt-1"
+                      style={{ color: domainColor }}
+                    >
+                      {topic.domain.replace('.0', '.')}
                     </div>
                   </div>
                 );
