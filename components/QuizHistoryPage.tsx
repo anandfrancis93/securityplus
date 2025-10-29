@@ -50,11 +50,40 @@ export default function QuizHistoryPage() {
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
             <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+            <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
           </div>
         )}
-        <div className="relative text-center">
-          <div className={`animate-spin rounded-2xl h-32 w-32 md:h-40 md:w-40 border-4 ${liquidGlass ? 'border-white/10 border-t-cyan-400/80' : 'border-zinc-800 border-t-blue-500'} mx-auto`}></div>
-          <p className={`mt-8 text-2xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-400 font-mono'}`}>Loading...</p>
+        <div className="relative">
+          {/* Liquid glass card */}
+          <div className={`${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-slate-800/95 backdrop-blur-xl border border-slate-700/50 rounded-3xl'} p-16 md:p-20 shadow-2xl`}>
+            {liquidGlass && (
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50 pointer-events-none" />
+            )}
+            <div className="relative text-center">
+              {/* Animated icon */}
+              <div className="relative mx-auto w-32 h-32 md:w-40 md:h-40 mb-8">
+                {/* Outer ring */}
+                <div className={`absolute inset-0 ${liquidGlass ? 'border-4 border-white/20 rounded-full' : 'border-4 border-slate-700 rounded-full'}`}></div>
+                {/* Spinning gradient ring */}
+                <div className="absolute inset-0 animate-spin">
+                  <div className={`w-full h-full rounded-full ${liquidGlass ? 'border-4 border-transparent border-t-cyan-400 border-r-cyan-400/50' : 'border-4 border-transparent border-t-blue-500 border-r-blue-500/50'}`}></div>
+                </div>
+                {/* Center icon - history/clock */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <svg className={`w-16 h-16 md:w-20 md:h-20 ${liquidGlass ? 'text-cyan-400' : 'text-blue-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              {/* Loading text */}
+              <p className={`text-2xl md:text-3xl font-bold tracking-tight ${liquidGlass ? 'text-white' : 'text-slate-200'}`}>
+                Loading quiz history...
+              </p>
+              <p className={`text-base md:text-lg mt-4 ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>
+                Please wait
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     );

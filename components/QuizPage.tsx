@@ -280,11 +280,34 @@ export default function Quiz() {
 
           {/* Loading spinner */}
           <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
-            <div className={`text-center relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] p-16 shadow-2xl' : ''}`}>
-              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
-              <div className={`animate-spin rounded-2xl h-32 w-32 md:h-40 md:w-40 border-4 ${liquidGlass ? 'border-white/10 border-t-violet-400/80' : 'border-zinc-800 border-t-zinc-400'} mx-auto relative`}></div>
-              <p className={`mt-10 text-3xl md:text-4xl font-bold relative ${liquidGlass ? 'text-white' : 'text-zinc-200'}`}>Generating first question...</p>
-              <p className={`mt-4 text-xl md:text-2xl relative ${liquidGlass ? 'text-zinc-400' : 'text-zinc-400'}`}>This will take about 10 seconds</p>
+            <div className={`${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-slate-800/95 backdrop-blur-xl border border-slate-700/50 rounded-3xl'} p-16 md:p-20 shadow-2xl relative`}>
+              {liquidGlass && (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50 pointer-events-none" />
+              )}
+              <div className="relative text-center">
+                {/* Animated icon */}
+                <div className="relative mx-auto w-32 h-32 md:w-40 md:h-40 mb-8">
+                  {/* Outer ring */}
+                  <div className={`absolute inset-0 ${liquidGlass ? 'border-4 border-white/20 rounded-full' : 'border-4 border-slate-700 rounded-full'}`}></div>
+                  {/* Spinning gradient ring */}
+                  <div className="absolute inset-0 animate-spin">
+                    <div className={`w-full h-full rounded-full ${liquidGlass ? 'border-4 border-transparent border-t-violet-400 border-r-violet-400/50' : 'border-4 border-transparent border-t-violet-500 border-r-violet-500/50'}`}></div>
+                  </div>
+                  {/* Center icon - question mark */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <svg className={`w-16 h-16 md:w-20 md:h-20 ${liquidGlass ? 'text-violet-400' : 'text-violet-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+                    </svg>
+                  </div>
+                </div>
+                {/* Loading text */}
+                <p className={`text-2xl md:text-3xl font-bold tracking-tight ${liquidGlass ? 'text-white' : 'text-slate-200'}`}>
+                  Generating first question...
+                </p>
+                <p className={`text-base md:text-lg mt-4 ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>
+                  This will take about 10 seconds
+                </p>
+              </div>
             </div>
           </div>
         </div>
