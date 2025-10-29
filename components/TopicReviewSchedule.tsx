@@ -236,11 +236,18 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
             <h4 className={`text-2xl md:text-3xl font-bold text-white mb-4 ${liquidGlass ? '' : 'font-mono'}`}>
               Expected Topics in Quiz #{nextQuizNumber}
             </h4>
-            <p className={`text-base md:text-lg mb-6 ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
-              Based on FSRS scheduling, these {nextQuizTopics.length} topics are likely to appear in your next quiz:
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {nextQuizTopics.slice(0, 10).map((topic, index) => {
+            {nextQuizTopics.length === 0 ? (
+              <div className={`text-center py-8 ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
+                <p className="text-base md:text-lg mb-2">No topic data available yet</p>
+                <p className="text-sm md:text-base">Take your first quiz to start tracking topic performance and scheduling</p>
+              </div>
+            ) : (
+              <>
+                <p className={`text-base md:text-lg mb-6 ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
+                  Based on FSRS scheduling, these {nextQuizTopics.length} topics are likely to appear in your next quiz:
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {nextQuizTopics.slice(0, 10).map((topic, index) => {
                 const domainColor = getDomainColor(topic.domain);
                 return (
                   <div
@@ -275,11 +282,13 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
                   </div>
                 );
               })}
-            </div>
-            {nextQuizTopics.length > 10 && (
-              <p className={`mt-4 text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600 font-mono'}`}>
-                + {nextQuizTopics.length - 10} more topics may appear
-              </p>
+                </div>
+                {nextQuizTopics.length > 10 && (
+                  <p className={`mt-4 text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600 font-mono'}`}>
+                    + {nextQuizTopics.length - 10} more topics may appear
+                  </p>
+                )}
+              </>
             )}
           </div>
 
