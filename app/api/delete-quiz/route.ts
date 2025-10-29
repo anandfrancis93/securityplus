@@ -34,29 +34,34 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const userData = userDoc.data();
-    const quizHistory = userData?.quizHistory || [];
+    // Delete quiz from subcollection
+    const quizRef = userRef.collection('quizzes').doc(quizId);
+    const quizDoc = await quizRef.get();
 
-    // Find the quiz to delete
-    const quizIndex = quizHistory.findIndex((q: any) => q.id === quizId);
-
-    if (quizIndex === -1) {
+    if (!quizDoc.exists) {
       return NextResponse.json(
         { error: 'Quiz not found' },
         { status: 404 }
       );
     }
 
-    // Remove the quiz from history
-    quizHistory.splice(quizIndex, 1);
+    await quizRef.delete();
+    console.log(`[DELETE QUIZ] Deleted quiz ${quizId} from subcollection`);
+
+    // Load all remaining quizzes from subcollection
+    const quizzesSnapshot = await userRef.collection('quizzes').orderBy('startedAt', 'desc').get();
+    const quizHistory: any[] = [];
+    quizzesSnapshot.forEach(doc => {
+      quizHistory.push(doc.data());
+    });
 
     // Check if this was the last quiz - if so, reset all progress like the reset button does
     if (quizHistory.length === 0) {
       console.log(`[DELETE QUIZ] Last quiz deleted - clearing all progress data`);
 
       // Clear all progress data (same as reset progress button)
+      // Note: quizHistory is not stored in main document anymore (it's in subcollection)
       await userRef.update({
-        quizHistory: [],
         answeredQuestions: [],
         correctAnswers: 0,
         totalQuestions: 0,
@@ -125,8 +130,8 @@ export async function POST(request: NextRequest) {
     const maxPossiblePoints = allAttempts.reduce((sum: number, attempt: any) => sum + (attempt.maxPoints || 100), 0);
 
     // Update user document with recalculated metrics
+    // Note: quizHistory is not stored in main document (it's in subcollection)
     await userRef.update({
-      quizHistory,
       totalQuestions,
       correctAnswers,
       totalPoints,

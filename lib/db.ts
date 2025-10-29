@@ -9,6 +9,9 @@ import {
   where,
   getDocs,
   serverTimestamp,
+  orderBy,
+  limit as firestoreLimit,
+  deleteDoc,
 } from 'firebase/firestore';
 import { UserProgress, QuizSession, Question, QuestionAttempt, TopicPerformance, CachedQuiz } from './types';
 import { estimateAbility, estimateAbilityWithError, calculateIRTScore } from './irt';
@@ -16,6 +19,7 @@ import { ensureMetadataInitialized, updateMetadataAfterQuiz, syncTopicPerformanc
 
 const USERS_COLLECTION = 'users';
 const QUESTIONS_COLLECTION = 'questions';
+const QUIZZES_SUBCOLLECTION = 'quizzes';
 
 /**
  * Remove undefined values from an object recursively
@@ -43,6 +47,31 @@ function removeUndefinedValues(obj: any): any {
   return obj;
 }
 
+/**
+ * Load quiz history from subcollection
+ * This prevents the main user document from growing too large
+ */
+export async function loadQuizHistory(userId: string, limitCount?: number): Promise<QuizSession[]> {
+  try {
+    const quizzesRef = collection(db, USERS_COLLECTION, userId, QUIZZES_SUBCOLLECTION);
+    const quizzesQuery = limitCount
+      ? query(quizzesRef, orderBy('startedAt', 'desc'), firestoreLimit(limitCount))
+      : query(quizzesRef, orderBy('startedAt', 'desc'));
+
+    const querySnapshot = await getDocs(quizzesQuery);
+    const quizzes: QuizSession[] = [];
+
+    querySnapshot.forEach((doc) => {
+      quizzes.push(doc.data() as QuizSession);
+    });
+
+    return quizzes;
+  } catch (error) {
+    console.error('Error loading quiz history:', error);
+    return [];
+  }
+}
+
 export async function getUserProgress(userId: string): Promise<UserProgress | null> {
   try {
     const docRef = doc(db, USERS_COLLECTION, userId);
@@ -50,6 +79,9 @@ export async function getUserProgress(userId: string): Promise<UserProgress | nu
 
     if (docSnap.exists()) {
       const data = docSnap.data() as UserProgress;
+
+      // Load quiz history from subcollection instead of storing in main document
+      data.quizHistory = await loadQuizHistory(userId);
 
       // Ensure abilityStandardError exists (for backwards compatibility with existing users)
       if (data.abilityStandardError === undefined && data.quizHistory && data.quizHistory.length > 0) {
@@ -124,19 +156,18 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
         maxPossiblePoints: 0,
         estimatedAbility: 0,
         lastUpdated: Date.now(),
-        quizHistory: [],
+        quizHistory: [], // Will be empty, quizzes stored in subcollection
       };
     }
 
-    const quizHistory = userData.quizHistory || [];
+    // Save quiz to subcollection instead of array in main document
+    const quizRef = doc(db, USERS_COLLECTION, userId, QUIZZES_SUBCOLLECTION, session.id);
+    const cleanedSession = removeUndefinedValues(session) as QuizSession;
+    await setDoc(quizRef, cleanedSession);
+    console.log('Quiz session saved to subcollection:', session.id);
 
-    // Update or add quiz session
-    const existingIndex = quizHistory.findIndex(q => q.id === session.id);
-    if (existingIndex >= 0) {
-      quizHistory[existingIndex] = session;
-    } else {
-      quizHistory.push(session);
-    }
+    // Load all quiz history from subcollection for calculations
+    const quizHistory = await loadQuizHistory(userId);
 
     // Update answered questions
     const answeredQuestions = new Set(userData.answeredQuestions || []);
@@ -159,6 +190,8 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
 
     // Initialize or get quiz metadata and update with FSRS
     console.log('[FSRS] Initializing metadata...');
+    // Load quizHistory for FSRS initialization
+    userData.quizHistory = quizHistory;
     const quizMetadata = ensureMetadataInitialized(userData);
     console.log('[FSRS] Metadata initialized successfully');
 
@@ -172,7 +205,8 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
 
     const updatedProgress: UserProgress = {
       userId,
-      quizHistory,
+      // DO NOT store quizHistory in main document - it's in subcollection
+      quizHistory: [],
       answeredQuestions: Array.from(answeredQuestions),
       correctAnswers: (userData.correctAnswers || 0) + sessionCorrectAnswers,
       totalQuestions: (userData.totalQuestions || 0) + session.questions.length,
@@ -191,7 +225,7 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
       totalPoints: updatedProgress.totalPoints,
       maxPossiblePoints: updatedProgress.maxPossiblePoints,
       estimatedAbility: updatedProgress.estimatedAbility,
-      quizHistoryCount: updatedProgress.quizHistory.length
+      quizHistoryCount: quizHistory.length
     });
 
     // Clean undefined values before saving to Firestore
@@ -254,6 +288,18 @@ export async function resetUserProgress(userId: string): Promise<void> {
   try {
     console.log('[DEBUG db.ts] resetUserProgress called for user:', userId);
     const userRef = doc(db, USERS_COLLECTION, userId);
+
+    // Delete all quizzes from subcollection
+    console.log('[DEBUG db.ts] Deleting all quizzes from subcollection...');
+    const quizzesRef = collection(db, USERS_COLLECTION, userId, QUIZZES_SUBCOLLECTION);
+    const quizzesSnapshot = await getDocs(quizzesRef);
+
+    const deletions = quizzesSnapshot.docs.map(async (quizDoc) => {
+      await deleteDoc(quizDoc.ref);
+    });
+
+    await Promise.all(deletions);
+    console.log(`[DEBUG db.ts] Deleted ${quizzesSnapshot.size} quizzes from subcollection`);
 
     const resetProgress: UserProgress = {
       userId,
