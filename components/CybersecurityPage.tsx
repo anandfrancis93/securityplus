@@ -88,7 +88,7 @@ export default function Cybersecurity() {
         </section>
 
         {/* Primary Study Methods - Featured Cards */}
-        <section className="mb-16">
+        <section className="mb-8">
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Quiz Card */}
             <button
