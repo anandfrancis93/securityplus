@@ -29,7 +29,9 @@
       "WebFetch(domain:www.npmjs.com)",
       "Bash(node test-intervals.js:*)",
       "Bash(node test-fsrs-states.js:*)",
-      "Bash(node test-fsrs-lapse.js:*)"
+      "Bash(node test-fsrs-lapse.js:*)",
+      "Bash(curl:*)",
+      "WebFetch(domain:ai.google.dev)"
     ],
     "deny": [],
     "ask": []

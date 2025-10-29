@@ -1,12 +1,11 @@
-import Anthropic from '@anthropic-ai/sdk';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { Question } from './types';
 import { calculateIRTParameters, categoryToDifficulty } from './irt';
 import { ALL_SECURITY_PLUS_TOPICS } from './topicData';
 import { getDomainsFromTopics } from './domainDetection';
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
+const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
 
 // Shuffle array using Fisher-Yates algorithm
 function shuffleArray<T>(array: T[]): T[] {
@@ -155,19 +154,16 @@ Return ONLY a valid JSON array of exact topic strings:
 No explanation, just the JSON array.`;
 
   try {
-    const message = await anthropic.messages.create({
-      model: "claude-sonnet-4-5-20250929",
-      max_tokens: 1024,
-      temperature: 0, // Deterministic for consistency
-      messages: [{ role: "user", content: prompt }]
+    const result = await model.generateContent({
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig: {
+        maxOutputTokens: 1024,
+        temperature: 0, // Deterministic for consistency
+      },
     });
 
-    const content = message.content[0];
-    if (content.type !== 'text') {
-      throw new Error('Unexpected response type from Claude');
-    }
-
-    const textContent = content.text.trim();
+    const response = result.response;
+    const textContent = response.text().trim();
     const jsonContent = textContent.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
 
     const extractedTopics: string[] = JSON.parse(jsonContent);
@@ -578,14 +574,13 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
 }`;
 
   try {
-    const message = await anthropic.messages.create({
-      model: "claude-sonnet-4-5-20250929",
-      max_tokens: 2048,
-      temperature: 0.8,
-      messages: [
+    const result = await model.generateContent({
+      contents: [
         {
-          role: "user",
-          content: `You are a CompTIA Security+ SY0-701 exam expert. Generate high-quality exam questions that cannot be guessed through test-taking strategies.
+          role: 'user',
+          parts: [
+            {
+              text: `You are a CompTIA Security+ SY0-701 exam expert. Generate high-quality exam questions that cannot be guessed through test-taking strategies.
 
 CRITICAL QUALITY RULES:
 1. ONLY test the exact topics provided - do not introduce unrelated domains
@@ -599,16 +594,18 @@ CRITICAL QUALITY RULES:
 Return only valid JSON, no markdown formatting.
 
 ${prompt}`
+            }
+          ]
         }
-      ]
+      ],
+      generationConfig: {
+        maxOutputTokens: 2048,
+        temperature: 0.8,
+      },
     });
 
-    const content = message.content[0];
-    if (content.type !== 'text') {
-      throw new Error('Unexpected response type from Claude');
-    }
-
-    const textContent = content.text.trim();
+    const response = result.response;
+    const textContent = response.text().trim();
 
     // Remove markdown code blocks if present
     const jsonContent = textContent.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
