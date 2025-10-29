@@ -17,13 +17,14 @@ function createScheduler(): FSRS {
 
 /**
  * Map user difficulty rating to FSRS Rating
+ * FSRS Ratings: 1 = Again, 2 = Hard, 3 = Good, 4 = Easy
  */
 function difficultyToRating(difficulty: 'again' | 'hard' | 'good' | 'easy'): Rating {
-  const ratingMap = {
-    'again': Rating.Again, // 1 - Failed to recall
-    'hard': Rating.Hard,   // 2 - Recalled with difficulty
-    'good': Rating.Good,   // 3 - Recalled with some effort
-    'easy': Rating.Easy,   // 4 - Recalled easily
+  const ratingMap: Record<string, Rating> = {
+    'again': 1 as Rating, // 1 - Failed to recall
+    'hard': 2 as Rating,   // 2 - Recalled with difficulty
+    'good': 3 as Rating,   // 3 - Recalled with some effort
+    'easy': 4 as Rating,   // 4 - Recalled easily
   };
   return ratingMap[difficulty];
 }
