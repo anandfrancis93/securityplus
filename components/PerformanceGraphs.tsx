@@ -518,16 +518,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               const domainNum = domain.split(' ')[0].replace('.0', '.');
               const totalCovered = topics.filter(t => t.count > 0).length;
               const totalTopics = topics.length;
-              const coveragePercentage = totalTopics > 0 ? (totalCovered / totalTopics) * 100 : 0;
-
-              // Determine coverage color based on percentage
-              const coverageColor = coveragePercentage >= 80
-                ? 'text-emerald-400'
-                : coveragePercentage >= 60
-                ? 'text-yellow-400'
-                : coveragePercentage > 0
-                ? 'text-red-400'
-                : 'text-zinc-500';
 
               return (
                 <div key={domain} className="relative border border-white/10 rounded-3xl bg-white/5 backdrop-blur-xl overflow-hidden">
@@ -610,8 +600,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                             <td className="px-6 py-5 text-lg md:text-xl font-bold text-white">
                               Total Coverage
                             </td>
-                            <td colSpan={2} className={`px-6 py-5 text-lg md:text-xl text-center font-bold ${coverageColor}`}>
-                              {totalCovered} of {totalTopics}
+                            <td colSpan={2} className="px-6 py-5 text-lg md:text-xl text-center font-bold text-white">
+                              {totalCovered} / {totalTopics}
                             </td>
                           </tr>
                         </tbody>
