@@ -11,7 +11,7 @@ import {
   getFlashcard,
   saveFlashcardReview,
 } from '@/lib/flashcardDb';
-import { getDueFlashcards, calculateNextReview } from '@/lib/spacedRepetition';
+import { getDueFlashcards } from '@/lib/spacedRepetition';
 import { Flashcard, FlashcardReview } from '@/lib/types';
 
 export default function StudyFlashcards() {
@@ -78,8 +78,23 @@ export default function StudyFlashcards() {
       const reviews = await getUserReviews(userId);
       const previousReview = reviews.find((r) => r.flashcardId === currentCard.id) || null;
 
-      // Calculate next review
-      const newReview = calculateNextReview(previousReview, difficulty, currentCard.id, userId);
+      // Calculate next review via API
+      const response = await fetch('/api/flashcard-review', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          previousReview,
+          difficulty,
+          flashcardId: currentCard.id,
+          userId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to calculate review');
+      }
+
+      const newReview = await response.json();
 
       // Save review
       await saveFlashcardReview(newReview);
