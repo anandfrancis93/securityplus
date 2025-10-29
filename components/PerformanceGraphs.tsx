@@ -560,6 +560,10 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                               if (b.count === 0) return -1;
 
                               // Sort covered topics by accuracy (worst to best)
+                              // If accuracy is the same, prioritize topics with more attempts (more failures)
+                              if (a.accuracy === b.accuracy) {
+                                return b.count - a.count; // More attempts = higher priority
+                              }
                               return a.accuracy - b.accuracy;
                             })
                             .map((topic, index) => (
