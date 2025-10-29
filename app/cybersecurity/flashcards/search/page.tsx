@@ -452,6 +452,29 @@ export default function SearchFlashcards() {
 
   return (
     <>
+      {/* Global styles for custom scrollbar */}
+      <style jsx global>{`
+        .flashcard-list-scroll::-webkit-scrollbar {
+          width: 8px;
+        }
+        .flashcard-list-scroll::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 10px;
+        }
+        .flashcard-list-scroll::-webkit-scrollbar-thumb {
+          background: rgba(16, 185, 129, 0.5);
+          border-radius: 10px;
+          backdrop-filter: blur(10px);
+        }
+        .flashcard-list-scroll::-webkit-scrollbar-thumb:hover {
+          background: rgba(16, 185, 129, 0.7);
+        }
+        .flashcard-list-scroll {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(16, 185, 129, 0.5) rgba(255, 255, 255, 0.05);
+        }
+      `}</style>
+
       <DebugOverlay />
       <div className={`fixed inset-0 h-screen text-white overflow-hidden flex flex-col relative ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
       {liquidGlass && (
@@ -531,7 +554,7 @@ export default function SearchFlashcards() {
                 </div>
               </div>
 
-              <div className="space-y-3 flex-1 overflow-y-auto" style={{ overscrollBehavior: 'contain' }}>
+              <div className="flashcard-list-scroll space-y-3 flex-1 overflow-y-auto" style={{ overscrollBehavior: 'contain' }}>
                 {filteredFlashcards.length === 0 ? (
                   <div className={`text-center py-12 text-lg ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>
                     {searchQuery ? 'No flashcards match your search.' : 'No flashcards yet.'}
