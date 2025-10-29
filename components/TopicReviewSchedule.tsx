@@ -166,9 +166,9 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
 
             {/* Tooltip */}
             {hoveredCard === 'current' && (
-              <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 z-50 ${liquidGlass ? 'bg-black/90 backdrop-blur-2xl border border-white/20 rounded-2xl' : 'bg-zinc-900 border-2 border-zinc-700 rounded-md'} p-4 shadow-2xl`}>
+              <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 z-50 ${liquidGlass ? 'bg-black/95 backdrop-blur-2xl border border-white/20 rounded-2xl' : 'bg-zinc-900 border-2 border-zinc-700 rounded-md'} p-4 shadow-2xl`}>
                 {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl" />}
-                <div className="relative text-sm text-zinc-300 leading-relaxed">
+                <div className="relative text-sm text-white leading-relaxed">
                   The number of quizzes you have completed so far. Topics are scheduled based on this quiz number.
                 </div>
                 {/* Arrow */}
@@ -190,9 +190,9 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
 
             {/* Tooltip */}
             {hoveredCard === 'overdue' && (
-              <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 z-50 ${liquidGlass ? 'bg-black/90 backdrop-blur-2xl border border-red-500/40 rounded-2xl' : 'bg-zinc-900 border-2 border-red-700 rounded-md'} p-4 shadow-2xl shadow-red-500/20`}>
+              <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 z-50 ${liquidGlass ? 'bg-black/95 backdrop-blur-2xl border border-red-500/40 rounded-2xl' : 'bg-zinc-900 border-2 border-red-700 rounded-md'} p-4 shadow-2xl shadow-red-500/20`}>
                 {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 via-transparent to-transparent rounded-2xl" />}
-                <div className="relative text-sm text-zinc-300 leading-relaxed">
+                <div className="relative text-sm text-white leading-relaxed">
                   Topics that were scheduled to be reviewed in previous quizzes but haven&apos;t appeared yet. These should be prioritized in your next quiz.
                 </div>
                 {/* Arrow */}
@@ -214,9 +214,9 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
 
             {/* Tooltip */}
             {hoveredCard === 'due-now' && (
-              <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 z-50 ${liquidGlass ? 'bg-black/90 backdrop-blur-2xl border border-yellow-500/40 rounded-2xl' : 'bg-zinc-900 border-2 border-yellow-700 rounded-md'} p-4 shadow-2xl shadow-yellow-500/20`}>
+              <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 z-50 ${liquidGlass ? 'bg-black/95 backdrop-blur-2xl border border-yellow-500/40 rounded-2xl' : 'bg-zinc-900 border-2 border-yellow-700 rounded-md'} p-4 shadow-2xl shadow-yellow-500/20`}>
                 {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-transparent rounded-2xl" />}
-                <div className="relative text-sm text-zinc-300 leading-relaxed">
+                <div className="relative text-sm text-white leading-relaxed">
                   Topics scheduled to be reviewed in your next quiz (Quiz #{nextQuizNumber}). These are ready for review based on FSRS optimal spacing.
                 </div>
                 {/* Arrow */}
@@ -238,9 +238,9 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
 
             {/* Tooltip */}
             {hoveredCard === 'due-soon' && (
-              <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 z-50 ${liquidGlass ? 'bg-black/90 backdrop-blur-2xl border border-cyan-500/40 rounded-2xl' : 'bg-zinc-900 border-2 border-cyan-700 rounded-md'} p-4 shadow-2xl shadow-cyan-500/20`}>
+              <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 z-50 ${liquidGlass ? 'bg-black/95 backdrop-blur-2xl border border-cyan-500/40 rounded-2xl' : 'bg-zinc-900 border-2 border-cyan-700 rounded-md'} p-4 shadow-2xl shadow-cyan-500/20`}>
                 {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-transparent rounded-2xl" />}
-                <div className="relative text-sm text-zinc-300 leading-relaxed">
+                <div className="relative text-sm text-white leading-relaxed">
                   Topics scheduled to be reviewed within the next 1-3 quizzes. These will appear soon as you continue taking quizzes.
                 </div>
                 {/* Arrow */}
