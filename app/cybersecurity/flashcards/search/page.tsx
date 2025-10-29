@@ -591,8 +591,8 @@ export default function SearchFlashcards() {
 
       <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 pb-8 max-w-5xl flex-1 flex flex-col min-h-0" style={{ overscrollBehavior: 'none' }}>
         {/* Hero Section */}
-        <div className="mb-8 flex-shrink-0">
-          <div className="text-center mb-12">
+        <div className="mb-6 flex-shrink-0">
+          <div className="text-center mb-8">
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-tight mb-6">
               <span className="block bg-gradient-to-br from-white via-zinc-100 to-zinc-300 bg-clip-text text-transparent">Search</span>
               <span className="block bg-gradient-to-br from-emerald-400 via-teal-400 to-emerald-500 bg-clip-text text-transparent">Flashcards</span>
