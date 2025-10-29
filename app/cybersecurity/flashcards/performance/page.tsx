@@ -356,11 +356,6 @@ export default function FlashcardPerformance() {
                   </tbody>
                 </table>
               </div>
-              {reviews.length > 0 && (
-                <div className={`mt-6 text-sm ${liquidGlass ? 'text-zinc-500' : 'text-slate-500'}`}>
-                  <p><strong>Tip:</strong> Cards with intervals less than 1 day were created before the FSRS fix. Review them once more to get proper multi-day intervals.</p>
-                </div>
-              )}
             </div>
           </div>
         )}
