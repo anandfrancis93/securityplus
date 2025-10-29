@@ -5,14 +5,14 @@
  * Server-side only to avoid bundling FSRS in client components.
  */
 
-import { FSRS, Card, Rating, State, fsrs } from 'fsrs';
+import { FSRS, Card, Rating, State } from 'fsrs';
 import { FlashcardReview } from './types';
 
 /**
  * Create FSRS scheduler instance
  */
 function createScheduler(): FSRS {
-  return fsrs();
+  return new FSRS();
 }
 
 /**
