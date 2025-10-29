@@ -75,8 +75,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }, [userProgress]);
 
-  // Background check: Ensure quiz cache always has 10 questions ready
-  // Runs on initial load and periodically every 10 minutes
+  // DISABLED: Background quiz pregeneration (to save API costs)
+  // Previously ran on page load (2s delay) and every 10 minutes
+  // Quizzes now only generate when user clicks "Start Quiz"
+  //
+  // To re-enable, uncomment the useEffect below:
+  /*
   useEffect(() => {
     if (!userId || !userProgress) return;
 
@@ -92,11 +96,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
         console.log(`📋 Background check: Only ${cachedCount}/10 questions cached, triggering pre-generation...`);
 
         setIsPregenerating(true);
-        // Trigger pre-generation in background
         try {
           const data = await authenticatedPost('/api/pregenerate-quiz', {
             userId,
-            completedQuestions: [], // No completed questions, just fill the cache
+            completedQuestions: [],
           });
 
           if (data.success) {
@@ -104,7 +107,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
               questionsCount: data.questionsCount,
               generationTime: `${data.generationTimeMs}ms`,
             });
-            // Refresh progress to get the newly cached quiz
             await refreshProgress();
           } else {
             console.error('Background pre-generation failed:', data.error);
@@ -119,17 +121,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
     };
 
-    // Run initial check after 2 seconds to avoid blocking initial load
     const initialCheckTimeout = setTimeout(checkAndEnsureQuizCache, 2000);
-
-    // Set up periodic check every 10 minutes
     const periodicCheckInterval = setInterval(checkAndEnsureQuizCache, 10 * 60 * 1000);
 
     return () => {
       clearTimeout(initialCheckTimeout);
       clearInterval(periodicCheckInterval);
     };
-  }, [userId]); // Only re-run when userId changes (login/logout)
+  }, [userId]);
+  */
 
   // Initialize notifications and periodic checks
   useEffect(() => {
