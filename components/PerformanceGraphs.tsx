@@ -573,7 +573,13 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                             >
                               <td className="px-6 py-4 text-base md:text-lg text-zinc-300">{topic.topicName}</td>
                               <td className={`px-6 py-4 text-base md:text-lg text-center font-bold ${
-                                topic.count === 0 ? 'text-zinc-500' : 'text-cyan-400'
+                                topic.count === 0
+                                  ? 'text-zinc-500'
+                                  : topic.accuracy >= 80
+                                  ? 'text-emerald-400'
+                                  : topic.accuracy >= 60
+                                  ? 'text-yellow-400'
+                                  : 'text-red-400'
                               }`}>
                                 {topic.count}
                               </td>
