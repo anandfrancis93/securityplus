@@ -26,6 +26,7 @@ export default function Quiz() {
   const [showCelebration, setShowCelebration] = useState(false);
   const [hasInitialized, setHasInitialized] = useState(false);
   const [quizSessionId, setQuizSessionId] = useState<string | null>(null);
+  const [quizEnding, setQuizEnding] = useState(false); // Flag to stop generation when ending quiz
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -56,8 +57,8 @@ export default function Quiz() {
 
   // Automatically generate next question in background whenever a new question is added
   useEffect(() => {
-    // Don't generate if quiz has ended (celebration modal is showing)
-    if (!loading && !showCelebration && questions.length > 0 && questions.length < totalQuestions && !generatingNext) {
+    // Don't generate if quiz has ended or is ending
+    if (!loading && !showCelebration && !quizEnding && questions.length > 0 && questions.length < totalQuestions && !generatingNext) {
       // Generate the next question immediately after the current one is added
       console.log(`Auto-generating question ${questions.length + 1} in background...`);
       setGeneratingNext(true);
@@ -65,10 +66,13 @@ export default function Quiz() {
         setGeneratingNext(false);
       });
     }
-  }, [loading, showCelebration, questions.length, generatingNext]); // Watch showCelebration to stop generation
+  }, [loading, showCelebration, quizEnding, questions.length, generatingNext]); // Watch quizEnding to stop generation immediately
 
   const initQuiz = async () => {
     console.log('Starting fresh quiz - generating first question...');
+
+    // Reset quiz ending flag
+    setQuizEnding(false);
 
     // Clear any old cached quiz
     await clearCachedQuiz();
@@ -224,6 +228,9 @@ export default function Quiz() {
   };
 
   const handleEndQuiz = async () => {
+    // Immediately set flag to stop any background generation
+    setQuizEnding(true);
+
     try {
       console.log('Ending quiz...');
       console.log('currentQuiz:', currentQuiz);
