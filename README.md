@@ -43,7 +43,7 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 - **Manual Flashcard Creation**: Create custom flashcards with terms, definitions, and optional context
 - **Image Support**: Add images to flashcards with Firebase Storage integration (up to 5MB per image)
 - **Image Lightbox**: Click images to view enlarged versions with zoom functionality
-- **Spaced Repetition (SM-2 Algorithm)**: Intelligent review scheduling based on your performance
+- **Spaced Repetition (FSRS Algorithm)**: Intelligent review scheduling using the Free Spaced Repetition Scheduler
   - **Again** (<1 min): Reset card, review immediately
   - **Hard** (~6 hours): Difficult recall, reduced interval
   - **Good** (~10 hours): Normal progression
@@ -69,11 +69,14 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 
 ## Tech Stack
 
-- **Frontend**: Next.js 15.5.6 (App Router), React 19, TypeScript, Tailwind CSS
-- **Charting**: Recharts 2.15.0 for data visualization
-- **AI**: Google Gemini 2.5 Flash-Lite for question generation and topic identification
+- **Frontend**: Next.js 15.0.0 (App Router), React 19, TypeScript, Tailwind CSS
+- **Charting**: Recharts 3.3.0 for data visualization
+- **AI**:
+  - Google Gemini 2.5 Flash-Lite ($0.10/$0.40 per million tokens) - Question generation and topic identification
+  - OpenAI text-embedding-3-small ($0.02 per million tokens) - Question similarity detection
 - **Backend**: Firebase (Firestore Database + Firebase Storage + Google Authentication)
 - **Image Hosting**: Firebase Storage with CORS configuration
+- **Spaced Repetition**: ts-fsrs 5.2.3 (FSRS algorithm implementation)
 - **Deployment**: Vercel with automatic CI/CD
 
 ## How It Works
@@ -132,10 +135,11 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 1. **Manual Creation**: User creates flashcards by entering term, definition, optional context, and domain
 2. **Image Upload**: Optional image attachments stored in Firebase Storage (supports PNG, JPG, GIF, WebP up to 5MB)
 3. **Flashcard Storage**: Flashcards saved to Firestore with user association
-4. **Spaced Repetition**: SM-2 algorithm calculates optimal review intervals
-   - Ease Factor: Starts at 2.5, adjusts based on performance
-   - Intervals: Dynamically calculated based on user ratings
-   - Quality Score: Maps user difficulty ratings to 0-5 scale
+4. **Spaced Repetition**: FSRS algorithm calculates optimal review intervals using machine learning
+   - Difficulty: Measures card complexity, adjusts over time
+   - Stability: Predicts memory retention duration
+   - Intervals: Dynamically calculated based on recall performance
+   - Retrievability: Estimates current recall probability
 5. **Review Tracking**: System monitors each card's review history and next due date
 6. **Automatic Scheduling**: Cards appear when due based on spaced repetition algorithm
 7. **Search & Filter**: Real-time search across terms, definitions, domains, and source files
@@ -249,20 +253,21 @@ Questions are generated from the complete CompTIA Security+ SY0-701 exam objecti
 
 ### Flashcard System
 
-#### Spaced Repetition Algorithm (SM-2)
+#### Spaced Repetition Algorithm (FSRS)
 
-The app uses the SuperMemo 2 (SM-2) algorithm, a proven method for optimizing long-term retention:
+The app uses the Free Spaced Repetition Scheduler (FSRS), a modern algorithm optimized for long-term retention through machine learning:
 
 **How It Works:**
-- **Ease Factor**: Measures how easy a card is (default 2.5)
-- **Repetitions**: Count of successful reviews
-- **Interval**: Days until next review
+- **Difficulty**: Measures how challenging a card is to remember
+- **Stability**: How long the memory will last before forgetting
+- **Retrievability**: Current probability of successful recall
+- **State**: Learning, Review, or Relearning phase
 
 **Rating System:**
 - **Again (0)**: Forgot completely → Review in <1 minute
-- **Hard (3)**: Recalled with difficulty → 80% of normal interval
+- **Hard (3)**: Recalled with difficulty → Shorter interval
 - **Good (4)**: Recalled with some effort → Normal progression
-- **Easy (5)**: Perfect recall → 130% of normal interval
+- **Easy (5)**: Perfect recall → Longer interval
 
 **Progression Example:**
 1. First review: Immediate
@@ -344,11 +349,11 @@ Choose from predefined Security+ domains when creating flashcards:
 - Collapsible sections for better information density
 
 **Performance Optimization:**
-- Background question generation for zero wait time
-- Automatic pre-loading of next question
+- On-demand question generation (~10 seconds for first question)
+- Sequential background generation of remaining questions during quiz
+- Unused questions cached for next quiz session (eliminates waste)
 - Efficient Firebase queries with proper indexing
-- Client-side calculation caching
-- Pre-generation system maintains 10-question cache
+- Client-side calculation caching for IRT and performance metrics
 
 ## License
 
