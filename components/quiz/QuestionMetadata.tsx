@@ -9,13 +9,13 @@ interface QuestionMetadataProps {
   liquidGlass?: boolean;
 }
 
-// Domain color mapping
+// Domain color mapping - More vibrant and distinct colors
 const DOMAIN_COLORS: { [key: string]: string } = {
-  '1.0 General Security Concepts': '#6e2a8d',
-  '2.0 Threats, Vulnerabilities, and Mitigations': '#f36c23',
-  '3.0 Security Architecture': '#0090ba',
-  '4.0 Security Operations': '#f5a81c',
-  '5.0 Security Program Management and Oversight': '#5fa511',
+  '1.0 General Security Concepts': '#9333ea', // Bright purple
+  '2.0 Threats, Vulnerabilities, and Mitigations': '#ff4500', // Bright orange-red
+  '3.0 Security Architecture': '#06b6d4', // Bright cyan
+  '4.0 Security Operations': '#fbbf24', // Bright yellow
+  '5.0 Security Program Management and Oversight': '#22c55e', // Bright green
 };
 
 // Helper function to get domain color
@@ -53,11 +53,11 @@ export default function QuestionMetadata({ question, liquidGlass = true }: Quest
                   key={index}
                   className={`px-6 py-4 text-lg md:text-xl font-bold ${liquidGlass ? 'backdrop-blur-xl rounded-2xl' : 'rounded-md'}`}
                   style={{
-                    backgroundColor: liquidGlass ? `${color}20` : color,
+                    backgroundColor: liquidGlass ? `${color}40` : color,
                     color: '#ffffff',
                     borderWidth: '2px',
                     borderStyle: 'solid',
-                    borderColor: liquidGlass ? `${color}80` : color,
+                    borderColor: liquidGlass ? `${color}` : color,
                   }}
                 >
                   {domain.replace('.0', '.')}
@@ -82,11 +82,11 @@ export default function QuestionMetadata({ question, liquidGlass = true }: Quest
                     key={index}
                     className={`px-6 py-4 text-lg md:text-xl font-medium ${liquidGlass ? 'backdrop-blur-xl rounded-2xl' : 'rounded-md'}`}
                     style={{
-                      backgroundColor: liquidGlass ? `${color}20` : color,
+                      backgroundColor: liquidGlass ? `${color}40` : color,
                       color: '#ffffff',
                       borderWidth: '2px',
                       borderStyle: 'solid',
-                      borderColor: liquidGlass ? `${color}80` : color,
+                      borderColor: liquidGlass ? `${color}` : color,
                     }}
                   >
                     {topic}
