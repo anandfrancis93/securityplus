@@ -260,7 +260,7 @@ export default function CreateFlashcards() {
 
                 {/* Custom Dropdown Menu */}
                 {domainDropdownOpen && (
-                  <div className={`absolute z-50 w-full mt-2 ${liquidGlass ? 'bg-black/80 backdrop-blur-2xl border border-white/20 rounded-[28px]' : 'bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-3xl'} shadow-2xl overflow-hidden`}>
+                  <div className={`absolute z-50 w-full mt-2 ${liquidGlass ? 'bg-black/95 backdrop-blur-2xl border border-white/20 rounded-[28px]' : 'bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-3xl'} shadow-2xl overflow-hidden`}>
                     {[
                       'General Security Concepts',
                       'Threats, Vulnerabilities, and Mitigations',
