@@ -306,7 +306,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             <XAxis dataKey="quiz" stroke="#9ca3af" tick={false} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#9ca3af' }} />
             <YAxis domain={[-3, 3]} stroke="#9ca3af" label={{ value: 'Ability Level', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
             <Tooltip
-              contentStyle={{ backgroundColor: '#000000', border: '1px solid #1f2937', borderRadius: '16px' }}
+              contentStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.95)', border: '2px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', backdropFilter: 'blur(16px)' }}
               labelStyle={{ color: '#F3F4F6' }}
               itemStyle={{ color: '#3b82f6' }}
             />
@@ -360,7 +360,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 <XAxis dataKey="quiz" stroke="#9ca3af" tick={false} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#9ca3af' }} />
                 <YAxis domain={[100, 900]} stroke="#9ca3af" label={{ value: 'Exam Score', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#000000', border: '1px solid #1f2937', borderRadius: '16px' }}
+                  contentStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.95)', border: '2px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', backdropFilter: 'blur(16px)' }}
                   labelStyle={{ color: '#F3F4F6' }}
                   itemStyle={{ color: '#10b981' }}
                 />
