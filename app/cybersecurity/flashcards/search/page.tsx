@@ -2,38 +2,24 @@
 
 export const dynamic = 'force-dynamic';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '@/components/AppProvider';
-import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import { getUserFlashcards } from '@/lib/flashcardDb';
 import { uploadFlashcardImage, validateImageFile } from '@/lib/imageUpload';
 import { Flashcard } from '@/lib/types';
-
-// Domain color mapping - same colors as QuizPage's QuestionMetadata
-const DOMAIN_COLORS: { [key: string]: string } = {
-  'General Security Concepts': '#9333ea', // Bright purple
-  'Threats, Vulnerabilities, and Mitigations': '#ff4500', // Bright orange-red
-  'Security Architecture': '#06b6d4', // Bright cyan
-  'Security Operations': '#fbbf24', // Bright yellow
-  'Security Program Management and Oversight': '#22c55e', // Bright green
-};
-
-// Helper function to get domain color
-function getDomainColor(domain: string): string {
-  return DOMAIN_COLORS[domain] || '#22c55e'; // Default to green
-}
+import { useRequireAuth } from '@/lib/hooks/useRequireAuth';
+import { LoadingScreen } from '@/components/ui/LoadingScreen';
+import { AdaptiveBackground } from '@/components/ui/LiquidGlassBackground';
+import { LiquidGlassCard } from '@/components/ui/LiquidGlassCard';
+import { DomainDropdown } from '@/components/ui/DomainDropdown';
+import { getDomainColor } from '@/lib/constants/domainColors';
 
 export default function SearchFlashcards() {
   const { userId, user, loading: authLoading, liquidGlass } = useApp();
-  const router = useRouter();
 
   // Redirect to login if not authenticated
-  useEffect(() => {
-    if (!authLoading && !user) {
-      router.push('/');
-    }
-  }, [user, authLoading, router]);
+  useRequireAuth(user, authLoading);
 
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [loading, setLoading] = useState(true);
@@ -48,7 +34,6 @@ export default function SearchFlashcards() {
   const [editImage, setEditImage] = useState<File | null>(null);
   const [editImagePreview, setEditImagePreview] = useState<string | null>(null);
   const [editDomainDropdownOpen, setEditDomainDropdownOpen] = useState(false);
-  const editDomainDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (userId) {
@@ -65,22 +50,6 @@ export default function SearchFlashcards() {
       console.log('Modal should be hidden');
     }
   }, [editingCard]);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (editDomainDropdownRef.current && !editDomainDropdownRef.current.contains(event.target as Node)) {
-        setEditDomainDropdownOpen(false);
-      }
-    }
-
-    if (editDomainDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }
-  }, [editDomainDropdownOpen]);
 
   const loadFlashcards = async () => {
     if (!userId) return;
@@ -191,51 +160,7 @@ export default function SearchFlashcards() {
   };
 
   if (loading) {
-    return (
-      <div className={`flex items-center justify-center min-h-screen ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
-        {liquidGlass && (
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-            <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-cyan-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-          </div>
-        )}
-        <div className="relative">
-          {/* Liquid glass card */}
-          <div className={`${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-slate-800/95 backdrop-blur-xl border border-slate-700/50 rounded-3xl'} p-16 md:p-20 shadow-2xl`}>
-            {liquidGlass && (
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50 pointer-events-none" />
-            )}
-            <div className="relative text-center">
-              {/* Animated icon */}
-              <div className="relative mx-auto w-32 h-32 md:w-40 md:h-40 mb-8">
-                {/* Outer ring */}
-                <div className={`absolute inset-0 ${liquidGlass ? 'border-4 border-white/20 rounded-full' : 'border-4 border-slate-700 rounded-full'}`}></div>
-                {/* Spinning gradient ring */}
-                <div className="absolute inset-0 animate-spin">
-                  <div className={`w-full h-full rounded-full ${liquidGlass ? 'border-4 border-transparent border-t-cyan-400 border-r-cyan-400/50' : 'border-4 border-transparent border-t-cyan-500 border-r-cyan-500/50'}`}></div>
-                </div>
-                {/* Center icon - graduation cap */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <svg className={`w-16 h-16 md:w-20 md:h-20 ${liquidGlass ? 'text-cyan-400' : 'text-cyan-500'}`} fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M11.7 2.805a.75.75 0 01.6 0A60.65 60.65 0 0122.83 8.72a.75.75 0 01-.231 1.337 49.949 49.949 0 00-9.902 3.912l-.003.002-.34.18a.75.75 0 01-.707 0A50.009 50.009 0 007.5 12.174v-.224c0-.131.067-.248.172-.311a54.614 54.614 0 014.653-2.52.75.75 0 00-.65-1.352 56.129 56.129 0 00-4.78 2.589 1.858 1.858 0 00-.859 1.228 49.803 49.803 0 00-4.634-1.527.75.75 0 01-.231-1.337A60.653 60.653 0 0111.7 2.805z" />
-                    <path d="M13.06 15.473a48.45 48.45 0 017.666-3.282c.134 1.414.22 2.843.255 4.285a.75.75 0 01-.46.71 47.878 47.878 0 00-8.105 4.342.75.75 0 01-.832 0 47.877 47.877 0 00-8.104-4.342.75.75 0 01-.461-.71c.035-1.442.121-2.87.255-4.286A48.4 48.4 0 016 13.18v1.27a1.5 1.5 0 00-.14 2.508c-.09.38-.222.753-.397 1.11.452.213.901.434 1.346.661a6.729 6.729 0 00.551-1.608 1.5 1.5 0 00.14-2.67v-.645a48.549 48.549 0 013.44 1.668 2.25 2.25 0 002.12 0z" />
-                    <path d="M4.462 19.462c.42-.419.753-.89 1-1.394.453.213.902.434 1.347.661a6.743 6.743 0 01-1.286 1.794.75.75 0 11-1.06-1.06z" />
-                  </svg>
-                </div>
-              </div>
-              {/* Loading text */}
-              <p className={`text-2xl md:text-3xl font-bold tracking-tight ${liquidGlass ? 'text-white' : 'text-slate-200'}`}>
-                Loading flashcards...
-              </p>
-              <p className={`text-base md:text-lg mt-4 ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>
-                Please wait
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <LoadingScreen liquidGlass={liquidGlass} message="Loading flashcards..." />;
   }
 
   // Filter and sort flashcards based on search query with relevance scoring
@@ -460,117 +385,14 @@ export default function SearchFlashcards() {
                 <label style={{ display: 'block', marginBottom: '14px', fontSize: '16px', fontWeight: '700', color: '#fff', letterSpacing: '0.01em' }}>
                   Security+ Domain
                 </label>
-                <div style={{ position: 'relative' }} ref={editDomainDropdownRef}>
-                  <button
-                    type="button"
-                    onClick={() => !generating && setEditDomainDropdownOpen(!editDomainDropdownOpen)}
-                    disabled={generating}
-                    style={{
-                      width: '100%',
-                      padding: '18px 24px',
-                      fontSize: '18px',
-                      borderRadius: liquidGlass ? '24px' : '28px',
-                      border: liquidGlass ? '2px solid rgba(52, 211, 153, 0.15)' : '2px solid rgba(148, 163, 184, 0.2)',
-                      backgroundColor: liquidGlass ? 'rgba(255, 255, 255, 0.03)' : 'rgba(15, 23, 42, 0.6)',
-                      color: '#fff',
-                      outline: 'none',
-                      cursor: generating ? 'not-allowed' : 'pointer',
-                      boxSizing: 'border-box',
-                      transition: 'all 700ms cubic-bezier(0.4, 0, 0.2, 1)',
-                      backdropFilter: liquidGlass ? 'blur(8px)' : 'none',
-                      textAlign: 'left',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      opacity: generating ? 0.5 : 1
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!generating) {
-                        e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.06)' : 'rgba(15, 23, 42, 0.8)';
-                        e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.3)';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.03)' : 'rgba(15, 23, 42, 0.6)';
-                      e.currentTarget.style.borderColor = liquidGlass ? 'rgba(52, 211, 153, 0.15)' : 'rgba(148, 163, 184, 0.2)';
-                    }}
-                  >
-                    <span>{editDomain}</span>
-                    <svg
-                      style={{
-                        width: '20px',
-                        height: '20px',
-                        transition: 'transform 300ms',
-                        transform: editDomainDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)'
-                      }}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-
-                  {/* Custom Dropdown Menu */}
-                  {editDomainDropdownOpen && (
-                    <div style={{
-                      position: 'absolute',
-                      zIndex: 1000000,
-                      width: '100%',
-                      marginTop: '8px',
-                      backgroundColor: liquidGlass ? 'rgba(0, 0, 0, 0.95)' : 'rgba(30, 41, 59, 0.95)',
-                      backdropFilter: 'blur(24px)',
-                      border: liquidGlass ? '2px solid rgba(255, 255, 255, 0.2)' : '2px solid rgba(148, 163, 184, 0.2)',
-                      borderRadius: liquidGlass ? '24px' : '28px',
-                      boxShadow: '0 20px 40px rgba(0, 0, 0, 0.6)',
-                      overflow: 'hidden'
-                    }}>
-                      {[
-                        'General Security Concepts',
-                        'Threats, Vulnerabilities, and Mitigations',
-                        'Security Architecture',
-                        'Security Operations',
-                        'Security Program Management and Oversight'
-                      ].map((domain) => (
-                        <button
-                          key={domain}
-                          type="button"
-                          onClick={() => {
-                            setEditDomain(domain);
-                            setEditDomainDropdownOpen(false);
-                          }}
-                          style={{
-                            width: '100%',
-                            textAlign: 'left',
-                            padding: '16px 20px',
-                            fontSize: '16px',
-                            border: 'none',
-                            backgroundColor: editDomain === domain
-                              ? (liquidGlass ? 'rgba(16, 185, 129, 0.3)' : 'rgba(52, 211, 153, 0.2)')
-                              : 'transparent',
-                            color: '#fff',
-                            cursor: 'pointer',
-                            transition: 'all 300ms',
-                            outline: 'none'
-                          }}
-                          onMouseEnter={(e) => {
-                            if (editDomain !== domain) {
-                              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                            }
-                          }}
-                          onMouseLeave={(e) => {
-                            if (editDomain !== domain) {
-                              e.currentTarget.style.backgroundColor = 'transparent';
-                            }
-                          }}
-                        >
-                          {domain}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <DomainDropdown
+                  value={editDomain}
+                  onChange={setEditDomain}
+                  liquidGlass={liquidGlass}
+                  disabled={generating}
+                  isOpen={editDomainDropdownOpen}
+                  setIsOpen={setEditDomainDropdownOpen}
+                />
               </div>
 
               {/* Buttons */}
@@ -634,43 +456,8 @@ export default function SearchFlashcards() {
 
   return (
     <>
-      {/* Global styles for custom scrollbar */}
-      <style jsx global>{`
-        .flashcard-list-scroll::-webkit-scrollbar,
-        .edit-modal-scroll::-webkit-scrollbar {
-          width: 8px;
-        }
-        .flashcard-list-scroll::-webkit-scrollbar-track,
-        .edit-modal-scroll::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.05);
-          border-radius: 10px;
-        }
-        .flashcard-list-scroll::-webkit-scrollbar-thumb,
-        .edit-modal-scroll::-webkit-scrollbar-thumb {
-          background: rgba(16, 185, 129, 0.5);
-          border-radius: 10px;
-          backdrop-filter: blur(10px);
-        }
-        .flashcard-list-scroll::-webkit-scrollbar-thumb:hover,
-        .edit-modal-scroll::-webkit-scrollbar-thumb:hover {
-          background: rgba(16, 185, 129, 0.7);
-        }
-        .flashcard-list-scroll,
-        .edit-modal-scroll {
-          scrollbar-width: thin;
-          scrollbar-color: rgba(16, 185, 129, 0.5) rgba(255, 255, 255, 0.05);
-        }
-      `}</style>
-
       <DebugOverlay />
-      <div className={`fixed inset-0 h-screen text-white overflow-hidden flex flex-col relative ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
-      {liquidGlass && (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-          <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-cyan-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-        </div>
-      )}
+      <AdaptiveBackground liquidGlass={liquidGlass} className="fixed inset-0 h-screen text-white overflow-hidden flex flex-col relative">
 
       {/* Header - Full width */}
       <div className="relative pt-6 pb-4 md:pt-8 md:pb-6 flex-shrink-0">
@@ -693,11 +480,8 @@ export default function SearchFlashcards() {
 
         {/* Flashcard List */}
         {flashcards.length > 0 && (
-          <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px]' : 'bg-slate-800/95 backdrop-blur-xl rounded-[28px]'} p-8 border ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} flex-1 flex flex-col overflow-hidden mb-4 shadow-2xl`}>
-              {liquidGlass && (
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50 pointer-events-none" />
-              )}
-              <div className="relative flex items-center justify-between mb-6 flex-shrink-0">
+          <LiquidGlassCard liquidGlass={liquidGlass} padding="p-8" className="flex-1 flex flex-col overflow-hidden mb-4">
+              <div className="flex items-center justify-between mb-6 flex-shrink-0">
                 <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
                   Your Flashcards ({filteredFlashcards.length}{filteredFlashcards.length !== flashcards.length && ` of ${flashcards.length}`})
                 </h3>
@@ -819,7 +603,7 @@ export default function SearchFlashcards() {
                   ))
                 )}
               </div>
-            </div>
+          </LiquidGlassCard>
         )}
 
         {flashcards.length === 0 && (
@@ -832,7 +616,7 @@ export default function SearchFlashcards() {
           </div>
         )}
       </div>
-    </div>
+    </AdaptiveBackground>
     </>
   );
 }

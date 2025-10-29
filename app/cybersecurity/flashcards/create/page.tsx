@@ -2,13 +2,16 @@
 
 export const dynamic = 'force-dynamic';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { useApp } from '@/components/AppProvider';
-import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import { getUserFlashcards, saveFlashcards } from '@/lib/flashcardDb';
 import { uploadFlashcardImage, validateImageFile } from '@/lib/imageUpload';
 import { Flashcard } from '@/lib/types';
+import { useRequireAuth } from '@/lib/hooks/useRequireAuth';
+import { AdaptiveBackground } from '@/components/ui/LiquidGlassBackground';
+import { LiquidGlassCard } from '@/components/ui/LiquidGlassCard';
+import { DomainDropdown } from '@/components/ui/DomainDropdown';
 
 export default function CreateFlashcards() {
   const { userId, user, loading: authLoading, liquidGlass } = useApp();
@@ -25,30 +28,9 @@ export default function CreateFlashcards() {
   const [manualTermError, setManualTermError] = useState('');
   const [manualDefinitionError, setManualDefinitionError] = useState('');
   const [domainDropdownOpen, setDomainDropdownOpen] = useState(false);
-  const domainDropdownRef = useRef<HTMLDivElement>(null);
 
   // Redirect to login if not authenticated
-  useEffect(() => {
-    if (!authLoading && !user) {
-      router.push('/');
-    }
-  }, [user, authLoading, router]);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (domainDropdownRef.current && !domainDropdownRef.current.contains(event.target as Node)) {
-        setDomainDropdownOpen(false);
-      }
-    }
-
-    if (domainDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }
-  }, [domainDropdownOpen]);
+  useRequireAuth(user, authLoading);
 
   const handleManualImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -142,26 +124,7 @@ export default function CreateFlashcards() {
   };
 
   return (
-    <>
-      {/* Global styles for hidden scrollbar */}
-      <style jsx global>{`
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
-
-      <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
-      {liquidGlass && (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-          <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-        </div>
-      )}
+    <AdaptiveBackground liquidGlass={liquidGlass}>
 
       {/* Header - Full width */}
       <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
@@ -184,15 +147,8 @@ export default function CreateFlashcards() {
 
         {/* Flashcard Creation Form */}
         <div className="mb-8">
-      <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px]' : 'bg-slate-800/95 backdrop-blur-xl rounded-3xl'} p-10 md:p-12 border ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} shadow-2xl overflow-hidden`}>
-        {liquidGlass && (
-          <>
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-transparent rounded-[40px] opacity-50" />
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
-          </>
-        )}
-
-          <div className="relative space-y-8">
+      <LiquidGlassCard liquidGlass={liquidGlass}>
+          <div className="space-y-8">
             <div>
               <label className={`block text-lg font-medium mb-3 tracking-tight ${liquidGlass ? 'text-zinc-300' : 'text-slate-300'}`}>
                 Term / Question
@@ -238,59 +194,14 @@ export default function CreateFlashcards() {
               <label className={`block text-lg font-medium mb-3 tracking-tight ${liquidGlass ? 'text-zinc-300' : 'text-slate-300'}`}>
                 Security+ Domain
               </label>
-              <div className="relative" ref={domainDropdownRef}>
-                <button
-                  id="domain-dropdown"
-                  type="button"
-                  onClick={() => !generating && setDomainDropdownOpen(!domainDropdownOpen)}
-                  className={`w-full ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-lg ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} p-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} ${liquidGlass ? 'hover:bg-white/10 hover:border-cyan-500/50' : 'hover:bg-slate-900/80'} focus:outline-none transition-all duration-700 disabled:opacity-50 disabled:cursor-not-allowed text-left flex items-center justify-between`}
-                  disabled={generating}
-                >
-                  <span>{manualDomain}</span>
-                  <svg
-                    className={`w-5 h-5 transition-transform duration-300 ${domainDropdownOpen ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-
-                {/* Custom Dropdown Menu */}
-                {domainDropdownOpen && (
-                  <div className={`absolute z-50 w-full mt-2 ${liquidGlass ? 'bg-black/95 backdrop-blur-2xl border border-white/20 rounded-[28px]' : 'bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-3xl'} shadow-2xl overflow-hidden`}>
-                    {[
-                      'General Security Concepts',
-                      'Threats, Vulnerabilities, and Mitigations',
-                      'Security Architecture',
-                      'Security Operations',
-                      'Security Program Management and Oversight'
-                    ].map((domain) => (
-                      <button
-                        key={domain}
-                        type="button"
-                        onClick={() => {
-                          setManualDomain(domain);
-                          setDomainDropdownOpen(false);
-                        }}
-                        className={`w-full text-left px-5 py-4 text-base transition-all duration-300 ${
-                          manualDomain === domain
-                            ? liquidGlass
-                              ? 'bg-cyan-500/30 text-white'
-                              : 'bg-cyan-600/50 text-white'
-                            : liquidGlass
-                            ? 'text-zinc-200 hover:bg-white/10'
-                            : 'text-slate-200 hover:bg-slate-800/60'
-                        }`}
-                      >
-                        {domain}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <DomainDropdown
+                value={manualDomain}
+                onChange={setManualDomain}
+                liquidGlass={liquidGlass}
+                disabled={generating}
+                isOpen={domainDropdownOpen}
+                setIsOpen={setDomainDropdownOpen}
+              />
             </div>
 
             <div>
@@ -346,10 +257,9 @@ export default function CreateFlashcards() {
               </div>
             </div>
           </div>
-        </div>
+      </LiquidGlassCard>
         </div>
       </div>
-    </div>
-    </>
+    </AdaptiveBackground>
   );
 }
