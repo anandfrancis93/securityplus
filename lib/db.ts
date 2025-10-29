@@ -160,14 +160,15 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
       };
     }
 
+    // Load quiz history BEFORE saving current quiz to get accurate count
+    // This ensures totalQuizzesCompleted doesn't include the quiz being saved
+    const quizHistory = await loadQuizHistory(userId);
+
     // Save quiz to subcollection instead of array in main document
     const quizRef = doc(db, USERS_COLLECTION, userId, QUIZZES_SUBCOLLECTION, session.id);
     const cleanedSession = removeUndefinedValues(session) as QuizSession;
     await setDoc(quizRef, cleanedSession);
     console.log('Quiz session saved to subcollection:', session.id);
-
-    // Load all quiz history from subcollection for calculations
-    const quizHistory = await loadQuizHistory(userId);
 
     // Update answered questions
     const answeredQuestions = new Set(userData.answeredQuestions || []);
