@@ -97,7 +97,7 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
   const dueSoonCount = topicsWithSchedule.filter(t => t.status === 'due-soon').length;
 
   return (
-    <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'} overflow-hidden`}>
+    <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'}`}>
       {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
 
       {/* Header */}
