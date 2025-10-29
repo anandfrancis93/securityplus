@@ -274,20 +274,20 @@ export default function QuizPerformance() {
   // Confidence level based on CI width
   const getConfidenceInfo = () => {
     if (!isFinite(abilityStandardError) || totalAnswered < 5) {
-      return { label: 'Insufficient data', margin: 0, color: 'zinc' };
+      return { label: 'Insufficient data', margin: 0, color: 'zinc', tooltip: 'Not enough data to calculate confidence interval. Answer more questions for a reliable prediction.' };
     }
 
     const ciWidth = scoreCI.upper - scoreCI.lower;
     const margin = Math.round(ciWidth / 2);
 
     if (ciWidth <= 50) {
-      return { label: 'High confidence', margin, color: 'emerald' };
+      return { label: 'High confidence', margin, color: 'emerald', tooltip: 'The prediction is very reliable with a narrow margin of error (±' + margin + ' points). Your estimated score is highly likely to fall within this range.' };
     } else if (ciWidth <= 100) {
-      return { label: 'Medium confidence', margin, color: 'yellow' };
+      return { label: 'Medium confidence', margin, color: 'yellow', tooltip: 'The prediction is moderately reliable with a reasonable margin of error (±' + margin + ' points). Answer more questions to improve accuracy.' };
     } else if (ciWidth <= 150) {
-      return { label: 'Low confidence', margin, color: 'orange' };
+      return { label: 'Low confidence', margin, color: 'orange', tooltip: 'The prediction has a wide margin of error (±' + margin + ' points). More questions are needed for a reliable estimate.' };
     } else {
-      return { label: 'Very low confidence', margin, color: 'red' };
+      return { label: 'Very low confidence', margin, color: 'red', tooltip: 'The prediction is unreliable with a very wide margin of error (±' + margin + ' points). Significantly more questions are needed.' };
     }
   };
   const confidenceInfo = getConfidenceInfo();
@@ -365,13 +365,19 @@ export default function QuizPerformance() {
               {confidenceInfo.margin > 0 && (
                 <>
                   <span className="text-zinc-700">•</span>
-                  <span className={`font-semibold ${
-                    confidenceInfo.color === 'emerald' ? 'text-emerald-400' :
-                    confidenceInfo.color === 'yellow' ? 'text-yellow-400' :
-                    confidenceInfo.color === 'orange' ? 'text-orange-400' :
-                    confidenceInfo.color === 'red' ? 'text-red-400' :
-                    'text-zinc-400'
-                  }`}>{confidenceInfo.label}</span>
+                  <span className="relative group cursor-help">
+                    <span className={`font-semibold ${
+                      confidenceInfo.color === 'emerald' ? 'text-emerald-400' :
+                      confidenceInfo.color === 'yellow' ? 'text-yellow-400' :
+                      confidenceInfo.color === 'orange' ? 'text-orange-400' :
+                      confidenceInfo.color === 'red' ? 'text-red-400' :
+                      'text-zinc-400'
+                    }`}>{confidenceInfo.label}</span>
+                    {/* Hover tooltip */}
+                    <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-80 transition-opacity duration-700 ${liquidGlass ? 'bg-black/80 backdrop-blur-xl border-white/20 rounded-3xl' : 'bg-black border-zinc-800 rounded-md'} border p-4 z-50 pointer-events-none opacity-0 group-hover:opacity-100`}>
+                      <p className={`text-base text-zinc-300 leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>{confidenceInfo.tooltip}</p>
+                    </div>
+                  </span>
                 </>
               )}
             </p>
