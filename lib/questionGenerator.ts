@@ -634,7 +634,7 @@ ${prompt}`;
     // Use unified AI provider
     const textContent = await aiProvider.generateContent(fullPrompt, {
       maxOutputTokens: 2048,
-      temperature: 0.8,
+      temperature: 0.5,  // Lower temperature for stricter instruction following
       useReasoning: true  // Use reasoning model for better question generation
     });
 
