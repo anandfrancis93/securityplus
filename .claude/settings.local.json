@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(code --list-extensions:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "WebFetch(domain:docs.x.ai)",
+      "WebFetch(domain:neurorouters.com)",
+      "WebFetch(domain:lablab.ai)",
+      "Bash(node test-ai-providers.js:*)"
     ],
     "deny": [],
     "ask": []

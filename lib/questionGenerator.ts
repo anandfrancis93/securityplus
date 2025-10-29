@@ -1,11 +1,44 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { Question } from './types';
 import { calculateIRTParameters, categoryToDifficulty } from './irt';
 import { ALL_SECURITY_PLUS_TOPICS } from './topicData';
 import { getDomainsFromTopics } from './domainDetection';
+import { UnifiedAIProvider, createAIProvider } from './ai-providers';
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
-const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
+// Initialize AI provider from environment variables
+// Set NEXT_PUBLIC_AI_PROVIDER to 'grok' to use Grok instead of Gemini
+// Default is Gemini for backward compatibility
+let aiProvider: UnifiedAIProvider;
+
+try {
+  aiProvider = createAIProvider();
+  const info = aiProvider.getProviderInfo();
+  console.log(`Using AI Provider: ${info.name} (${info.model})`);
+} catch (error) {
+  console.error('Failed to initialize AI provider:', error);
+  // Fallback to direct Gemini initialization for backward compatibility
+  const { GoogleGenerativeAI } = require('@google/generative-ai');
+  const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
+
+  // Create a simple wrapper to match our interface
+  aiProvider = {
+    generateContent: async (prompt: string) => {
+      const result = await model.generateContent({
+        contents: [{
+          role: 'user',
+          parts: [{ text: prompt }]
+        }],
+        generationConfig: {
+          maxOutputTokens: 2048,
+          temperature: 0.8,
+        },
+      });
+      return result.response.text().trim();
+    },
+    getProviderInfo: () => ({ name: 'Google Gemini (fallback)', model: 'gemini-2.5-flash-lite' }),
+    getPricingInfo: () => ({ input: 0.0375, output: 0.15, unit: '1M tokens' })
+  } as UnifiedAIProvider;
+}
 
 // Shuffle array using Fisher-Yates algorithm
 function shuffleArray<T>(array: T[]): T[] {
@@ -585,13 +618,7 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
 }`;
 
   try {
-    const result = await model.generateContent({
-      contents: [
-        {
-          role: 'user',
-          parts: [
-            {
-              text: `You are a CompTIA Security+ SY0-701 exam expert. Generate high-quality exam questions that cannot be guessed through test-taking strategies.
+    const systemPrompt = `You are a CompTIA Security+ SY0-701 exam expert. Generate high-quality exam questions that cannot be guessed through test-taking strategies.
 
 CRITICAL QUALITY RULES:
 1. ONLY test the exact topics provided - do not introduce unrelated domains
@@ -602,21 +629,18 @@ CRITICAL QUALITY RULES:
 6. Make incorrect answers subtly wrong, not obviously unrelated
 7. All options should have similar technical depth and specificity
 
-Return only valid JSON, no markdown formatting.
+Return only valid JSON, no markdown formatting.`;
 
-${prompt}`
-            }
-          ]
-        }
-      ],
-      generationConfig: {
-        maxOutputTokens: 2048,
-        temperature: 0.8,
-      },
+    const fullPrompt = `${systemPrompt}
+
+${prompt}`;
+
+    // Use unified AI provider
+    const textContent = await aiProvider.generateContent(fullPrompt, {
+      maxOutputTokens: 2048,
+      temperature: 0.8,
+      useReasoning: true  // Use reasoning model for better question generation
     });
-
-    const response = result.response;
-    const textContent = response.text().trim();
 
     // Remove markdown code blocks if present
     const jsonContent = textContent.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
