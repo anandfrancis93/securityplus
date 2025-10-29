@@ -229,8 +229,19 @@ function shuffleQuestionOptions(questionData: any): any {
   // Find new position of correct answer
   const newCorrectAnswerIndex = shuffledIndices.indexOf(questionData.correctAnswer);
 
+  // Ensure incorrectExplanations has exactly 4 elements
+  // Fill missing elements with a default explanation
+  const explanations = questionData.incorrectExplanations || [];
+  const filledExplanations = [...Array(4)].map((_, i) => {
+    const exp = explanations[i];
+    // Return existing explanation if it's a non-empty string, otherwise provide default
+    return (exp && typeof exp === 'string' && exp.trim() !== '')
+      ? exp
+      : `This option is ${i === questionData.correctAnswer ? 'correct' : 'incorrect'} based on the question requirements.`;
+  });
+
   // Reorder explanations to match new option order
-  const shuffledExplanations = shuffledIndices.map(i => questionData.incorrectExplanations[i]);
+  const shuffledExplanations = shuffledIndices.map(i => filledExplanations[i]);
 
   return {
     ...questionData,
@@ -612,9 +623,32 @@ ${prompt}`
 
     const questionData = JSON.parse(jsonContent);
 
+    // Validate and fix incorrectExplanations array
+    if (!Array.isArray(questionData.incorrectExplanations)) {
+      questionData.incorrectExplanations = [];
+    }
+
+    // Ensure exactly 4 explanations (one for each option)
+    questionData.incorrectExplanations = [...Array(4)].map((_, i) => {
+      const exp = questionData.incorrectExplanations[i];
+      // Return existing explanation if valid, otherwise provide default
+      return (exp && typeof exp === 'string' && exp.trim() !== '')
+        ? exp
+        : `This option is ${i === questionData.correctAnswer ? 'correct' : 'incorrect'} based on the question requirements.`;
+    });
+
     // Shuffle the answer options to randomize correct answer position
     // Only shuffle for single-choice questions
     const shuffledData = questionType === 'single' ? shuffleQuestionOptions(questionData) : questionData;
+
+    // For multiple-response questions, also ensure incorrectExplanations are valid
+    if (questionType === 'multiple' && shuffledData.incorrectExplanations) {
+      shuffledData.incorrectExplanations = shuffledData.incorrectExplanations.map((exp: any, i: number) => {
+        return (exp && typeof exp === 'string' && exp.trim() !== '')
+          ? exp
+          : `This option is ${Array.isArray(shuffledData.correctAnswer) && shuffledData.correctAnswer.includes(i) ? 'correct' : 'incorrect'} based on the question requirements.`;
+      });
+    }
 
     // AI-BASED TOPIC IDENTIFICATION
     // Use AI to identify which topics the question actually tests
@@ -627,7 +661,9 @@ ${prompt}`
     );
 
     // Fallback to requested topics if AI extraction fails
-    const finalTopics = extractedTopics.length > 0 ? extractedTopics : topicStrings;
+    // Also filter out any null/undefined values
+    const finalTopics = (extractedTopics.length > 0 ? extractedTopics : topicStrings)
+      .filter((topic): topic is string => topic != null && typeof topic === 'string' && topic.trim() !== '');
 
     // Log if AI couldn't identify any topics (shouldn't happen)
     if (extractedTopics.length === 0) {
@@ -667,13 +703,35 @@ ${prompt}`
 
     console.log(`Question generated: Category=${actualCategory}, Type=${questionType}, Difficulty=${actualDifficulty}, Correct=${correctAnswerDisplay}, IRT(b=${irtParams.irtDifficulty}, a=${irtParams.irtDiscrimination}), Points=${irtParams.maxPoints}`);
 
+    // Final validation to ensure clean data
+    const cleanedIncorrectExplanations = (shuffledData.incorrectExplanations || [])
+      .map((exp: any) => {
+        return (exp && typeof exp === 'string' && exp.trim() !== '')
+          ? exp
+          : 'This option is based on the question requirements.';
+      });
+
+    // Ensure exactly 4 explanations
+    while (cleanedIncorrectExplanations.length < 4) {
+      cleanedIncorrectExplanations.push('This option is based on the question requirements.');
+    }
+
+    // Ensure exactly 4 options
+    const cleanedOptions = (shuffledData.options || [])
+      .filter((opt: any) => opt != null && typeof opt === 'string' && opt.trim() !== '')
+      .slice(0, 4);
+
+    while (cleanedOptions.length < 4) {
+      cleanedOptions.push(`Option ${cleanedOptions.length + 1}`);
+    }
+
     return {
       id: `q_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      question: shuffledData.question,
-      options: shuffledData.options,
+      question: shuffledData.question || 'Question text not available',
+      options: cleanedOptions,
       correctAnswer: shuffledData.correctAnswer,
-      explanation: shuffledData.explanation,
-      incorrectExplanations: shuffledData.incorrectExplanations,
+      explanation: shuffledData.explanation || 'Explanation not available',
+      incorrectExplanations: cleanedIncorrectExplanations,
       topics: finalTopics, // Use extracted topics, not requested topics
       difficulty: actualDifficulty, // Use derived difficulty from actual category
       questionType: questionType,
@@ -681,7 +739,7 @@ ${prompt}`
       irtDifficulty: irtParams.irtDifficulty,
       irtDiscrimination: irtParams.irtDiscrimination,
       maxPoints: irtParams.maxPoints,
-      metadata: shuffledData.metadata,
+      metadata: shuffledData.metadata || {},
       createdAt: Date.now(),
     };
   } catch (error) {

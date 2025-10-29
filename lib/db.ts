@@ -272,7 +272,14 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
 
     for (const topicName of testedTopics) {
       if (topicName && topicPerformance[topicName]) {
-        topicUpdates[`topicPerformance.${topicName}`] = topicPerformance[topicName];
+        // Sanitize field name for Firestore (replace invalid characters)
+        const sanitizedFieldName = topicName
+          .replace(/\//g, '_')  // Replace forward slashes
+          .replace(/\*/g, '_')  // Replace asterisks
+          .replace(/~/g, '_')   // Replace tildes
+          .replace(/\[/g, '_')  // Replace brackets
+          .replace(/\]/g, '_');
+        topicUpdates[`topicPerformance.${sanitizedFieldName}`] = topicPerformance[topicName];
       }
     }
 
