@@ -200,8 +200,7 @@ export default function SearchFlashcards() {
     return (
       card.term.toLowerCase().includes(query) ||
       card.definition.toLowerCase().includes(query) ||
-      card.domain?.toLowerCase().includes(query) ||
-      card.sourceFile?.toLowerCase().includes(query)
+      card.domain?.toLowerCase().includes(query)
     );
   });
 
@@ -624,7 +623,7 @@ export default function SearchFlashcards() {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by term, definition, domain, or source..."
+                    placeholder="Search by term, definition, or domain..."
                     className={`w-full ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-lg ${liquidGlass ? 'rounded-[28px]' : 'rounded-full'} pl-14 pr-14 py-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} focus:border-emerald-500/50 focus:outline-none ${liquidGlass ? 'focus:bg-white/10' : 'focus:bg-slate-900/80'} transition-all duration-700 ${liquidGlass ? 'backdrop-blur-xl' : ''}`}
                   />
                   <svg
@@ -671,12 +670,11 @@ export default function SearchFlashcards() {
                         <div className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'} mt-2 line-clamp-2 leading-relaxed`}>
                           {card.definition}
                         </div>
-                        <div className={`text-xs md:text-sm ${liquidGlass ? 'text-zinc-500' : 'text-slate-500'} mt-3 flex items-center gap-2 flex-wrap`}>
-                          <span>From: {card.sourceFile}</span>
-                          {card.domain && (
-                            <span className="text-emerald-400">• {card.domain}</span>
-                          )}
-                        </div>
+                        {card.domain && (
+                          <div className={`text-xs md:text-sm mt-3 flex items-center gap-2 flex-wrap`}>
+                            <span className="text-emerald-400">{card.domain}</span>
+                          </div>
+                        )}
                       </div>
                       <div className="flex items-center gap-2 relative z-10">
                         <button
