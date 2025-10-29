@@ -551,7 +551,18 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-white/10">
-                          {topics.map((topic, index) => (
+                          {topics
+                            .slice()
+                            .sort((a, b) => {
+                              // Uncovered topics go to the end
+                              if (a.count === 0 && b.count === 0) return 0;
+                              if (a.count === 0) return 1;
+                              if (b.count === 0) return -1;
+
+                              // Sort covered topics by accuracy (worst to best)
+                              return a.accuracy - b.accuracy;
+                            })
+                            .map((topic, index) => (
                             <tr
                               key={index}
                               className="hover:bg-white/5 transition-all duration-700"
