@@ -844,20 +844,20 @@ export default function QuizPerformance() {
           </div>
         )}
 
-        {/* Recent Activity - Collapsible */}
+        {/* Past Activity - Collapsible */}
         {userProgress && (
           <div className={`relative mt-16 mb-16 p-10 md:p-12 transition-all duration-700 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl' : 'bg-black border border-zinc-800 rounded-md'}`}>
             {liquidGlass && (
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
             )}
             <div className="relative flex items-center justify-between">
-              <h3 className={`text-3xl md:text-4xl font-bold tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Recent Quizzes ({userProgress.quizHistory.length})</h3>
+              <h3 className={`text-3xl md:text-4xl font-bold tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Past Quizzes ({userProgress.quizHistory.length})</h3>
               {userProgress.quizHistory.length > 0 && (
                 <button
-                  id="toggle-recent-quizzes"
+                  id="toggle-past-quizzes"
                   onClick={() => setRecentQuizzesExpanded(!recentQuizzesExpanded)}
                   className={`p-4 hover:bg-white/5 active:bg-white/10 transition-all duration-700 ${liquidGlass ? 'rounded-3xl' : 'rounded-md'}`}
-                  aria-label="Toggle Recent Quizzes"
+                  aria-label="Toggle Past Quizzes"
                 >
                   <svg
                     className={`w-8 h-8 text-zinc-400 transition-transform duration-700 ${recentQuizzesExpanded ? 'rotate-180' : ''}`}
