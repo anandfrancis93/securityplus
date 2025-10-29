@@ -154,19 +154,31 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
 
         {/* Statistics Summary */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className={`${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10' : 'bg-zinc-900 rounded-md border border-zinc-800'} p-4`}>
+          <div
+            className={`${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10' : 'bg-zinc-900 rounded-md border border-zinc-800'} p-4 cursor-help`}
+            title="The number of quizzes you have completed so far. Topics are scheduled based on this quiz number."
+          >
             <div className="text-sm text-zinc-400 mb-1">Current Quiz</div>
             <div className="text-2xl font-bold text-white">#{currentQuizNumber}</div>
           </div>
-          <div className={`${liquidGlass ? 'bg-red-500/20 backdrop-blur-xl rounded-2xl border-2 border-red-500/50' : 'bg-red-900 rounded-md border-2 border-red-700'} p-4`}>
+          <div
+            className={`${liquidGlass ? 'bg-red-500/20 backdrop-blur-xl rounded-2xl border-2 border-red-500/50' : 'bg-red-900 rounded-md border-2 border-red-700'} p-4 cursor-help`}
+            title="Topics that were scheduled to be reviewed in previous quizzes but haven't appeared yet. These should be prioritized in your next quiz."
+          >
             <div className="text-sm text-red-200 mb-1">Overdue</div>
             <div className="text-2xl font-bold text-red-300">{overdueCount}</div>
           </div>
-          <div className={`${liquidGlass ? 'bg-yellow-500/20 backdrop-blur-xl rounded-2xl border-2 border-yellow-500/50' : 'bg-yellow-900 rounded-md border-2 border-yellow-700'} p-4`}>
+          <div
+            className={`${liquidGlass ? 'bg-yellow-500/20 backdrop-blur-xl rounded-2xl border-2 border-yellow-500/50' : 'bg-yellow-900 rounded-md border-2 border-yellow-700'} p-4 cursor-help`}
+            title="Topics scheduled to be reviewed in your next quiz (Quiz #${nextQuizNumber}). These are ready for review based on FSRS optimal spacing."
+          >
             <div className="text-sm text-yellow-200 mb-1">Due Now</div>
             <div className="text-2xl font-bold text-yellow-300">{dueNowCount}</div>
           </div>
-          <div className={`${liquidGlass ? 'bg-cyan-500/20 backdrop-blur-xl rounded-2xl border-2 border-cyan-500/50' : 'bg-cyan-900 rounded-md border-2 border-cyan-700'} p-4`}>
+          <div
+            className={`${liquidGlass ? 'bg-cyan-500/20 backdrop-blur-xl rounded-2xl border-2 border-cyan-500/50' : 'bg-cyan-900 rounded-md border-2 border-cyan-700'} p-4 cursor-help`}
+            title="Topics scheduled to be reviewed within the next 1-3 quizzes. These will appear soon as you continue taking quizzes."
+          >
             <div className="text-sm text-cyan-200 mb-1">Due Soon</div>
             <div className="text-2xl font-bold text-cyan-300">{dueSoonCount}</div>
           </div>
