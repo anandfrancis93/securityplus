@@ -208,7 +208,7 @@ export default function SearchFlashcards() {
           />
 
           {/* Modal Content */}
-          <div style={{
+          <div className="edit-modal-scroll" style={{
             position: 'fixed',
             top: '50%',
             left: '50%',
@@ -454,22 +454,27 @@ export default function SearchFlashcards() {
     <>
       {/* Global styles for custom scrollbar */}
       <style jsx global>{`
-        .flashcard-list-scroll::-webkit-scrollbar {
+        .flashcard-list-scroll::-webkit-scrollbar,
+        .edit-modal-scroll::-webkit-scrollbar {
           width: 8px;
         }
-        .flashcard-list-scroll::-webkit-scrollbar-track {
+        .flashcard-list-scroll::-webkit-scrollbar-track,
+        .edit-modal-scroll::-webkit-scrollbar-track {
           background: rgba(255, 255, 255, 0.05);
           border-radius: 10px;
         }
-        .flashcard-list-scroll::-webkit-scrollbar-thumb {
+        .flashcard-list-scroll::-webkit-scrollbar-thumb,
+        .edit-modal-scroll::-webkit-scrollbar-thumb {
           background: rgba(16, 185, 129, 0.5);
           border-radius: 10px;
           backdrop-filter: blur(10px);
         }
-        .flashcard-list-scroll::-webkit-scrollbar-thumb:hover {
+        .flashcard-list-scroll::-webkit-scrollbar-thumb:hover,
+        .edit-modal-scroll::-webkit-scrollbar-thumb:hover {
           background: rgba(16, 185, 129, 0.7);
         }
-        .flashcard-list-scroll {
+        .flashcard-list-scroll,
+        .edit-modal-scroll {
           scrollbar-width: thin;
           scrollbar-color: rgba(16, 185, 129, 0.5) rgba(255, 255, 255, 0.05);
         }
