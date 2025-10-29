@@ -97,11 +97,12 @@ export function getDeckStats(
   let mastered = 0;
 
   for (const r of reviews) {
-    // Use FSRS state for better categorization
+    // Use FSRS data for better categorization
     // State: 0=New, 1=Learning, 2=Review, 3=Relearning
     const state = r.state ?? 0;
     const reps = r.reps ?? r.repetitions ?? 0;
     const lapses = r.lapses ?? 0;
+    const difficulty = r.difficulty;
 
     if (state === 0) {
       // State.New - brand new card (shouldn't normally be in reviews)
@@ -111,6 +112,9 @@ export function getDeckStats(
       learning++;
     } else if (lapses > 0 && reps < 3) {
       // Has failed before and not yet mastered
+      learning++;
+    } else if (difficulty === 'again' && reps < 3) {
+      // Last rating was "Again" and not yet mastered
       learning++;
     } else if (reps < 3) {
       // State.Review but less than 3 successful reviews
