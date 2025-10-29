@@ -806,6 +806,11 @@ export function updateMetadataAfterQuiz(
   updatedMetadata.totalQuizzesCompleted += 1;
   const currentQuizNumber = updatedMetadata.totalQuizzesCompleted;
 
+  // Ensure questionHistory exists
+  if (!updatedMetadata.questionHistory) {
+    updatedMetadata.questionHistory = {};
+  }
+
   // Update question history
   completedQuestions.forEach(({ questionId, question, isCorrect }) => {
     if (!updatedMetadata.questionHistory[questionId]) {

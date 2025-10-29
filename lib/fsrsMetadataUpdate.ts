@@ -63,12 +63,15 @@ export function ensureMetadataInitialized(
     lastParameterUpdate: Date.now(),
   };
 
-  // Ensure topicCoverage and topicPerformance exist
+  // Ensure required objects exist
   if (!metadata.topicCoverage) {
     metadata.topicCoverage = {};
   }
   if (!metadata.topicPerformance) {
     metadata.topicPerformance = {};
+  }
+  if (!metadata.questionHistory) {
+    metadata.questionHistory = {};
   }
 
   // Ensure ALL topics from ALL_SECURITY_PLUS_TOPICS are initialized
