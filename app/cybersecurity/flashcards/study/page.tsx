@@ -379,7 +379,7 @@ export default function StudyFlashcards() {
                 <div className="relative text-2xl font-bold tracking-tight">Again</div>
               </button>
               {/* Hover tooltip */}
-              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur border border-slate-700 rounded-3xl'} p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
+              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-black/80 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur border border-slate-700 rounded-3xl'} p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
                 <p className={`text-base tracking-tight ${liquidGlass ? 'text-white' : 'text-slate-200'}`}>Failed to recall. Goes to Learning with a 1-day interval.</p>
               </div>
             </div>
@@ -401,7 +401,7 @@ export default function StudyFlashcards() {
                 <div className="relative text-2xl font-bold tracking-tight">Hard</div>
               </button>
               {/* Hover tooltip */}
-              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur border border-slate-700 rounded-3xl'} p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
+              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-black/80 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur border border-slate-700 rounded-3xl'} p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
                 <p className={`text-base tracking-tight ${liquidGlass ? 'text-white' : 'text-slate-200'}`}>Difficult but recalled. Goes to Review with a 2-day interval.</p>
               </div>
             </div>
@@ -423,7 +423,7 @@ export default function StudyFlashcards() {
                 <div className="relative text-2xl font-bold tracking-tight">Good</div>
               </button>
               {/* Hover tooltip */}
-              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur border border-slate-700 rounded-3xl'} p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
+              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-black/80 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur border border-slate-700 rounded-3xl'} p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
                 <p className={`text-base tracking-tight ${liquidGlass ? 'text-white' : 'text-slate-200'}`}>Recalled correctly. Goes to Review with a 3-day interval.</p>
               </div>
             </div>
@@ -445,7 +445,7 @@ export default function StudyFlashcards() {
                 <div className="relative text-2xl font-bold tracking-tight">Easy</div>
               </button>
               {/* Hover tooltip */}
-              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur border border-slate-700 rounded-3xl'} p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
+              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-black/80 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur border border-slate-700 rounded-3xl'} p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
                 <p className={`text-base tracking-tight ${liquidGlass ? 'text-white' : 'text-slate-200'}`}>Instant recall. Goes to Review with an 8-day interval.</p>
               </div>
             </div>
