@@ -195,7 +195,7 @@ export default function StudyFlashcards() {
 
   return (
     <>
-      {/* Global tooltip animation */}
+      {/* Global tooltip animation and scrollbar styling */}
       <style jsx global>{`
         @keyframes tooltipFade {
           0% { opacity: 0; }
@@ -203,6 +203,26 @@ export default function StudyFlashcards() {
           30.3% { opacity: 1; }
           96.1% { opacity: 1; }
           100% { opacity: 0; }
+        }
+
+        /* Custom scrollbar for liquid glass design */
+        .flashcard-scroll::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        .flashcard-scroll::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 10px;
+        }
+
+        .flashcard-scroll::-webkit-scrollbar-thumb {
+          background: rgba(139, 92, 246, 0.5);
+          border-radius: 10px;
+          backdrop-filter: blur(10px);
+        }
+
+        .flashcard-scroll::-webkit-scrollbar-thumb:hover {
+          background: rgba(139, 92, 246, 0.7);
         }
       `}</style>
 
@@ -330,7 +350,7 @@ export default function StudyFlashcards() {
               )}
 
               {/* Scrollable Content Container */}
-              <div className="relative h-full overflow-y-auto overflow-x-hidden p-10 sm:p-12 md:p-16 flex items-start">
+              <div className="flashcard-scroll relative h-full overflow-y-auto overflow-x-hidden p-10 sm:p-12 md:p-16 flex items-start">
                 <div className="text-left w-full space-y-6 my-auto">
                   <p className={`text-xl sm:text-2xl leading-relaxed whitespace-pre-wrap ${liquidGlass ? 'text-white' : 'text-slate-200'} tracking-tight font-light`}>{currentCard.definition}</p>
                   {currentCard.imageUrl && (
@@ -371,7 +391,7 @@ export default function StudyFlashcards() {
                 className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px]' : 'bg-red-600 rounded-3xl'} ${liquidGlass ? 'hover:bg-white/10 hover:scale-105' : 'hover:bg-red-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-red-400/60' : 'border-transparent hover:border-red-400'} ${liquidGlass ? 'shadow-lg hover:shadow-2xl hover:shadow-red-500/50' : 'shadow-xl hover:shadow-red-500/50'} transition-all duration-700`}
               >
                 {liquidGlass && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-[32px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-red-500/30 via-transparent to-transparent rounded-[32px] group-hover:opacity-100 transition-opacity duration-700" />
                 )}
                 {liquidGlass && (
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] opacity-50" />
@@ -393,7 +413,7 @@ export default function StudyFlashcards() {
                 className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px]' : 'bg-yellow-600 rounded-3xl'} ${liquidGlass ? 'hover:bg-white/10 hover:scale-105' : 'hover:bg-yellow-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-yellow-400/60' : 'border-transparent hover:border-yellow-400'} ${liquidGlass ? 'shadow-lg hover:shadow-2xl hover:shadow-yellow-500/50' : 'shadow-xl hover:shadow-yellow-500/50'} transition-all duration-700`}
               >
                 {liquidGlass && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 via-transparent to-transparent rounded-[32px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/30 via-transparent to-transparent rounded-[32px] group-hover:opacity-100 transition-opacity duration-700" />
                 )}
                 {liquidGlass && (
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] opacity-50" />
@@ -415,7 +435,7 @@ export default function StudyFlashcards() {
                 className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px]' : 'bg-green-600 rounded-3xl'} ${liquidGlass ? 'hover:bg-white/10 hover:scale-105' : 'hover:bg-green-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-green-400/60' : 'border-transparent hover:border-green-400'} ${liquidGlass ? 'shadow-lg hover:shadow-2xl hover:shadow-green-500/50' : 'shadow-xl hover:shadow-green-500/50'} transition-all duration-700`}
               >
                 {liquidGlass && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-transparent to-transparent rounded-[32px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/30 via-transparent to-transparent rounded-[32px] group-hover:opacity-100 transition-opacity duration-700" />
                 )}
                 {liquidGlass && (
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] opacity-50" />
@@ -437,7 +457,7 @@ export default function StudyFlashcards() {
                 className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px]' : 'bg-blue-600 rounded-3xl'} ${liquidGlass ? 'hover:bg-white/10 hover:scale-105' : 'hover:bg-blue-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-blue-400/60' : 'border-transparent hover:border-blue-400'} ${liquidGlass ? 'shadow-lg hover:shadow-2xl hover:shadow-blue-500/50' : 'shadow-xl hover:shadow-blue-500/50'} transition-all duration-700`}
               >
                 {liquidGlass && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-transparent rounded-[32px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/30 via-transparent to-transparent rounded-[32px] group-hover:opacity-100 transition-opacity duration-700" />
                 )}
                 {liquidGlass && (
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] opacity-50" />
