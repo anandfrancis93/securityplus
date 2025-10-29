@@ -236,16 +236,6 @@ export default function FlashcardsPage() {
         {/* Secondary Actions - Smaller Cards */}
         <section className="mb-8">
           <div className="max-w-6xl mx-auto">
-            {/* Section Header */}
-            <div className="text-center mb-8">
-              <h3 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-                Manage & Track
-              </h3>
-              <p className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600'}`}>
-                Search your collection and view performance
-              </p>
-            </div>
-
             {/* Secondary Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {/* Search Card */}
