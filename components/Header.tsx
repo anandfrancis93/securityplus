@@ -44,12 +44,16 @@ export default function Header({
         {/* Logo - Top Left */}
         <button
           onClick={() => router.push('/')}
-          className="flex items-center gap-2 sm:gap-3 transition-all duration-300 hover:opacity-80 focus:outline-none focus:opacity-70"
+          className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 transition-all duration-300 focus:outline-none ${
+            liquidGlass
+              ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl hover:bg-white/10 hover:scale-[1.02] shadow-lg hover:shadow-white/10'
+              : 'hover:opacity-80'
+          }`}
           title="Home"
         >
           {/* Learning Icon - Graduation Cap */}
           <svg
-            className="w-8 h-8 sm:w-10 sm:h-10 text-white"
+            className="w-6 h-6 sm:w-8 sm:h-8 text-white"
             fill="currentColor"
             viewBox="0 0 24 24"
           >
@@ -60,7 +64,7 @@ export default function Header({
 
           {/* Logo Text */}
           <div className="hidden sm:block">
-            <div className="text-xl md:text-2xl font-bold tracking-tight leading-tight text-white">
+            <div className="text-lg md:text-xl font-bold tracking-tight leading-tight text-white">
               LearnQuest
             </div>
             <div className="text-xs leading-tight text-zinc-400">
