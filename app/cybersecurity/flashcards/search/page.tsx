@@ -193,16 +193,59 @@ export default function SearchFlashcards() {
     );
   }
 
-  // Filter flashcards based on search query
-  const filteredFlashcards = flashcards.filter((card) => {
-    if (!searchQuery.trim()) return true;
-    const query = searchQuery.toLowerCase();
-    return (
-      card.term.toLowerCase().includes(query) ||
-      card.definition.toLowerCase().includes(query) ||
-      card.domain?.toLowerCase().includes(query)
-    );
-  });
+  // Filter and sort flashcards based on search query with relevance scoring
+  const filteredFlashcards = flashcards
+    .filter((card) => {
+      if (!searchQuery.trim()) return true;
+      const query = searchQuery.toLowerCase();
+      return (
+        card.term.toLowerCase().includes(query) ||
+        card.definition.toLowerCase().includes(query) ||
+        card.domain?.toLowerCase().includes(query)
+      );
+    })
+    .sort((a, b) => {
+      if (!searchQuery.trim()) return 0;
+
+      const query = searchQuery.toLowerCase();
+      const aTermLower = a.term.toLowerCase();
+      const bTermLower = b.term.toLowerCase();
+      const aDefLower = a.definition.toLowerCase();
+      const bDefLower = b.definition.toLowerCase();
+      const aDomainLower = a.domain?.toLowerCase() || '';
+      const bDomainLower = b.domain?.toLowerCase() || '';
+
+      // Calculate relevance scores (higher is better)
+      let aScore = 0;
+      let bScore = 0;
+
+      // Exact match in term (highest priority) - score 1000
+      if (aTermLower === query) aScore += 1000;
+      if (bTermLower === query) bScore += 1000;
+
+      // Starts with query in term - score 500
+      if (aTermLower.startsWith(query)) aScore += 500;
+      if (bTermLower.startsWith(query)) bScore += 500;
+
+      // Contains query in term - score 300
+      if (aTermLower.includes(query)) aScore += 300;
+      if (bTermLower.includes(query)) bScore += 300;
+
+      // Starts with query in definition - score 100
+      if (aDefLower.startsWith(query)) aScore += 100;
+      if (bDefLower.startsWith(query)) bScore += 100;
+
+      // Contains query in definition - score 50
+      if (aDefLower.includes(query)) aScore += 50;
+      if (bDefLower.includes(query)) bScore += 50;
+
+      // Contains query in domain - score 10
+      if (aDomainLower.includes(query)) aScore += 10;
+      if (bDomainLower.includes(query)) bScore += 10;
+
+      // Sort by score (descending - highest score first)
+      return bScore - aScore;
+    });
 
   const DebugOverlay = () => (
     <>
