@@ -130,21 +130,21 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
 
         {/* Statistics Summary */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {/* Current Quiz Card */}
+          {/* Quizzes Completed Card */}
           <div
             className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10' : 'bg-zinc-900 rounded-md border border-zinc-800'} p-4 cursor-help transition-all duration-300`}
             onMouseEnter={() => setHoveredCard('current')}
             onMouseLeave={() => setHoveredCard(null)}
           >
-            <div className="text-sm text-zinc-400 mb-1">Current Quiz</div>
-            <div className="text-2xl font-bold text-white">#{currentQuizNumber}</div>
+            <div className="text-sm text-zinc-400 mb-1">Quizzes Completed</div>
+            <div className="text-2xl font-bold text-white">{currentQuizNumber}</div>
 
             {/* Tooltip */}
             {hoveredCard === 'current' && (
               <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 z-50 ${liquidGlass ? 'bg-black/95 backdrop-blur-2xl border border-white/20 rounded-2xl' : 'bg-zinc-900 border-2 border-zinc-700 rounded-md'} p-4 shadow-2xl`}>
                 {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl" />}
                 <div className="relative text-sm text-white leading-relaxed">
-                  The number of quizzes you have completed so far. Topics are scheduled based on this quiz number.
+                  The total number of quizzes you have completed so far. Topics are scheduled based on this number.
                 </div>
                 {/* Arrow */}
                 <div className={`absolute top-full left-1/2 transform -translate-x-1/2 -mt-px`}>
