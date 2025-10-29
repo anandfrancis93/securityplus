@@ -24,6 +24,7 @@ export default function FlashcardPerformance() {
   const [reviews, setReviews] = useState<FlashcardReview[]>([]);
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [reviewScheduleOpen, setReviewScheduleOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Close menu when clicking outside
@@ -263,9 +264,23 @@ export default function FlashcardPerformance() {
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
             )}
             <div className="relative">
-              <h3 className={`text-2xl font-bold mb-6 ${liquidGlass ? 'text-white' : 'text-slate-100'}`}>Review Schedule</h3>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+              <button
+                onClick={() => setReviewScheduleOpen(!reviewScheduleOpen)}
+                className="w-full flex items-center justify-between mb-6 group"
+              >
+                <h3 className={`text-2xl font-bold ${liquidGlass ? 'text-white' : 'text-slate-100'}`}>Review Schedule</h3>
+                <svg
+                  className={`w-6 h-6 transition-transform duration-300 ${reviewScheduleOpen ? 'rotate-180' : ''} ${liquidGlass ? 'text-zinc-400 group-hover:text-white' : 'text-slate-400 group-hover:text-slate-100'}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {reviewScheduleOpen && (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
                   <thead>
                     <tr className={`border-b ${liquidGlass ? 'border-white/10' : 'border-slate-700'}`}>
                       <th className={`text-left py-3 px-4 font-semibold ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>Term</th>
@@ -355,7 +370,8 @@ export default function FlashcardPerformance() {
                     )}
                   </tbody>
                 </table>
-              </div>
+                </div>
+              )}
             </div>
           </div>
         )}
