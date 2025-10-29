@@ -254,9 +254,12 @@ export default function QuizPerformance() {
 
   const totalAnswered = userProgress?.totalQuestions || 0;
   const correctAnswers = userProgress?.correctAnswers || 0;
+  const totalPoints = userProgress?.totalPoints || 0;
+  const maxPossiblePoints = userProgress?.maxPossiblePoints || 0;
   const estimatedAbility = userProgress?.estimatedAbility || 0;
   const abilityStandardError = userProgress?.abilityStandardError || Infinity;
-  const accuracy = totalAnswered > 0 ? ((correctAnswers / totalAnswered) * 100).toFixed(1) : 0;
+  // Calculate accuracy based on points earned (accounts for partial credit)
+  const accuracy = maxPossiblePoints > 0 ? ((totalPoints / maxPossiblePoints) * 100).toFixed(1) : 0;
 
   // Calculate confidence intervals
   const abilityCI = calculateIRTConfidenceInterval(estimatedAbility, abilityStandardError);
@@ -597,13 +600,13 @@ export default function QuizPerformance() {
               <div className={`text-5xl md:text-6xl font-bold transition-all duration-700 ${totalAnswered === 0 ? 'text-zinc-400' : 'text-white'}`}>{totalAnswered}</div>
             </div>
             <div className="text-center">
-              <div className={`text-zinc-400 text-xl md:text-2xl mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Correct Answers</div>
+              <div className={`text-zinc-400 text-xl md:text-2xl mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Points Earned</div>
               <div className={`text-5xl md:text-6xl font-bold transition-all duration-700 ${
                 totalAnswered === 0 ? 'text-zinc-400' :
                 isGoodPerformance ? 'text-emerald-400' :
                 isNeedsWork ? 'text-red-400' :
                 'text-yellow-400'
-              }`}>{correctAnswers}</div>
+              }`}>{totalPoints} / {maxPossiblePoints}</div>
             </div>
             <div className="text-center">
               <div className={`text-zinc-400 text-xl md:text-2xl mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Accuracy</div>
