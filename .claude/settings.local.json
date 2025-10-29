@@ -31,7 +31,8 @@
       "Bash(node test-fsrs-states.js:*)",
       "Bash(node test-fsrs-lapse.js:*)",
       "Bash(curl:*)",
-      "WebFetch(domain:ai.google.dev)"
+      "WebFetch(domain:ai.google.dev)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []
