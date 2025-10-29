@@ -143,9 +143,37 @@ export default function StudyFlashcards() {
             <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
           </div>
         )}
-        <div className="relative text-center">
-          <div className={`animate-spin rounded-2xl h-32 w-32 md:h-40 md:w-40 border-4 ${liquidGlass ? 'border-white/10 border-t-cyan-400/80' : 'border-white/10 border-t-violet-500'} mx-auto`}></div>
-          <p className={`mt-8 text-2xl md:text-3xl font-light tracking-tight ${liquidGlass ? 'text-zinc-400' : 'text-slate-300'}`}>Loading flashcards...</p>
+        <div className="relative">
+          {/* Liquid glass card */}
+          <div className={`${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-slate-800/95 backdrop-blur-xl border border-slate-700/50 rounded-3xl'} p-16 md:p-20 shadow-2xl`}>
+            {liquidGlass && (
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50 pointer-events-none" />
+            )}
+            <div className="relative text-center">
+              {/* Animated icon */}
+              <div className="relative mx-auto w-32 h-32 md:w-40 md:h-40 mb-8">
+                {/* Outer ring */}
+                <div className={`absolute inset-0 ${liquidGlass ? 'border-4 border-white/20 rounded-full' : 'border-4 border-slate-700 rounded-full'}`}></div>
+                {/* Spinning gradient ring */}
+                <div className="absolute inset-0 animate-spin">
+                  <div className={`w-full h-full rounded-full ${liquidGlass ? 'border-4 border-transparent border-t-violet-400 border-r-violet-400/50' : 'border-4 border-transparent border-t-violet-500 border-r-violet-500/50'}`}></div>
+                </div>
+                {/* Center icon - brain/study */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <svg className={`w-16 h-16 md:w-20 md:h-20 ${liquidGlass ? 'text-violet-400' : 'text-violet-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                  </svg>
+                </div>
+              </div>
+              {/* Loading text */}
+              <p className={`text-2xl md:text-3xl font-bold tracking-tight ${liquidGlass ? 'text-white' : 'text-slate-200'}`}>
+                Loading flashcards...
+              </p>
+              <p className={`text-base md:text-lg mt-4 ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>
+                Please wait
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     );
