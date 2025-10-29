@@ -130,6 +130,12 @@ export function updateMetadataAfterQuiz(
     // Update each topic in the question
     if (question.topics && question.topics.length > 0) {
       question.topics.forEach((topicName) => {
+        // Skip invalid topics (null, undefined, empty strings)
+        if (!topicName || typeof topicName !== 'string') {
+          console.warn(`[FSRS Update] Skipping invalid topic: ${topicName}`);
+          return;
+        }
+
         // Update topic coverage
         if (updatedMetadata.topicCoverage[topicName]) {
           const coverage = updatedMetadata.topicCoverage[topicName];

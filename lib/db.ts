@@ -27,7 +27,7 @@ function removeUndefinedValues(obj: any): any {
   }
 
   if (Array.isArray(obj)) {
-    return obj.map(item => removeUndefinedValues(item)).filter(item => item !== undefined);
+    return obj.map(item => removeUndefinedValues(item)).filter(item => item !== undefined && item !== null);
   }
 
   if (typeof obj === 'object') {
@@ -158,29 +158,17 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
       : { theta: 0, standardError: Infinity };
 
     // Initialize or get quiz metadata and update with FSRS
-    let quizMetadata;
-    let updatedMetadata;
-    let topicPerformance;
+    console.log('[FSRS] Initializing metadata...');
+    const quizMetadata = ensureMetadataInitialized(userData);
+    console.log('[FSRS] Metadata initialized successfully');
 
-    try {
-      console.log('[FSRS] Initializing metadata...');
-      quizMetadata = ensureMetadataInitialized(userData);
-      console.log('[FSRS] Metadata initialized successfully');
+    console.log('[FSRS] Updating metadata after quiz...');
+    const updatedMetadata = updateMetadataAfterQuiz(quizMetadata, session.questions);
+    console.log('[FSRS] Metadata updated successfully');
 
-      console.log('[FSRS] Updating metadata after quiz...');
-      updatedMetadata = updateMetadataAfterQuiz(quizMetadata, session.questions);
-      console.log('[FSRS] Metadata updated successfully');
-
-      console.log('[FSRS] Syncing topic performance...');
-      topicPerformance = syncTopicPerformanceToUserProgress(updatedMetadata);
-      console.log('[FSRS] Topic performance synced successfully');
-    } catch (fsrsError) {
-      console.error('[FSRS] Error during FSRS operations:', fsrsError);
-      // Fall back to old topic performance update if FSRS fails
-      console.log('[FSRS] Falling back to legacy topic performance update');
-      topicPerformance = updateTopicPerformance(userData.topicPerformance || {}, session);
-      updatedMetadata = null; // Don't include broken metadata
-    }
+    console.log('[FSRS] Syncing topic performance...');
+    const topicPerformance = syncTopicPerformanceToUserProgress(updatedMetadata);
+    console.log('[FSRS] Topic performance synced successfully');
 
     const updatedProgress: UserProgress = {
       userId,
@@ -193,7 +181,7 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
       estimatedAbility,
       abilityStandardError,
       topicPerformance,
-      ...(updatedMetadata && { quizMetadata: updatedMetadata }), // Include updated FSRS metadata only if successful
+      quizMetadata: updatedMetadata, // Always include FSRS metadata
       lastUpdated: Date.now(),
     };
 
@@ -428,7 +416,11 @@ export function updateTopicPerformance(
     const topics = attempt.question.topics || [];
 
     for (const topic of topics) {
-      if (!topic) continue;
+      // Skip invalid topics (null, undefined, empty strings)
+      if (!topic || typeof topic !== 'string') {
+        console.warn(`[Legacy Topic Update] Skipping invalid topic: ${topic}`);
+        continue;
+      }
 
       const domain = extractDomainFromTopics([topic]);
 
