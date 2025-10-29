@@ -364,11 +364,10 @@ export default function StudyFlashcards() {
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] opacity-50" />
                 )}
                 <div className="relative text-2xl font-bold tracking-tight">Again</div>
-                <div className="relative text-base opacity-75 tracking-tight mt-2">1 day</div>
               </button>
               {/* Hover tooltip */}
               <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-slate-900/95 backdrop-blur border border-slate-600' : 'bg-slate-800/95 backdrop-blur border border-slate-700'} rounded-3xl p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
-                <p className="text-base text-slate-200 tracking-tight">Couldn&apos;t remember or got it wrong. Card will be reviewed in 1 day.</p>
+                <p className="text-base text-slate-200 tracking-tight">Couldn&apos;t remember or got it wrong.</p>
               </div>
             </div>
 
@@ -387,11 +386,10 @@ export default function StudyFlashcards() {
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] opacity-50" />
                 )}
                 <div className="relative text-2xl font-bold tracking-tight">Hard</div>
-                <div className="relative text-base opacity-75 tracking-tight mt-2">1 day</div>
               </button>
               {/* Hover tooltip */}
               <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-slate-900/95 backdrop-blur border border-slate-600' : 'bg-slate-800/95 backdrop-blur border border-slate-700'} rounded-3xl p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
-                <p className="text-base text-slate-200 tracking-tight">Difficult to recall, needed time. Card will be reviewed in 1 day.</p>
+                <p className="text-base text-slate-200 tracking-tight">Difficult to recall, needed time.</p>
               </div>
             </div>
 
@@ -410,11 +408,10 @@ export default function StudyFlashcards() {
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] opacity-50" />
                 )}
                 <div className="relative text-2xl font-bold tracking-tight">Good</div>
-                <div className="relative text-base opacity-75 tracking-tight mt-2">3 days</div>
               </button>
               {/* Hover tooltip */}
               <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-slate-900/95 backdrop-blur border border-slate-600' : 'bg-slate-800/95 backdrop-blur border border-slate-700'} rounded-3xl p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
-                <p className="text-base text-slate-200 tracking-tight">Recalled with some effort. Card will be reviewed in 3 days.</p>
+                <p className="text-base text-slate-200 tracking-tight">Recalled with some effort.</p>
               </div>
             </div>
 
@@ -433,11 +430,10 @@ export default function StudyFlashcards() {
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] opacity-50" />
                 )}
                 <div className="relative text-2xl font-bold tracking-tight">Easy</div>
-                <div className="relative text-base opacity-75 tracking-tight mt-2">7 days</div>
               </button>
               {/* Hover tooltip */}
               <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-slate-900/95 backdrop-blur border border-slate-600' : 'bg-slate-800/95 backdrop-blur border border-slate-700'} rounded-3xl p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
-                <p className="text-base text-slate-200 tracking-tight">Instant recall, confident. Card will be reviewed in 7 days.</p>
+                <p className="text-base text-slate-200 tracking-tight">Instant recall, confident.</p>
               </div>
             </div>
           </div>

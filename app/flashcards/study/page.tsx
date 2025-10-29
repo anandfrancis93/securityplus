@@ -240,33 +240,33 @@ export default function StudyFlashcards() {
               onClick={() => handleAnswer('again')}
               disabled={answering}
               className="bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-4 rounded-lg font-medium transition-all"
+              title="Couldn't remember or got it wrong"
             >
               <div className="text-lg font-bold">Again</div>
-              <div className="text-xs opacity-75">&lt;1 min</div>
             </button>
             <button
               onClick={() => handleAnswer('hard')}
               disabled={answering}
               className="bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-4 rounded-lg font-medium transition-all"
+              title="Difficult to recall, needed time"
             >
               <div className="text-lg font-bold">Hard</div>
-              <div className="text-xs opacity-75">&lt;6 min</div>
             </button>
             <button
               onClick={() => handleAnswer('good')}
               disabled={answering}
               className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-4 rounded-lg font-medium transition-all"
+              title="Recalled with some effort"
             >
               <div className="text-lg font-bold">Good</div>
-              <div className="text-xs opacity-75">&lt;10 min</div>
             </button>
             <button
               onClick={() => handleAnswer('easy')}
               disabled={answering}
               className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-4 rounded-lg font-medium transition-all"
+              title="Instant recall, confident"
             >
               <div className="text-lg font-bold">Easy</div>
-              <div className="text-xs opacity-75">4 days</div>
             </button>
           </div>
         )}
