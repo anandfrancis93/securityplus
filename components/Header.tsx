@@ -41,28 +41,35 @@ export default function Header({
   return (
     <div className={`w-full ${className}`}>
       <div className="flex justify-between items-center px-6 sm:px-8 lg:px-12">
-        {/* Back Button (Optional) */}
-        {showBackButton && (
-          <button
-            onClick={() => router.push(backButtonPath)}
-            className="p-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl hover:bg-white/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/20 shadow-lg hover:shadow-white/10 flex items-center gap-2"
-            title={backButtonLabel}
-          >
+        {/* Logo - Top Left */}
+        <button
+          onClick={() => router.push('/cybersecurity')}
+          className={`flex items-center gap-3 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 ${liquidGlass ? 'focus:ring-cyan-400/50' : 'focus:ring-blue-500/50'} rounded-2xl p-2`}
+          title="Security+ Quiz Home"
+        >
+          {/* Shield Icon */}
+          <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center ${liquidGlass ? 'bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-400/30 backdrop-blur-xl' : 'bg-gradient-to-br from-blue-600 to-blue-800 border border-blue-500'} shadow-lg`}>
             <svg
-              className="w-5 h-5 text-zinc-300"
+              className={`w-6 h-6 sm:w-7 sm:h-7 ${liquidGlass ? 'text-cyan-400' : 'text-white'}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
-              strokeWidth={2}
+              strokeWidth={1.5}
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
             </svg>
-            <span className="text-sm text-zinc-300">{backButtonLabel}</span>
-          </button>
-        )}
+          </div>
 
-        {/* Spacer */}
-        {!showBackButton && <div />}
+          {/* Logo Text */}
+          <div className="hidden sm:block">
+            <div className={`text-lg md:text-xl font-bold tracking-tight ${liquidGlass ? 'bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent' : 'text-white'}`}>
+              Security+
+            </div>
+            <div className={`text-xs ${liquidGlass ? 'text-zinc-500' : 'text-zinc-400'}`}>
+              SY0-701 Quiz
+            </div>
+          </div>
+        </button>
 
         {/* Menu Button - Liquid Glass */}
         <div className="relative" ref={menuRef}>
