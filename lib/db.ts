@@ -29,7 +29,7 @@ export async function getUserProgress(userId: string): Promise<UserProgress | nu
         const allAttempts: QuestionAttempt[] = data.quizHistory.flatMap(quiz => quiz.questions);
         const { standardError } = allAttempts.length > 0
           ? estimateAbilityWithError(allAttempts)
-          : { theta: 0, standardError: Infinity };
+          : { standardError: Infinity };
         data.abilityStandardError = standardError;
       } else if (data.abilityStandardError === undefined) {
         data.abilityStandardError = Infinity;
