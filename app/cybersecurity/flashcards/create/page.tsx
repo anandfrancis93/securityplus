@@ -224,14 +224,14 @@ export default function CreateFlashcards() {
                 id="domain-dropdown"
                 value={manualDomain}
                 onChange={(e) => setManualDomain(e.target.value)}
-                className={`w-full ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-lg ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} p-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} focus:border-cyan-500/50 focus:outline-none ${liquidGlass ? 'focus:bg-white/10' : 'focus:bg-slate-900/80'} transition-all duration-700`}
+                className={`w-full ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-lg ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} p-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} focus:border-cyan-500/50 focus:outline-none ${liquidGlass ? 'focus:bg-white/10' : 'focus:bg-slate-900/80'} transition-all duration-700 ${liquidGlass ? '[&>option]:bg-zinc-900 [&>option]:text-white [&>option]:py-3' : ''}`}
                 disabled={generating}
               >
-                <option value="General Security Concepts">General Security Concepts</option>
-                <option value="Threats, Vulnerabilities, and Mitigations">Threats, Vulnerabilities, and Mitigations</option>
-                <option value="Security Architecture">Security Architecture</option>
-                <option value="Security Operations">Security Operations</option>
-                <option value="Security Program Management and Oversight">Security Program Management and Oversight</option>
+                <option value="General Security Concepts" className={liquidGlass ? 'bg-zinc-900 text-white hover:bg-cyan-600 hover:text-white' : ''}>General Security Concepts</option>
+                <option value="Threats, Vulnerabilities, and Mitigations" className={liquidGlass ? 'bg-zinc-900 text-white hover:bg-cyan-600 hover:text-white' : ''}>Threats, Vulnerabilities, and Mitigations</option>
+                <option value="Security Architecture" className={liquidGlass ? 'bg-zinc-900 text-white hover:bg-cyan-600 hover:text-white' : ''}>Security Architecture</option>
+                <option value="Security Operations" className={liquidGlass ? 'bg-zinc-900 text-white hover:bg-cyan-600 hover:text-white' : ''}>Security Operations</option>
+                <option value="Security Program Management and Oversight" className={liquidGlass ? 'bg-zinc-900 text-white hover:bg-cyan-600 hover:text-white' : ''}>Security Program Management and Oversight</option>
               </select>
             </div>
 
