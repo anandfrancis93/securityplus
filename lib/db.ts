@@ -203,10 +203,9 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
     const topicPerformance = syncTopicPerformanceToUserProgress(updatedMetadata);
     console.log('[FSRS] Topic performance synced successfully');
 
-    const updatedProgress: UserProgress = {
-      userId,
-      // DO NOT store quizHistory in main document - it's in subcollection
-      quizHistory: [],
+    // Use updateDoc to only update specific fields, not the entire document
+    // This avoids hitting the index limit on existing large documents
+    const updates: any = {
       answeredQuestions: Array.from(answeredQuestions),
       correctAnswers: (userData.correctAnswers || 0) + sessionCorrectAnswers,
       totalQuestions: (userData.totalQuestions || 0) + session.questions.length,
@@ -214,28 +213,97 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
       maxPossiblePoints: (userData.maxPossiblePoints || 0) + sessionMaxPoints,
       estimatedAbility,
       abilityStandardError,
-      topicPerformance,
-      quizMetadata: updatedMetadata, // Always include FSRS metadata
       lastUpdated: Date.now(),
+      // Clear old quizHistory array if it exists (data is now in subcollection)
+      quizHistory: [],
     };
 
-    console.log('Saving updated progress:', {
-      totalQuestions: updatedProgress.totalQuestions,
-      correctAnswers: updatedProgress.correctAnswers,
-      totalPoints: updatedProgress.totalPoints,
-      maxPossiblePoints: updatedProgress.maxPossiblePoints,
-      estimatedAbility: updatedProgress.estimatedAbility,
+    console.log('Updating progress:', {
+      totalQuestions: updates.totalQuestions,
+      correctAnswers: updates.correctAnswers,
+      totalPoints: updates.totalPoints,
+      maxPossiblePoints: updates.maxPossiblePoints,
+      estimatedAbility: updates.estimatedAbility,
       quizHistoryCount: quizHistory.length
     });
 
-    // Clean undefined values before saving to Firestore
-    const cleanedProgress = removeUndefinedValues(updatedProgress) as UserProgress;
+    // Try to update, but if it fails due to index limit, recreate the document
+    try {
+      await updateDoc(userRef, updates);
+      console.log('Progress updated successfully');
+    } catch (updateError: any) {
+      if (updateError?.message?.includes('too many index entries')) {
+        console.log('[RECOVERY] Document too large, recreating with fresh data...');
 
-    // Use setDoc to create or update the document
-    await setDoc(userRef, cleanedProgress);
-    console.log('Progress saved successfully to Firestore');
-  } catch (error) {
+        // Delete the corrupted document
+        await setDoc(userRef, {
+          userId,
+          answeredQuestions: updates.answeredQuestions,
+          correctAnswers: updates.correctAnswers,
+          totalQuestions: updates.totalQuestions,
+          totalPoints: updates.totalPoints,
+          maxPossiblePoints: updates.maxPossiblePoints,
+          estimatedAbility: updates.estimatedAbility,
+          abilityStandardError: updates.abilityStandardError,
+          lastUpdated: updates.lastUpdated,
+          quizHistory: [], // Empty, data in subcollection
+          topicPerformance: {}, // Start fresh to avoid index issues
+          quizMetadata: {
+            totalQuizzesCompleted: updatedMetadata.totalQuizzesCompleted,
+            currentPhase: updatedMetadata.currentPhase,
+            allTopicsCoveredOnce: updatedMetadata.allTopicsCoveredOnce,
+            questionHistory: {},
+            topicCoverage: {},
+            topicPerformance: {},
+            lastParameterUpdate: Date.now(),
+          },
+        });
+
+        console.log('[RECOVERY] Document recreated successfully');
+        return; // Exit early, skip topic updates
+      }
+      throw updateError;
+    }
+
+    // Update topicPerformance and quizMetadata separately with smaller batches
+    // Only update topics that were actually tested in this quiz
+    const testedTopics = new Set(session.questions.flatMap(q => q.question.topics || []));
+    const topicUpdates: any = {};
+
+    for (const topicName of testedTopics) {
+      if (topicName && topicPerformance[topicName]) {
+        topicUpdates[`topicPerformance.${topicName}`] = topicPerformance[topicName];
+      }
+    }
+
+    if (Object.keys(topicUpdates).length > 0) {
+      try {
+        await updateDoc(userRef, topicUpdates);
+        console.log(`Updated ${Object.keys(topicUpdates).length} topic performance entries`);
+      } catch (topicError) {
+        console.warn('Could not update topic performance, skipping:', topicError);
+      }
+    }
+
+    // Update quiz metadata phase and completion counts
+    try {
+      await updateDoc(userRef, {
+        'quizMetadata.totalQuizzesCompleted': updatedMetadata.totalQuizzesCompleted,
+        'quizMetadata.currentPhase': updatedMetadata.currentPhase,
+        'quizMetadata.allTopicsCoveredOnce': updatedMetadata.allTopicsCoveredOnce,
+      });
+      console.log('Quiz metadata updated');
+    } catch (metadataError) {
+      console.warn('Could not update quiz metadata, skipping:', metadataError);
+    }
+  } catch (error: any) {
     console.error('Error saving quiz session:', error);
+
+    // If we hit the index limit, the user MUST reset their progress
+    if (error?.message?.includes('too many index entries')) {
+      throw new Error('Your progress data is too large. Please go to the Performance page and click "Reset Progress" to continue using the app. Your quiz will be saved after reset.');
+    }
+
     throw error;
   }
 }
