@@ -2,9 +2,10 @@
 
 export const dynamic = 'force-dynamic';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '@/components/AppProvider';
 import { useRouter } from 'next/navigation';
+import Header from '@/components/Header';
 import {
   getUserFlashcards,
   getUserReviews,
@@ -15,7 +16,7 @@ import { getDueFlashcards, calculateNextReview } from '@/lib/spacedRepetition';
 import { Flashcard, FlashcardReview } from '@/lib/types';
 
 export default function StudyFlashcards() {
-  const { userId, user, loading: authLoading, handleSignOut, liquidGlass } = useApp();
+  const { userId, user, loading: authLoading, liquidGlass } = useApp();
   const router = useRouter();
 
   // Redirect to login if not authenticated
@@ -24,6 +25,7 @@ export default function StudyFlashcards() {
       router.push('/');
     }
   }, [user, authLoading, router]);
+
   const [dueCardIds, setDueCardIds] = useState<string[]>([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [currentCard, setCurrentCard] = useState<Flashcard | null>(null);
@@ -31,24 +33,6 @@ export default function StudyFlashcards() {
   const [loading, setLoading] = useState(true);
   const [answering, setAnswering] = useState(false);
   const [imageEnlarged, setImageEnlarged] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-
-  // Close menu when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setMenuOpen(false);
-      }
-    }
-
-    if (menuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }
-  }, [menuOpen]);
 
   useEffect(() => {
     if (userId) {
@@ -190,6 +174,7 @@ export default function StudyFlashcards() {
       `}</style>
 
       <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
+        {/* Animated Background Gradients */}
         {liquidGlass && (
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
@@ -197,63 +182,32 @@ export default function StudyFlashcards() {
             <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
           </div>
         )}
-        <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 py-8 max-w-5xl">
-          {/* Header */}
-        <div className="mb-12 md:mb-16">
-          <div className="flex justify-between items-center mb-8">
-            <button
-              onClick={() => router.push('/cybersecurity/flashcards')}
-              className={`${liquidGlass ? 'text-zinc-400 hover:text-white' : 'text-slate-300 hover:text-white'} hover:bg-white/5 active:bg-white/10 transition-all duration-700 p-4 rounded-2xl`}
-              title="Back to Flashcards"
-            >
-              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
 
-            <p className={`text-xl md:text-2xl font-medium tracking-tight ${liquidGlass ? 'text-zinc-300' : 'text-slate-300'}`}>
-              {currentCardIndex + 1} <span className={liquidGlass ? 'text-zinc-500' : 'text-slate-500'}>of</span> {dueCardIds.length}
-            </p>
+        {/* Header - Full width */}
+        <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
+          <Header />
+        </div>
 
-            <div className="relative" ref={menuRef}>
+        <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-5xl">
+          {/* Progress Section */}
+          <div className="mb-12 md:mb-16">
+            <div className="flex justify-between items-center mb-6">
               <button
-                onClick={() => setMenuOpen(!menuOpen)}
+                onClick={() => router.push('/cybersecurity/flashcards')}
                 className={`${liquidGlass ? 'text-zinc-400 hover:text-white' : 'text-slate-300 hover:text-white'} hover:bg-white/5 active:bg-white/10 transition-all duration-700 p-4 rounded-2xl`}
-                title="Menu"
+                title="Back to Flashcards"
               >
                 <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
 
-              {menuOpen && user && !user?.isAnonymous && (
-                <div className="absolute right-0 top-full mt-2 bg-slate-800/95 backdrop-blur border border-slate-700 rounded-3xl shadow-2xl py-3 min-w-[200px] z-50">
-                  <div className="px-4 py-3 text-sm text-white border-b border-slate-700">
-                    <div className="flex items-center gap-2">
-                      <svg className="w-4 h-4 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                      <span className="tracking-wide">{user?.displayName || 'User'}</span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={async () => {
-                      if (confirm('Are you sure you want to sign out?')) {
-                        await handleSignOut();
-                        setMenuOpen(false);
-                      }
-                    }}
-                    className="w-full px-4 py-3 text-sm text-left text-white hover:bg-white/5 active:bg-white/10 transition-all duration-500 flex items-center gap-2"
-                  >
-                    <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
-                    <span className="tracking-wide">Sign Out</span>
-                  </button>
-                </div>
-              )}
+              <p className={`text-xl md:text-2xl font-medium tracking-tight ${liquidGlass ? 'text-zinc-300' : 'text-slate-300'}`}>
+                {currentCardIndex + 1} <span className={liquidGlass ? 'text-zinc-500' : 'text-slate-500'}>of</span> {dueCardIds.length}
+              </p>
+
+              <div className="w-16" /> {/* Spacer for alignment */}
             </div>
-          </div>
 
           {/* Progress Bar */}
           <div className="relative">
@@ -470,7 +424,7 @@ export default function StudyFlashcards() {
             </div>
           </div>
         )}
-
+        </div>
       </div>
 
       {/* Image Lightbox */}
@@ -503,7 +457,6 @@ export default function StudyFlashcards() {
           </div>
         </div>
       )}
-      </div>
     </>
   );
 }
