@@ -6,7 +6,7 @@
 
 1. A Vercel account (sign up at https://vercel.com)
 2. Firebase project set up with Firestore and Anonymous Auth enabled
-3. Anthropic API key with available credits
+3. Google AI API key with available credits
 
 ### Step 1: Prepare Your Repository
 
@@ -34,7 +34,7 @@ Make sure all your code is committed to your Git repository (GitHub, GitLab, or 
    Click "Environment Variables" and add the following:
 
    ```
-   ANTHROPIC_API_KEY=your_anthropic_api_key_here
+   GOOGLE_API_KEY=your_google_api_key_here
    NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
    NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
@@ -85,7 +85,7 @@ Make sure all your code is committed to your Git repository (GitHub, GitLab, or 
 
 4. **Add Environment Variables**
    ```bash
-   vercel env add ANTHROPIC_API_KEY
+   vercel env add GOOGLE_API_KEY
    vercel env add NEXT_PUBLIC_FIREBASE_API_KEY
    # ... add all other env variables
    ```
@@ -119,11 +119,11 @@ Once connected to Git:
 ### Monitor Costs
 - **Vercel**: Free tier includes 100GB bandwidth, hobby plan
 - **Firebase**: Free tier includes 50K reads/day, 20K writes/day
-- **Anthropic**: Monitor API usage at https://console.anthropic.com/
+- **Google AI**: Monitor API usage at https://aistudio.google.com/
 
 ### Set Up Alerts
 1. Firebase Console → Set up budget alerts
-2. Anthropic Console → Set up usage limits
+2. Google AI Studio → Monitor usage and set quotas
 
 ## Troubleshooting
 
@@ -135,11 +135,11 @@ Once connected to Git:
 ### Runtime Errors
 - Check Runtime Logs in Vercel
 - Verify Firebase configuration is correct
-- Check Anthropic API key is valid and has credits
+- Check Google AI API key is valid and has credits
 
 ### Questions Not Generating
-- Verify ANTHROPIC_API_KEY is set correctly
-- Check Anthropic account has available credits
+- Verify GOOGLE_API_KEY is set correctly
+- Check Google AI account has available credits
 - Review API route logs in Vercel
 
 ### Progress Not Saving

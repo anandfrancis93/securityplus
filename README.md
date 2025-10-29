@@ -5,7 +5,7 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 ## Features
 
 ### Quiz Mode with Adaptive Testing
-- **AI-Generated Synthesis Questions**: Creates complex questions combining multiple security concepts using Claude 4.5 Sonnet
+- **AI-Generated Synthesis Questions**: Creates complex questions combining multiple security concepts using Google Gemini 2.5 Flash-Lite
 - **AI-Based Topic Identification**: Uses semantic understanding to accurately identify which topics each question tests (no false positives from distractors)
 - **Deterministic Difficulty Classification**: Questions are automatically classified based on topic/domain complexity:
   - **EASY (100 points)**: Single domain, single topic questions
@@ -71,7 +71,7 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 
 - **Frontend**: Next.js 15.5.6 (App Router), React 19, TypeScript, Tailwind CSS
 - **Charting**: Recharts 2.15.0 for data visualization
-- **AI**: Claude 4.5 Sonnet (claude-sonnet-4-5-20250929) for question generation
+- **AI**: Google Gemini 2.5 Flash-Lite for question generation and topic identification
 - **Backend**: Firebase (Firestore Database + Firebase Storage + Google Authentication)
 - **Image Hosting**: Firebase Storage with CORS configuration
 - **Deployment**: Vercel with automatic CI/CD
@@ -85,7 +85,7 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
    - Subsequent questions generate automatically in the background
    - Each new question triggers generation of the next one
    - Zero wait time between questions for seamless experience
-3. **AI Question Generation**: Claude AI creates unique synthesis questions from comprehensive SY0-701 exam objectives
+3. **AI Question Generation**: Google Gemini AI creates unique synthesis questions from comprehensive SY0-701 exam objectives
 4. **AI-Based Topic Identification**:
    - After generation, AI analyzes the question to identify which topics it actually tests
    - Uses semantic understanding with temperature=0 for consistency
@@ -325,7 +325,7 @@ Choose from predefined Security+ domains when creating flashcards:
   - HARD: difficulty=2.2, discrimination=2.5
 
 **AI Question Quality System:**
-- **Claude 4.5 Sonnet** for question generation with temperature=0.8 (creative)
+- **Google Gemini 2.5 Flash-Lite** for question generation with temperature=0.8 (creative)
 - **AI Topic Identification** with temperature=0 (deterministic, ~99% consistent)
 - **Anti-Telltale Controls** built into generation prompts:
   - Length variation requirements (15-60 words per option)

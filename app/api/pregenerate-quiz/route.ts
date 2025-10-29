@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
       name: error?.name,
     });
 
-    // Check for specific Anthropic API errors
+    // Check for specific Google AI API errors
     if (error?.status === 429) {
       return NextResponse.json(
         {
