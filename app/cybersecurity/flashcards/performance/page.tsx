@@ -2,15 +2,16 @@
 
 export const dynamic = 'force-dynamic';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '@/components/AppProvider';
 import { useRouter } from 'next/navigation';
+import Header from '@/components/Header';
 import { getUserFlashcards, getUserReviews } from '@/lib/flashcardDb';
 import { getDeckStats } from '@/lib/spacedRepetition';
 import { Flashcard, FlashcardReview } from '@/lib/types';
 
 export default function FlashcardPerformance() {
-  const { userId, user, loading: authLoading, handleSignOut, liquidGlass } = useApp();
+  const { userId, user, loading: authLoading, liquidGlass } = useApp();
   const router = useRouter();
 
   // Redirect to login if not authenticated
@@ -23,25 +24,7 @@ export default function FlashcardPerformance() {
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [reviews, setReviews] = useState<FlashcardReview[]>([]);
   const [loading, setLoading] = useState(true);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [reviewScheduleOpen, setReviewScheduleOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-
-  // Close menu when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setMenuOpen(false);
-      }
-    }
-
-    if (menuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }
-  }, [menuOpen]);
 
   useEffect(() => {
     if (userId) {
@@ -125,59 +108,10 @@ export default function FlashcardPerformance() {
       <div className="container mx-auto px-6 sm:px-8 lg:px-12 py-8 max-w-5xl">
         {/* Header */}
         <div className="mb-8 flex-shrink-0">
-          <div className="flex justify-between items-center mb-12">
-            <button
-              onClick={() => router.push('/cybersecurity/flashcards')}
-              className={`${liquidGlass ? 'text-zinc-400 hover:text-white hover:bg-white/5' : 'text-slate-400 hover:text-white hover:bg-white/5'} active:bg-white/10 transition-all duration-700 p-3 ${liquidGlass ? 'rounded-[28px]' : 'rounded-full'}`}
-              title="Back to Flashcards"
-            >
-              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-
-            <div className="relative" ref={menuRef}>
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                className={`${liquidGlass ? 'text-zinc-400 hover:text-white hover:bg-white/5' : 'text-slate-400 hover:text-white hover:bg-white/5'} active:bg-white/10 transition-all duration-700 p-3 ${liquidGlass ? 'rounded-[28px]' : 'rounded-full'}`}
-                title="Menu"
-              >
-                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-
-              {menuOpen && user && !user?.isAnonymous && (
-                <div className={`absolute right-0 top-full mt-3 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border-white/10 rounded-[28px]' : 'bg-slate-800/95 backdrop-blur-xl border-slate-700/50 rounded-3xl'} border shadow-2xl py-3 min-w-[220px] z-50`}>
-                  <div className={`px-5 py-3 text-sm ${liquidGlass ? 'text-zinc-200 border-b border-white/10' : 'text-slate-200 border-b border-slate-700/50'}`}>
-                    <div className="flex items-center gap-3">
-                      <svg className="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                      <span className="font-medium">{user?.displayName || 'User'}</span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={async () => {
-                      if (confirm('Are you sure you want to sign out?')) {
-                        await handleSignOut();
-                        setMenuOpen(false);
-                      }
-                    }}
-                    className={`w-full px-5 py-3 text-sm text-left ${liquidGlass ? 'text-zinc-200' : 'text-slate-200'} hover:bg-white/5 active:bg-white/10 transition-all duration-700 flex items-center gap-3`}
-                  >
-                    <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
-                    Sign Out
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
+          <Header />
 
           {/* Hero Section */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-12 mt-8">
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-tight mb-6">
               <span className="block bg-gradient-to-br from-white via-zinc-100 to-zinc-300 bg-clip-text text-transparent">Flashcard</span>
               <span className="block bg-gradient-to-br from-amber-400 via-orange-400 to-amber-500 bg-clip-text text-transparent">Performance</span>
@@ -200,7 +134,7 @@ export default function FlashcardPerformance() {
               </div>
               <div className="relative text-4xl font-bold text-amber-400">{stats.total}</div>
               {/* Hover tooltip */}
-              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-[28px]'} p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
+              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 ${liquidGlass ? 'bg-black/80 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-[28px]'} p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
                 <p className={`text-sm leading-relaxed ${liquidGlass ? 'text-white' : 'text-slate-300'}`}>Total number of flashcards in your deck, including new and reviewed cards.</p>
               </div>
             </div>
@@ -216,7 +150,7 @@ export default function FlashcardPerformance() {
                 <div className={`relative text-sm ${liquidGlass ? 'text-zinc-500' : 'text-slate-500'} mt-2 font-medium`}>New cards</div>
               )}
               {/* Hover tooltip */}
-              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-[28px]'} p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
+              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 ${liquidGlass ? 'bg-black/80 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-[28px]'} p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
                 <p className={`text-sm leading-relaxed ${liquidGlass ? 'text-white' : 'text-slate-300'}`}>Cards you&apos;re struggling with - rated as &quot;Again&quot; or have been forgotten after learning. These need more practice to master.</p>
               </div>
             </div>
@@ -232,7 +166,7 @@ export default function FlashcardPerformance() {
                 <div className={`relative text-sm ${liquidGlass ? 'text-zinc-500' : 'text-slate-500'} mt-2 font-medium`}>In progress</div>
               )}
               {/* Hover tooltip */}
-              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-[28px]'} p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
+              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 ${liquidGlass ? 'bg-black/80 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-[28px]'} p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
                 <p className={`text-sm leading-relaxed ${liquidGlass ? 'text-white' : 'text-slate-300'}`}>Cards you&apos;re actively learning - rated as &quot;Hard&quot;, &quot;Good&quot;, or &quot;Easy&quot; with 1-2 successful reviews. Making good progress!</p>
               </div>
             </div>
@@ -250,7 +184,7 @@ export default function FlashcardPerformance() {
                 </div>
               )}
               {/* Hover tooltip */}
-              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-[28px]'} p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
+              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 ${liquidGlass ? 'bg-black/80 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-[28px]'} p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
                 <p className={`text-sm leading-relaxed ${liquidGlass ? 'text-white' : 'text-slate-300'}`}>Cards you&apos;ve successfully reviewed 3 or more times. Well-learned and scheduled with optimal intervals for long-term retention using FSRS.</p>
               </div>
             </div>

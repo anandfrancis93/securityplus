@@ -2,15 +2,16 @@
 
 export const dynamic = 'force-dynamic';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '@/components/AppProvider';
 import { useRouter } from 'next/navigation';
+import Header from '@/components/Header';
 import { getUserFlashcards } from '@/lib/flashcardDb';
 import { uploadFlashcardImage, validateImageFile } from '@/lib/imageUpload';
 import { Flashcard } from '@/lib/types';
 
 export default function SearchFlashcards() {
-  const { userId, user, loading: authLoading, handleSignOut, liquidGlass } = useApp();
+  const { userId, user, loading: authLoading, liquidGlass } = useApp();
   const router = useRouter();
 
   // Redirect to login if not authenticated
@@ -24,8 +25,6 @@ export default function SearchFlashcards() {
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
 
   // Edit mode states
   const [editingCard, setEditingCard] = useState<Flashcard | null>(null);
@@ -34,22 +33,6 @@ export default function SearchFlashcards() {
   const [editDomain, setEditDomain] = useState('General Security Concepts');
   const [editImage, setEditImage] = useState<File | null>(null);
   const [editImagePreview, setEditImagePreview] = useState<string | null>(null);
-
-  // Close menu when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setMenuOpen(false);
-      }
-    }
-
-    if (menuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }
-  }, [menuOpen]);
 
   useEffect(() => {
     if (userId) {
@@ -481,59 +464,10 @@ export default function SearchFlashcards() {
       <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 py-8 max-w-5xl flex-1 flex flex-col min-h-0" style={{ overscrollBehavior: 'none' }}>
         {/* Header */}
         <div className="mb-8 flex-shrink-0">
-          <div className="flex justify-between items-center mb-12">
-            <button
-              onClick={() => router.push('/cybersecurity/flashcards')}
-              className={`${liquidGlass ? 'text-zinc-400 hover:text-white hover:bg-white/5' : 'text-slate-400 hover:text-white hover:bg-white/5'} active:bg-white/10 transition-all duration-700 p-3 ${liquidGlass ? 'rounded-[28px]' : 'rounded-full'}`}
-              title="Back to Flashcards"
-            >
-              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-
-            <div className="relative" ref={menuRef}>
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                className={`${liquidGlass ? 'text-zinc-400 hover:text-white hover:bg-white/5' : 'text-slate-400 hover:text-white hover:bg-white/5'} active:bg-white/10 transition-all duration-700 p-3 ${liquidGlass ? 'rounded-[28px]' : 'rounded-full'}`}
-                title="Menu"
-              >
-                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-
-              {menuOpen && user && !user?.isAnonymous && (
-                <div className={`absolute right-0 top-full mt-3 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border-white/10 rounded-[28px]' : 'bg-slate-800/95 backdrop-blur-xl border-slate-700/50 rounded-3xl'} border shadow-2xl py-3 min-w-[220px] z-50`}>
-                  <div className={`px-5 py-3 text-sm ${liquidGlass ? 'text-zinc-200 border-b border-white/10' : 'text-slate-200 border-b border-slate-700/50'}`}>
-                    <div className="flex items-center gap-3">
-                      <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                      <span className="font-medium">{user?.displayName || 'User'}</span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={async () => {
-                      if (confirm('Are you sure you want to sign out?')) {
-                        await handleSignOut();
-                        setMenuOpen(false);
-                      }
-                    }}
-                    className={`w-full px-5 py-3 text-sm text-left ${liquidGlass ? 'text-zinc-200' : 'text-slate-200'} hover:bg-white/5 active:bg-white/10 transition-all duration-700 flex items-center gap-3`}
-                  >
-                    <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
-                    Sign Out
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
+          <Header />
 
           {/* Hero Section */}
-          <div className="text-center mb-12">
+          <div className="text-center mb-12 mt-8">
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-tight mb-6">
               <span className="block bg-gradient-to-br from-white via-zinc-100 to-zinc-300 bg-clip-text text-transparent">Search</span>
               <span className="block bg-gradient-to-br from-emerald-400 via-teal-400 to-emerald-500 bg-clip-text text-transparent">Flashcards</span>

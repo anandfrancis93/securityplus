@@ -2,15 +2,16 @@
 
 export const dynamic = 'force-dynamic';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '@/components/AppProvider';
 import { useRouter } from 'next/navigation';
+import Header from '@/components/Header';
 import { getUserFlashcards, saveFlashcards } from '@/lib/flashcardDb';
 import { uploadFlashcardImage, validateImageFile } from '@/lib/imageUpload';
 import { Flashcard } from '@/lib/types';
 
 export default function CreateFlashcards() {
-  const { userId, user, loading: authLoading, handleSignOut, liquidGlass } = useApp();
+  const { userId, user, loading: authLoading, liquidGlass } = useApp();
   const router = useRouter();
 
   // Redirect to login if not authenticated
@@ -21,8 +22,6 @@ export default function CreateFlashcards() {
   }, [user, authLoading, router]);
 
   const [generating, setGenerating] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
 
   // Manual mode states
   const [manualTerm, setManualTerm] = useState('');
@@ -32,22 +31,6 @@ export default function CreateFlashcards() {
   const [manualImagePreview, setManualImagePreview] = useState<string | null>(null);
   const [manualTermError, setManualTermError] = useState('');
   const [manualDefinitionError, setManualDefinitionError] = useState('');
-
-  // Close menu when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setMenuOpen(false);
-      }
-    }
-
-    if (menuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }
-  }, [menuOpen]);
 
   const handleManualImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -153,56 +136,7 @@ export default function CreateFlashcards() {
       <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 py-8 max-w-5xl">
         {/* Header */}
         <div className="mb-12 md:mb-16">
-          <div className="flex justify-between items-center mb-8">
-            <button
-              onClick={() => router.push('/cybersecurity/flashcards')}
-              className={`${liquidGlass ? 'text-zinc-400 hover:text-white' : 'text-slate-400 hover:text-white'} hover:bg-white/5 active:bg-white/10 transition-all duration-700 p-4 rounded-2xl`}
-              title="Back to Flashcards"
-            >
-              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-
-            <div className="relative" ref={menuRef}>
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                className={`${liquidGlass ? 'text-zinc-400 hover:text-white' : 'text-slate-400 hover:text-white'} hover:bg-white/5 active:bg-white/10 transition-all duration-700 p-4 rounded-2xl`}
-                title="Menu"
-              >
-                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-
-              {menuOpen && user && !user?.isAnonymous && (
-                <div className={`absolute right-0 top-full mt-2 ${liquidGlass ? 'bg-slate-900/95' : 'bg-slate-800/95'} backdrop-blur-xl border ${liquidGlass ? 'border-slate-600' : 'border-slate-700/50'} rounded-3xl shadow-2xl py-2 min-w-[200px] z-50`}>
-                  <div className="px-4 py-2 text-sm text-slate-200 border-b border-slate-700/50">
-                    <div className="flex items-center gap-2">
-                      <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                      <span>{user?.displayName || 'User'}</span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={async () => {
-                      if (confirm('Are you sure you want to sign out?')) {
-                        await handleSignOut();
-                        setMenuOpen(false);
-                      }
-                    }}
-                    className="w-full px-4 py-2 text-sm text-left text-slate-200 hover:bg-white/5 active:bg-white/10 transition-all duration-700 flex items-center gap-2"
-                  >
-                    <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
-                    Sign Out
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
+          <Header />
 
           {/* Hero Section */}
           <div className="text-center mb-12">
