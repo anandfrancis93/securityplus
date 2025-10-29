@@ -830,14 +830,14 @@ export default function QuizPerformance() {
         )}
 
         {/* Topic Review Schedule - Verification Tool */}
-        {userProgress && userProgress.quizHistory.length > 0 && userProgress.topicPerformance && (
+        {userProgress && (
           <div className="mt-16">
             <TopicReviewSchedule userProgress={userProgress} liquidGlass={liquidGlass} />
           </div>
         )}
 
         {/* Performance Graphs Section */}
-        {userProgress && userProgress.quizHistory.length > 0 && (
+        {userProgress && (
           <div className="mt-16">
             <h2 className={`text-4xl md:text-5xl font-bold text-white mb-12 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Progress Charts</h2>
             <PerformanceGraphs userProgress={userProgress} />
@@ -845,7 +845,7 @@ export default function QuizPerformance() {
         )}
 
         {/* Recent Activity - Collapsible */}
-        {userProgress && userProgress.quizHistory.length > 0 && (
+        {userProgress && (
           <div className={`relative mt-16 p-10 md:p-12 transition-all duration-700 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl' : 'bg-black border border-zinc-800 rounded-md'}`}>
             {liquidGlass && (
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
@@ -872,7 +872,12 @@ export default function QuizPerformance() {
 
             {recentQuizzesExpanded ? (
               <div className="space-y-4 mt-6">
-                {userProgress.quizHistory.slice(-5).reverse().map((quiz) => {
+                {userProgress.quizHistory.length === 0 ? (
+                  <div className={`relative text-center py-12 text-xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
+                    No quizzes taken yet. Take a quiz to see your history here.
+                  </div>
+                ) : (
+                  userProgress.quizHistory.slice(-5).reverse().map((quiz) => {
                   const date = new Date(quiz.startedAt);
                   const formattedDate = date.toLocaleDateString('en-US', {
                     month: 'short',
@@ -988,7 +993,8 @@ export default function QuizPerformance() {
                       )}
                     </div>
                   );
-                })}
+                })
+                )}
 
                 {/* Show More button if there are more than 5 quizzes */}
                 {userProgress.quizHistory.length > 5 && (
@@ -1004,7 +1010,10 @@ export default function QuizPerformance() {
               </div>
             ) : (
               <div className={`relative mt-8 text-xl text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>
-                Click to view your last 5 quizzes
+                {userProgress.quizHistory.length === 0
+                  ? 'No quizzes taken yet'
+                  : `Click to view your last ${Math.min(5, userProgress.quizHistory.length)} quiz${userProgress.quizHistory.length === 1 ? '' : 'es'}`
+                }
               </div>
             )}
           </div>
