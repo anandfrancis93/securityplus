@@ -134,7 +134,7 @@ export default function Cybersecurity() {
                     Quiz
                   </h2>
                   <p className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed`}>
-                    Test your knowledge with AI-generated synthesis questions and get instant feedback.
+                    Test your knowledge with AI-generated questions and get instant feedback.
                   </p>
                   <div className="flex items-center gap-3 text-violet-400 font-medium pt-2">
                     <span>Start Quiz</span>
