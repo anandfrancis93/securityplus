@@ -157,14 +157,30 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
       ? estimateAbilityWithError(allAttempts)
       : { theta: 0, standardError: Infinity };
 
-    // Initialize or get quiz metadata
-    const quizMetadata = ensureMetadataInitialized(userData);
+    // Initialize or get quiz metadata and update with FSRS
+    let quizMetadata;
+    let updatedMetadata;
+    let topicPerformance;
 
-    // Update FSRS metadata with this quiz session's questions
-    const updatedMetadata = updateMetadataAfterQuiz(quizMetadata, session.questions);
+    try {
+      console.log('[FSRS] Initializing metadata...');
+      quizMetadata = ensureMetadataInitialized(userData);
+      console.log('[FSRS] Metadata initialized successfully');
 
-    // Sync FSRS-enabled topic performance back to main topicPerformance
-    const topicPerformance = syncTopicPerformanceToUserProgress(updatedMetadata);
+      console.log('[FSRS] Updating metadata after quiz...');
+      updatedMetadata = updateMetadataAfterQuiz(quizMetadata, session.questions);
+      console.log('[FSRS] Metadata updated successfully');
+
+      console.log('[FSRS] Syncing topic performance...');
+      topicPerformance = syncTopicPerformanceToUserProgress(updatedMetadata);
+      console.log('[FSRS] Topic performance synced successfully');
+    } catch (fsrsError) {
+      console.error('[FSRS] Error during FSRS operations:', fsrsError);
+      // Fall back to old topic performance update if FSRS fails
+      console.log('[FSRS] Falling back to legacy topic performance update');
+      topicPerformance = updateTopicPerformance(userData.topicPerformance || {}, session);
+      updatedMetadata = null; // Don't include broken metadata
+    }
 
     const updatedProgress: UserProgress = {
       userId,
@@ -177,7 +193,7 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
       estimatedAbility,
       abilityStandardError,
       topicPerformance,
-      quizMetadata: updatedMetadata, // Include updated FSRS metadata
+      ...(updatedMetadata && { quizMetadata: updatedMetadata }), // Include updated FSRS metadata only if successful
       lastUpdated: Date.now(),
     };
 
