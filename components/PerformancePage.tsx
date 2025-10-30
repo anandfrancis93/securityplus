@@ -1027,13 +1027,9 @@ export default function QuizPerformance() {
                             <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
                               <span className="text-zinc-500">Total Time:</span> {timeDisplay}
                             </div>
-                            <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'} flex items-center gap-3`}>
-                              <span className="text-zinc-500">Status:</span>
-                              <span className={`px-4 py-1 text-base transition-all duration-700 ${liquidGlass ? 'rounded-2xl' : 'rounded-md'} ${
-                                isIncomplete
-                                  ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/50'
-                                  : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/50'
-                              } ${liquidGlass ? '' : 'font-mono'}`}>
+                            <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
+                              <span className="text-zinc-500">Status:</span>{' '}
+                              <span className={isIncomplete ? 'text-yellow-400' : 'text-emerald-400'}>
                                 {isIncomplete ? 'Incomplete' : 'Completed'}
                               </span>
                             </div>
