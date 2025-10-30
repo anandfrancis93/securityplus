@@ -122,9 +122,12 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
   }
 
   // Graph 1: Ability Level Over Time with Confidence Intervals
-  const abilityOverTime = userProgress.quizHistory.map((quiz, index) => {
-    // Calculate ability up to this quiz
-    const attemptsUpToNow = userProgress.quizHistory
+  // Sort quizzes by quiz number to ensure correct chronological order
+  const sortedQuizHistory = [...userProgress.quizHistory].sort((a, b) => a.quizNumber - b.quizNumber);
+
+  const abilityOverTime = sortedQuizHistory.map((quiz, index) => {
+    // Calculate ability up to this quiz using sorted history
+    const attemptsUpToNow = sortedQuizHistory
       .slice(0, index + 1)
       .flatMap(q => q.questions);
 
@@ -133,7 +136,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     const abilityCI = calculateIRTConfidenceInterval(theta, standardError);
 
     return {
-      quiz: `Quiz ${index + 1}`,
+      quiz: `Quiz ${quiz.quizNumber}`,  // Use actual quiz number, not array index
+      quizNumber: quiz.quizNumber,       // Store for reference
       ability: parseFloat(theta.toFixed(2)),
       abilityErrorLower: parseFloat((theta - abilityCI.lower).toFixed(2)),
       abilityErrorUpper: parseFloat((abilityCI.upper - theta).toFixed(2)),
@@ -144,7 +148,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
   });
 
   // Graph 2: Predicted Score Over Time with Confidence Intervals
-  const scoreOverTime = userProgress.quizHistory.map((quiz, index) => {
+  // Use sorted quiz history to match abilityOverTime
+  const scoreOverTime = sortedQuizHistory.map((quiz, index) => {
     const ability = abilityOverTime[index].ability;
     const ciLower = abilityOverTime[index].ciLower;
     const ciUpper = abilityOverTime[index].ciUpper;
@@ -157,7 +162,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     const scoreUpper = Math.max(100, Math.min(900, Math.round(baseScore + (ciUpper * scaleFactor))));
 
     return {
-      quiz: `Quiz ${index + 1}`,
+      quiz: `Quiz ${quiz.quizNumber}`,  // Use actual quiz number, not array index
+      quizNumber: quiz.quizNumber,
       score,
       scoreLower,
       scoreUpper,
