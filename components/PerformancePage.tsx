@@ -691,33 +691,58 @@ export default function QuizPerformance() {
                   )}
                   <div className="relative flex items-center justify-between mb-6">
                     <h4 className={`text-2xl md:text-3xl font-bold text-white tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Ability Level</h4>
-                    {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
-                      <div className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold transition-all duration-700 flex items-center justify-center gap-2`}>
-                        <span className={
-                          lowerAbilityColor === 'emerald' ? 'text-emerald-400' :
-                          lowerAbilityColor === 'yellow' ? 'text-yellow-400' :
+                    <div className="relative group cursor-help">
+                      {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
+                        <div className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold transition-all duration-700 flex items-center justify-center gap-2`}>
+                          <span className={
+                            lowerAbilityColor === 'emerald' ? 'text-emerald-400' :
+                            lowerAbilityColor === 'yellow' ? 'text-yellow-400' :
+                            'text-red-400'
+                          }>
+                            {abilityCI.lower.toFixed(2)}
+                          </span>
+                          <span className="text-zinc-500">-</span>
+                          <span className={
+                            upperAbilityColor === 'emerald' ? 'text-emerald-400' :
+                            upperAbilityColor === 'yellow' ? 'text-yellow-400' :
+                            'text-red-400'
+                          }>
+                            {abilityCI.upper.toFixed(2)}
+                          </span>
+                        </div>
+                      ) : (
+                        <div className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold transition-all duration-700 ${
+                          estimatedAbility >= 1.0 ? 'text-emerald-400' :
+                          estimatedAbility >= -1.0 ? 'text-yellow-400' :
                           'text-red-400'
-                        }>
-                          {abilityCI.lower.toFixed(2)}
-                        </span>
-                        <span className="text-zinc-500">-</span>
-                        <span className={
-                          upperAbilityColor === 'emerald' ? 'text-emerald-400' :
-                          upperAbilityColor === 'yellow' ? 'text-yellow-400' :
-                          'text-red-400'
-                        }>
-                          {abilityCI.upper.toFixed(2)}
-                        </span>
+                        }`}>
+                          {estimatedAbility.toFixed(2)}
+                        </div>
+                      )}
+                      {/* Tooltip */}
+                      <div className={`absolute bottom-full right-0 mb-2 w-80 transition-opacity duration-700 ${liquidGlass ? 'bg-black/95 backdrop-blur-xl border-white/20 rounded-3xl' : 'bg-black border-zinc-800 rounded-md'} border p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100`}>
+                        <div className={`text-sm ${liquidGlass ? '' : 'font-mono'}`}>
+                          <div className="mb-3 pb-3 border-b border-zinc-700">
+                            <div className="text-zinc-400 font-semibold mb-1">Ability Level (θ)</div>
+                            <div className="text-xs text-zinc-500">IRT measure adjusted for question difficulty</div>
+                          </div>
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-emerald-400 font-semibold">≥1.0</span>
+                              <span className="text-zinc-300">Passing (~680+)</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-yellow-400 font-semibold">-1.0 to 1.0</span>
+                              <span className="text-zinc-300">Average (420-680)</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-red-400 font-semibold">&lt;-1.0</span>
+                              <span className="text-zinc-300">Below Average (&lt;420)</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    ) : (
-                      <div className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold transition-all duration-700 ${
-                        estimatedAbility >= 1.0 ? 'text-emerald-400' :
-                        estimatedAbility >= -1.0 ? 'text-yellow-400' :
-                        'text-red-400'
-                      }`}>
-                        {estimatedAbility.toFixed(2)}
-                      </div>
-                    )}
+                    </div>
                   </div>
                   <div className="relative mt-6">
                     <div className={`h-6 relative overflow-hidden ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl' : 'bg-zinc-900 border border-zinc-800 rounded-md'}`}>
