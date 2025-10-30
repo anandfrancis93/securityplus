@@ -12,10 +12,13 @@ import {
   Tooltip,
   ResponsiveContainer,
   ReferenceLine,
+  ReferenceArea,
   Legend,
   TooltipProps,
   Cell,
   ErrorBar,
+  Area,
+  ComposedChart,
 } from 'recharts';
 import { UserProgress } from '@/lib/types';
 import { ALL_SECURITY_PLUS_TOPICS } from '@/lib/topicData';
@@ -26,13 +29,20 @@ interface PerformanceGraphsProps {
   userProgress: UserProgress | null;
 }
 
+// Helper function to get color based on ability level
+const getAbilityColor = (ability: number) => {
+  if (ability >= 1.54) return '#22c55e'; // Green for passing
+  if (ability >= 0) return '#f5a623'; // Yellow for marginal
+  return '#ef4444'; // Red for failing
+};
+
 // Custom tooltip for Ability Level Over Time
 const AbilityTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
       <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.95)', border: '2px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '12px', backdropFilter: 'blur(16px)' }}>
-        <p style={{ color: '#3b82f6', fontSize: '14px' }}>
+        <p style={{ color: '#ffffff', fontSize: '14px' }}>
           {data.ciLower.toFixed(2)} to {data.ciUpper.toFixed(2)}
         </p>
       </div>
@@ -47,7 +57,7 @@ const ScoreTooltip = ({ active, payload }: any) => {
     const data = payload[0].payload;
     return (
       <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.95)', border: '2px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '12px', backdropFilter: 'blur(16px)' }}>
-        <p style={{ color: '#10b981', fontSize: '14px' }}>
+        <p style={{ color: '#ffffff', fontSize: '14px' }}>
           {data.scoreLower} to {data.scoreUpper}
         </p>
       </div>
@@ -355,11 +365,47 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           <div className="relative px-10 md:px-12 pb-10 md:pb-12">
             <ResponsiveContainer width="100%" height={400}>
           <LineChart data={abilityOverTime}>
+            <defs>
+              {/* Define individual gradients for each data point based on ability level */}
+              {abilityOverTime.map((point, index) => {
+                const color = getAbilityColor(point.ability);
+                return (
+                  <linearGradient key={`gradient-${index}`} id={`abilityGradient-${index}`} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={color} stopOpacity={0.3} />
+                    <stop offset="100%" stopColor={color} stopOpacity={0.1} />
+                  </linearGradient>
+                );
+              })}
+            </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
             <XAxis dataKey="quiz" stroke="#9ca3af" tick={false} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#9ca3af' }} />
             <YAxis domain={[-3, 3]} stroke="#9ca3af" label={{ value: 'Ability Level', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
             <Tooltip content={<AbilityTooltip />} />
             <ReferenceLine y={1.54} stroke="#22c55e" strokeDasharray="3 3" label={{ value: 'Passing (750)', fill: '#22c55e', position: 'right' }} />
+
+            {/* Render colored confidence bands as reference areas between consecutive points */}
+            {abilityOverTime.map((point, index) => {
+              if (index === abilityOverTime.length - 1) return null;
+
+              const nextPoint = abilityOverTime[index + 1];
+              const avgAbility = (point.ability + nextPoint.ability) / 2;
+              const color = getAbilityColor(avgAbility);
+
+              return (
+                <ReferenceArea
+                  key={`ci-band-${index}`}
+                  x1={point.quiz}
+                  x2={nextPoint.quiz}
+                  y1={Math.min(point.ciLower, nextPoint.ciLower)}
+                  y2={Math.max(point.ciUpper, nextPoint.ciUpper)}
+                  fill={color}
+                  fillOpacity={0.2}
+                  strokeOpacity={0}
+                />
+              );
+            })}
+
+            {/* Main ability line */}
             <Line
               type="monotone"
               dataKey="ability"
@@ -368,9 +414,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               dot={(props: any) => {
                 const { cx, cy, payload } = props;
                 const ability = payload.ability;
-                let fill = '#ff0000'; // Red for below average
-                if (ability >= 1) fill = '#22c55e'; // Green for excellent
-                else if (ability >= 0) fill = '#f5a623'; // Yellow for average to good
+                const fill = getAbilityColor(ability);
                 return <circle cx={cx} cy={cy} r={5} fill={fill} />;
               }}
             >
