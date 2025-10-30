@@ -236,19 +236,26 @@ export default function QuizPerformance() {
     }
   };
 
-  const handleExportData = () => {
+  const handleExportData = async () => {
     if (!userProgress || !user) {
       alert('No data to export');
       return;
     }
 
     try {
-      // Create export data object
-      const exportData = {
-        exportDate: new Date().toISOString(),
+      // Call API to get complete export data (including subcollection)
+      const response = await authenticatedPost('/api/export-progress', {
         userId: user.uid,
+      });
+
+      if (!response.success) {
+        throw new Error('Export failed');
+      }
+
+      // Add user email to export data
+      const exportData = {
+        ...response.data,
         userEmail: user.email,
-        userData: userProgress,
       };
 
       // Convert to JSON string
@@ -282,14 +289,26 @@ export default function QuizPerformance() {
         const content = e.target?.result as string;
         const importedData = JSON.parse(content);
 
-        // Validate imported data
-        if (!importedData.userData || !importedData.userId) {
+        // Validate imported data (support both old and new formats)
+        const isValidOldFormat = importedData.userData && importedData.userId;
+        const isValidNewFormat = importedData.mainDocument && importedData.userId;
+
+        if (!isValidOldFormat && !isValidNewFormat) {
           throw new Error('Invalid backup file format');
+        }
+
+        // Show info about what will be imported
+        let quizCount = 0;
+        if (importedData.quizHistory && Array.isArray(importedData.quizHistory)) {
+          quizCount = importedData.quizHistory.length;
+        } else if (importedData.userData?.quizHistory && Array.isArray(importedData.userData.quizHistory)) {
+          quizCount = importedData.userData.quizHistory.length;
         }
 
         // Confirm import
         const confirmed = confirm(
           `Import performance data from ${new Date(importedData.exportDate).toLocaleDateString()}?\n\n` +
+          `This backup contains ${quizCount} quiz${quizCount !== 1 ? 'zes' : ''}.\n` +
           `This will replace your current performance data. This action cannot be undone.`
         );
 
@@ -303,12 +322,12 @@ export default function QuizPerformance() {
           throw new Error('User not authenticated');
         }
 
-        await authenticatedPost('/api/import-progress', {
+        const response = await authenticatedPost('/api/import-progress', {
           userId: user.uid,
-          progressData: importedData.userData,
+          importData: importedData,
         });
 
-        alert('Performance data imported successfully! The page will now reload.');
+        alert(`Performance data imported successfully! ${response.quizzesImported || 0} quizzes restored.\n\nThe page will now reload.`);
         window.location.reload();
       } catch (error) {
         console.error('[IMPORT] Failed to import data:', error);
