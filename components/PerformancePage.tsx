@@ -1025,9 +1025,6 @@ export default function QuizPerformance() {
                               <span className="text-zinc-500">Time Started:</span> {formattedTime}
                             </div>
                             <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
-                              <span className="text-zinc-500">Time Ended:</span> {quiz.endedAt ? new Date(quiz.endedAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) : 'N/A'}
-                            </div>
-                            <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
                               <span className="text-zinc-500">Total Time:</span> {timeDisplay}
                             </div>
                             <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'} flex items-center gap-3`}>
