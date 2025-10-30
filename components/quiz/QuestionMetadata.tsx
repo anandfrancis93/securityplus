@@ -54,7 +54,7 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
       <div className="space-y-6 relative">
         {/* Domain(s) */}
         <div className="flex items-start gap-4">
-          <span className="text-lg font-semibold text-zinc-400 min-w-[100px] flex-shrink-0">
+          <span className="text-xl font-semibold text-zinc-400 min-w-[120px] flex-shrink-0">
             {domains.length > 1 ? 'Domain(s):' : 'Domain:'}
           </span>
           <div className="flex flex-col gap-2">
@@ -63,7 +63,7 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
               return (
                 <span
                   key={index}
-                  className="text-lg font-semibold"
+                  className="text-xl font-semibold"
                   style={{
                     color: color,
                   }}
@@ -78,7 +78,7 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
         {/* Topics grouped by domain */}
         {question.topics && question.topics.length > 0 && (
           <div className="flex items-start gap-4">
-            <span className="text-lg font-semibold text-zinc-400 min-w-[100px] flex-shrink-0">
+            <span className="text-xl font-semibold text-zinc-400 min-w-[120px] flex-shrink-0">
               {question.topics.length > 1 ? 'Topic(s):' : 'Topic:'}
             </span>
             <div className="flex flex-col gap-3">
@@ -87,7 +87,7 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
                 return (
                   <span
                     key={index}
-                    className="text-lg font-semibold"
+                    className="text-xl font-semibold"
                     style={{ color }}
                   >
                     {topics.join(', ')}
@@ -101,8 +101,8 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
         {/* Question Type */}
         {question.questionCategory && (
           <div className="flex items-center gap-4 flex-wrap">
-            <span className="text-lg font-semibold text-zinc-400 min-w-[100px]">Type:</span>
-            <span className="text-lg font-semibold text-white">
+            <span className="text-xl font-semibold text-zinc-400 min-w-[120px]">Type:</span>
+            <span className="text-xl font-semibold text-white">
               {question.questionCategory === 'single-domain-single-topic' ? 'Single Domain, Single Topic' :
                question.questionCategory === 'single-domain-multiple-topics' ? 'Single Domain, Multiple Topics' :
                'Multiple Domains, Multiple Topics'}
@@ -112,8 +112,8 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
 
         {/* Difficulty */}
         <div className="flex items-center gap-4 flex-wrap">
-          <span className="text-lg font-semibold text-zinc-400 min-w-[100px]">Difficulty:</span>
-          <span className={`text-lg font-semibold ${
+          <span className="text-xl font-semibold text-zinc-400 min-w-[120px]">Difficulty:</span>
+          <span className={`text-xl font-semibold ${
             question.difficulty === 'easy' ? 'text-green-400' :
             question.difficulty === 'medium' ? 'text-yellow-400' :
             'text-red-400'
@@ -125,8 +125,8 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
         {/* Points */}
         {pointsEarned !== undefined && maxPoints !== undefined && (
           <div className="flex items-center gap-4 flex-wrap">
-            <span className="text-lg font-semibold text-zinc-400 min-w-[100px]">Points:</span>
-            <span className="text-lg font-semibold text-white">
+            <span className="text-xl font-semibold text-zinc-400 min-w-[120px]">Points:</span>
+            <span className="text-xl font-semibold text-white">
               {pointsEarned}/{maxPoints}
             </span>
           </div>
