@@ -47,8 +47,10 @@ export function formatQuizSummary(quiz: QuizSession): FormattedQuizSummary {
     ? `${timeTakenMinutes}m ${timeTakenSeconds}s`
     : `${timeTakenSeconds}s`;
 
-  // Calculate accuracy
-  const accuracy = ((quiz.score / quiz.questions.length) * 100).toFixed(1);
+  // Calculate accuracy based on points (accounts for partial credit)
+  const accuracy = quiz.maxPoints > 0
+    ? ((quiz.totalPoints / quiz.maxPoints) * 100).toFixed(1)
+    : '0.0';
 
   // Check if incomplete
   const isIncomplete = !quiz.completed;
