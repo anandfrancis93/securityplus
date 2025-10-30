@@ -465,52 +465,14 @@ export default function QuizPerformance() {
 
       {/* Header - Full width */}
       <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
-        <Header />
+        <Header
+          onExportData={handleExportData}
+          onImportData={handleImportData}
+          hasData={!!userProgress && userProgress.totalQuestions > 0}
+        />
       </div>
 
       <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
-        {/* Export/Import Buttons */}
-        <div className="flex justify-end gap-4 mb-6">
-          <button
-            onClick={handleExportData}
-            className={`px-6 py-3 font-bold text-sm transition-all duration-700 ${
-              liquidGlass
-                ? 'bg-blue-500/20 hover:bg-blue-500/30 backdrop-blur-xl border border-blue-500/50 rounded-2xl text-blue-300 hover:scale-105 shadow-lg hover:shadow-xl hover:shadow-blue-500/20'
-                : 'bg-blue-900 hover:bg-blue-800 text-blue-200 rounded-md'
-            }`}
-            title="Download a backup of your performance data"
-          >
-            <span className="flex items-center gap-2">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-              Export Data
-            </span>
-          </button>
-
-          <label
-            className={`px-6 py-3 font-bold text-sm transition-all duration-700 cursor-pointer ${
-              liquidGlass
-                ? 'bg-green-500/20 hover:bg-green-500/30 backdrop-blur-xl border border-green-500/50 rounded-2xl text-green-300 hover:scale-105 shadow-lg hover:shadow-xl hover:shadow-green-500/20'
-                : 'bg-green-900 hover:bg-green-800 text-green-200 rounded-md'
-            }`}
-            title="Upload a backup to restore your performance data"
-          >
-            <span className="flex items-center gap-2">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-              </svg>
-              Import Data
-            </span>
-            <input
-              type="file"
-              accept=".json"
-              onChange={handleImportData}
-              className="hidden"
-            />
-          </label>
-        </div>
-
         {/* Hero Section - Apple Style */}
         <section className="text-center mb-8">
             <div className="max-w-5xl mx-auto space-y-8">

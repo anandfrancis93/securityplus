@@ -11,6 +11,9 @@ interface HeaderProps {
   className?: string;
   onHomeClick?: () => void; // Custom handler for home button (e.g., to show warning on quiz page)
   onSignOutClick?: () => void; // Custom handler for sign out (e.g., to show save/end modal on quiz page)
+  onExportData?: () => void; // Handler for exporting performance data
+  onImportData?: (event: React.ChangeEvent<HTMLInputElement>) => void; // Handler for importing performance data
+  hasData?: boolean; // Whether user has data to export
 }
 
 export default function Header({
@@ -19,7 +22,10 @@ export default function Header({
   backButtonLabel = 'Back',
   className = '',
   onHomeClick,
-  onSignOutClick
+  onSignOutClick,
+  onExportData,
+  onImportData,
+  hasData = false
 }: HeaderProps) {
   const router = useRouter();
   const { user, handleSignOut, liquidGlass } = useApp();
@@ -124,6 +130,59 @@ export default function Header({
               </div>
             </div>
 
+            {/* Export Data Button */}
+            {onExportData && (
+              <button
+                onClick={() => {
+                  onExportData();
+                  setMenuOpen(false);
+                }}
+                disabled={!hasData}
+                className={`w-full px-4 py-3 text-sm text-left transition-all duration-300 flex items-center gap-3 ${
+                  hasData
+                    ? 'text-zinc-200 hover:bg-white/10 cursor-pointer'
+                    : 'text-zinc-600 cursor-not-allowed opacity-50'
+                }`}
+                title={hasData ? 'Download backup of your performance data' : 'No data to export'}
+              >
+                <svg
+                  className={`w-4 h-4 ${hasData ? 'text-blue-400' : 'text-zinc-600'}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                <span>Export Data</span>
+              </button>
+            )}
+
+            {/* Import Data Button */}
+            {onImportData && (
+              <label className="w-full px-4 py-3 text-sm text-left text-zinc-200 hover:bg-white/10 transition-all duration-300 flex items-center gap-3 cursor-pointer">
+                <svg
+                  className="w-4 h-4 text-green-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                </svg>
+                <span>Import Data</span>
+                <input
+                  type="file"
+                  accept=".json"
+                  onChange={(e) => {
+                    onImportData(e);
+                    setMenuOpen(false);
+                  }}
+                  className="hidden"
+                />
+              </label>
+            )}
+
             {/* Sign Out Button */}
             <button
               id="sign-out"
@@ -138,7 +197,7 @@ export default function Header({
                   }
                 }
               }}
-              className="w-full px-4 py-3 text-sm text-left text-zinc-200 hover:bg-white/10 transition-all duration-300 flex items-center gap-3"
+              className="w-full px-4 py-3 text-sm text-left text-zinc-200 hover:bg-white/10 transition-all duration-300 flex items-center gap-3 border-t border-white/10"
             >
               <svg
                 className="w-4 h-4 text-zinc-400"
