@@ -13,6 +13,7 @@ interface HeaderProps {
   onSignOutClick?: () => void; // Custom handler for sign out (e.g., to show save/end modal on quiz page)
   onExportData?: () => void; // Handler for exporting performance data
   onImportData?: (event: React.ChangeEvent<HTMLInputElement>) => void; // Handler for importing performance data
+  onRecalculateProgress?: () => void; // Handler for recalculating performance metrics
   hasData?: boolean; // Whether user has data to export
 }
 
@@ -25,6 +26,7 @@ export default function Header({
   onSignOutClick,
   onExportData,
   onImportData,
+  onRecalculateProgress,
   hasData = false
 }: HeaderProps) {
   const router = useRouter();
@@ -181,6 +183,29 @@ export default function Header({
                   className="hidden"
                 />
               </label>
+            )}
+
+            {/* Recalculate Progress Button */}
+            {onRecalculateProgress && (
+              <button
+                onClick={() => {
+                  onRecalculateProgress();
+                  setMenuOpen(false);
+                }}
+                disabled={!hasData}
+                className="w-full px-4 py-3 text-sm text-left text-zinc-200 hover:bg-white/10 transition-all duration-300 flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg
+                  className="w-4 h-4 text-purple-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                </svg>
+                <span>Recalculate Progress</span>
+              </button>
             )}
 
             {/* Sign Out Button */}

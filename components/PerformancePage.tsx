@@ -280,6 +280,40 @@ export default function QuizPerformance() {
     }
   };
 
+  const handleRecalculateProgress = async () => {
+    if (!user) {
+      alert('User not authenticated');
+      return;
+    }
+
+    if (!confirm('This will recalculate all performance metrics and fix any incorrect partial credit scores from past quizzes. Continue?')) {
+      return;
+    }
+
+    try {
+      const response = await authenticatedPost('/api/recalculate-progress', {
+        userId: user.uid,
+      });
+
+      if (response.success) {
+        alert(
+          `${response.message}\n\n` +
+          `Total questions: ${response.stats.totalQuestions}\n` +
+          `Correct answers: ${response.stats.correctAnswers}\n` +
+          `Ability estimate: ${response.stats.estimatedAbility.toFixed(3)}\n` +
+          `Partial credits updated: ${response.stats.partialCreditsUpdated || 0}\n\n` +
+          `The page will now reload.`
+        );
+        window.location.reload();
+      } else {
+        throw new Error('Recalculation failed');
+      }
+    } catch (error) {
+      console.error('[RECALCULATE] Failed:', error);
+      alert(`Failed to recalculate progress: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  };
+
   const handleImportData = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -535,6 +569,7 @@ export default function QuizPerformance() {
         <Header
           onExportData={handleExportData}
           onImportData={handleImportData}
+          onRecalculateProgress={handleRecalculateProgress}
           hasData={!!userProgress && userProgress.totalQuestions > 0}
         />
       </div>
