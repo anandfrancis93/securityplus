@@ -150,17 +150,13 @@ export default function QuizReviewPage() {
                   <div className="text-2xl font-bold text-white">{totalQuestions}</div>
                 </div>
 
-                {/* Incomplete Quiz Badge */}
-                {isIncomplete && (
-                  <div className="space-y-2">
-                    <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Status</div>
-                    <div>
-                      <span className={`inline-block px-4 py-2 text-sm font-bold ${liquidGlass ? 'bg-yellow-500/20 backdrop-blur-xl border border-yellow-500/50 rounded-2xl text-yellow-300' : 'bg-yellow-950 text-yellow-300 border border-yellow-500 rounded-md'}`}>
-                        Incomplete Quiz
-                      </span>
-                    </div>
+                {/* Status */}
+                <div className="space-y-2">
+                  <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Status</div>
+                  <div className={`text-2xl font-bold ${isIncomplete ? 'text-yellow-400' : 'text-emerald-400'}`}>
+                    {isIncomplete ? 'Incomplete' : 'Completed'}
                   </div>
-                )}
+                </div>
               </div>
             </div>
           </div>

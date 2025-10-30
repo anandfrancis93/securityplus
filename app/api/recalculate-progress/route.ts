@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebaseAdmin';
 import { authenticateAndAuthorize } from '@/lib/apiAuth';
-import { estimateAbilityWithError } from '@/lib/irt';
+import { estimateAbilityWithError, calculatePartialCredit } from '@/lib/irt';
 import { updateMetadataAfterQuiz, ensureMetadataInitialized, syncTopicPerformanceToUserProgress } from '@/lib/fsrsMetadataUpdate';
 
 export async function POST(request: NextRequest) {
@@ -32,7 +32,10 @@ export async function POST(request: NextRequest) {
       .orderBy('startedAt', 'asc')
       .get();
 
-    const quizHistory = quizHistorySnapshot.docs.map(doc => doc.data());
+    let quizHistory = quizHistorySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
 
     console.log(`[RECALCULATE] Found ${quizHistory.length} quizzes to process`);
 
@@ -43,7 +46,83 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Collect all question attempts
+    // Recalculate partial credit scores for all multiple-response questions
+    let recalculatedCount = 0;
+    const batch = adminDb.batch();
+
+    for (const quiz of quizHistory) {
+      let quizUpdated = false;
+      let newTotalPoints = 0;
+      let newMaxPoints = 0;
+
+      const updatedQuestions = (quiz.questions || []).map((attempt: any) => {
+        const question = attempt.question;
+
+        // Recalculate partial credit for multiple-response questions that aren't fully correct
+        if (question.questionType === 'multiple' && !attempt.isCorrect && Array.isArray(attempt.userAnswer)) {
+          const correctAnswers = Array.isArray(question.correctAnswer) ? question.correctAnswer : [question.correctAnswer];
+          const userAnswers = attempt.userAnswer;
+          const totalOptions = question.options?.length || 4;
+
+          // Recalculate using correct formula
+          const newPointsEarned = calculatePartialCredit(
+            userAnswers,
+            correctAnswers,
+            totalOptions,
+            attempt.maxPoints || question.maxPoints || 10
+          );
+
+          if (newPointsEarned !== attempt.pointsEarned) {
+            console.log(`[RECALCULATE] Quiz ${quiz.id}, Question ${question.id}: ${attempt.pointsEarned} → ${newPointsEarned} points`);
+            quizUpdated = true;
+            recalculatedCount++;
+
+            newTotalPoints += newPointsEarned;
+            newMaxPoints += attempt.maxPoints;
+
+            return {
+              ...attempt,
+              pointsEarned: newPointsEarned
+            };
+          }
+        }
+
+        newTotalPoints += attempt.pointsEarned || 0;
+        newMaxPoints += attempt.maxPoints || 0;
+        return attempt;
+      });
+
+      if (quizUpdated) {
+        // Update the quiz document in the batch
+        const quizRef = userRef.collection('quizzes').doc(quiz.id);
+        batch.update(quizRef, {
+          questions: updatedQuestions,
+          totalPoints: newTotalPoints,
+          maxPoints: newMaxPoints
+        });
+
+        // Update the quiz in our local array for subsequent calculations
+        const quizIndex = quizHistory.findIndex(q => q.id === quiz.id);
+        if (quizIndex !== -1) {
+          quizHistory[quizIndex] = {
+            ...quiz,
+            questions: updatedQuestions,
+            totalPoints: newTotalPoints,
+            maxPoints: newMaxPoints
+          };
+        }
+      }
+    }
+
+    // Commit all quiz updates
+    if (recalculatedCount > 0) {
+      await batch.commit();
+      console.log(`[RECALCULATE] Updated ${recalculatedCount} partial credit scores across ${quizHistory.length} quizzes`);
+    } else {
+      console.log(`[RECALCULATE] No partial credit scores needed recalculation`);
+    }
+
+    // Collect all question attempts (with updated scores)
     const allAttempts = quizHistory.flatMap(quiz => quiz.questions || []);
 
     // Calculate IRT ability from all attempts
@@ -127,12 +206,15 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Performance data recalculated successfully',
+      message: recalculatedCount > 0
+        ? `Performance data recalculated successfully. Updated ${recalculatedCount} partial credit scores.`
+        : 'Performance data recalculated successfully. No partial credit updates needed.',
       stats: {
         totalQuestions,
         correctAnswers,
         estimatedAbility: theta,
         abilityStandardError: standardError,
+        partialCreditsUpdated: recalculatedCount,
       },
     });
   } catch (error: any) {
