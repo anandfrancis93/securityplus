@@ -27,7 +27,7 @@ interface PerformanceGraphsProps {
 }
 
 // Custom tooltip for Ability Level Over Time
-const AbilityTooltip = ({ active, payload }: TooltipProps<number, string>) => {
+const AbilityTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
@@ -42,7 +42,7 @@ const AbilityTooltip = ({ active, payload }: TooltipProps<number, string>) => {
 };
 
 // Custom tooltip for Predicted Score Over Time
-const ScoreTooltip = ({ active, payload }: TooltipProps<number, string>) => {
+const ScoreTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
