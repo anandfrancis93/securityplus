@@ -236,6 +236,91 @@ export default function QuizPerformance() {
     }
   };
 
+  const handleExportData = () => {
+    if (!userProgress || !user) {
+      alert('No data to export');
+      return;
+    }
+
+    try {
+      // Create export data object
+      const exportData = {
+        exportDate: new Date().toISOString(),
+        userId: user.uid,
+        userEmail: user.email,
+        userData: userProgress,
+      };
+
+      // Convert to JSON string
+      const dataStr = JSON.stringify(exportData, null, 2);
+
+      // Create blob and download
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `security-plus-performance-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      console.log('[EXPORT] Data exported successfully');
+    } catch (error) {
+      console.error('[EXPORT] Failed to export data:', error);
+      alert('Failed to export data. Please try again.');
+    }
+  };
+
+  const handleImportData = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        const content = e.target?.result as string;
+        const importedData = JSON.parse(content);
+
+        // Validate imported data
+        if (!importedData.userData || !importedData.userId) {
+          throw new Error('Invalid backup file format');
+        }
+
+        // Confirm import
+        const confirmed = confirm(
+          `Import performance data from ${new Date(importedData.exportDate).toLocaleDateString()}?\n\n` +
+          `This will replace your current performance data. This action cannot be undone.`
+        );
+
+        if (!confirmed) {
+          console.log('[IMPORT] Import cancelled by user');
+          return;
+        }
+
+        // Import data via API
+        if (!user) {
+          throw new Error('User not authenticated');
+        }
+
+        await authenticatedPost('/api/import-progress', {
+          userId: user.uid,
+          progressData: importedData.userData,
+        });
+
+        alert('Performance data imported successfully! The page will now reload.');
+        window.location.reload();
+      } catch (error) {
+        console.error('[IMPORT] Failed to import data:', error);
+        alert(`Failed to import data: ${error instanceof Error ? error.message : 'Invalid file format'}`);
+      }
+    };
+
+    reader.readAsText(file);
+    // Reset input so same file can be selected again
+    event.target.value = '';
+  };
+
   if (loading) {
     return (
       <div className={`flex items-center justify-center min-h-screen ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black font-mono'}`}>
@@ -384,6 +469,48 @@ export default function QuizPerformance() {
       </div>
 
       <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
+        {/* Export/Import Buttons */}
+        <div className="flex justify-end gap-4 mb-6">
+          <button
+            onClick={handleExportData}
+            className={`px-6 py-3 font-bold text-sm transition-all duration-700 ${
+              liquidGlass
+                ? 'bg-blue-500/20 hover:bg-blue-500/30 backdrop-blur-xl border border-blue-500/50 rounded-2xl text-blue-300 hover:scale-105 shadow-lg hover:shadow-xl hover:shadow-blue-500/20'
+                : 'bg-blue-900 hover:bg-blue-800 text-blue-200 rounded-md'
+            }`}
+            title="Download a backup of your performance data"
+          >
+            <span className="flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Export Data
+            </span>
+          </button>
+
+          <label
+            className={`px-6 py-3 font-bold text-sm transition-all duration-700 cursor-pointer ${
+              liquidGlass
+                ? 'bg-green-500/20 hover:bg-green-500/30 backdrop-blur-xl border border-green-500/50 rounded-2xl text-green-300 hover:scale-105 shadow-lg hover:shadow-xl hover:shadow-green-500/20'
+                : 'bg-green-900 hover:bg-green-800 text-green-200 rounded-md'
+            }`}
+            title="Upload a backup to restore your performance data"
+          >
+            <span className="flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+              </svg>
+              Import Data
+            </span>
+            <input
+              type="file"
+              accept=".json"
+              onChange={handleImportData}
+              className="hidden"
+            />
+          </label>
+        </div>
+
         {/* Hero Section - Apple Style */}
         <section className="text-center mb-8">
             <div className="max-w-5xl mx-auto space-y-8">
@@ -1027,12 +1154,6 @@ export default function QuizPerformance() {
                             <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
                               <span className="text-zinc-500">Total Time:</span> {timeDisplay}
                             </div>
-                            <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
-                              <span className="text-zinc-500">Status:</span>{' '}
-                              <span className={isIncomplete ? 'text-yellow-400' : 'text-emerald-400'}>
-                                {isIncomplete ? 'Incomplete' : 'Completed'}
-                              </span>
-                            </div>
                             {(() => {
                               const percentage = (quiz.totalPoints / quiz.maxPoints) * 100;
                               const scoreColor = percentage >= 81.25 ? 'text-emerald-400' :
@@ -1047,6 +1168,12 @@ export default function QuizPerformance() {
                                 </div>
                               );
                             })()}
+                            <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
+                              <span className="text-zinc-500">Status:</span>{' '}
+                              <span className={isIncomplete ? 'text-yellow-400' : 'text-emerald-400'}>
+                                {isIncomplete ? 'Incomplete' : 'Completed'}
+                              </span>
+                            </div>
                           </div>
                           <div className="text-right">
                             {(() => {
