@@ -176,10 +176,11 @@ export function updateMetadataAfterQuiz(
         }
         topicPerf.totalPoints += pointsEarned;
         topicPerf.maxPoints += maxPoints;
-        topicPerf.accuracy = (topicPerf.correctAnswers / topicPerf.questionsAnswered) * 100;
+        // Use points-based accuracy for partial credit
+        topicPerf.accuracy = topicPerf.maxPoints > 0 ? (topicPerf.totalPoints / topicPerf.maxPoints) * 100 : 0;
         topicPerf.lastTested = Date.now();
 
-        // Update mastery and struggling status
+        // Update mastery and struggling status (using points-based accuracy)
         topicPerf.isMastered = topicPerf.accuracy >= 80 && topicPerf.questionsAnswered >= 3;
         topicPerf.isStruggling = topicPerf.accuracy < 60 && topicPerf.questionsAnswered >= 2;
 

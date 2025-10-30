@@ -93,11 +93,11 @@ function generatePerformanceInsights(userProgress: UserProgress | null, estimate
 
   // Generate insights based on analysis
 
-  // 1. Difficulty Performance Insight
+  // 1. Difficulty Performance Insight (using points for partial credit)
   const difficultyInsight = [];
   for (const [diff, stats] of Object.entries(byDifficulty)) {
     if (stats.total > 0) {
-      const acc = ((stats.correct / stats.total) * 100).toFixed(0);
+      const acc = stats.maxPoints > 0 ? ((stats.points / stats.maxPoints) * 100).toFixed(0) : '0';
       difficultyInsight.push(`${diff}: ${acc}%`);
     }
   }
@@ -105,21 +105,25 @@ function generatePerformanceInsights(userProgress: UserProgress | null, estimate
     insights.push(`Accuracy by difficulty: ${difficultyInsight.join(', ')}`);
   }
 
-  // 2. Weakness by Difficulty
-  if (byDifficulty.easy.total >= 3 && byDifficulty.easy.correct / byDifficulty.easy.total < 0.7) {
+  // 2. Weakness by Difficulty (using points for partial credit)
+  const easyAcc = byDifficulty.easy.maxPoints > 0 ? byDifficulty.easy.points / byDifficulty.easy.maxPoints : 0;
+  const mediumAcc = byDifficulty.medium.maxPoints > 0 ? byDifficulty.medium.points / byDifficulty.medium.maxPoints : 0;
+  const hardAcc = byDifficulty.hard.maxPoints > 0 ? byDifficulty.hard.points / byDifficulty.hard.maxPoints : 0;
+
+  if (byDifficulty.easy.total >= 3 && easyAcc < 0.7) {
     insights.push('Struggling with easy questions - review fundamental concepts');
   }
-  if (byDifficulty.medium.total >= 5 && byDifficulty.medium.correct / byDifficulty.medium.total < 0.7) {
+  if (byDifficulty.medium.total >= 5 && mediumAcc < 0.7) {
     insights.push('Medium difficulty questions need more practice');
   }
-  if (byDifficulty.hard.total >= 3 && byDifficulty.hard.correct / byDifficulty.hard.total < 0.6) {
+  if (byDifficulty.hard.total >= 3 && hardAcc < 0.6) {
     insights.push('Hard questions require deeper understanding - review advanced topics');
   }
 
-  // 3. Category Performance - Areas for Improvement
+  // 3. Category Performance - Areas for Improvement (using points for partial credit)
   const multiDomain = byCategory['multiple-domains-multiple-topics'];
   if (multiDomain.total >= 3) {
-    const acc = (multiDomain.correct / multiDomain.total) * 100;
+    const acc = multiDomain.maxPoints > 0 ? (multiDomain.points / multiDomain.maxPoints) * 100 : 0;
     if (acc < 70) {
       insights.push(`Improve cross-domain integration (currently ${acc.toFixed(0)}%)`);
     }
@@ -127,28 +131,38 @@ function generatePerformanceInsights(userProgress: UserProgress | null, estimate
 
   const multiTopic = byCategory['single-domain-multiple-topics'];
   if (multiTopic.total >= 3) {
-    const acc = (multiTopic.correct / multiTopic.total) * 100;
+    const acc = multiTopic.maxPoints > 0 ? (multiTopic.points / multiTopic.maxPoints) * 100 : 0;
     if (acc < 60) {
       insights.push(`Focus on connecting multiple concepts within domains (${acc.toFixed(0)}%)`);
     }
   }
 
-  // 4. Question Type Performance
+  // 4. Question Type Performance (using points for partial credit)
   if (byType.multiple.total >= 3) {
-    const multiAcc = ((byType.multiple.correct / byType.multiple.total) * 100).toFixed(0);
+    // For multiple-choice, we need to track points too
+    let multiPoints = 0;
+    let multiMaxPoints = 0;
+    allAttempts.forEach(attempt => {
+      if (attempt.question.questionType === 'multiple') {
+        multiPoints += attempt.pointsEarned;
+        multiMaxPoints += attempt.maxPoints;
+      }
+    });
+    const multiAcc = multiMaxPoints > 0 ? ((multiPoints / multiMaxPoints) * 100).toFixed(0) : '0';
     if (byType.multiple.partialCredit > 0) {
       insights.push(`Partial credit earned on ${byType.multiple.partialCredit} multi-select questions - review all correct options`);
     }
-    if (byType.multiple.correct / byType.multiple.total < 0.6) {
+    const multiAccNum = multiMaxPoints > 0 ? multiPoints / multiMaxPoints : 0;
+    if (multiAccNum < 0.6) {
       insights.push(`Multi-select questions need work (${multiAcc}%) - practice "select all that apply"`);
     }
   }
 
-  // 5. Recent Performance Trend - Areas for Improvement
+  // 5. Recent Performance Trend - Areas for Improvement (using points for partial credit)
   if (userProgress.quizHistory.length >= 3) {
     const recentQuizzes = userProgress.quizHistory.slice(-3);
     const recentAccuracies = recentQuizzes.map(quiz =>
-      quiz.questions.length > 0 ? (quiz.questions.filter(q => q.isCorrect).length / quiz.questions.length) * 100 : 0
+      quiz.maxPoints > 0 ? (quiz.totalPoints / quiz.maxPoints) * 100 : 0
     );
     const avgRecent = recentAccuracies.reduce((a, b) => a + b, 0) / recentAccuracies.length;
 

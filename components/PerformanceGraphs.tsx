@@ -118,17 +118,19 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     };
   });
 
-  // Graph 3: Accuracy by Difficulty
-  const difficultyStats: { [key: string]: { correct: number; total: number } } = {
-    easy: { correct: 0, total: 0 },
-    medium: { correct: 0, total: 0 },
-    hard: { correct: 0, total: 0 },
+  // Graph 3: Accuracy by Difficulty (using points for partial credit)
+  const difficultyStats: { [key: string]: { points: number; maxPoints: number; correct: number; total: number } } = {
+    easy: { points: 0, maxPoints: 0, correct: 0, total: 0 },
+    medium: { points: 0, maxPoints: 0, correct: 0, total: 0 },
+    hard: { points: 0, maxPoints: 0, correct: 0, total: 0 },
   };
 
   userProgress.quizHistory.forEach(quiz => {
     quiz.questions.forEach(attempt => {
       const diff = attempt.question.difficulty || 'medium';
       difficultyStats[diff].total += 1;
+      difficultyStats[diff].points += attempt.pointsEarned;
+      difficultyStats[diff].maxPoints += attempt.maxPoints;
       if (attempt.isCorrect) {
         difficultyStats[diff].correct += 1;
       }
@@ -138,14 +140,17 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
   const accuracyByDifficulty = [
     {
       difficulty: 'Easy',
-      accuracy: difficultyStats.easy.total > 0
-        ? Math.round((difficultyStats.easy.correct / difficultyStats.easy.total) * 100)
+      accuracy: difficultyStats.easy.maxPoints > 0
+        ? Math.round((difficultyStats.easy.points / difficultyStats.easy.maxPoints) * 100)
         : 0,
       questions: difficultyStats.easy.total,
       ...(() => {
         if (difficultyStats.easy.total > 0) {
+          // Still use Wilson interval for binomial confidence (correct vs incorrect questions)
           const ci = wilsonScoreInterval(difficultyStats.easy.correct, difficultyStats.easy.total);
-          const accuracy = Math.round(ci.proportion);
+          const accuracy = difficultyStats.easy.maxPoints > 0
+            ? Math.round((difficultyStats.easy.points / difficultyStats.easy.maxPoints) * 100)
+            : 0;
           return {
             ciLower: ci.lower,
             ciUpper: ci.upper,
@@ -158,14 +163,16 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     },
     {
       difficulty: 'Medium',
-      accuracy: difficultyStats.medium.total > 0
-        ? Math.round((difficultyStats.medium.correct / difficultyStats.medium.total) * 100)
+      accuracy: difficultyStats.medium.maxPoints > 0
+        ? Math.round((difficultyStats.medium.points / difficultyStats.medium.maxPoints) * 100)
         : 0,
       questions: difficultyStats.medium.total,
       ...(() => {
         if (difficultyStats.medium.total > 0) {
           const ci = wilsonScoreInterval(difficultyStats.medium.correct, difficultyStats.medium.total);
-          const accuracy = Math.round(ci.proportion);
+          const accuracy = difficultyStats.medium.maxPoints > 0
+            ? Math.round((difficultyStats.medium.points / difficultyStats.medium.maxPoints) * 100)
+            : 0;
           return {
             ciLower: ci.lower,
             ciUpper: ci.upper,
@@ -178,14 +185,16 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     },
     {
       difficulty: 'Hard',
-      accuracy: difficultyStats.hard.total > 0
-        ? Math.round((difficultyStats.hard.correct / difficultyStats.hard.total) * 100)
+      accuracy: difficultyStats.hard.maxPoints > 0
+        ? Math.round((difficultyStats.hard.points / difficultyStats.hard.maxPoints) * 100)
         : 0,
       questions: difficultyStats.hard.total,
       ...(() => {
         if (difficultyStats.hard.total > 0) {
           const ci = wilsonScoreInterval(difficultyStats.hard.correct, difficultyStats.hard.total);
-          const accuracy = Math.round(ci.proportion);
+          const accuracy = difficultyStats.hard.maxPoints > 0
+            ? Math.round((difficultyStats.hard.points / difficultyStats.hard.maxPoints) * 100)
+            : 0;
           return {
             ciLower: ci.lower,
             ciUpper: ci.upper,
@@ -200,7 +209,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
   // Graph 4: Topic Performance Breakdown by Domain
   // Count unique questions per domain (not topic occurrences)
-  const domainStats: { [domain: string]: { questionIds: Set<string>; correctQuestionIds: Set<string> } } = {};
+  // Track points for partial credit accuracy
+  const domainStats: { [domain: string]: { questionIds: Set<string>; correctQuestionIds: Set<string>; points: number; maxPoints: number } } = {};
 
   // Build a map of questionId -> domains for that question
   userProgress.quizHistory.forEach(quiz => {
@@ -217,14 +227,20 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       });
 
       // Count this question once per domain it appears in
+      // Track points for partial credit
       domainsForQuestion.forEach(domain => {
         if (!domainStats[domain]) {
           domainStats[domain] = {
             questionIds: new Set<string>(),
-            correctQuestionIds: new Set<string>()
+            correctQuestionIds: new Set<string>(),
+            points: 0,
+            maxPoints: 0
           };
         }
         domainStats[domain].questionIds.add(questionId);
+        // Add points for this question (even if question appears in multiple domains, count points once per domain)
+        domainStats[domain].points += attempt.pointsEarned;
+        domainStats[domain].maxPoints += attempt.maxPoints;
         if (attempt.isCorrect) {
           domainStats[domain].correctQuestionIds.add(questionId);
         }
@@ -243,7 +259,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     return {
       domain: domainName,
       domainNum,
-      accuracy: totalQuestions > 0 ? Math.round((correctQuestions / totalQuestions) * 100) : 0,
+      accuracy: stats.maxPoints > 0 ? Math.round((stats.points / stats.maxPoints) * 100) : 0,
       questions: totalQuestions,
     };
   }).sort((a, b) => a.domainNum.localeCompare(b.domainNum));
