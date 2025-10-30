@@ -1171,39 +1171,54 @@ export default function QuizPerformance() {
                           </svg>
                         </button>
 
-                        <div className="relative flex justify-between items-start pr-12">
-                          <div className="space-y-3">
-                            <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
-                              <span className="text-zinc-500">Date:</span> {formattedDate}
+                        <div className="relative pr-12">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                            {/* Date */}
+                            <div className="space-y-2">
+                              <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Date</div>
+                              <div className="text-2xl font-bold text-white">{formattedDate}</div>
                             </div>
-                            <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
-                              <span className="text-zinc-500">Time Started:</span> {formattedTime}
+
+                            {/* Time Started */}
+                            <div className="space-y-2">
+                              <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Time Started</div>
+                              <div className="text-2xl font-bold text-white">{formattedTime}</div>
                             </div>
-                            <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
-                              <span className="text-zinc-500">Total Time:</span> {timeDisplay}
+
+                            {/* Total Time */}
+                            <div className="space-y-2">
+                              <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Total Time</div>
+                              <div className="text-2xl font-bold text-white">{timeDisplay}</div>
                             </div>
-                            <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
-                              <span className="text-zinc-500">Total Questions:</span> {quiz.questions.length}
+
+                            {/* Total Questions */}
+                            <div className="space-y-2">
+                              <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Total Questions</div>
+                              <div className="text-2xl font-bold text-white">{quiz.questions.length}</div>
                             </div>
+
+                            {/* Accuracy */}
                             {(() => {
                               const percentage = (quiz.totalPoints / quiz.maxPoints) * 100;
                               const scoreColor = percentage >= 81.25 ? 'text-emerald-400' :
                                                 percentage >= 62.5 ? 'text-yellow-400' :
                                                 'text-red-400';
                               return (
-                                <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
-                                  <span className="text-zinc-500">Accuracy:</span>{' '}
-                                  <span className={scoreColor}>
+                                <div className="space-y-2">
+                                  <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Accuracy</div>
+                                  <div className={`text-2xl font-bold ${scoreColor}`}>
                                     {percentage.toFixed(1)}%
-                                  </span>
+                                  </div>
                                 </div>
                               );
                             })()}
-                            <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
-                              <span className="text-zinc-500">Status:</span>{' '}
-                              <span className={isIncomplete ? 'text-yellow-400' : 'text-emerald-400'}>
+
+                            {/* Status */}
+                            <div className="space-y-2">
+                              <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Status</div>
+                              <div className={`text-2xl font-bold ${isIncomplete ? 'text-yellow-400' : 'text-emerald-400'}`}>
                                 {isIncomplete ? 'Incomplete' : 'Completed'}
-                              </span>
+                              </div>
                             </div>
                           </div>
                         </div>
