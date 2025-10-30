@@ -475,9 +475,9 @@ export default function Quiz() {
   };
 
   const handleCelebrationClose = () => {
-    console.log('Celebration close clicked, navigating to /cybersecurity');
+    console.log('Celebration close clicked, navigating to /cybersecurity/quiz');
     // Use window.location.href for guaranteed navigation
-    window.location.href = '/cybersecurity';
+    window.location.href = '/cybersecurity/quiz';
   };
 
   // Handle navigation warning confirmation
