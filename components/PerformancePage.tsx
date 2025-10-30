@@ -410,9 +410,11 @@ export default function QuizPerformance() {
 
           <div className="relative text-center mb-10">
             <h2 className={`text-3xl md:text-4xl text-white mb-2 tracking-tight font-bold ${liquidGlass ? '' : 'font-mono'}`}>Predicted Exam Score</h2>
-            <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'} mb-8`}>
-              Based on {totalAnswered} question{totalAnswered !== 1 ? 's' : ''}
-            </p>
+            {totalAnswered >= MIN_QUESTIONS_FOR_PREDICTION && (
+              <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'} mb-8`}>
+                Based on {totalAnswered} question{totalAnswered !== 1 ? 's' : ''}
+              </p>
+            )}
 
             {hasEnoughQuestions ? (
               <>
