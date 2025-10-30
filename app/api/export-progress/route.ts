@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     // Get quiz history from subcollection (using 'quizzes' to match lib/db.ts)
     const quizHistorySnapshot = await userRef
       .collection('quizzes')
-      .orderBy('completedAt', 'desc')
+      .orderBy('startedAt', 'desc')
       .get();
 
     const quizHistory = quizHistorySnapshot.docs.map(doc => ({

@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
 
       // Add imported quiz history
       quizHistoryData.forEach(quiz => {
-        const quizId = quiz.id || `quiz_${quiz.completedAt || Date.now()}`;
+        const quizId = quiz.id || `quiz_${quiz.startedAt || quiz.completedAt || Date.now()}`;
         const quizRef = quizHistoryRef.doc(quizId);
         // Keep the id field in the document data for consistency
         const quizData = { ...quiz, id: quizId };
