@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     let quizHistory = quizHistorySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
-    }));
+    })) as any[];
 
     console.log(`[RECALCULATE] Found ${quizHistory.length} quizzes to process`);
 
