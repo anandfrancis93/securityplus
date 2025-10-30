@@ -122,8 +122,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
   }
 
   // Graph 1: Ability Level Over Time with Confidence Intervals
-  // Sort quizzes by quiz number to ensure correct chronological order
-  const sortedQuizHistory = [...userProgress.quizHistory].sort((a, b) => a.quizNumber - b.quizNumber);
+  // Sort quizzes by startedAt timestamp to ensure correct chronological order
+  const sortedQuizHistory = [...userProgress.quizHistory].sort((a, b) => a.startedAt - b.startedAt);
 
   const abilityOverTime = sortedQuizHistory.map((quiz, index) => {
     // Calculate ability up to this quiz using sorted history
@@ -135,9 +135,14 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     const { theta, standardError } = estimateAbilityWithError(attemptsUpToNow);
     const abilityCI = calculateIRTConfidenceInterval(theta, standardError);
 
+    // Use quiz ID for stable identification (extract quiz number if present in ID)
+    const quizLabel = quiz.id.includes('quiz_')
+      ? `Quiz ${quiz.id.split('_')[1] || index + 1}`
+      : `Quiz ${index + 1}`;
+
     return {
-      quiz: `Quiz ${quiz.quizNumber}`,  // Use actual quiz number, not array index
-      quizNumber: quiz.quizNumber,       // Store for reference
+      quiz: quizLabel,
+      quizId: quiz.id,  // Store quiz ID for stable reference
       ability: parseFloat(theta.toFixed(2)),
       abilityErrorLower: parseFloat((theta - abilityCI.lower).toFixed(2)),
       abilityErrorUpper: parseFloat((abilityCI.upper - theta).toFixed(2)),
@@ -161,9 +166,14 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     const scoreLower = Math.max(100, Math.min(900, Math.round(baseScore + (ciLower * scaleFactor))));
     const scoreUpper = Math.max(100, Math.min(900, Math.round(baseScore + (ciUpper * scaleFactor))));
 
+    // Use same quiz label logic as abilityOverTime
+    const quizLabel = quiz.id.includes('quiz_')
+      ? `Quiz ${quiz.id.split('_')[1] || index + 1}`
+      : `Quiz ${index + 1}`;
+
     return {
-      quiz: `Quiz ${quiz.quizNumber}`,  // Use actual quiz number, not array index
-      quizNumber: quiz.quizNumber,
+      quiz: quizLabel,
+      quizId: quiz.id,
       score,
       scoreLower,
       scoreUpper,
