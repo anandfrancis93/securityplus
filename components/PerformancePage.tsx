@@ -690,40 +690,41 @@ export default function QuizPerformance() {
 
             {irtExpanded ? (
               <>
-                <div className={`relative p-8 md:p-10 mb-8 mt-8 transition-all duration-700 ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl' : 'bg-black border border-zinc-800 rounded-md'}`}>
-                  {liquidGlass && (
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />
-                  )}
-                  <div className="relative flex items-center justify-between mb-6">
-                    <h4 className={`text-2xl md:text-3xl font-bold text-white tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Ability Level</h4>
-                    <div className="relative group cursor-help">
-                      {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
-                        <div className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold transition-all duration-700 flex items-center justify-center gap-2`}>
-                          <span className={
-                            lowerAbilityColor === 'emerald' ? 'text-emerald-400' :
-                            lowerAbilityColor === 'yellow' ? 'text-yellow-400' :
+                {hasEnoughQuestions ? (
+                  <div className={`relative p-8 md:p-10 mb-8 mt-8 transition-all duration-700 ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl' : 'bg-black border border-zinc-800 rounded-md'}`}>
+                    {liquidGlass && (
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />
+                    )}
+                    <div className="relative flex items-center justify-between mb-6">
+                      <h4 className={`text-2xl md:text-3xl font-bold text-white tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Ability Level</h4>
+                      <div className="relative group cursor-help">
+                        {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
+                          <div className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold transition-all duration-700 flex items-center justify-center gap-2`}>
+                            <span className={
+                              lowerAbilityColor === 'emerald' ? 'text-emerald-400' :
+                              lowerAbilityColor === 'yellow' ? 'text-yellow-400' :
+                              'text-red-400'
+                            }>
+                              {abilityCI.lower.toFixed(2)}
+                            </span>
+                            <span className="text-zinc-500">-</span>
+                            <span className={
+                              upperAbilityColor === 'emerald' ? 'text-emerald-400' :
+                              upperAbilityColor === 'yellow' ? 'text-yellow-400' :
+                              'text-red-400'
+                            }>
+                              {abilityCI.upper.toFixed(2)}
+                            </span>
+                          </div>
+                        ) : (
+                          <div className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold transition-all duration-700 ${
+                            estimatedAbility >= 1.54 ? 'text-emerald-400' :
+                            estimatedAbility >= 0.38 ? 'text-yellow-400' :
                             'text-red-400'
-                          }>
-                            {abilityCI.lower.toFixed(2)}
-                          </span>
-                          <span className="text-zinc-500">-</span>
-                          <span className={
-                            upperAbilityColor === 'emerald' ? 'text-emerald-400' :
-                            upperAbilityColor === 'yellow' ? 'text-yellow-400' :
-                            'text-red-400'
-                          }>
-                            {abilityCI.upper.toFixed(2)}
-                          </span>
-                        </div>
-                      ) : (
-                        <div className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold transition-all duration-700 ${
-                          estimatedAbility >= 1.54 ? 'text-emerald-400' :
-                          estimatedAbility >= 0.38 ? 'text-yellow-400' :
-                          'text-red-400'
-                        }`}>
-                          {estimatedAbility.toFixed(2)}
-                        </div>
-                      )}
+                          }`}>
+                            {estimatedAbility.toFixed(2)}
+                          </div>
+                        )}
                       {/* Tooltip */}
                       <div className={`absolute bottom-full right-0 mb-2 w-80 transition-opacity duration-700 ${liquidGlass ? 'bg-black/95 backdrop-blur-xl border-white/20 rounded-3xl' : 'bg-black border-zinc-800 rounded-md'} border p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100`}>
                         <div className={`text-sm ${liquidGlass ? '' : 'font-mono'}`}>
@@ -883,6 +884,27 @@ export default function QuizPerformance() {
                     </ul>
                   </div>
                 </div>
+              </>
+                ) : (
+                  <div className="mt-8">
+                    <div className={`relative p-8 ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10' : 'bg-zinc-900 rounded-2xl border border-zinc-800'}`}>
+                      {liquidGlass && (
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-3xl" />
+                      )}
+                      <div className="relative text-center">
+                        <svg className="w-16 h-16 mx-auto mb-4 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+                        </svg>
+                        <h4 className={`text-2xl md:text-3xl font-bold text-white mb-3 ${liquidGlass ? '' : 'font-mono'}`}>
+                          Insufficient Data
+                        </h4>
+                        <p className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
+                          Answer <span className="text-white font-bold">{questionsNeeded} more</span> {questionsNeeded === 1 ? 'question' : 'questions'} for ability level analysis
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </>
             ) : (
               <div className={`relative mt-8 text-xl text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>
