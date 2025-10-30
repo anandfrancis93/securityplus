@@ -521,7 +521,7 @@ export default function QuizPerformance() {
                           <strong className="text-white">Margin of Error:</strong> ±{confidenceInfo.margin} points
                         </div>
                         <div className={`pt-3 border-t ${liquidGlass ? 'border-zinc-700' : 'border-zinc-800'} ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} text-xs`}>
-                          We are 95% confident your exam score will fall between <strong className="text-white">{scoreCI.lower}</strong> and <strong className="text-white">{scoreCI.upper}</strong> with a margin of <strong className="text-white">±{confidenceInfo.margin}</strong> points.
+                          We are 95% confident your exam score will fall between <strong className="text-white">{scoreCI.lower}</strong> and <strong className="text-white">{scoreCI.upper}</strong>.
                         </div>
                       </div>
                     </div>
