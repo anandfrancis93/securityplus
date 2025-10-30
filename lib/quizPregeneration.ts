@@ -525,13 +525,14 @@ export function selectCrossDomainTopics(count: number): string[] {
 
 /**
  * Select question category based on distribution
- * 70% single-domain-single-topic, 25% single-domain-multiple-topics, 5% multiple-domains-multiple-topics
+ * 30% single-domain-single-topic (easy), 40% single-domain-multiple-topics (medium), 30% multiple-domains-multiple-topics (hard)
+ * This gives a quiz distribution of approximately 3 easy, 4 medium, 3 hard questions per 10-question quiz
  */
 export function selectQuestionCategory(): 'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics' {
   const random = Math.random();
-  if (random < 0.70) return 'single-domain-single-topic';
-  if (random < 0.95) return 'single-domain-multiple-topics'; // 0.70 to 0.95 = 25%
-  return 'multiple-domains-multiple-topics'; // 0.95 to 1.00 = 5%
+  if (random < 0.30) return 'single-domain-single-topic';      // 0.00 to 0.30 = 30% (easy)
+  if (random < 0.70) return 'single-domain-multiple-topics';   // 0.30 to 0.70 = 40% (medium)
+  return 'multiple-domains-multiple-topics';                    // 0.70 to 1.00 = 30% (hard)
 }
 
 /**
@@ -660,7 +661,7 @@ export async function pregenerateQuiz(
       while (!question && attempts < MAX_ATTEMPTS) {
         attempts++;
 
-        // Select question category (70% direct, 25% synthesis, 5% cross-domain)
+        // Select question category (30% easy, 40% medium, 30% hard)
         const questionCategory = selectQuestionCategory();
 
         // Select topics based on category, prioritizing uncovered topics
@@ -715,7 +716,7 @@ export async function pregenerateQuiz(
       while (!question && attempts < MAX_ATTEMPTS) {
         attempts++;
 
-        // Select question category (70% direct, 25% synthesis, 5% cross-domain)
+        // Select question category (30% easy, 40% medium, 30% hard)
         const questionCategory = selectQuestionCategory();
 
         // Select topics based on category (no priority topics in Phase 2)
