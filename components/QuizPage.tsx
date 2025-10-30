@@ -36,6 +36,75 @@ export default function Quiz() {
   }, [user, authLoading, router]);
   const [quizStats, setQuizStats] = useState<{ total: number; correct: number; accuracy: number } | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [showNavigationWarning, setShowNavigationWarning] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState<(() => void) | null>(null);
+
+  // Save quiz state to localStorage as backup
+  const saveQuizToLocalStorage = () => {
+    if (!user?.uid || !quizSessionId) return;
+
+    const quizState = {
+      userId: user.uid,
+      quizSessionId,
+      questions,
+      currentQuestionIndex,
+      selectedAnswer,
+      selectedAnswers,
+      showExplanation,
+      timestamp: Date.now(),
+    };
+
+    try {
+      localStorage.setItem('quizInProgress', JSON.stringify(quizState));
+      console.log('Quiz state saved to localStorage');
+    } catch (error) {
+      console.error('Failed to save quiz to localStorage:', error);
+    }
+  };
+
+  // Clear quiz from localStorage
+  const clearQuizFromLocalStorage = () => {
+    try {
+      localStorage.removeItem('quizInProgress');
+      console.log('Quiz state cleared from localStorage');
+    } catch (error) {
+      console.error('Failed to clear quiz from localStorage:', error);
+    }
+  };
+
+  // Try to restore quiz from localStorage
+  const restoreQuizFromLocalStorage = (): boolean => {
+    if (!user?.uid) return false;
+
+    try {
+      const savedQuiz = localStorage.getItem('quizInProgress');
+      if (!savedQuiz) return false;
+
+      const quizState = JSON.parse(savedQuiz);
+
+      // Check if the quiz is for the current user and not too old (1 hour)
+      const isExpired = Date.now() - quizState.timestamp > 60 * 60 * 1000;
+      if (quizState.userId !== user.uid || isExpired) {
+        clearQuizFromLocalStorage();
+        return false;
+      }
+
+      // Restore quiz state
+      setQuizSessionId(quizState.quizSessionId);
+      setQuestions(quizState.questions);
+      setCurrentQuestionIndex(quizState.currentQuestionIndex);
+      setSelectedAnswer(quizState.selectedAnswer);
+      setSelectedAnswers(quizState.selectedAnswers);
+      setShowExplanation(quizState.showExplanation);
+
+      console.log('Quiz restored from localStorage');
+      return true;
+    } catch (error) {
+      console.error('Failed to restore quiz from localStorage:', error);
+      clearQuizFromLocalStorage();
+      return false;
+    }
+  };
 
   useEffect(() => {
     // Don't initialize until auth is complete and user exists
@@ -52,7 +121,14 @@ export default function Quiz() {
 
     console.log('Auth complete, initializing quiz...');
     setHasInitialized(true);
-    initQuiz();
+
+    // Try to restore from localStorage first
+    const restored = restoreQuizFromLocalStorage();
+    if (restored) {
+      setLoading(false);
+    } else {
+      initQuiz();
+    }
   }, [authLoading, user]); // Don't include hasInitialized - it triggers re-runs!
 
   // Automatically generate next question in background whenever a new question is added
@@ -67,6 +143,53 @@ export default function Quiz() {
       });
     }
   }, [loading, showCelebration, quizEnding, questions.length, generatingNext]); // Watch quizEnding to stop generation immediately
+
+  // Auto-save quiz state whenever it changes
+  useEffect(() => {
+    if (!loading && questions.length > 0 && quizSessionId) {
+      saveQuizToLocalStorage();
+    }
+  }, [questions, currentQuestionIndex, selectedAnswer, selectedAnswers, showExplanation]);
+
+  // Handle browser navigation (back/forward/refresh/close)
+  useEffect(() => {
+    if (loading || showCelebration || questions.length === 0) return;
+
+    // Warn before page unload (refresh/close)
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      // Save to localStorage before leaving
+      saveQuizToLocalStorage();
+      // Modern browsers ignore custom messages, but we still need to set returnValue
+      e.returnValue = '';
+      return '';
+    };
+
+    // Handle back/forward navigation
+    const handlePopState = (e: PopStateEvent) => {
+      e.preventDefault();
+      // Show custom warning modal
+      setShowNavigationWarning(true);
+      // Store the navigation action to execute if user confirms
+      setPendingNavigation(() => () => {
+        saveQuizToLocalStorage();
+        window.history.back();
+      });
+      // Push current state back to prevent immediate navigation
+      window.history.pushState(null, '', window.location.pathname);
+    };
+
+    // Push initial state to enable popstate detection
+    window.history.pushState(null, '', window.location.pathname);
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [loading, showCelebration, questions.length, quizSessionId]);
 
   const initQuiz = async () => {
     console.log('Starting fresh quiz - generating first question...');
@@ -261,6 +384,10 @@ export default function Quiz() {
 
       await endQuiz(unusedQuestions.length > 0 ? unusedQuestions : undefined);
       console.log('Quiz ended successfully, showing celebration...');
+
+      // Clear localStorage since quiz is completed
+      clearQuizFromLocalStorage();
+
       setShowCelebration(true);
     } catch (error) {
       console.error('Error ending quiz:', error);
@@ -272,6 +399,20 @@ export default function Quiz() {
     setShowCelebration(false);
     setQuizStats(null);
     router.push('/cybersecurity');
+  };
+
+  // Handle navigation warning confirmation
+  const handleNavigationConfirm = () => {
+    if (pendingNavigation) {
+      pendingNavigation();
+    }
+    setShowNavigationWarning(false);
+    setPendingNavigation(null);
+  };
+
+  const handleNavigationCancel = () => {
+    setShowNavigationWarning(false);
+    setPendingNavigation(null);
   };
 
   if (loading) {
@@ -418,6 +559,41 @@ export default function Quiz() {
 
   return (
     <AdaptiveBackground liquidGlass={liquidGlass} colors={{ top: 'bg-violet-500/10', bottom: 'bg-cyan-500/10', center: 'bg-emerald-500/5' }}>
+      {/* Navigation Warning Modal */}
+      {showNavigationWarning && (
+        <div className={`fixed inset-0 flex items-center justify-center z-50 p-4 ${liquidGlass ? 'bg-black/80 backdrop-blur-xl' : 'bg-black/90'}`}>
+          <div className={`p-8 sm:p-12 md:p-16 max-w-2xl w-full border relative ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border-white/20 rounded-[40px] shadow-2xl' : 'bg-zinc-950 border-zinc-800 rounded-md'}`}>
+            {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
+            {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-transparent rounded-[40px]" />}
+            <div className="text-center relative space-y-8">
+              <div className="text-6xl mb-4">⚠️</div>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
+                Leave Quiz?
+              </h2>
+
+              <p className="text-lg sm:text-xl md:text-2xl text-zinc-300 leading-relaxed">
+                Your progress has been saved and you can resume this quiz later. Are you sure you want to leave?
+              </p>
+
+              <div className="flex gap-4 justify-center flex-wrap">
+                <button
+                  onClick={handleNavigationCancel}
+                  className={`px-8 sm:px-12 py-4 sm:py-5 font-bold text-lg sm:text-xl ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 rounded-3xl text-white transition-all duration-700 hover:scale-105 shadow-xl hover:shadow-2xl' : 'bg-zinc-800 hover:bg-zinc-700 text-white rounded-md transition-all duration-150'}`}
+                >
+                  Stay
+                </button>
+                <button
+                  onClick={handleNavigationConfirm}
+                  className={`px-8 sm:px-12 py-4 sm:py-5 font-bold text-lg sm:text-xl ${liquidGlass ? 'bg-yellow-500/20 hover:bg-yellow-500/30 backdrop-blur-xl border border-yellow-500/50 rounded-3xl text-yellow-300 transition-all duration-700 hover:scale-105 shadow-xl hover:shadow-2xl hover:shadow-yellow-500/30' : 'bg-yellow-900 hover:bg-yellow-800 text-yellow-200 rounded-md transition-all duration-150'}`}
+                >
+                  Leave
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Celebration Modal */}
       {showCelebration && (
         <div className={`fixed inset-0 flex items-center justify-center z-50 p-4 overflow-y-auto ${liquidGlass ? 'bg-black/80 backdrop-blur-xl' : 'bg-black/90'}`}>
