@@ -171,12 +171,18 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       ? `Quiz ${quiz.id.split('_')[1] || index + 1}`
       : `Quiz ${index + 1}`;
 
+    // Calculate error bar distances for ErrorBar component
+    const scoreErrorLower = score - scoreLower;
+    const scoreErrorUpper = scoreUpper - score;
+
     return {
       quiz: quizLabel,
       quizId: quiz.id,
       score,
       scoreLower,
       scoreUpper,
+      scoreErrorLower,  // Distance from score to lower bound
+      scoreErrorUpper,  // Distance from score to upper bound
       date: new Date(quiz.endedAt || quiz.startedAt).toLocaleDateString(),
     };
   });
@@ -464,11 +470,47 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           <div className="relative px-10 md:px-12 pb-10 md:pb-12">
             <ResponsiveContainer width="100%" height={400}>
               <LineChart data={scoreOverTime}>
+                <defs>
+                  {/* Define individual gradients for confidence bands based on score */}
+                  {scoreOverTime.map((point, index) => {
+                    const score = point.score;
+                    const color = score >= 800 ? '#22c55e' : score >= 750 ? '#f5a623' : '#ef4444';
+                    return (
+                      <linearGradient key={`score-gradient-${index}`} id={`scoreGradient-${index}`} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor={color} stopOpacity={0.3} />
+                        <stop offset="100%" stopColor={color} stopOpacity={0.1} />
+                      </linearGradient>
+                    );
+                  })}
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
                 <XAxis dataKey="quiz" stroke="#9ca3af" tick={false} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#9ca3af' }} />
                 <YAxis domain={[100, 900]} stroke="#9ca3af" label={{ value: 'Exam Score', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
                 <Tooltip content={<ScoreTooltip />} />
-                <ReferenceLine y={750} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Passing', fill: '#10b981', position: 'right' }} />
+                <ReferenceLine y={750} stroke="#22c55e" strokeDasharray="3 3" label={{ value: 'Passing (750)', fill: '#22c55e', position: 'right' }} />
+
+                {/* Colored confidence bands between consecutive points */}
+                {scoreOverTime.map((point, index) => {
+                  if (index === scoreOverTime.length - 1) return null;
+
+                  const nextPoint = scoreOverTime[index + 1];
+                  const avgScore = (point.score + nextPoint.score) / 2;
+                  const color = avgScore >= 800 ? '#22c55e' : avgScore >= 750 ? '#f5a623' : '#ef4444';
+
+                  return (
+                    <ReferenceArea
+                      key={`score-ci-band-${index}`}
+                      x1={point.quiz}
+                      x2={nextPoint.quiz}
+                      y1={Math.min(point.scoreLower, nextPoint.scoreLower)}
+                      y2={Math.max(point.scoreUpper, nextPoint.scoreUpper)}
+                      fill={color}
+                      fillOpacity={0.2}
+                      strokeOpacity={0}
+                    />
+                  );
+                })}
+
                 <Line
                   type="monotone"
                   dataKey="score"
@@ -477,12 +519,15 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                   dot={(props: any) => {
                     const { cx, cy, payload } = props;
                     const score = payload.score;
-                    let fill = '#ff0000'; // Red for below passing
+                    let fill = '#ef4444'; // Red for below passing
                     if (score >= 800) fill = '#22c55e'; // Green for excellent
                     else if (score >= 750) fill = '#f5a623'; // Yellow for passing
                     return <circle cx={cx} cy={cy} r={5} fill={fill} />;
                   }}
-                />
+                >
+                  <ErrorBar dataKey="scoreErrorLower" direction="y" stroke="#888" strokeWidth={2} />
+                  <ErrorBar dataKey="scoreErrorUpper" direction="y" stroke="#888" strokeWidth={2} />
+                </Line>
               </LineChart>
             </ResponsiveContainer>
           </div>
