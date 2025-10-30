@@ -691,7 +691,8 @@ export default function QuizPerformance() {
             {irtExpanded ? (
               <>
                 {hasEnoughQuestions ? (
-                  <div className={`relative p-8 md:p-10 mb-8 mt-8 transition-all duration-700 ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl' : 'bg-black border border-zinc-800 rounded-md'}`}>
+                  <>
+                    <div className={`relative p-8 md:p-10 mb-8 mt-8 transition-all duration-700 ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl' : 'bg-black border border-zinc-800 rounded-md'}`}>
                     {liquidGlass && (
                       <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />
                     )}
@@ -884,7 +885,7 @@ export default function QuizPerformance() {
                     </ul>
                   </div>
                 </div>
-              </>
+                  </>
                 ) : (
                   <div className="mt-8">
                     <div className={`relative p-8 ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10' : 'bg-zinc-900 rounded-2xl border border-zinc-800'}`}>
