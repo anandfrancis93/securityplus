@@ -476,11 +476,11 @@ export default function Quiz() {
 
   const handleCelebrationClose = () => {
     console.log('Celebration close clicked, navigating to /cybersecurity');
+    // Navigate immediately before clearing state to avoid any interference
+    router.replace('/cybersecurity');
+    // Clear celebration state after navigation is initiated
     setShowCelebration(false);
     setQuizStats(null);
-    console.log('About to call router.push...');
-    router.push('/cybersecurity');
-    console.log('router.push called');
   };
 
   // Handle navigation warning confirmation
