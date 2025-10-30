@@ -171,15 +171,30 @@ Here is the COMPLETE list of Security+ SY0-701 topics (organized by domain):
 
 ${JSON.stringify(ALL_SECURITY_PLUS_TOPICS, null, 2)}
 
-Your task: Identify which topics from the list above this question ACTUALLY TESTS.
+Your task: Identify the CORE TOPICS this question is PRIMARILY testing - focus on INTENT, not everything mentioned.
+
+CRITICAL DISTINCTION:
+- "What is a firewall?" → CORE: ["Firewall (network security)"]
+  ❌ NOT: ["Layer 4/Layer 7", "Packet filtering", "Stateful inspection", "Rule sets"]
+  (Those are MENTIONED but not the PRIMARY focus)
+
+- "Which firewall type prevents SQL injection?" → CORE: ["WAF (firewall type)", "SQLi (web vulnerability)"]
+  ✅ Testing: Understanding of WAF purpose and SQL injection
+  ❌ NOT: Generic "firewall" or "database security" unless central to the answer
 
 Rules:
-1. Only include topics that are CENTRAL to answering the question correctly
-2. Do NOT include topics only mentioned in wrong answer distractors
+1. Focus on CORE INTENT: What knowledge is absolutely required to answer correctly?
+2. Distinguish between:
+   - PRIMARY topics (what's being tested)
+   - CONTEXTUAL topics (mentioned in question/options but not the focus)
+   - DISTRACTOR topics (appear in wrong answers only)
 3. Return EXACT topic strings from the list above (copy character-for-character)
-4. If a topic appears multiple times with different qualifiers (e.g., "Cost (architecture consideration)" vs "Cost (automation consideration)"), pick the MOST relevant one based on context
-5. Typically questions test 1-5 topics, rarely more than 6
-6. Think about what knowledge is REQUIRED to select the correct answer
+4. PREFER FEWER, MORE SPECIFIC topics over many related ones
+5. Typically:
+   - Easy questions: 1 topic (basic understanding)
+   - Medium questions: 2-3 topics (application/synthesis)
+   - Hard questions: 3-4 topics across domains (complex scenarios)
+6. Maximum 5 topics (if you find more, you're over-extracting)
 
 Return ONLY a valid JSON array of exact topic strings:
 ["exact topic string 1", "exact topic string 2", ...]
@@ -202,10 +217,11 @@ No explanation, just the JSON array.`;
       throw new Error('AI did not return an array');
     }
 
-    // Sanity check: No question should test more than 8 topics
-    if (extractedTopics.length > 8) {
-      console.warn(`⚠️ AI extracted ${extractedTopics.length} topics (seems high!)`);
+    // Sanity check: No question should test more than 5 topics (core intent focus)
+    if (extractedTopics.length > 5) {
+      console.warn(`⚠️ AI extracted ${extractedTopics.length} topics (over-extraction detected!)`);
       console.warn(`   Topics: ${extractedTopics.join(', ')}`);
+      console.warn(`   Consider: AI may be including contextual topics instead of core intent`);
     }
 
     console.log(`AI identified ${extractedTopics.length} topics: ${extractedTopics.join(', ')}`);
