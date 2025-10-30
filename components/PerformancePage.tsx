@@ -316,20 +316,43 @@ export default function QuizPerformance() {
   // Confidence level based on CI width
   const getConfidenceInfo = () => {
     if (!isFinite(abilityStandardError) || totalAnswered < 1) {
-      return { label: 'Insufficient data', margin: 0, color: 'zinc', tooltip: 'Not enough data to calculate confidence interval. Answer more questions for a reliable prediction.' };
+      return {
+        label: 'Insufficient data',
+        margin: 0,
+        color: 'zinc',
+        tooltip: 'Not enough data to calculate confidence interval. Answer more questions for a reliable prediction.'
+      };
     }
 
     const ciWidth = scoreCI.upper - scoreCI.lower;
     const margin = Math.round(ciWidth / 2);
 
+    // Create comprehensive guide for all confidence levels
+    const guide = `
+Confidence Level Guide:
+
+HIGH (±0-25 points): Excellent precision! Your score estimate is very reliable. Based on 50+ questions with consistent performance. The predicted range is narrow and highly accurate.
+
+MEDIUM (±26-50 points): Good precision. Your score estimate is reasonably reliable. Based on 20-50 questions. Continue answering to narrow the range further.
+
+LOW (±51-75 points): Fair precision. Your score has a wide margin of error. Based on 10-20 questions. More data needed for accurate prediction.
+
+VERY LOW (±76+ points): Poor precision. Your score estimate is unreliable with a very wide range. Based on fewer than 10 questions. Significantly more data needed.
+
+Your current margin: ±${margin} points
+Questions answered: ${totalAnswered}
+
+Tip: Answer more questions to improve confidence and narrow your predicted score range!
+    `.trim();
+
     if (ciWidth <= 50) {
-      return { label: 'High confidence', margin, color: 'emerald', tooltip: 'The prediction is very reliable with a narrow margin of error (±' + margin + ' points). Your estimated score is highly likely to fall within this range.' };
+      return { label: 'High confidence', margin, color: 'emerald', tooltip: guide };
     } else if (ciWidth <= 100) {
-      return { label: 'Medium confidence', margin, color: 'yellow', tooltip: 'The prediction is moderately reliable with a reasonable margin of error (±' + margin + ' points). Answer more questions to improve accuracy.' };
+      return { label: 'Medium confidence', margin, color: 'yellow', tooltip: guide };
     } else if (ciWidth <= 150) {
-      return { label: 'Low confidence', margin, color: 'orange', tooltip: 'The prediction has a wide margin of error (±' + margin + ' points). More questions are needed for a reliable estimate.' };
+      return { label: 'Low confidence', margin, color: 'orange', tooltip: guide };
     } else {
-      return { label: 'Very low confidence', margin, color: 'red', tooltip: 'The prediction is unreliable with a very wide margin of error (±' + margin + ' points). Significantly more questions are needed.' };
+      return { label: 'Very low confidence', margin, color: 'red', tooltip: guide };
     }
   };
   const confidenceInfo = getConfidenceInfo();
@@ -416,8 +439,8 @@ export default function QuizPerformance() {
                       'text-zinc-400'
                     }`}>{confidenceInfo.label}</span>
                     {/* Hover tooltip */}
-                    <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-80 transition-opacity duration-700 ${liquidGlass ? 'bg-black/80 backdrop-blur-xl border-white/20 rounded-3xl' : 'bg-black border-zinc-800 rounded-md'} border p-4 z-50 pointer-events-none opacity-0 group-hover:opacity-100`}>
-                      <p className={`text-base text-zinc-300 leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>{confidenceInfo.tooltip}</p>
+                    <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-96 max-w-[90vw] transition-opacity duration-700 ${liquidGlass ? 'bg-black/95 backdrop-blur-xl border-white/20 rounded-3xl' : 'bg-black border-zinc-800 rounded-md'} border p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100`}>
+                      <p className={`text-sm text-zinc-300 leading-relaxed whitespace-pre-line ${liquidGlass ? '' : 'font-mono'}`}>{confidenceInfo.tooltip}</p>
                     </div>
                   </span>
                 </>
