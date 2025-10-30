@@ -41,10 +41,10 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
   return (
     <div className={`relative p-12 md:p-16 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'}`}>
       {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
-      <div className="space-y-8 relative">
+      <div className="space-y-6 relative">
         {/* Domain(s) */}
         <div className="flex items-center gap-4 flex-wrap">
-          <span className="text-xl md:text-2xl text-white font-bold">
+          <span className="text-lg font-semibold text-zinc-400 min-w-[100px]">
             {domains.length > 1 ? 'Domains:' : 'Domain:'}
           </span>
           <div className="flex flex-wrap gap-3">
@@ -53,7 +53,7 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
               return (
                 <span
                   key={index}
-                  className="text-lg md:text-xl font-bold"
+                  className="text-lg font-semibold"
                   style={{
                     color: color,
                   }}
@@ -68,7 +68,7 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
         {/* Topics */}
         {question.topics && question.topics.length > 0 && (
           <div className="flex items-start gap-4 flex-wrap">
-            <span className="text-xl md:text-2xl text-white font-bold">
+            <span className="text-lg font-semibold text-zinc-400 min-w-[100px]">
               {question.topics.length > 1 ? 'Topics:' : 'Topic:'}
             </span>
             <div className="flex flex-wrap gap-3">
@@ -78,7 +78,7 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
                 return (
                   <span
                     key={index}
-                    className="text-lg md:text-xl font-medium"
+                    className="text-lg font-semibold"
                     style={{
                       color: color,
                     }}
@@ -94,8 +94,8 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
         {/* Question Type */}
         {question.questionCategory && (
           <div className="flex items-center gap-4 flex-wrap">
-            <span className="text-xl md:text-2xl text-white font-bold">Type:</span>
-            <span className="text-lg md:text-xl text-zinc-300">
+            <span className="text-lg font-semibold text-zinc-400 min-w-[100px]">Type:</span>
+            <span className="text-lg font-semibold text-white">
               {question.questionCategory === 'single-domain-single-topic' ? 'Single Domain, Single Topic' :
                question.questionCategory === 'single-domain-multiple-topics' ? 'Single Domain, Multiple Topics' :
                'Multiple Domains, Multiple Topics'}
@@ -105,8 +105,8 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
 
         {/* Difficulty */}
         <div className="flex items-center gap-4 flex-wrap">
-          <span className="text-xl md:text-2xl text-white font-bold">Difficulty:</span>
-          <span className={`text-lg md:text-xl ${
+          <span className="text-lg font-semibold text-zinc-400 min-w-[100px]">Difficulty:</span>
+          <span className={`text-lg font-semibold ${
             question.difficulty === 'easy' ? 'text-green-400' :
             question.difficulty === 'medium' ? 'text-yellow-400' :
             'text-red-400'
@@ -118,8 +118,8 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
         {/* Points */}
         {pointsEarned !== undefined && maxPoints !== undefined && (
           <div className="flex items-center gap-4 flex-wrap">
-            <span className="text-xl md:text-2xl text-white font-bold">Points:</span>
-            <span className="text-lg md:text-xl text-white">
+            <span className="text-lg font-semibold text-zinc-400 min-w-[100px]">Points:</span>
+            <span className="text-lg font-semibold text-white">
               {pointsEarned}/{maxPoints}
             </span>
           </div>
