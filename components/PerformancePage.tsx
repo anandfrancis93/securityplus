@@ -628,8 +628,8 @@ export default function QuizPerformance() {
               <div className="relative group inline-block cursor-help">
                 <div className={`text-5xl md:text-6xl font-bold transition-all duration-700 ${
                   totalAnswered === 0 ? 'text-zinc-400' :
-                  parseFloat(accuracy.toString()) >= 83.3 ? 'text-emerald-400' :
-                  parseFloat(accuracy.toString()) >= 66.7 ? 'text-yellow-400' :
+                  parseFloat(accuracy.toString()) >= 81.25 ? 'text-emerald-400' :
+                  parseFloat(accuracy.toString()) >= 62.5 ? 'text-yellow-400' :
                   'text-red-400'
                 }`}>{accuracy}%</div>
                 {/* Tooltip */}
@@ -641,15 +641,15 @@ export default function QuizPerformance() {
                     </div>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-emerald-400 font-semibold">≥83.3%</span>
+                        <span className="text-emerald-400 font-semibold">≥81.25%</span>
                         <span className="text-zinc-300">Passing (≥750)</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-yellow-400 font-semibold">66.7-83.2%</span>
+                        <span className="text-yellow-400 font-semibold">62.5-81.24%</span>
                         <span className="text-zinc-300">Close (600-749)</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-red-400 font-semibold">&lt;66.7%</span>
+                        <span className="text-red-400 font-semibold">&lt;62.5%</span>
                         <span className="text-zinc-300">Needs Work (&lt;600)</span>
                       </div>
                     </div>
