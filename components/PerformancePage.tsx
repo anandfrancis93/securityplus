@@ -500,30 +500,16 @@ export default function QuizPerformance() {
                     </>
                   )}
                   {/* Hover tooltip */}
-                  <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 w-96 max-w-[90vw] ${liquidGlass ? 'bg-zinc-950/95 backdrop-blur-2xl rounded-[32px] border-white/20 shadow-2xl' : 'bg-zinc-900 rounded-2xl border-zinc-800'} border p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-700`}>
+                  <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 w-80 max-w-[90vw] ${liquidGlass ? 'bg-zinc-950/95 backdrop-blur-2xl rounded-[32px] border-white/20 shadow-2xl' : 'bg-zinc-900 rounded-2xl border-zinc-800'} border p-5 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-700`}>
                     {/* Light reflection overlay */}
                     {liquidGlass && (
                       <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] pointer-events-none" />
                     )}
 
                     <div className="relative">
-                      <h4 className={`text-base md:text-lg font-bold text-white mb-3 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>
-                        Prediction Confidence
-                      </h4>
-                      <div className="space-y-3 text-sm leading-relaxed">
-                        <div className={`${liquidGlass ? 'text-zinc-300' : 'text-zinc-400'}`}>
-                          <strong className="text-white">Confidence Level:</strong> 95%
-                        </div>
-                        <div className={`${liquidGlass ? 'text-zinc-300' : 'text-zinc-400'}`}>
-                          <strong className="text-white">Confidence Interval:</strong> {scoreCI.lower} - {scoreCI.upper}
-                        </div>
-                        <div className={`${liquidGlass ? 'text-zinc-300' : 'text-zinc-400'}`}>
-                          <strong className="text-white">Margin of Error:</strong> ±{confidenceInfo.margin} points
-                        </div>
-                        <div className={`pt-3 border-t ${liquidGlass ? 'border-zinc-700' : 'border-zinc-800'} ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} text-xs`}>
-                          We are 95% confident your exam score will fall between <strong className="text-white">{scoreCI.lower}</strong> and <strong className="text-white">{scoreCI.upper}</strong>.
-                        </div>
-                      </div>
+                      <p className={`text-sm leading-relaxed ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400'}`}>
+                        We are 95% confident your exam score will fall between <strong className="text-white">{scoreCI.lower}</strong> and <strong className="text-white">{scoreCI.upper}</strong>.
+                      </p>
                     </div>
                   </div>
                 </div>
