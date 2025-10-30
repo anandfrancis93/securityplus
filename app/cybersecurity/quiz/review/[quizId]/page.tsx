@@ -233,6 +233,8 @@ export default function QuizReviewPage() {
                 <QuestionMetadata
                   question={question}
                   liquidGlass={liquidGlass}
+                  pointsEarned={attempt.pointsEarned}
+                  maxPoints={attempt.maxPoints}
                 />
               </div>
             );
