@@ -38,16 +38,26 @@ function getTopicDomain(topic: string): string {
 export default function QuestionMetadata({ question, liquidGlass = true, pointsEarned, maxPoints }: QuestionMetadataProps) {
   const domains = getDomainsFromTopics(question.topics);
 
+  // Group topics by domain
+  const topicsByDomain: { [domain: string]: string[] } = {};
+  question.topics?.forEach(topic => {
+    const topicDomain = getTopicDomain(topic);
+    if (!topicsByDomain[topicDomain]) {
+      topicsByDomain[topicDomain] = [];
+    }
+    topicsByDomain[topicDomain].push(topic);
+  });
+
   return (
     <div className={`relative p-12 md:p-16 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'}`}>
       {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
       <div className="space-y-6 relative">
         {/* Domain(s) */}
-        <div className="flex items-center gap-4 flex-wrap">
-          <span className="text-lg font-semibold text-zinc-400 min-w-[100px]">
-            {domains.length > 1 ? 'Domains:' : 'Domain:'}
+        <div className="flex items-start gap-4">
+          <span className="text-lg font-semibold text-zinc-400 min-w-[100px] flex-shrink-0">
+            {domains.length > 1 ? 'Domain(s):' : 'Domain:'}
           </span>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-col gap-2">
             {domains.map((domain, index) => {
               const color = getDomainColor(domain);
               return (
@@ -65,26 +75,24 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
           </div>
         </div>
 
-        {/* Topics */}
+        {/* Topics grouped by domain */}
         {question.topics && question.topics.length > 0 && (
-          <div className="flex items-start gap-4 flex-wrap">
-            <span className="text-lg font-semibold text-zinc-400 min-w-[100px]">
-              {question.topics.length > 1 ? 'Topics:' : 'Topic:'}
+          <div className="flex items-start gap-4">
+            <span className="text-lg font-semibold text-zinc-400 min-w-[100px] flex-shrink-0">
+              {question.topics.length > 1 ? 'Topic(s):' : 'Topic:'}
             </span>
-            <div className="flex flex-wrap gap-3">
-              {question.topics.map((topic, index) => {
-                const topicDomain = getTopicDomain(topic);
-                const color = getDomainColor(topicDomain);
+            <div className="flex flex-col gap-3">
+              {Object.entries(topicsByDomain).map(([domain, topics], index) => {
+                const color = getDomainColor(domain);
                 return (
-                  <span
-                    key={index}
-                    className="text-lg font-semibold"
-                    style={{
-                      color: color,
-                    }}
-                  >
-                    {topic}
-                  </span>
+                  <div key={index} className="flex flex-col gap-1">
+                    <span className="text-lg font-semibold" style={{ color }}>
+                      {topics.join(', ')}
+                    </span>
+                    <span className="text-sm font-medium text-zinc-500">
+                      [{domain.replace('.0', '.')}]
+                    </span>
+                  </div>
                 );
               })}
             </div>
