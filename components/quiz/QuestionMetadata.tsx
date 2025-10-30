@@ -53,13 +53,9 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
               return (
                 <span
                   key={index}
-                  className={`px-6 py-4 text-lg md:text-xl font-bold ${liquidGlass ? 'backdrop-blur-xl rounded-2xl' : 'rounded-md'}`}
+                  className="text-lg md:text-xl font-bold"
                   style={{
-                    backgroundColor: liquidGlass ? `${color}40` : color,
-                    color: '#ffffff',
-                    borderWidth: '2px',
-                    borderStyle: 'solid',
-                    borderColor: liquidGlass ? `${color}` : color,
+                    color: color,
                   }}
                 >
                   {domain.replace('.0', '.')}
@@ -82,13 +78,9 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
                 return (
                   <span
                     key={index}
-                    className={`px-6 py-4 text-lg md:text-xl font-medium ${liquidGlass ? 'backdrop-blur-xl rounded-2xl' : 'rounded-md'}`}
+                    className="text-lg md:text-xl font-medium"
                     style={{
-                      backgroundColor: liquidGlass ? `${color}40` : color,
-                      color: '#ffffff',
-                      borderWidth: '2px',
-                      borderStyle: 'solid',
-                      borderColor: liquidGlass ? `${color}` : color,
+                      color: color,
                     }}
                   >
                     {topic}
