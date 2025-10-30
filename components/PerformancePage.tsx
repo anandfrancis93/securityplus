@@ -488,7 +488,7 @@ export default function QuizPerformance() {
                       {totalAnswered === 0 ? (
                         <>Start answering questions to generate your predicted score</>
                       ) : (
-                        <>Answer <span className="text-cyan-400 font-bold">{questionsNeeded} more</span> {questionsNeeded === 1 ? 'question' : 'questions'} for a reliable IRT prediction</>
+                        <>Answer <span className="text-white font-bold">{questionsNeeded} more</span> {questionsNeeded === 1 ? 'question' : 'questions'} for a reliable IRT prediction</>
                       )}
                     </p>
                     <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'}`}>
