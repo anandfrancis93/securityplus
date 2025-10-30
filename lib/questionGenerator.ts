@@ -535,9 +535,56 @@ export async function generateQuestionWithTopics(
   const difficulty = categoryToDifficulty(questionCategory);
 
   const categoryGuidance = {
-    'single-domain-single-topic': `This is a SINGLE DOMAIN, SINGLE TOPIC question testing: "${topicStrings[0]}". Focus the question specifically on this one concept.`,
-    'single-domain-multiple-topics': `This is a SINGLE DOMAIN, MULTIPLE TOPICS question combining related topics from the same domain: ${topicStrings.map(t => `"${t}"`).join(', ')}. Create a realistic scenario that integrates these concepts.`,
-    'multiple-domains-multiple-topics': `This is a MULTIPLE DOMAINS, MULTIPLE TOPICS question combining topics across different Security+ domains: ${topicStrings.map(t => `"${t}"`).join(', ')}. Create a complex scenario that requires understanding how these concepts work together across domains.`
+    'single-domain-single-topic': `This is a SINGLE DOMAIN, SINGLE TOPIC question testing: "${topicStrings[0]}". Focus the question specifically on this one concept.
+
+EXAMPLE OF EASY (SINGLE TOPIC) QUESTION:
+
+Question: "What is the primary purpose of a firewall in network security?"
+
+Options:
+A) To monitor and control incoming and outgoing network traffic based on predetermined security rules
+B) To encrypt all data transmitted over the network
+C) To provide backup and disaster recovery capabilities
+D) To manage user authentication and access control
+
+Correct Answer: A
+Explanation: A firewall's primary purpose is to act as a barrier between trusted and untrusted networks by monitoring and controlling traffic based on security rules. While it may have other features, traffic filtering is its core function.
+
+Note: Simple definition question, tests one concept, straightforward correct answer.`,
+
+    'single-domain-multiple-topics': `This is a SINGLE DOMAIN, MULTIPLE TOPICS question combining related topics from the same domain: ${topicStrings.map(t => `"${t}"`).join(', ')}. Create a realistic scenario that integrates these concepts.
+
+EXAMPLE OF MEDIUM (MULTIPLE TOPICS, SINGLE DOMAIN) QUESTION:
+
+Question: "A web application is experiencing attacks where malicious SQL commands are being injected through user input fields. The security team needs to implement a solution that can inspect HTTP traffic and block these attacks at the application layer. Which firewall type would be most appropriate?"
+
+Options:
+A) Web Application Firewall (WAF) configured with SQL injection detection rules
+B) Next-generation firewall (NGFW) with intrusion prevention capabilities
+C) Layer 4 stateful firewall with strict port filtering
+D) Network-based firewall with deep packet inspection enabled
+
+Correct Answer: A
+Explanation: A WAF operates at Layer 7 (application layer) and is specifically designed to protect web applications from attacks like SQL injection by inspecting HTTP/HTTPS traffic. While NGFWs can help, WAFs are purpose-built for this scenario.
+
+Note: Scenario-based, requires understanding of WAF vs other firewall types, tests application of multiple related concepts.`,
+
+    'multiple-domains-multiple-topics': `This is a MULTIPLE DOMAINS, MULTIPLE TOPICS question combining topics across different Security+ domains: ${topicStrings.map(t => `"${t}"`).join(', ')}. Create a complex scenario that requires understanding how these concepts work together across domains.
+
+EXAMPLE OF HARD (MULTIPLE DOMAINS) QUESTION:
+
+Question: "Your organization is implementing a zero-trust architecture for a new cloud-based application. The solution must verify user identity, enforce least privilege access, segment network traffic between application tiers, and continuously monitor for threats. Which combination of security controls would best support this zero-trust implementation?"
+
+Options:
+A) Multi-factor authentication (MFA), role-based access control (RBAC), micro-segmentation with next-generation firewalls, and security information and event management (SIEM)
+B) Single sign-on (SSO), mandatory access control (MAC), virtual LANs (VLANs), and antivirus software
+C) Biometric authentication, discretionary access control (DAC), air-gapped networks, and intrusion detection systems (IDS)
+D) Certificate-based authentication, attribute-based access control (ABAC), screened subnets (DMZ), and endpoint detection and response (EDR)
+
+Correct Answer: A
+Explanation: This combination fully implements zero-trust principles: MFA provides strong identity verification (adaptive identity), RBAC enforces least privilege (policy-driven access), micro-segmentation with NGFWs creates trust boundaries (threat scope reduction), and SIEM enables continuous monitoring. Together, these controls address all zero-trust control plane and data plane requirements.
+
+Note: Complex scenario, integrates concepts from identity management, access control, network architecture, and security monitoring across multiple domains.`
   };
 
   const typeGuidance = questionType === 'single'
