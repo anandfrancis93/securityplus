@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
     try {
       // Get current user document to get any existing metadata
       const currentUserDoc = await userRef.get();
-      const currentUserData = currentUserDoc.data();
+      const currentUserData = currentUserDoc.data() as any;
 
       // Initialize metadata from scratch (or use existing as base)
       let metadata = ensureMetadataInitialized(currentUserData || null);
