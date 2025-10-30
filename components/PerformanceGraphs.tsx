@@ -359,8 +359,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             <XAxis dataKey="quiz" stroke="#9ca3af" tick={false} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#9ca3af' }} />
             <YAxis domain={[-3, 3]} stroke="#9ca3af" label={{ value: 'Ability Level', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
             <Tooltip content={<AbilityTooltip />} />
-            <ReferenceLine y={0} stroke="#6b7280" strokeDasharray="3 3" label={{ value: 'Average', fill: '#9ca3af' }} />
-            <ReferenceLine y={1} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Target', fill: '#10b981' }} />
+            <ReferenceLine y={1.5} stroke="#22c55e" strokeDasharray="3 3" label={{ value: 'Passing (750)', fill: '#22c55e', position: 'right' }} />
             <Line
               type="monotone"
               dataKey="ability"
