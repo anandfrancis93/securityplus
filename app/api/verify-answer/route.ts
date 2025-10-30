@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateAndAuthorize } from '@/lib/apiAuth';
 import { VerifyAnswerSchema, safeValidateRequestBody } from '@/lib/apiValidation';
+import { calculatePartialCredit } from '@/lib/irt';
 import {
   getQuestionFromSession,
   isQuestionAnswered,
@@ -73,23 +74,18 @@ export async function POST(request: NextRequest) {
         correctAnswers.length === userAnswers.length &&
         userAnswers.every(ans => correctSet.has(ans));
 
-      // Calculate partial credit for multiple-response
+      // Calculate partial credit for multiple-response using IRT function
       if (isCorrect) {
         // Full credit
         pointsEarned = question.maxPoints || 10;
       } else {
-        // Partial credit based on intersection
-        const correctCount = userAnswers.filter(ans => correctSet.has(ans)).length;
-        const incorrectCount = userAnswers.filter(ans => !correctSet.has(ans)).length;
-        const missedCount = correctAnswers.length - correctCount;
-
-        // Award points: (correct - incorrect - missed) / total * maxPoints
-        // Minimum 0 points
-        const ratio = Math.max(
-          0,
-          (correctCount - incorrectCount - missedCount) / correctAnswers.length
+        // Use the centralized partial credit calculation from lib/irt.ts
+        pointsEarned = calculatePartialCredit(
+          userAnswers,
+          correctAnswers,
+          question.options.length, // Total number of options
+          question.maxPoints || 10
         );
-        pointsEarned = Math.round(ratio * (question.maxPoints || 10));
       }
     } else {
       // Single-choice question
