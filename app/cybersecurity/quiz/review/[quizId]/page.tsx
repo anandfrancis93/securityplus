@@ -129,52 +129,55 @@ export default function QuizReviewPage() {
             </h1>
 
             {/* Quiz Summary Card */}
-            <div className={`p-8 md:p-10 ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl' : 'bg-zinc-900 border border-zinc-800 rounded-xl'}`}>
+            <div className={`relative p-8 md:p-10 ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl' : 'bg-zinc-900 border border-zinc-800 rounded-xl'}`}>
               {liquidGlass && (
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl pointer-events-none" />
               )}
-              <div className="relative space-y-4">
+              <div className="relative grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                 {/* Date */}
-                <div className="flex items-baseline gap-3">
-                  <span className="text-lg font-semibold text-zinc-400 min-w-[140px]">Date:</span>
-                  <span className="text-xl font-medium text-white">{formattedDate}</span>
+                <div className="space-y-2">
+                  <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Date</div>
+                  <div className="text-2xl font-bold text-white">{formattedDate}</div>
                 </div>
 
                 {/* Time Started */}
-                <div className="flex items-baseline gap-3">
-                  <span className="text-lg font-semibold text-zinc-400 min-w-[140px]">Time Started:</span>
-                  <span className="text-xl font-medium text-white">{formattedTime}</span>
+                <div className="space-y-2">
+                  <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Time Started</div>
+                  <div className="text-2xl font-bold text-white">{formattedTime}</div>
                 </div>
 
                 {/* Total Time */}
-                <div className="flex items-baseline gap-3">
-                  <span className="text-lg font-semibold text-zinc-400 min-w-[140px]">Total Time:</span>
-                  <span className="text-xl font-medium text-white">{timeDisplay}</span>
+                <div className="space-y-2">
+                  <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Total Time</div>
+                  <div className="text-2xl font-bold text-white">{timeDisplay}</div>
                 </div>
 
                 {/* Accuracy */}
-                <div className="flex items-baseline gap-3">
-                  <span className="text-lg font-semibold text-zinc-400 min-w-[140px]">Accuracy:</span>
-                  <span className="text-xl font-medium text-white">
+                <div className="space-y-2">
+                  <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Accuracy</div>
+                  <div className="text-2xl font-bold text-white">
                     {((quiz.score / quiz.questions.length) * 100).toFixed(1)}%
-                    <span className="text-zinc-500 ml-2 text-lg">
+                    <span className="text-zinc-400 ml-2 text-lg font-normal">
                       ({quiz.score}/{quiz.questions.length})
                     </span>
-                  </span>
+                  </div>
                 </div>
 
                 {/* Total Questions */}
-                <div className="flex items-baseline gap-3">
-                  <span className="text-lg font-semibold text-zinc-400 min-w-[140px]">Total Questions:</span>
-                  <span className="text-xl font-medium text-white">{quiz.questions.length}</span>
+                <div className="space-y-2">
+                  <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Total Questions</div>
+                  <div className="text-2xl font-bold text-white">{quiz.questions.length}</div>
                 </div>
 
                 {/* Incomplete Quiz Badge */}
                 {!quiz.completed && (
-                  <div className="pt-4">
-                    <span className={`inline-block px-4 py-2 text-sm font-bold ${liquidGlass ? 'bg-yellow-500/20 backdrop-blur-xl border border-yellow-500/50 rounded-2xl text-yellow-300' : 'bg-yellow-950 text-yellow-300 border border-yellow-500 rounded-md'}`}>
-                      Incomplete Quiz
-                    </span>
+                  <div className="space-y-2">
+                    <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Status</div>
+                    <div>
+                      <span className={`inline-block px-4 py-2 text-sm font-bold ${liquidGlass ? 'bg-yellow-500/20 backdrop-blur-xl border border-yellow-500/50 rounded-2xl text-yellow-300' : 'bg-yellow-950 text-yellow-300 border border-yellow-500 rounded-md'}`}>
+                        Incomplete Quiz
+                      </span>
+                    </div>
                   </div>
                 )}
               </div>
