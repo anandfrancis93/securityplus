@@ -102,7 +102,8 @@ export async function POST(request: NextRequest) {
       quizHistoryData.forEach(quiz => {
         const quizId = quiz.id || `quiz_${quiz.completedAt || Date.now()}`;
         const quizRef = quizHistoryRef.doc(quizId);
-        const { id, ...quizData } = quiz; // Remove id field before storing
+        // Keep the id field in the document data for consistency
+        const quizData = { ...quiz, id: quizId };
 
         if (mergeData) {
           // In merge mode, use set with merge option to preserve existing data

@@ -62,7 +62,10 @@ export async function loadQuizHistory(userId: string, limitCount?: number): Prom
     const quizzes: QuizSession[] = [];
 
     querySnapshot.forEach((doc) => {
-      quizzes.push(doc.data() as QuizSession);
+      quizzes.push({
+        id: doc.id,
+        ...doc.data()
+      } as QuizSession);
     });
 
     return quizzes;
