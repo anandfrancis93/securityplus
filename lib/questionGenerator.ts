@@ -732,34 +732,29 @@ ${prompt}`;
     const domains = getDomainsFromTopics(finalTopics);
     const uniqueDomains = [...new Set(domains)];
 
-    // Determine category based on actual topics/domains
-    let actualCategory: 'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics';
-    if (uniqueDomains.length > 1) {
-      actualCategory = 'multiple-domains-multiple-topics';
-    } else if (finalTopics.length > 1) {
-      actualCategory = 'single-domain-multiple-topics';
-    } else {
-      actualCategory = 'single-domain-single-topic';
-    }
+    // Use REQUESTED category for difficulty (don't let AI override the distribution)
+    const actualCategory = questionCategory;
+    const actualDifficulty = categoryToDifficulty(questionCategory);
+    const irtParams = calculateIRTParameters(questionCategory);
 
-    // Derive difficulty from actual category (deterministic)
-    const actualDifficulty = categoryToDifficulty(actualCategory);
-
-    // Calculate IRT parameters based on actual category
-    const irtParams = calculateIRTParameters(actualCategory);
+    // Calculate what AI would suggest for logging/monitoring
+    const aiSuggestedCategory: 'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics' =
+      (uniqueDomains.length > 1) ? 'multiple-domains-multiple-topics' :
+      (finalTopics.length > 1) ? 'single-domain-multiple-topics' :
+      'single-domain-single-topic';
 
     const correctAnswerDisplay = Array.isArray(shuffledData.correctAnswer)
       ? `[${shuffledData.correctAnswer.join(', ')}]`
       : shuffledData.correctAnswer;
 
-    // Log comparison if category changed
-    if (actualCategory !== questionCategory) {
-      console.log(`⚠️ Category mismatch! Requested: ${questionCategory}, Actual: ${actualCategory}`);
+    // Log if AI suggestion differs from requested (for monitoring)
+    if (aiSuggestedCategory !== questionCategory) {
+      console.log(`ℹ️ AI suggested ${aiSuggestedCategory} (${finalTopics.length} topics) but using requested ${questionCategory} for difficulty`);
       console.log(`   Requested topics: ${topicStrings.join(', ')}`);
       console.log(`   Extracted topics: ${finalTopics.join(', ')}`);
     }
 
-    console.log(`Question generated: Category=${actualCategory}, Type=${questionType}, Difficulty=${actualDifficulty}, Correct=${correctAnswerDisplay}, IRT(b=${irtParams.irtDifficulty}, a=${irtParams.irtDiscrimination}), Points=${irtParams.maxPoints}`);
+    console.log(`✅ Question generated: Category=${actualCategory}, Type=${questionType}, Difficulty=${actualDifficulty}, Correct=${correctAnswerDisplay}, IRT(b=${irtParams.irtDifficulty}, a=${irtParams.irtDiscrimination}), Points=${irtParams.maxPoints}`);
 
     // Final validation to ensure clean data
     const cleanedIncorrectExplanations = (shuffledData.incorrectExplanations || [])
