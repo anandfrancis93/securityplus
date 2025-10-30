@@ -80,19 +80,33 @@ export async function getUserProgress(userId: string): Promise<UserProgress | nu
     if (docSnap.exists()) {
       const data = docSnap.data() as UserProgress;
 
+      console.log('[getUserProgress] Raw data from Firestore:', {
+        estimatedAbility: data.estimatedAbility,
+        abilityStandardError: data.abilityStandardError,
+        totalQuestions: data.totalQuestions
+      });
+
       // Load quiz history from subcollection instead of storing in main document
       data.quizHistory = await loadQuizHistory(userId);
 
       // Ensure abilityStandardError exists (for backwards compatibility with existing users)
       if (data.abilityStandardError === undefined && data.quizHistory && data.quizHistory.length > 0) {
+        console.log('[getUserProgress] abilityStandardError undefined, recalculating from quiz history');
         const allAttempts: QuestionAttempt[] = data.quizHistory.flatMap(quiz => quiz.questions);
         const { standardError } = allAttempts.length > 0
           ? estimateAbilityWithError(allAttempts)
           : { standardError: Infinity };
         data.abilityStandardError = standardError;
       } else if (data.abilityStandardError === undefined) {
+        console.log('[getUserProgress] No quiz history, setting abilityStandardError to Infinity');
         data.abilityStandardError = Infinity;
       }
+
+      console.log('[getUserProgress] Final data:', {
+        estimatedAbility: data.estimatedAbility,
+        abilityStandardError: data.abilityStandardError,
+        totalQuestions: data.totalQuestions
+      });
 
       return data;
     }
@@ -225,6 +239,7 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
       totalPoints: updates.totalPoints,
       maxPossiblePoints: updates.maxPossiblePoints,
       estimatedAbility: updates.estimatedAbility,
+      abilityStandardError: updates.abilityStandardError,
       quizHistoryCount: quizHistory.length
     });
 
