@@ -196,7 +196,11 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
     const sessionMaxPoints = session.questions.reduce((sum, q) => sum + (q.maxPoints || 100), 0);
 
     // Get all attempts across all quizzes for ability estimation
-    const allAttempts: QuestionAttempt[] = quizHistory.flatMap(quiz => quiz.questions);
+    // Include current session questions since quizHistory was loaded BEFORE current quiz was saved
+    const allAttempts: QuestionAttempt[] = [
+      ...quizHistory.flatMap(quiz => quiz.questions),
+      ...session.questions
+    ];
 
     // Estimate ability using IRT with standard error for confidence intervals
     const { theta: estimatedAbility, standardError: abilityStandardError } = allAttempts.length > 0
