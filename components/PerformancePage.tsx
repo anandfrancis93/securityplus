@@ -472,7 +472,7 @@ export default function QuizPerformance() {
                 <div className={`text-xl md:text-2xl text-zinc-500 ${liquidGlass ? '' : 'font-mono'}`}>out of 900</div>
               </>
             ) : (
-              <div className="space-y-6">
+              <div className="space-y-6 mt-8">
                 <div className={`relative p-8 ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10' : 'bg-zinc-900 rounded-2xl border border-zinc-800'}`}>
                   {liquidGlass && (
                     <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-3xl" />
