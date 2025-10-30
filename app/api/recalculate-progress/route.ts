@@ -26,9 +26,9 @@ export async function POST(request: NextRequest) {
 
     const userRef = adminDb.collection('users').doc(userId);
 
-    // Fetch all quiz history from subcollection
+    // Fetch all quiz history from subcollection (using 'quizzes' to match lib/db.ts)
     const quizHistorySnapshot = await userRef
-      .collection('quizHistory')
+      .collection('quizzes')
       .orderBy('completedAt', 'asc')
       .get();
 

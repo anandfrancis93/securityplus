@@ -33,9 +33,9 @@ export async function POST(request: NextRequest) {
 
     const userData = userDoc.data();
 
-    // Get quiz history from subcollection
+    // Get quiz history from subcollection (using 'quizzes' to match lib/db.ts)
     const quizHistorySnapshot = await userRef
-      .collection('quizHistory')
+      .collection('quizzes')
       .orderBy('completedAt', 'desc')
       .get();
 

@@ -81,10 +81,10 @@ export async function POST(request: NextRequest) {
       console.log(`[IMPORT] Main document replaced for user ${userId}`);
     }
 
-    // Import quiz history to subcollection
+    // Import quiz history to subcollection (using 'quizzes' to match lib/db.ts)
     if (quizHistoryData && quizHistoryData.length > 0) {
       const batch = adminDb.batch();
-      const quizHistoryRef = userRef.collection('quizHistory');
+      const quizHistoryRef = userRef.collection('quizzes');
 
       if (!mergeData) {
         // REPLACE mode: Clear existing quiz history first
