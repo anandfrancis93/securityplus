@@ -38,7 +38,7 @@ function getTopicDomain(topic: string): string {
 export default function QuestionMetadata({ question, liquidGlass = true, pointsEarned, maxPoints }: QuestionMetadataProps) {
   const domains = getDomainsFromTopics(question.topics);
 
-  // Group topics by domain
+  // Group topics by domain, maintaining the same order as domains array
   const topicsByDomain: { [domain: string]: string[] } = {};
   question.topics?.forEach(topic => {
     const topicDomain = getTopicDomain(topic);
@@ -47,6 +47,12 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
     }
     topicsByDomain[topicDomain].push(topic);
   });
+
+  // Create ordered array of domain-topics pairs matching the domains order
+  const orderedTopicsByDomain = domains.map(domain => ({
+    domain,
+    topics: topicsByDomain[domain] || []
+  }));
 
   return (
     <div className={`relative p-12 md:p-16 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'}`}>
@@ -75,14 +81,14 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
           </div>
         </div>
 
-        {/* Topics grouped by domain */}
+        {/* Topics grouped by domain - ordered to match domains display */}
         {question.topics && question.topics.length > 0 && (
           <div className="flex items-start gap-4">
             <span className="text-xl font-semibold text-zinc-400 min-w-[120px] flex-shrink-0">
               {question.topics.length > 1 ? 'Topic(s):' : 'Topic:'}
             </span>
             <div className="flex flex-col gap-3">
-              {Object.entries(topicsByDomain).map(([domain, topics], index) => {
+              {orderedTopicsByDomain.map(({ domain, topics }, index) => {
                 const color = getDomainColor(domain);
                 return (
                   <span
