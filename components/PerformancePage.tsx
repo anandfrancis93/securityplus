@@ -424,19 +424,19 @@ export default function QuizPerformance() {
                     <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-96 max-w-[90vw] transition-opacity duration-700 ${liquidGlass ? 'bg-black/95 backdrop-blur-xl border-white/20 rounded-3xl' : 'bg-black border-zinc-800 rounded-md'} border p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100`}>
                       <div className={`text-sm leading-relaxed space-y-3 ${liquidGlass ? '' : 'font-mono'}`}>
                         <div className="flex items-start gap-3">
-                          <span className="text-emerald-400 font-semibold whitespace-nowrap">High Confidence:</span>
+                          <span className="text-emerald-400 font-semibold whitespace-nowrap w-40">High Confidence:</span>
                           <span className="text-zinc-300">Excellent precision, 50+ questions</span>
                         </div>
                         <div className="flex items-start gap-3">
-                          <span className="text-yellow-400 font-semibold whitespace-nowrap">Medium Confidence:</span>
+                          <span className="text-yellow-400 font-semibold whitespace-nowrap w-40">Medium Confidence:</span>
                           <span className="text-zinc-300">Good precision, 20-50 questions</span>
                         </div>
                         <div className="flex items-start gap-3">
-                          <span className="text-orange-400 font-semibold whitespace-nowrap">Low Confidence:</span>
+                          <span className="text-orange-400 font-semibold whitespace-nowrap w-40">Low Confidence:</span>
                           <span className="text-zinc-300">Fair precision, 10-20 questions</span>
                         </div>
                         <div className="flex items-start gap-3">
-                          <span className="text-red-400 font-semibold whitespace-nowrap">Very Low Confidence:</span>
+                          <span className="text-red-400 font-semibold whitespace-nowrap w-40">Very Low Confidence:</span>
                           <span className="text-zinc-300">Poor precision, &lt;10 questions</span>
                         </div>
                       </div>
