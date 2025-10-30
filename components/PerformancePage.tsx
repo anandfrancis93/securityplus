@@ -650,9 +650,6 @@ export default function QuizPerformance() {
                         <span className="text-zinc-300">Needs Work (&lt;600)</span>
                       </div>
                     </div>
-                    <div className="mt-3 pt-3 border-t border-zinc-700 text-xs text-zinc-400">
-                      Points earned ÷ max points • Includes partial credit
-                    </div>
                   </div>
                 </div>
               </div>
