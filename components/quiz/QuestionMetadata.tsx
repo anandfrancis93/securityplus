@@ -85,14 +85,13 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
               {Object.entries(topicsByDomain).map(([domain, topics], index) => {
                 const color = getDomainColor(domain);
                 return (
-                  <div key={index} className="flex flex-col gap-1">
-                    <span className="text-lg font-semibold" style={{ color }}>
-                      {topics.join(', ')}
-                    </span>
-                    <span className="text-sm font-medium text-zinc-500">
-                      {domain.replace('.0', '.')}
-                    </span>
-                  </div>
+                  <span
+                    key={index}
+                    className="text-lg font-semibold"
+                    style={{ color }}
+                  >
+                    {topics.join(', ')}
+                  </span>
                 );
               })}
             </div>
