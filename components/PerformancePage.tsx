@@ -696,33 +696,33 @@ export default function QuizPerformance() {
               <div className="relative group inline-block cursor-help">
                 <div className={`text-5xl md:text-6xl font-bold transition-all duration-700 ${
                   totalAnswered === 0 ? 'text-zinc-400' :
-                  isGoodPerformance ? 'text-emerald-400' :
-                  isNeedsWork ? 'text-red-400' :
-                  'text-yellow-400'
+                  parseFloat(accuracy.toString()) >= 83.3 ? 'text-emerald-400' :
+                  parseFloat(accuracy.toString()) >= 66.7 ? 'text-yellow-400' :
+                  'text-red-400'
                 }`}>{accuracy}%</div>
                 {/* Tooltip */}
                 <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-80 transition-opacity duration-700 ${liquidGlass ? 'bg-black/95 backdrop-blur-xl border-white/20 rounded-3xl' : 'bg-black border-zinc-800 rounded-md'} border p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100`}>
                   <div className={`text-sm ${liquidGlass ? '' : 'font-mono'}`}>
                     <div className="mb-3 pb-3 border-b border-zinc-700">
                       <div className="text-zinc-400 font-semibold mb-1">Accuracy Levels</div>
-                      <div className="text-xs text-zinc-500">Points earned ÷ max points</div>
+                      <div className="text-xs text-zinc-500">Maps to exam scores (100-900 scale)</div>
                     </div>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-emerald-400 font-semibold">Excellent</span>
-                        <span className="text-zinc-300">80-100%</span>
+                        <span className="text-emerald-400 font-semibold">Passing (≥750)</span>
+                        <span className="text-zinc-300">≥83.3%</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-yellow-400 font-semibold">Good</span>
-                        <span className="text-zinc-300">60-79%</span>
+                        <span className="text-yellow-400 font-semibold">Close (600-749)</span>
+                        <span className="text-zinc-300">66.7-83.2%</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-red-400 font-semibold">Needs Work</span>
-                        <span className="text-zinc-300">0-59%</span>
+                        <span className="text-red-400 font-semibold">Needs Work (&lt;600)</span>
+                        <span className="text-zinc-300">&lt;66.7%</span>
                       </div>
                     </div>
                     <div className="mt-3 pt-3 border-t border-zinc-700 text-xs text-zinc-400">
-                      Includes partial credit for multi-select questions
+                      Points earned ÷ max points • Includes partial credit
                     </div>
                   </div>
                 </div>
