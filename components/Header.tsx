@@ -10,6 +10,7 @@ interface HeaderProps {
   backButtonLabel?: string;
   className?: string;
   onHomeClick?: () => void; // Custom handler for home button (e.g., to show warning on quiz page)
+  onSignOutClick?: () => void; // Custom handler for sign out (e.g., to show save/end modal on quiz page)
 }
 
 export default function Header({
@@ -17,7 +18,8 @@ export default function Header({
   backButtonPath = '/',
   backButtonLabel = 'Back',
   className = '',
-  onHomeClick
+  onHomeClick,
+  onSignOutClick
 }: HeaderProps) {
   const router = useRouter();
   const { user, handleSignOut, liquidGlass } = useApp();
@@ -126,9 +128,14 @@ export default function Header({
             <button
               id="sign-out"
               onClick={async () => {
-                if (confirm('Are you sure you want to sign out?')) {
-                  await handleSignOut();
+                if (onSignOutClick) {
+                  onSignOutClick(); // Use custom handler if provided (e.g., show save/end modal on quiz page)
                   setMenuOpen(false);
+                } else {
+                  if (confirm('Are you sure you want to sign out?')) {
+                    await handleSignOut();
+                    setMenuOpen(false);
+                  }
                 }
               }}
               className="w-full px-4 py-3 text-sm text-left text-zinc-200 hover:bg-white/10 transition-all duration-300 flex items-center gap-3"

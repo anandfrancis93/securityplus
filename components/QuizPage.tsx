@@ -13,7 +13,7 @@ import { LoadingScreen } from '@/components/ui/LoadingScreen';
 import { AdaptiveBackground } from '@/components/ui/LiquidGlassBackground';
 
 export default function Quiz() {
-  const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, restoreQuiz, user, loading: authLoading, liquidGlass, handleSignOut, refreshProgress } = useApp();
+  const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, restoreQuiz, saveQuizToServer, loadQuizFromServer, deleteSavedQuiz, user, loading: authLoading, liquidGlass, handleSignOut, refreshProgress } = useApp();
   const router = useRouter();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -145,13 +145,9 @@ export default function Quiz() {
     console.log('Auth complete, initializing quiz...');
     setHasInitialized(true);
 
-    // Try to restore from localStorage first
-    const restored = restoreQuizFromLocalStorage();
-    if (restored) {
-      setLoading(false);
-    } else {
-      initQuiz();
-    }
+    // Priority order: Firebase (cross-device) → localStorage (same device) → New quiz
+    initQuizWithRestore();
+  };
   }, [authLoading, user]); // Don't include hasInitialized - it triggers re-runs!
 
   // Automatically generate next question in background whenever a new question is added
@@ -213,6 +209,66 @@ export default function Quiz() {
       window.removeEventListener('popstate', handlePopState);
     };
   }, [loading, showCelebration, questions.length, quizSessionId]);
+
+  // Initialize quiz with proper restoration priority
+  const initQuizWithRestore = async () => {
+    // 1. Try Firebase first (for cross-device resume)
+    console.log('Checking Firebase for saved quiz...');
+    const serverQuiz = await loadQuizFromServer();
+    if (serverQuiz) {
+      console.log('Found saved quiz on Firebase, restoring...');
+      const restored = restoreQuizFromServer(serverQuiz);
+      if (restored) {
+        setLoading(false);
+        return;
+      }
+    }
+
+    // 2. Try localStorage next (for same-device resume after close/refresh)
+    console.log('Checking localStorage for saved quiz...');
+    const localRestored = restoreQuizFromLocalStorage();
+    if (localRestored) {
+      console.log('Restored quiz from localStorage');
+      setLoading(false);
+      return;
+    }
+
+    // 3. Start new quiz
+    console.log('No saved quiz found, starting new quiz...');
+    await initQuiz();
+  };
+
+  // Restore quiz from Firebase (used for cross-device resume)
+  const restoreQuizFromServer = (serverQuizState: any): boolean => {
+    if (!serverQuizState || !user?.uid) return false;
+
+    try {
+      // Validate the quiz state
+      if (serverQuizState.userId !== user.uid) {
+        console.error('Quiz user ID mismatch');
+        return false;
+      }
+
+      // Restore all state
+      setQuizSessionId(serverQuizState.quizSessionId);
+      setQuestions(serverQuizState.questions);
+      setCurrentQuestionIndex(serverQuizState.currentQuestionIndex);
+      setSelectedAnswer(serverQuizState.selectedAnswer);
+      setSelectedAnswers(serverQuizState.selectedAnswers);
+      setShowExplanation(serverQuizState.showExplanation);
+
+      // Restore currentQuiz in AppProvider
+      if (serverQuizState.currentQuiz) {
+        restoreQuiz(serverQuizState.currentQuiz);
+      }
+
+      console.log('Quiz restored from server');
+      return true;
+    } catch (error) {
+      console.error('Failed to restore quiz from server:', error);
+      return false;
+    }
+  };
 
   const initQuiz = async () => {
     console.log('Starting fresh quiz - generating first question...');
@@ -408,8 +464,9 @@ export default function Quiz() {
       await endQuiz(unusedQuestions.length > 0 ? unusedQuestions : undefined);
       console.log('Quiz ended successfully, showing celebration...');
 
-      // Clear localStorage since quiz is completed
+      // Clear both localStorage and Firebase since quiz is completed
       clearQuizFromLocalStorage();
+      await deleteSavedQuiz();
 
       setShowCelebration(true);
     } catch (error) {
@@ -444,7 +501,17 @@ export default function Quiz() {
     setShowNavigationWarning(true);
     // Store the navigation action to execute if user confirms
     setPendingNavigation(() => () => {
-      saveQuizToLocalStorage();
+      router.push('/');
+    });
+  };
+
+  // Handle sign out click
+  const handleSignOutClick = () => {
+    // Show warning modal
+    setShowNavigationWarning(true);
+    // Store the navigation action to execute if user confirms
+    setPendingNavigation(() => async () => {
+      await handleSignOut();
       router.push('/');
     });
   };
@@ -453,7 +520,7 @@ export default function Quiz() {
     return (
       <AdaptiveBackground liquidGlass={liquidGlass}>
         <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
-          <Header onHomeClick={handleHomeClick} />
+          <Header onHomeClick={handleHomeClick} onSignOutClick={handleSignOutClick} />
         </div>
         <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
 
@@ -500,7 +567,7 @@ export default function Quiz() {
     return (
       <AdaptiveBackground liquidGlass={liquidGlass} colors={{ top: 'bg-red-500/10', bottom: 'bg-red-500/10' }}>
         <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
-          <Header onHomeClick={handleHomeClick} />
+          <Header onHomeClick={handleHomeClick} onSignOutClick={handleSignOutClick} />
         </div>
         <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
 
@@ -596,31 +663,92 @@ export default function Quiz() {
       {/* Navigation Warning Modal */}
       {showNavigationWarning && (
         <div className={`fixed inset-0 flex items-center justify-center z-50 p-4 ${liquidGlass ? 'bg-black/80 backdrop-blur-xl' : 'bg-black/90'}`}>
-          <div className={`p-8 sm:p-12 md:p-16 max-w-2xl w-full border relative ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border-white/20 rounded-[40px] shadow-2xl' : 'bg-zinc-950 border-zinc-800 rounded-md'}`}>
+          <div className={`p-8 sm:p-12 md:p-16 max-w-3xl w-full border relative ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border-white/20 rounded-[40px] shadow-2xl' : 'bg-zinc-950 border-zinc-800 rounded-md'}`}>
             {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
             {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-transparent rounded-[40px]" />}
             <div className="text-center relative space-y-8">
-              <div className="text-6xl mb-4">⚠️</div>
+              <div className="text-6xl mb-4">💾</div>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
-                Leave Quiz?
+                What would you like to do?
               </h2>
 
               <p className="text-lg sm:text-xl md:text-2xl text-zinc-300 leading-relaxed">
-                Your progress has been saved and you can resume this quiz later. Are you sure you want to leave?
+                You can save your quiz to resume later (even from a different device), end the quiz and record your progress, or stay and continue.
               </p>
 
               <div className="flex gap-4 justify-center flex-wrap">
                 <button
                   onClick={handleNavigationCancel}
-                  className={`px-8 sm:px-12 py-4 sm:py-5 font-bold text-lg sm:text-xl ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 rounded-3xl text-white transition-all duration-700 hover:scale-105 shadow-xl hover:shadow-2xl' : 'bg-zinc-800 hover:bg-zinc-700 text-white rounded-md transition-all duration-150'}`}
+                  className={`px-6 sm:px-8 py-4 sm:py-5 font-bold text-lg sm:text-xl ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 rounded-3xl text-white transition-all duration-700 hover:scale-105 shadow-xl hover:shadow-2xl' : 'bg-zinc-800 hover:bg-zinc-700 text-white rounded-md transition-all duration-150'}`}
                 >
-                  Stay
+                  Cancel
                 </button>
                 <button
-                  onClick={handleNavigationConfirm}
-                  className={`px-8 sm:px-12 py-4 sm:py-5 font-bold text-lg sm:text-xl ${liquidGlass ? 'bg-yellow-500/20 hover:bg-yellow-500/30 backdrop-blur-xl border border-yellow-500/50 rounded-3xl text-yellow-300 transition-all duration-700 hover:scale-105 shadow-xl hover:shadow-2xl hover:shadow-yellow-500/30' : 'bg-yellow-900 hover:bg-yellow-800 text-yellow-200 rounded-md transition-all duration-150'}`}
+                  onClick={async () => {
+                    // Save quiz to server for cross-device resume
+                    const quizState = {
+                      userId: user?.uid,
+                      quizSessionId,
+                      questions,
+                      currentQuestionIndex,
+                      selectedAnswer,
+                      selectedAnswers,
+                      showExplanation,
+                      currentQuiz: currentQuiz ? {
+                        id: currentQuiz.id,
+                        startedAt: currentQuiz.startedAt,
+                        questions: currentQuiz.questions,
+                        score: currentQuiz.score,
+                        totalPoints: currentQuiz.totalPoints,
+                        maxPoints: currentQuiz.maxPoints,
+                        completed: currentQuiz.completed,
+                        quizSessionId: currentQuiz.quizSessionId,
+                      } : null,
+                      savedAt: Date.now(),
+                    };
+
+                    const saved = await saveQuizToServer(quizState);
+                    if (saved) {
+                      console.log('Quiz saved to server before navigation');
+                    } else {
+                      console.error('Failed to save quiz to server');
+                    }
+
+                    // Also save to localStorage as backup
+                    saveQuizToLocalStorage();
+
+                    // Execute the pending navigation
+                    handleNavigationConfirm();
+                  }}
+                  className={`px-6 sm:px-8 py-4 sm:py-5 font-bold text-lg sm:text-xl ${liquidGlass ? 'bg-blue-500/20 hover:bg-blue-500/30 backdrop-blur-xl border border-blue-500/50 rounded-3xl text-blue-300 transition-all duration-700 hover:scale-105 shadow-xl hover:shadow-2xl hover:shadow-blue-500/30' : 'bg-blue-900 hover:bg-blue-800 text-blue-200 rounded-md transition-all duration-150'}`}
                 >
-                  Leave
+                  Save & Leave
+                </button>
+                <button
+                  onClick={async () => {
+                    // End the quiz and record progress
+                    setShowNavigationWarning(false);
+
+                    // Get unused questions to record in performance
+                    const unusedQuestions = questions.slice(currentQuestionIndex + 1);
+
+                    // End quiz (this will record progress)
+                    await endQuiz(unusedQuestions.length > 0 ? unusedQuestions : undefined);
+                    console.log('Quiz ended, progress recorded');
+
+                    // Clear both storages since quiz is ended
+                    clearQuizFromLocalStorage();
+                    await deleteSavedQuiz();
+
+                    // Execute the pending navigation
+                    if (pendingNavigation) {
+                      pendingNavigation();
+                      setPendingNavigation(null);
+                    }
+                  }}
+                  className={`px-6 sm:px-8 py-4 sm:py-5 font-bold text-lg sm:text-xl ${liquidGlass ? 'bg-red-500/20 hover:bg-red-500/30 backdrop-blur-xl border border-red-500/50 rounded-3xl text-red-300 transition-all duration-700 hover:scale-105 shadow-xl hover:shadow-2xl hover:shadow-red-500/30' : 'bg-red-900 hover:bg-red-800 text-red-200 rounded-md transition-all duration-150'}`}
+                >
+                  End Quiz
                 </button>
               </div>
             </div>
@@ -684,7 +812,7 @@ export default function Quiz() {
 
       {/* Header - Full width */}
       <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
-        <Header onHomeClick={handleHomeClick} />
+        <Header onHomeClick={handleHomeClick} onSignOutClick={handleSignOutClick} />
       </div>
 
       <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">

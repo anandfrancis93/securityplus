@@ -19,7 +19,10 @@ interface AppContextType {
   liquidGlass: boolean;
   toggleLiquidGlass: () => void;
   startNewQuiz: (quizSessionId?: string) => void;
-  restoreQuiz: (quiz: QuizSession) => void; // NEW: Restore full quiz state from localStorage
+  restoreQuiz: (quiz: QuizSession) => void;
+  saveQuizToServer: (quizState: any) => Promise<boolean>; // Save quiz to Firebase for cross-device
+  loadQuizFromServer: () => Promise<any | null>; // Load quiz from Firebase
+  deleteSavedQuiz: () => Promise<boolean>; // Delete saved quiz from Firebase
   answerQuestion: (question: Question, answer: number | number[], quizSessionId?: string) => Promise<{ correctAnswer: number | number[], explanation: string, incorrectExplanations: string[] } | undefined>;
   endQuiz: (unusedQuestions?: Question[]) => Promise<void>;
   refreshProgress: () => Promise<void>;
@@ -182,6 +185,64 @@ export function AppProvider({ children }: { children: ReactNode }) {
       totalPoints: quiz.totalPoints,
       maxPoints: quiz.maxPoints
     });
+  };
+
+  // Save quiz to Firebase for cross-device resume
+  const saveQuizToServer = async (quizState: any): Promise<boolean> => {
+    if (!userId) {
+      console.error('Cannot save quiz: no userId');
+      return false;
+    }
+
+    try {
+      await authenticatedPost('/api/save-quiz', {
+        userId,
+        quizState,
+      });
+      console.log('Quiz saved to server');
+      return true;
+    } catch (error) {
+      console.error('Error saving quiz to server:', error);
+      return false;
+    }
+  };
+
+  // Load quiz from Firebase
+  const loadQuizFromServer = async (): Promise<any | null> => {
+    if (!userId) {
+      console.error('Cannot load quiz: no userId');
+      return null;
+    }
+
+    try {
+      const response = await authenticatedPost('/api/load-quiz', {
+        userId,
+      });
+      console.log('Quiz loaded from server:', response.quizState ? 'Found' : 'None');
+      return response.quizState;
+    } catch (error) {
+      console.error('Error loading quiz from server:', error);
+      return null;
+    }
+  };
+
+  // Delete saved quiz from Firebase
+  const deleteSavedQuiz = async (): Promise<boolean> => {
+    if (!userId) {
+      console.error('Cannot delete saved quiz: no userId');
+      return false;
+    }
+
+    try {
+      await authenticatedPost('/api/delete-saved-quiz', {
+        userId,
+      });
+      console.log('Saved quiz deleted from server');
+      return true;
+    } catch (error) {
+      console.error('Error deleting saved quiz from server:', error);
+      return false;
+    }
   };
 
   const answerQuestion = async (question: Question, answer: number | number[], quizSessionId?: string): Promise<{ correctAnswer: number | number[], explanation: string, incorrectExplanations: string[] } | undefined> => {
@@ -464,6 +525,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
     toggleLiquidGlass,
     startNewQuiz,
     restoreQuiz,
+    saveQuizToServer,
+    loadQuizFromServer,
+    deleteSavedQuiz,
     answerQuestion,
     endQuiz,
     refreshProgress,

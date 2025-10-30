@@ -45,6 +45,17 @@ export interface TopicPerformance {
   isStruggling?: boolean; // accuracy < 60% && questionsAnswered >= 2
 }
 
+export interface InProgressQuiz {
+  quizSessionId: string;
+  questions: Question[];
+  currentQuestionIndex: number;
+  selectedAnswer: number | null;
+  selectedAnswers: number[];
+  showExplanation: boolean;
+  currentQuiz: QuizSession; // Full AppProvider quiz state
+  savedAt: number;
+}
+
 export interface UserProgress {
   userId: string;
   answeredQuestions: string[]; // Array of question IDs
@@ -60,6 +71,7 @@ export interface UserProgress {
   topicPerformance?: { [topicName: string]: TopicPerformance }; // Cross-session topic tracking
   cachedQuiz?: CachedQuiz | null; // Pre-generated quiz ready to use
   quizMetadata?: QuizGenerationMetadata; // Metadata for question generation and tracking
+  inProgressQuiz?: InProgressQuiz | null; // Saved quiz for cross-device resume
 }
 
 export interface QuizSession {
