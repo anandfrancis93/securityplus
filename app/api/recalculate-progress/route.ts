@@ -97,13 +97,14 @@ export async function POST(request: NextRequest) {
         metadata = updateMetadataAfterQuiz(metadata, quiz.questions || []);
       }
 
-      // Save the recalculated metadata back to the user document
+      // Sync topic performance to the main document
+      const topicPerformance = syncTopicPerformanceToUserProgress(metadata);
+
+      // Save the recalculated metadata and topic performance back to the user document
       await userRef.update({
         quizMetadata: metadata,
+        topicPerformance: topicPerformance,
       });
-
-      // Also sync topic performance to the main document
-      await syncTopicPerformanceToUserProgress(userId);
 
       console.log(`[RECALCULATE] FSRS metadata recalculated from ${quizHistory.length} quizzes`);
     } catch (error) {
