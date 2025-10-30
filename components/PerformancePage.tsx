@@ -407,57 +407,8 @@ export default function QuizPerformance() {
 
           <div className="relative text-center mb-10">
             <h2 className={`text-3xl md:text-4xl text-white mb-2 tracking-tight font-bold ${liquidGlass ? '' : 'font-mono'}`}>Predicted Exam Score</h2>
-            <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'} mb-8 flex items-center justify-center gap-2 flex-wrap`}>
-              <span>Based on {totalAnswered} question{totalAnswered !== 1 ? 's' : ''}</span>
-              {confidenceInfo.margin > 0 && (
-                <>
-                  <span className="text-zinc-700">•</span>
-                  <span className="relative group cursor-help">
-                    <span className={`font-semibold ${
-                      confidenceInfo.color === 'emerald' ? 'text-emerald-400' :
-                      confidenceInfo.color === 'yellow' ? 'text-yellow-400' :
-                      confidenceInfo.color === 'orange' ? 'text-orange-400' :
-                      confidenceInfo.color === 'red' ? 'text-red-400' :
-                      'text-zinc-400'
-                    }`}>{confidenceInfo.label}</span>
-                    {/* Hover tooltip */}
-                    <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-[500px] max-w-[90vw] transition-opacity duration-700 ${liquidGlass ? 'bg-black/95 backdrop-blur-xl border-white/20 rounded-3xl' : 'bg-black border-zinc-800 rounded-md'} border p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100`}>
-                      <div className={`text-sm ${liquidGlass ? '' : 'font-mono'}`}>
-                        <div className="grid grid-cols-3 gap-3 mb-2 pb-2 border-b border-zinc-700">
-                          <div className="text-zinc-400 font-semibold">Confidence</div>
-                          <div className="text-zinc-400 font-semibold text-center">Margin</div>
-                          <div className="text-zinc-400 font-semibold text-right">Questions</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="grid grid-cols-3 gap-3 items-center">
-                            <span className="text-emerald-400 font-semibold">High</span>
-                            <span className="text-zinc-300 text-center">±0-25</span>
-                            <span className="text-zinc-300 text-right">50+</span>
-                          </div>
-                          <div className="grid grid-cols-3 gap-3 items-center">
-                            <span className="text-yellow-400 font-semibold">Medium</span>
-                            <span className="text-zinc-300 text-center">±26-50</span>
-                            <span className="text-zinc-300 text-right">20-50</span>
-                          </div>
-                          <div className="grid grid-cols-3 gap-3 items-center">
-                            <span className="text-orange-400 font-semibold">Low</span>
-                            <span className="text-zinc-300 text-center">±51-75</span>
-                            <span className="text-zinc-300 text-right">10-20</span>
-                          </div>
-                          <div className="grid grid-cols-3 gap-3 items-center">
-                            <span className="text-red-400 font-semibold">Very Low</span>
-                            <span className="text-zinc-300 text-center">±76+</span>
-                            <span className="text-zinc-300 text-right">&lt;10</span>
-                          </div>
-                        </div>
-                        <div className="mt-3 pt-3 border-t border-zinc-700 text-xs text-zinc-400">
-                          More questions + consistent performance = narrower margin
-                        </div>
-                      </div>
-                    </div>
-                  </span>
-                </>
-              )}
+            <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'} mb-8`}>
+              Based on {totalAnswered} question{totalAnswered !== 1 ? 's' : ''}
             </p>
 
             {hasEnoughQuestions ? (
