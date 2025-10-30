@@ -421,23 +421,37 @@ export default function QuizPerformance() {
                       'text-zinc-400'
                     }`}>{confidenceInfo.label}</span>
                     {/* Hover tooltip */}
-                    <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-96 max-w-[90vw] transition-opacity duration-700 ${liquidGlass ? 'bg-black/95 backdrop-blur-xl border-white/20 rounded-3xl' : 'bg-black border-zinc-800 rounded-md'} border p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100`}>
-                      <div className={`text-sm leading-relaxed space-y-3 ${liquidGlass ? '' : 'font-mono'}`}>
-                        <div className="flex items-start gap-3">
-                          <span className="text-emerald-400 font-semibold whitespace-nowrap w-40">High Confidence:</span>
-                          <span className="text-zinc-300">Narrow range (±0-25 points)</span>
+                    <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-[500px] max-w-[90vw] transition-opacity duration-700 ${liquidGlass ? 'bg-black/95 backdrop-blur-xl border-white/20 rounded-3xl' : 'bg-black border-zinc-800 rounded-md'} border p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100`}>
+                      <div className={`text-sm ${liquidGlass ? '' : 'font-mono'}`}>
+                        <div className="grid grid-cols-3 gap-3 mb-2 pb-2 border-b border-zinc-700">
+                          <div className="text-zinc-400 font-semibold">Confidence</div>
+                          <div className="text-zinc-400 font-semibold text-center">Margin</div>
+                          <div className="text-zinc-400 font-semibold text-right">Questions</div>
                         </div>
-                        <div className="flex items-start gap-3">
-                          <span className="text-yellow-400 font-semibold whitespace-nowrap w-40">Medium Confidence:</span>
-                          <span className="text-zinc-300">Moderate range (±26-50 points)</span>
+                        <div className="space-y-2">
+                          <div className="grid grid-cols-3 gap-3 items-center">
+                            <span className="text-emerald-400 font-semibold">High</span>
+                            <span className="text-zinc-300 text-center">±0-25</span>
+                            <span className="text-zinc-300 text-right">50+</span>
+                          </div>
+                          <div className="grid grid-cols-3 gap-3 items-center">
+                            <span className="text-yellow-400 font-semibold">Medium</span>
+                            <span className="text-zinc-300 text-center">±26-50</span>
+                            <span className="text-zinc-300 text-right">20-50</span>
+                          </div>
+                          <div className="grid grid-cols-3 gap-3 items-center">
+                            <span className="text-orange-400 font-semibold">Low</span>
+                            <span className="text-zinc-300 text-center">±51-75</span>
+                            <span className="text-zinc-300 text-right">10-20</span>
+                          </div>
+                          <div className="grid grid-cols-3 gap-3 items-center">
+                            <span className="text-red-400 font-semibold">Very Low</span>
+                            <span className="text-zinc-300 text-center">±76+</span>
+                            <span className="text-zinc-300 text-right">&lt;10</span>
+                          </div>
                         </div>
-                        <div className="flex items-start gap-3">
-                          <span className="text-orange-400 font-semibold whitespace-nowrap w-40">Low Confidence:</span>
-                          <span className="text-zinc-300">Wide range (±51-75 points)</span>
-                        </div>
-                        <div className="flex items-start gap-3">
-                          <span className="text-red-400 font-semibold whitespace-nowrap w-40">Very Low Confidence:</span>
-                          <span className="text-zinc-300">Very wide range (±76+ points)</span>
+                        <div className="mt-3 pt-3 border-t border-zinc-700 text-xs text-zinc-400">
+                          More questions + consistent performance = narrower margin
                         </div>
                       </div>
                     </div>
