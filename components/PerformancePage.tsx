@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import PerformanceGraphs from './PerformanceGraphs';
 import TopicReviewSchedule from './TopicReviewSchedule';
 import { UserProgress } from '@/lib/types';
+import { formatQuizSummary, formatQuizDateShort } from '@/lib/quizFormatting';
 import Header from './Header';
 import { authenticatedPost } from '@/lib/apiClient';
 import {
@@ -1120,28 +1121,9 @@ export default function QuizPerformance() {
             ) : recentQuizzesExpanded ? (
               <div className="space-y-4 mt-6">
                 {userProgress.quizHistory.slice(-5).reverse().map((quiz) => {
-                  const date = new Date(quiz.startedAt);
-                  const formattedDate = date.toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
-                  });
-                  const formattedTime = date.toLocaleTimeString('en-US', {
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    hour12: true
-                  });
-
-                  // Calculate time taken
-                  const timeTakenMs = (quiz.endedAt || quiz.startedAt) - quiz.startedAt;
-                  const timeTakenMinutes = Math.floor(timeTakenMs / 60000);
-                  const timeTakenSeconds = Math.floor((timeTakenMs % 60000) / 1000);
-                  const timeDisplay = timeTakenMinutes > 0
-                    ? `${timeTakenMinutes}m ${timeTakenSeconds}s`
-                    : `${timeTakenSeconds}s`;
-
-                  // Check if quiz is incomplete
-                  const isIncomplete = quiz.questions.length < 10;
+                  // Format quiz summary using shared utility
+                  const { formattedTime, timeDisplay, accuracy, totalQuestions, isIncomplete } = formatQuizSummary(quiz);
+                  const formattedDate = formatQuizDateShort(quiz);
 
                   return (
                     <div
@@ -1194,12 +1176,12 @@ export default function QuizPerformance() {
                             {/* Total Questions */}
                             <div className="space-y-2">
                               <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Total Questions</div>
-                              <div className="text-2xl font-bold text-white">{quiz.questions.length}</div>
+                              <div className="text-2xl font-bold text-white">{totalQuestions}</div>
                             </div>
 
                             {/* Accuracy */}
                             {(() => {
-                              const percentage = (quiz.totalPoints / quiz.maxPoints) * 100;
+                              const percentage = parseFloat(accuracy);
                               const scoreColor = percentage >= 81.25 ? 'text-emerald-400' :
                                                 percentage >= 62.5 ? 'text-yellow-400' :
                                                 'text-red-400';
@@ -1207,7 +1189,7 @@ export default function QuizPerformance() {
                                 <div className="space-y-2">
                                   <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Accuracy</div>
                                   <div className={`text-2xl font-bold ${scoreColor}`}>
-                                    {percentage.toFixed(1)}%
+                                    {accuracy}%
                                   </div>
                                 </div>
                               );

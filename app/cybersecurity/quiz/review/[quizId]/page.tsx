@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useApp } from '@/components/AppProvider';
 import { QuizSession } from '@/lib/types';
+import { formatQuizSummary } from '@/lib/quizFormatting';
 import QuestionCard from '@/components/quiz/QuestionCard';
 import ExplanationSection from '@/components/quiz/ExplanationSection';
 import QuestionMetadata from '@/components/quiz/QuestionMetadata';
@@ -84,25 +85,8 @@ export default function QuizReviewPage() {
     );
   }
 
-  const date = new Date(quiz.startedAt);
-  const formattedDate = date.toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric'
-  });
-  const formattedTime = date.toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true
-  });
-
-  // Calculate time taken
-  const timeTakenMs = (quiz.endedAt || quiz.startedAt) - quiz.startedAt;
-  const timeTakenMinutes = Math.floor(timeTakenMs / 60000);
-  const timeTakenSeconds = Math.floor((timeTakenMs % 60000) / 1000);
-  const timeDisplay = timeTakenMinutes > 0
-    ? `${timeTakenMinutes}m ${timeTakenSeconds}s`
-    : `${timeTakenSeconds}s`;
+  // Format quiz summary data using shared utility
+  const { formattedDate, formattedTime, timeDisplay, accuracy, totalQuestions, isIncomplete } = formatQuizSummary(quiz);
 
   return (
     <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
@@ -156,18 +140,18 @@ export default function QuizReviewPage() {
                 <div className="space-y-2">
                   <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Accuracy</div>
                   <div className="text-2xl font-bold text-white">
-                    {((quiz.score / quiz.questions.length) * 100).toFixed(1)}%
+                    {accuracy}%
                   </div>
                 </div>
 
                 {/* Total Questions */}
                 <div className="space-y-2">
                   <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Total Questions</div>
-                  <div className="text-2xl font-bold text-white">{quiz.questions.length}</div>
+                  <div className="text-2xl font-bold text-white">{totalQuestions}</div>
                 </div>
 
                 {/* Incomplete Quiz Badge */}
-                {!quiz.completed && (
+                {isIncomplete && (
                   <div className="space-y-2">
                     <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Status</div>
                     <div>
