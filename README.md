@@ -185,14 +185,14 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 - Statistical confidence intervals provided
 
 **Score Prediction Mapping:**
-- θ = -3: ~100 (very low ability)
-- θ = -1: ~400 (below average)
+- θ = -3: ~160 (very low ability)
+- θ = -1: ~420 (below average)
 - θ = 0: ~550 (average ability)
-- θ = +1: ~750 (passing ability) ✓
+- θ = +1: ~680 (above average)
 - θ = +2: ~810 (high ability)
 - θ = +3: ~900 (expert ability)
 
-**Passing Score**: 750/900 (requires θ ≈ +1.0)
+**Passing Score**: 750/900 (requires θ ≈ +1.5)
 
 **Performance Metrics:**
 - Total questions answered
