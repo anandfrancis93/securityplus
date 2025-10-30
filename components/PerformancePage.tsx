@@ -618,15 +618,7 @@ export default function QuizPerformance() {
           <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
             <div className="text-center">
               <div className={`text-zinc-400 text-xl md:text-2xl mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Questions Attempted</div>
-              <div className="relative group inline-block cursor-help">
-                <div className={`text-5xl md:text-6xl font-bold transition-all duration-700 ${totalAnswered === 0 ? 'text-zinc-400' : 'text-white'}`}>{totalAnswered}</div>
-                {/* Tooltip */}
-                <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 transition-opacity duration-700 ${liquidGlass ? 'bg-black/95 backdrop-blur-xl border-white/20 rounded-3xl' : 'bg-black border-zinc-800 rounded-md'} border p-4 z-50 pointer-events-none opacity-0 group-hover:opacity-100`}>
-                  <p className={`text-sm text-zinc-300 leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>
-                    Total number of quiz questions you&apos;ve answered across all quizzes. Each question contributes to your predicted exam score and ability estimate.
-                  </p>
-                </div>
-              </div>
+              <div className={`text-5xl md:text-6xl font-bold transition-all duration-700 ${totalAnswered === 0 ? 'text-zinc-400' : 'text-white'}`}>{totalAnswered}</div>
             </div>
             <div className="text-center">
               <div className={`text-zinc-400 text-xl md:text-2xl mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Accuracy</div>
