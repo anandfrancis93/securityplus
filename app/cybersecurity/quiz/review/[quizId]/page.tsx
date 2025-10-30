@@ -86,7 +86,7 @@ export default function QuizReviewPage() {
   }
 
   // Format quiz summary data using shared utility
-  const { formattedDate, formattedTime, timeDisplay, accuracy, totalQuestions, isIncomplete } = formatQuizSummary(quiz);
+  const { formattedDate, formattedTime, timeDisplay, accuracy, accuracyColor, totalQuestions, isIncomplete } = formatQuizSummary(quiz);
 
   return (
     <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black'}`}>
@@ -139,7 +139,7 @@ export default function QuizReviewPage() {
                 {/* Accuracy */}
                 <div className="space-y-2">
                   <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Accuracy</div>
-                  <div className="text-2xl font-bold text-white">
+                  <div className={`text-2xl font-bold ${accuracyColor}`}>
                     {accuracy}%
                   </div>
                 </div>

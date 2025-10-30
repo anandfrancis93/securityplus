@@ -1157,7 +1157,7 @@ export default function QuizPerformance() {
               <div className="space-y-4 mt-6">
                 {userProgress.quizHistory.slice(-5).reverse().map((quiz) => {
                   // Format quiz summary using shared utility
-                  const { formattedTime, timeDisplay, accuracy, totalQuestions, isIncomplete } = formatQuizSummary(quiz);
+                  const { formattedTime, timeDisplay, accuracy, accuracyColor, totalQuestions, isIncomplete } = formatQuizSummary(quiz);
                   const formattedDate = formatQuizDateShort(quiz);
 
                   return (
@@ -1215,20 +1215,12 @@ export default function QuizPerformance() {
                             </div>
 
                             {/* Accuracy */}
-                            {(() => {
-                              const percentage = parseFloat(accuracy);
-                              const scoreColor = percentage >= 81.25 ? 'text-emerald-400' :
-                                                percentage >= 62.5 ? 'text-yellow-400' :
-                                                'text-red-400';
-                              return (
-                                <div className="space-y-2">
-                                  <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Accuracy</div>
-                                  <div className={`text-2xl font-bold ${scoreColor}`}>
-                                    {accuracy}%
-                                  </div>
-                                </div>
-                              );
-                            })()}
+                            <div className="space-y-2">
+                              <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Accuracy</div>
+                              <div className={`text-2xl font-bold ${accuracyColor}`}>
+                                {accuracy}%
+                              </div>
+                            </div>
 
                             {/* Status */}
                             <div className="space-y-2">

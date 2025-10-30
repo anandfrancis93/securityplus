@@ -12,6 +12,7 @@ export interface FormattedQuizSummary {
   formattedTime: string;
   timeDisplay: string;
   accuracy: string;
+  accuracyColor: string; // Tailwind color class for accuracy display
   totalQuestions: number;
   isIncomplete: boolean;
 }
@@ -52,6 +53,15 @@ export function formatQuizSummary(quiz: QuizSession): FormattedQuizSummary {
     ? ((quiz.totalPoints / quiz.maxPoints) * 100).toFixed(1)
     : '0.0';
 
+  // Determine color based on accuracy percentage
+  // 81.25% or higher (passing) = green
+  // 62.5% to 81.24% (marginal) = yellow
+  // Below 62.5% (failing) = red
+  const accuracyNum = parseFloat(accuracy);
+  const accuracyColor = accuracyNum >= 81.25 ? 'text-emerald-400' :
+                        accuracyNum >= 62.5 ? 'text-yellow-400' :
+                        'text-red-400';
+
   // Check if incomplete
   const isIncomplete = !quiz.completed;
 
@@ -60,6 +70,7 @@ export function formatQuizSummary(quiz: QuizSession): FormattedQuizSummary {
     formattedTime,
     timeDisplay,
     accuracy,
+    accuracyColor,
     totalQuestions: quiz.questions.length,
     isIncomplete,
   };
