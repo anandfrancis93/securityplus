@@ -327,32 +327,14 @@ export default function QuizPerformance() {
     const ciWidth = scoreCI.upper - scoreCI.lower;
     const margin = Math.round(ciWidth / 2);
 
-    // Create comprehensive guide for all confidence levels
-    const guide = `
-Confidence Level Guide:
-
-HIGH (±0-25 points): Excellent precision! Your score estimate is very reliable. Based on 50+ questions with consistent performance. The predicted range is narrow and highly accurate.
-
-MEDIUM (±26-50 points): Good precision. Your score estimate is reasonably reliable. Based on 20-50 questions. Continue answering to narrow the range further.
-
-LOW (±51-75 points): Fair precision. Your score has a wide margin of error. Based on 10-20 questions. More data needed for accurate prediction.
-
-VERY LOW (±76+ points): Poor precision. Your score estimate is unreliable with a very wide range. Based on fewer than 10 questions. Significantly more data needed.
-
-Your current margin: ±${margin} points
-Questions answered: ${totalAnswered}
-
-Tip: Answer more questions to improve confidence and narrow your predicted score range!
-    `.trim();
-
     if (ciWidth <= 50) {
-      return { label: 'High confidence', margin, color: 'emerald', tooltip: guide };
+      return { label: 'High confidence', margin, color: 'emerald' };
     } else if (ciWidth <= 100) {
-      return { label: 'Medium confidence', margin, color: 'yellow', tooltip: guide };
+      return { label: 'Medium confidence', margin, color: 'yellow' };
     } else if (ciWidth <= 150) {
-      return { label: 'Low confidence', margin, color: 'orange', tooltip: guide };
+      return { label: 'Low confidence', margin, color: 'orange' };
     } else {
-      return { label: 'Very low confidence', margin, color: 'red', tooltip: guide };
+      return { label: 'Very low confidence', margin, color: 'red' };
     }
   };
   const confidenceInfo = getConfidenceInfo();
@@ -440,7 +422,24 @@ Tip: Answer more questions to improve confidence and narrow your predicted score
                     }`}>{confidenceInfo.label}</span>
                     {/* Hover tooltip */}
                     <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-96 max-w-[90vw] transition-opacity duration-700 ${liquidGlass ? 'bg-black/95 backdrop-blur-xl border-white/20 rounded-3xl' : 'bg-black border-zinc-800 rounded-md'} border p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100`}>
-                      <p className={`text-sm text-zinc-300 leading-relaxed whitespace-pre-line ${liquidGlass ? '' : 'font-mono'}`}>{confidenceInfo.tooltip}</p>
+                      <div className={`text-sm leading-relaxed space-y-2 ${liquidGlass ? '' : 'font-mono'}`}>
+                        <div className="flex items-start gap-2">
+                          <span className="text-emerald-400 font-semibold">High Confidence:</span>
+                          <span className="text-zinc-300">Excellent precision, 50+ questions</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-yellow-400 font-semibold">Medium Confidence:</span>
+                          <span className="text-zinc-300">Good precision, 20-50 questions</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-orange-400 font-semibold">Low Confidence:</span>
+                          <span className="text-zinc-300">Fair precision, 10-20 questions</span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-red-400 font-semibold">Very Low Confidence:</span>
+                          <span className="text-zinc-300">Poor precision, &lt;10 questions</span>
+                        </div>
+                      </div>
                     </div>
                   </span>
                 </>
