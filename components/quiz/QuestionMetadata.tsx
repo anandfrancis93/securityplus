@@ -90,7 +90,7 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
                       {topics.join(', ')}
                     </span>
                     <span className="text-sm font-medium text-zinc-500">
-                      [{domain.replace('.0', '.')}]
+                      {domain.replace('.0', '.')}
                     </span>
                   </div>
                 );
