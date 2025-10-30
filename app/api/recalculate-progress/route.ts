@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebaseAdmin';
 import { authenticateAndAuthorize } from '@/lib/apiAuth';
-import { calculateIRTAbility } from '@/lib/irtScoring';
-import { updateFSRSMetadata } from '@/lib/fsrsScheduler';
+import { estimateAbilityWithError } from '@/lib/irt';
+import { updateMetadataAfterQuiz, ensureMetadataInitialized } from '@/lib/fsrsMetadataUpdate';
 
 export async function POST(request: NextRequest) {
   try {
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     const allAttempts = quizHistory.flatMap(quiz => quiz.questions || []);
 
     // Calculate IRT ability from all attempts
-    const { theta, fisherInformation, standardError } = calculateIRTAbility(allAttempts);
+    const { theta, standardError } = estimateAbilityWithError(allAttempts);
 
     // Calculate basic stats
     const totalQuestions = allAttempts.length;
@@ -79,8 +79,15 @@ export async function POST(request: NextRequest) {
 
     // Recalculate FSRS metadata by processing quizzes in order
     try {
-      await updateFSRSMetadata(userId, quizHistory);
-      console.log(`[RECALCULATE] FSRS metadata recalculated`);
+      // First ensure metadata is initialized
+      await ensureMetadataInitialized(userId);
+
+      // Process each quiz in chronological order to rebuild FSRS state
+      for (const quiz of quizHistory) {
+        await updateMetadataAfterQuiz(userId, quiz.questions || []);
+      }
+
+      console.log(`[RECALCULATE] FSRS metadata recalculated from ${quizHistory.length} quizzes`);
     } catch (error) {
       console.error(`[RECALCULATE] Error updating FSRS metadata:`, error);
       // Don't fail the whole operation if FSRS update fails
