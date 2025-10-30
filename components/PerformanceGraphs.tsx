@@ -144,8 +144,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       quiz: quizLabel,
       quizId: quiz.id,  // Store quiz ID for stable reference
       ability: parseFloat(theta.toFixed(2)),
-      abilityErrorLower: parseFloat((theta - abilityCI.lower).toFixed(2)),
-      abilityErrorUpper: parseFloat((abilityCI.upper - theta).toFixed(2)),
+      abilityError: [parseFloat((theta - abilityCI.lower).toFixed(2)), parseFloat((abilityCI.upper - theta).toFixed(2))],
       ciLower: abilityCI.lower,
       ciUpper: abilityCI.upper,
       date: new Date(quiz.endedAt || quiz.startedAt).toLocaleDateString(),
@@ -171,9 +170,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       ? `Quiz ${quiz.id.split('_')[1] || index + 1}`
       : `Quiz ${index + 1}`;
 
-    // Calculate error bar distances for ErrorBar component
-    const scoreErrorLower = score - scoreLower;
-    const scoreErrorUpper = scoreUpper - score;
+    // Calculate error bar as array [lower, upper] for ErrorBar component
+    const scoreError = [score - scoreLower, scoreUpper - score];
 
     return {
       quiz: quizLabel,
@@ -181,8 +179,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       score,
       scoreLower,
       scoreUpper,
-      scoreErrorLower,  // Distance from score to lower bound
-      scoreErrorUpper,  // Distance from score to upper bound
+      scoreError,  // Array [lower distance, upper distance] for ErrorBar
       date: new Date(quiz.endedAt || quiz.startedAt).toLocaleDateString(),
     };
   });
@@ -440,8 +437,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 return <circle cx={cx} cy={cy} r={5} fill={fill} />;
               }}
             >
-              <ErrorBar dataKey="abilityErrorLower" direction="y" stroke="#888" strokeWidth={2} />
-              <ErrorBar dataKey="abilityErrorUpper" direction="y" stroke="#888" strokeWidth={2} />
+              <ErrorBar dataKey="abilityError" stroke="#888" strokeWidth={2} />
             </Line>
           </LineChart>
         </ResponsiveContainer>
@@ -525,8 +521,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                     return <circle cx={cx} cy={cy} r={5} fill={fill} />;
                   }}
                 >
-                  <ErrorBar dataKey="scoreErrorLower" direction="y" stroke="#888" strokeWidth={2} />
-                  <ErrorBar dataKey="scoreErrorUpper" direction="y" stroke="#888" strokeWidth={2} />
+                  <ErrorBar dataKey="scoreError" stroke="#888" strokeWidth={2} />
                 </Line>
               </LineChart>
             </ResponsiveContainer>
