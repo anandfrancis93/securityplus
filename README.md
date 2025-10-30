@@ -6,7 +6,7 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 
 ### Quiz Mode with Adaptive Testing & FSRS Scheduling
 
-- **AI-Generated Synthesis Questions**: Creates complex questions combining multiple security concepts using xAI Grok (grok-4-fast for generation, grok-2-latest for topic identification)
+- **AI-Generated Synthesis Questions**: Creates complex questions combining multiple security concepts using xAI Grok (grok-4-fast-reasoning for generation, grok-4-fast-non-reasoning for topic identification)
 - **FSRS-Powered Topic Selection**: Uses Free Spaced Repetition Scheduler algorithm to determine which topics appear in your quiz based on:
   - Topic stability and difficulty
   - Time since last review
@@ -96,8 +96,8 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 - **Frontend**: Next.js 15.5.6 (App Router), React 19, TypeScript, Tailwind CSS
 - **Charting**: Recharts 3.3.0 for data visualization
 - **AI**:
-  - xAI Grok (grok-4-fast) - Question generation
-  - xAI Grok (grok-2-latest) - Topic identification
+  - xAI Grok (grok-4-fast-reasoning) - Question generation
+  - xAI Grok (grok-4-fast-non-reasoning) - Topic identification
   - OpenAI text-embedding-3-small - Question similarity detection (deduplication)
 - **Backend**: Firebase (Firestore Database + Firebase Storage + Google Authentication)
 - **Image Hosting**: Firebase Storage with CORS configuration
