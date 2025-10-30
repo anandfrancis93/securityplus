@@ -653,11 +653,24 @@ export async function pregenerateQuiz(
     'single-domain-multiple-topics', 'single-domain-multiple-topics', 'single-domain-multiple-topics', 'single-domain-multiple-topics', // 4 medium
     'multiple-domains-multiple-topics', 'multiple-domains-multiple-topics', 'multiple-domains-multiple-topics'  // 3 hard
   ];
+
+  console.log(`[DIFFICULTY DEBUG] BEFORE shuffle: ${difficultyDistribution.join(', ')}`);
+
   // Shuffle using Fisher-Yates algorithm
   for (let i = difficultyDistribution.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [difficultyDistribution[i], difficultyDistribution[j]] = [difficultyDistribution[j], difficultyDistribution[i]];
   }
+
+  console.log(`[DIFFICULTY DEBUG] AFTER shuffle: ${difficultyDistribution.join(', ')}`);
+
+  // Count distribution for verification
+  const counts = {
+    easy: difficultyDistribution.filter(d => d === 'single-domain-single-topic').length,
+    medium: difficultyDistribution.filter(d => d === 'single-domain-multiple-topics').length,
+    hard: difficultyDistribution.filter(d => d === 'multiple-domains-multiple-topics').length
+  };
+  console.log(`[DIFFICULTY DEBUG] Distribution count: ${counts.easy} easy, ${counts.medium} medium, ${counts.hard} hard`);
 
   if (!phase1Complete) {
     // PHASE 1: Prioritize uncovered topics, 100% new questions
@@ -676,6 +689,7 @@ export async function pregenerateQuiz(
 
         // Use deterministic difficulty distribution (guaranteed 3 easy, 4 medium, 3 hard)
         const questionCategory = difficultyDistribution[i];
+        console.log(`[DIFFICULTY DEBUG] Q${i + 1}: Using category ${questionCategory}`);
 
         // Select topics based on category, prioritizing uncovered topics
         const selectedTopics = selectTopicsForQuestion(
@@ -743,6 +757,7 @@ export async function pregenerateQuiz(
 
         // Use deterministic difficulty distribution for Phase 2 new questions
         const questionCategory = newQuestionDistribution[i];
+        console.log(`[DIFFICULTY DEBUG] Phase 2 Q${i + 1}: Using category ${questionCategory}`);
 
         // Select topics based on category (no priority topics in Phase 2)
         const selectedTopics = selectTopicsForQuestion(
