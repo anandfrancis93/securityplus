@@ -421,11 +421,22 @@ export default function Quiz() {
     setPendingNavigation(null);
   };
 
+  // Handle home button click
+  const handleHomeClick = () => {
+    // Show warning modal
+    setShowNavigationWarning(true);
+    // Store the navigation action to execute if user confirms
+    setPendingNavigation(() => () => {
+      saveQuizToLocalStorage();
+      router.push('/');
+    });
+  };
+
   if (loading) {
     return (
       <AdaptiveBackground liquidGlass={liquidGlass}>
         <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
-          <Header />
+          <Header onHomeClick={handleHomeClick} />
         </div>
         <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
 
@@ -472,7 +483,7 @@ export default function Quiz() {
     return (
       <AdaptiveBackground liquidGlass={liquidGlass} colors={{ top: 'bg-red-500/10', bottom: 'bg-red-500/10' }}>
         <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
-          <Header />
+          <Header onHomeClick={handleHomeClick} />
         </div>
         <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
 
@@ -656,7 +667,7 @@ export default function Quiz() {
 
       {/* Header - Full width */}
       <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
-        <Header />
+        <Header onHomeClick={handleHomeClick} />
       </div>
 
       <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">

@@ -9,13 +9,15 @@ interface HeaderProps {
   backButtonPath?: string;
   backButtonLabel?: string;
   className?: string;
+  onHomeClick?: () => void; // Custom handler for home button (e.g., to show warning on quiz page)
 }
 
 export default function Header({
   showBackButton = false,
   backButtonPath = '/',
   backButtonLabel = 'Back',
-  className = ''
+  className = '',
+  onHomeClick
 }: HeaderProps) {
   const router = useRouter();
   const { user, handleSignOut, liquidGlass } = useApp();
@@ -43,7 +45,13 @@ export default function Header({
       <div className="flex justify-between items-center px-6 sm:px-8 lg:px-12">
         {/* Logo - Top Left */}
         <button
-          onClick={() => router.push('/')}
+          onClick={() => {
+            if (onHomeClick) {
+              onHomeClick(); // Use custom handler if provided (e.g., show warning on quiz page)
+            } else {
+              router.push('/'); // Default behavior
+            }
+          }}
           className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 transition-all duration-300 focus:outline-none ${
             liquidGlass
               ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl hover:bg-white/10 hover:scale-[1.02] shadow-lg hover:shadow-white/10'
