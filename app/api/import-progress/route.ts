@@ -5,7 +5,11 @@ import { authenticateAndAuthorize } from '@/lib/apiAuth';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { userId, importData } = body as { userId: string; importData: any };
+    const { userId, importData, mergeData = false } = body as {
+      userId: string;
+      importData: any;
+      mergeData?: boolean;
+    };
 
     if (!userId || !importData) {
       return NextResponse.json(
@@ -21,6 +25,8 @@ export async function POST(request: NextRequest) {
     }
 
     const userRef = adminDb.collection('users').doc(userId);
+
+    console.log(`[IMPORT] Starting import in ${mergeData ? 'MERGE' : 'REPLACE'} mode`);
 
     // Check if this is new format (with separate mainDocument and quizHistory)
     // or old format (with userData containing quizHistory array)
@@ -51,34 +57,64 @@ export async function POST(request: NextRequest) {
     }
 
     // Import main document
-    await userRef.set({
-      ...mainDocData,
-      lastUpdated: Date.now(),
-    });
+    if (mergeData) {
+      // MERGE mode: Update existing document, preserving non-imported fields
+      const existingDoc = await userRef.get();
+      const existingData = existingDoc.data() || {};
 
-    console.log(`[IMPORT] Main document imported for user ${userId}`);
+      // For merge, we need to be smart about numerical fields
+      // We'll keep the imported stats as they represent a complete state
+      await userRef.set({
+        ...existingData,
+        ...mainDocData,
+        lastUpdated: Date.now(),
+      });
+
+      console.log(`[IMPORT] Main document merged for user ${userId}`);
+    } else {
+      // REPLACE mode: Overwrite with imported data
+      await userRef.set({
+        ...mainDocData,
+        lastUpdated: Date.now(),
+      });
+
+      console.log(`[IMPORT] Main document replaced for user ${userId}`);
+    }
 
     // Import quiz history to subcollection
     if (quizHistoryData && quizHistoryData.length > 0) {
       const batch = adminDb.batch();
       const quizHistoryRef = userRef.collection('quizHistory');
 
-      // Clear existing quiz history first
-      const existingQuizzes = await quizHistoryRef.get();
-      existingQuizzes.docs.forEach(doc => {
-        batch.delete(doc.ref);
-      });
+      if (!mergeData) {
+        // REPLACE mode: Clear existing quiz history first
+        const existingQuizzes = await quizHistoryRef.get();
+        existingQuizzes.docs.forEach(doc => {
+          batch.delete(doc.ref);
+        });
+        console.log(`[IMPORT] Cleared ${existingQuizzes.docs.length} existing quizzes for replacement`);
+      } else {
+        // MERGE mode: Keep existing quizzes, only add new ones or update if they already exist
+        console.log(`[IMPORT] Merging quizzes with existing data`);
+      }
 
       // Add imported quiz history
       quizHistoryData.forEach(quiz => {
         const quizId = quiz.id || `quiz_${quiz.completedAt || Date.now()}`;
         const quizRef = quizHistoryRef.doc(quizId);
         const { id, ...quizData } = quiz; // Remove id field before storing
-        batch.set(quizRef, quizData);
+
+        if (mergeData) {
+          // In merge mode, use set with merge option to preserve existing data
+          batch.set(quizRef, quizData, { merge: true });
+        } else {
+          // In replace mode, overwrite completely
+          batch.set(quizRef, quizData);
+        }
       });
 
       await batch.commit();
-      console.log(`[IMPORT] ${quizHistoryData.length} quizzes imported to subcollection`);
+      console.log(`[IMPORT] ${quizHistoryData.length} quizzes ${mergeData ? 'merged into' : 'replaced in'} subcollection`);
     }
 
     return NextResponse.json({

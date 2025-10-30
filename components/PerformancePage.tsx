@@ -305,17 +305,35 @@ export default function QuizPerformance() {
           quizCount = importedData.userData.quizHistory.length;
         }
 
-        // Confirm import
-        const confirmed = confirm(
+        // Ask user if they want to merge or replace
+        const currentQuizCount = userProgress?.totalQuestions || 0;
+        const importChoice = confirm(
           `Import performance data from ${new Date(importedData.exportDate).toLocaleDateString()}?\n\n` +
           `This backup contains ${quizCount} quiz${quizCount !== 1 ? 'zes' : ''}.\n` +
-          `This will replace your current performance data. This action cannot be undone.`
+          `You currently have ${currentQuizCount} quiz${currentQuizCount !== 1 ? 'zes' : ''} in your account.\n\n` +
+          `Click OK to MERGE (add backup data to your existing data)\n` +
+          `Click Cancel to choose REPLACE instead`
         );
 
-        if (!confirmed) {
-          console.log('[IMPORT] Import cancelled by user');
-          return;
+        let replaceChoice = false;
+        if (!importChoice) {
+          // User clicked Cancel, ask if they want to replace instead
+          replaceChoice = confirm(
+            `Do you want to REPLACE your current data with the backup?\n\n` +
+            `⚠️ WARNING: This will delete your current ${currentQuizCount} quiz${currentQuizCount !== 1 ? 'zes' : ''} ` +
+            `and replace with ${quizCount} quiz${quizCount !== 1 ? 'zes' : ''} from the backup.\n\n` +
+            `This action cannot be undone.\n\n` +
+            `Click OK to REPLACE\n` +
+            `Click Cancel to abort import`
+          );
+
+          if (!replaceChoice) {
+            console.log('[IMPORT] Import cancelled by user');
+            return;
+          }
         }
+
+        const mergeData = importChoice; // true for merge, false for replace
 
         // Import data via API
         if (!user) {
@@ -325,9 +343,23 @@ export default function QuizPerformance() {
         const response = await authenticatedPost('/api/import-progress', {
           userId: user.uid,
           importData: importedData,
+          mergeData: mergeData,
         });
 
-        alert(`Performance data imported successfully! ${response.quizzesImported || 0} quizzes restored.\n\nThe page will now reload.`);
+        if (mergeData) {
+          alert(
+            `Performance data merged successfully!\n\n` +
+            `${response.quizzesImported || 0} quizzes added to your existing data.\n` +
+            `The page will now reload.`
+          );
+        } else {
+          alert(
+            `Performance data replaced successfully!\n\n` +
+            `${response.quizzesImported || 0} quizzes restored from backup.\n` +
+            `The page will now reload.`
+          );
+        }
+
         window.location.reload();
       } catch (error) {
         console.error('[IMPORT] Failed to import data:', error);
