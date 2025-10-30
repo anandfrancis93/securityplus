@@ -346,16 +346,31 @@ export default function QuizPerformance() {
           mergeData: mergeData,
         });
 
+        console.log('[IMPORT] Data imported, now recalculating performance metrics...');
+
+        // Recalculate all performance metrics based on the combined quiz history
+        try {
+          await authenticatedPost('/api/recalculate-progress', {
+            userId: user.uid,
+          });
+          console.log('[IMPORT] Performance metrics recalculated successfully');
+        } catch (recalcError) {
+          console.error('[IMPORT] Failed to recalculate metrics:', recalcError);
+          // Continue anyway - the data is imported, just metrics might be off
+        }
+
         if (mergeData) {
           alert(
             `Performance data merged successfully!\n\n` +
             `${response.quizzesImported || 0} quizzes added to your existing data.\n` +
+            `All performance metrics have been recalculated.\n\n` +
             `The page will now reload.`
           );
         } else {
           alert(
             `Performance data replaced successfully!\n\n` +
             `${response.quizzesImported || 0} quizzes restored from backup.\n` +
+            `All performance metrics have been recalculated.\n\n` +
             `The page will now reload.`
           );
         }
