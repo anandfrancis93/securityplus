@@ -1033,6 +1033,20 @@ export default function QuizPerformance() {
                                 {isIncomplete ? 'Incomplete' : 'Completed'}
                               </span>
                             </div>
+                            {(() => {
+                              const percentage = (quiz.totalPoints / quiz.maxPoints) * 100;
+                              const scoreColor = percentage >= 81.25 ? 'text-emerald-400' :
+                                                percentage >= 62.5 ? 'text-yellow-400' :
+                                                'text-red-400';
+                              return (
+                                <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
+                                  <span className="text-zinc-500">Accuracy:</span>{' '}
+                                  <span className={scoreColor}>
+                                    {percentage.toFixed(1)}%
+                                  </span>
+                                </div>
+                              );
+                            })()}
                           </div>
                           <div className="text-right">
                             {(() => {
@@ -1043,14 +1057,9 @@ export default function QuizPerformance() {
                               const correctAnswers = (quiz.totalPoints / quiz.maxPoints) * quiz.questions.length;
                               const displayScore = correctAnswers === 0 ? '0' : correctAnswers.toFixed(2);
                               return (
-                                <>
-                                  <div className={`text-4xl md:text-5xl font-bold ${scoreColor} ${liquidGlass ? '' : 'font-mono'}`}>
-                                    {displayScore}/{quiz.questions.length}
-                                  </div>
-                                  <div className={`text-xl text-zinc-400 mt-2 ${liquidGlass ? '' : 'font-mono'}`}>
-                                    {percentage.toFixed(1)}%
-                                  </div>
-                                </>
+                                <div className={`text-4xl md:text-5xl font-bold ${scoreColor} ${liquidGlass ? '' : 'font-mono'}`}>
+                                  {displayScore}/{quiz.questions.length}
+                                </div>
                               );
                             })()}
                           </div>
