@@ -99,27 +99,11 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
           </div>
         )}
 
-        {/* Difficulty */}
-        <div className="flex items-center gap-4 flex-wrap">
-          <span className="text-xl md:text-2xl text-white font-bold">Difficulty:</span>
-          <span className={`px-6 py-4 text-lg md:text-xl border-2 font-bold ${
-            liquidGlass
-              ? question.difficulty === 'easy' ? 'bg-green-500/20 text-green-200 border-green-500/50 backdrop-blur-xl rounded-2xl' :
-                question.difficulty === 'medium' ? 'bg-yellow-500/20 text-yellow-200 border-yellow-500/50 backdrop-blur-xl rounded-2xl' :
-                'bg-red-500/20 text-red-200 border-red-500/50 backdrop-blur-xl rounded-2xl'
-              : question.difficulty === 'easy' ? 'bg-green-900 text-green-200 border-green-700 rounded-md' :
-                question.difficulty === 'medium' ? 'bg-yellow-900 text-yellow-200 border-yellow-700 rounded-md' :
-                'bg-red-900 text-red-200 border-red-700 rounded-md'
-          }`}>
-            {question.difficulty.toUpperCase()}
-          </span>
-        </div>
-
         {/* Question Type */}
         {question.questionCategory && (
           <div className="flex items-center gap-4 flex-wrap">
             <span className="text-xl md:text-2xl text-white font-bold">Type:</span>
-            <span className={`px-6 py-4 text-lg md:text-xl font-medium ${liquidGlass ? 'bg-white/10 backdrop-blur-xl text-zinc-300 border border-white/20 rounded-2xl' : 'bg-zinc-900 text-zinc-300 border-2 border-zinc-700 rounded-md'}`}>
+            <span className="text-lg md:text-xl text-zinc-300">
               {question.questionCategory === 'single-domain-single-topic' ? 'Single Domain, Single Topic' :
                question.questionCategory === 'single-domain-multiple-topics' ? 'Single Domain, Multiple Topics' :
                'Multiple Domains, Multiple Topics'}
@@ -127,11 +111,19 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
           </div>
         )}
 
+        {/* Difficulty */}
+        <div className="flex items-center gap-4 flex-wrap">
+          <span className="text-xl md:text-2xl text-white font-bold">Difficulty:</span>
+          <span className="text-lg md:text-xl text-zinc-300">
+            {question.difficulty.toUpperCase()}
+          </span>
+        </div>
+
         {/* Points */}
         {pointsEarned !== undefined && maxPoints !== undefined && (
           <div className="flex items-center gap-4 flex-wrap">
             <span className="text-xl md:text-2xl text-white font-bold">Points:</span>
-            <span className={`px-6 py-4 text-lg md:text-xl font-bold ${liquidGlass ? 'bg-white/10 backdrop-blur-xl text-white border border-white/20 rounded-2xl' : 'bg-zinc-900 text-white border-2 border-zinc-700 rounded-md'}`}>
+            <span className="text-lg md:text-xl text-white">
               {pointsEarned}/{maxPoints}
             </span>
           </div>
