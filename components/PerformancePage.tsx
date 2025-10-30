@@ -355,10 +355,13 @@ export default function QuizPerformance() {
   const upperColor = getScoreColor(scoreCI.upper);
 
   // Helper function to get color for ability level
+  // Maps theta to exam score thresholds: 750 (passing), 600 (close)
+  // Formula: Score = 550 + (theta × 130)
+  // theta = 1.54 → 750, theta = 0.38 → 600
   const getAbilityColor = (ability: number) => {
-    if (ability >= 1.0) return 'emerald';
-    if (ability >= -1.0) return 'yellow';
-    return 'red';
+    if (ability >= 1.54) return 'emerald';  // Passing (≥750)
+    if (ability >= 0.38) return 'yellow';   // Close (600-749)
+    return 'red';                            // Needs Work (<600)
   };
 
   const lowerAbilityColor = getAbilityColor(abilityCI.lower);
@@ -712,8 +715,8 @@ export default function QuizPerformance() {
                         </div>
                       ) : (
                         <div className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold transition-all duration-700 ${
-                          estimatedAbility >= 1.0 ? 'text-emerald-400' :
-                          estimatedAbility >= -1.0 ? 'text-yellow-400' :
+                          estimatedAbility >= 1.54 ? 'text-emerald-400' :
+                          estimatedAbility >= 0.38 ? 'text-yellow-400' :
                           'text-red-400'
                         }`}>
                           {estimatedAbility.toFixed(2)}
@@ -751,8 +754,8 @@ export default function QuizPerformance() {
                       {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
                         // Show range (confidence interval) with multiple color segments
                         <>
-                          {/* Red segment: -3 to -1 */}
-                          {abilityCI.lower < -1.0 && (
+                          {/* Red segment: -3 to 0.38 (Needs Work <600) */}
+                          {abilityCI.lower < 0.38 && (
                             <div
                               className={`h-6 absolute transition-all duration-700 ${
                                 liquidGlass
@@ -761,19 +764,19 @@ export default function QuizPerformance() {
                               }`}
                               style={{
                                 left: `${Math.max(0, ((abilityCI.lower + 3) / 6) * 100)}%`,
-                                width: `${((Math.min(abilityCI.upper, -1.0) - abilityCI.lower) / 6) * 100}%`,
+                                width: `${((Math.min(abilityCI.upper, 0.38) - abilityCI.lower) / 6) * 100}%`,
                                 borderTopLeftRadius: liquidGlass ? '1rem' : '0.375rem',
                                 borderBottomLeftRadius: liquidGlass ? '1rem' : '0.375rem',
-                                borderTopRightRadius: abilityCI.upper < -1.0 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
-                                borderBottomRightRadius: abilityCI.upper < -1.0 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                                borderTopRightRadius: abilityCI.upper < 0.38 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                                borderBottomRightRadius: abilityCI.upper < 0.38 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
                               }}
                             >
-                              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" style={{ borderTopLeftRadius: '1rem', borderBottomLeftRadius: '1rem', borderTopRightRadius: abilityCI.upper < -1.0 ? '1rem' : '0', borderBottomRightRadius: abilityCI.upper < -1.0 ? '1rem' : '0' }} />}
+                              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" style={{ borderTopLeftRadius: '1rem', borderBottomLeftRadius: '1rem', borderTopRightRadius: abilityCI.upper < 0.38 ? '1rem' : '0', borderBottomRightRadius: abilityCI.upper < 0.38 ? '1rem' : '0' }} />}
                             </div>
                           )}
 
-                          {/* Yellow segment: -1 to 1 */}
-                          {abilityCI.lower < 1.0 && abilityCI.upper >= -1.0 && (
+                          {/* Yellow segment: 0.38 to 1.54 (Close 600-749) */}
+                          {abilityCI.lower < 1.54 && abilityCI.upper >= 0.38 && (
                             <div
                               className={`h-6 absolute transition-all duration-700 ${
                                 liquidGlass
@@ -781,20 +784,20 @@ export default function QuizPerformance() {
                                   : 'bg-yellow-500'
                               }`}
                               style={{
-                                left: `${((Math.max(abilityCI.lower, -1.0) + 3) / 6) * 100}%`,
-                                width: `${((Math.min(abilityCI.upper, 1.0) - Math.max(abilityCI.lower, -1.0)) / 6) * 100}%`,
-                                borderTopLeftRadius: abilityCI.lower >= -1.0 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
-                                borderBottomLeftRadius: abilityCI.lower >= -1.0 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
-                                borderTopRightRadius: abilityCI.upper < 1.0 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
-                                borderBottomRightRadius: abilityCI.upper < 1.0 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                                left: `${((Math.max(abilityCI.lower, 0.38) + 3) / 6) * 100}%`,
+                                width: `${((Math.min(abilityCI.upper, 1.54) - Math.max(abilityCI.lower, 0.38)) / 6) * 100}%`,
+                                borderTopLeftRadius: abilityCI.lower >= 0.38 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                                borderBottomLeftRadius: abilityCI.lower >= 0.38 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                                borderTopRightRadius: abilityCI.upper < 1.54 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                                borderBottomRightRadius: abilityCI.upper < 1.54 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
                               }}
                             >
-                              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" style={{ borderTopLeftRadius: abilityCI.lower >= -1.0 ? '1rem' : '0', borderBottomLeftRadius: abilityCI.lower >= -1.0 ? '1rem' : '0', borderTopRightRadius: abilityCI.upper < 1.0 ? '1rem' : '0', borderBottomRightRadius: abilityCI.upper < 1.0 ? '1rem' : '0' }} />}
+                              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" style={{ borderTopLeftRadius: abilityCI.lower >= 0.38 ? '1rem' : '0', borderBottomLeftRadius: abilityCI.lower >= 0.38 ? '1rem' : '0', borderTopRightRadius: abilityCI.upper < 1.54 ? '1rem' : '0', borderBottomRightRadius: abilityCI.upper < 1.54 ? '1rem' : '0' }} />}
                             </div>
                           )}
 
-                          {/* Green segment: 1 to 3 */}
-                          {abilityCI.upper >= 1.0 && (
+                          {/* Green segment: 1.54 to 3 (Passing ≥750) */}
+                          {abilityCI.upper >= 1.54 && (
                             <div
                               className={`h-6 absolute transition-all duration-700 ${
                                 liquidGlass
@@ -802,15 +805,15 @@ export default function QuizPerformance() {
                                   : 'bg-emerald-500'
                               }`}
                               style={{
-                                left: `${((Math.max(abilityCI.lower, 1.0) + 3) / 6) * 100}%`,
-                                width: `${((abilityCI.upper - Math.max(abilityCI.lower, 1.0)) / 6) * 100}%`,
-                                borderTopLeftRadius: abilityCI.lower >= 1.0 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
-                                borderBottomLeftRadius: abilityCI.lower >= 1.0 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                                left: `${((Math.max(abilityCI.lower, 1.54) + 3) / 6) * 100}%`,
+                                width: `${((abilityCI.upper - Math.max(abilityCI.lower, 1.54)) / 6) * 100}%`,
+                                borderTopLeftRadius: abilityCI.lower >= 1.54 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                                borderBottomLeftRadius: abilityCI.lower >= 1.54 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
                                 borderTopRightRadius: liquidGlass ? '1rem' : '0.375rem',
                                 borderBottomRightRadius: liquidGlass ? '1rem' : '0.375rem',
                               }}
                             >
-                              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" style={{ borderTopLeftRadius: abilityCI.lower >= 1.0 ? '1rem' : '0', borderBottomLeftRadius: abilityCI.lower >= 1.0 ? '1rem' : '0', borderTopRightRadius: '1rem', borderBottomRightRadius: '1rem' }} />}
+                              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" style={{ borderTopLeftRadius: abilityCI.lower >= 1.54 ? '1rem' : '0', borderBottomLeftRadius: abilityCI.lower >= 1.54 ? '1rem' : '0', borderTopRightRadius: '1rem', borderBottomRightRadius: '1rem' }} />}
                             </div>
                           )}
                         </>
