@@ -1036,10 +1036,10 @@ export default function QuizPerformance() {
                           </div>
                           <div className="text-right">
                             <div className={`text-4xl md:text-5xl font-bold text-cyan-400 ${liquidGlass ? '' : 'font-mono'}`}>
-                              {quiz.score}/{quiz.questions.length}
+                              {quiz.totalPoints}/{quiz.maxPoints}
                             </div>
                             <div className={`text-xl text-zinc-400 mt-2 ${liquidGlass ? '' : 'font-mono'}`}>
-                              {((quiz.score / quiz.questions.length) * 100).toFixed(0)}%
+                              {((quiz.totalPoints / quiz.maxPoints) * 100).toFixed(1)}%
                             </div>
                           </div>
                         </div>
