@@ -89,13 +89,19 @@ export default function Quiz() {
         return false;
       }
 
-      // Restore quiz state
+      // Restore quiz state to local state
       setQuizSessionId(quizState.quizSessionId);
       setQuestions(quizState.questions);
       setCurrentQuestionIndex(quizState.currentQuestionIndex);
       setSelectedAnswer(quizState.selectedAnswer);
       setSelectedAnswers(quizState.selectedAnswers);
       setShowExplanation(quizState.showExplanation);
+
+      // IMPORTANT: Also restore currentQuiz in AppProvider
+      // This is needed for answerQuestion() to work correctly
+      if (currentQuiz === null && quizState.quizSessionId) {
+        startNewQuiz(quizState.quizSessionId);
+      }
 
       console.log('Quiz restored from localStorage');
       return true;

@@ -412,12 +412,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const handleSignOut = async () => {
     try {
+      // Clear any in-progress quiz from localStorage before signing out
+      try {
+        localStorage.removeItem('quizInProgress');
+        console.log('Cleared quiz from localStorage on sign out');
+      } catch (e) {
+        console.error('Failed to clear localStorage on sign out:', e);
+      }
+
       await signOut();
       setUser(null);
       setUserId(null);
       setAuthUserId(null);
+      setCurrentQuiz(null); // Clear current quiz state
       setUserProgress(null);
-      setCurrentQuiz(null);
       // Redirect will be handled by the route's useEffect hook
     } catch (error) {
       console.error('Error signing out:', error);
