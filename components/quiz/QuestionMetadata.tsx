@@ -106,8 +106,12 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
         {/* Difficulty */}
         <div className="flex items-center gap-4 flex-wrap">
           <span className="text-xl md:text-2xl text-white font-bold">Difficulty:</span>
-          <span className="text-lg md:text-xl text-zinc-300">
-            {question.difficulty.toUpperCase()}
+          <span className={`text-lg md:text-xl ${
+            question.difficulty === 'easy' ? 'text-green-400' :
+            question.difficulty === 'medium' ? 'text-yellow-400' :
+            'text-red-400'
+          }`}>
+            {question.difficulty.charAt(0).toUpperCase() + question.difficulty.slice(1)}
           </span>
         </div>
 
