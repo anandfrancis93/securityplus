@@ -35,14 +35,13 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 
 ### Performance Analytics & Progress Tracking
 
-- **7 Interactive Performance Graphs**:
+- **6 Interactive Performance Graphs**:
   1. **Ability Level Over Time**: Track your IRT ability (θ) progression with confidence intervals
   2. **Predicted Score Over Time**: Monitor your exam readiness with 750 passing threshold and confidence bands
   3. **Accuracy by Difficulty**: See performance breakdown across easy/medium/hard questions
   4. **Performance by Domain**: Track coverage and accuracy across all 5 SY0-701 domains
-  5. **Study Volume Over Time**: Cumulative question count showing study consistency
-  6. **Individual Domain Performance**: Collapsible detailed view for each domain
-  7. **Topic Coverage by Domain**: Shows all topics organized by their domains
+  5. **Individual Domain Performance**: Collapsible detailed view for each domain
+  6. **Topic Coverage by Domain**: Shows all topics organized by their domains
 - **IRT Performance Insights**: Dynamic, specific insights generated from your IRT performance data considering:
   - Overall ability level and confidence
   - Performance by question category (single/multi-domain, single/multi-topic)
@@ -148,13 +147,12 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 2. **Predicted Score Over Time**: Line chart tracking score estimates with confidence bands and passing threshold (750)
 3. **Accuracy by Difficulty**: Bar chart showing percentage correct for easy/medium/hard questions
 4. **Domain Performance**: Horizontal bar chart showing accuracy across all 5 SY0-701 domains
-5. **Study Volume**: Cumulative line chart showing total questions answered over time
-6. **Individual Domain Tables**: Collapsible tables showing detailed stats for each domain
-7. **Topic Coverage**: Tables showing all topics with coverage count and accuracy
-8. **IRT Performance Insights**: AI-generated insights analyzing your performance patterns
-9. **Topic Review Schedule**: FSRS-based display of due topics and upcoming reviews
-10. **Quiz History**: Clickable cards showing all past quizzes with stats
-11. **Export/Import**: Backup and restore progress with automatic recalculation
+5. **Individual Domain Tables**: Collapsible tables showing detailed stats for each domain
+6. **Topic Coverage**: Tables showing all topics with coverage count and accuracy
+7. **IRT Performance Insights**: AI-generated insights analyzing your performance patterns
+8. **Topic Review Schedule**: FSRS-based display of due topics and upcoming reviews
+9. **Quiz History**: Clickable cards showing all past quizzes with stats
+10. **Export/Import**: Backup and restore progress with automatic recalculation
 
 ### Flashcard System
 
