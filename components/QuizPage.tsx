@@ -13,7 +13,7 @@ import { LoadingScreen } from '@/components/ui/LoadingScreen';
 import { AdaptiveBackground } from '@/components/ui/LiquidGlassBackground';
 
 export default function Quiz() {
-  const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, user, loading: authLoading, liquidGlass, handleSignOut, refreshProgress } = useApp();
+  const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, restoreQuiz, user, loading: authLoading, liquidGlass, handleSignOut, refreshProgress } = useApp();
   const router = useRouter();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -52,6 +52,17 @@ export default function Quiz() {
       selectedAnswers,
       showExplanation,
       timestamp: Date.now(),
+      // IMPORTANT: Also save currentQuiz from AppProvider for proper restoration
+      currentQuiz: currentQuiz ? {
+        id: currentQuiz.id,
+        startedAt: currentQuiz.startedAt,
+        questions: currentQuiz.questions,
+        score: currentQuiz.score,
+        totalPoints: currentQuiz.totalPoints,
+        maxPoints: currentQuiz.maxPoints,
+        completed: currentQuiz.completed,
+        quizSessionId: currentQuiz.quizSessionId,
+      } : null,
     };
 
     try {
@@ -97,10 +108,16 @@ export default function Quiz() {
       setSelectedAnswers(quizState.selectedAnswers);
       setShowExplanation(quizState.showExplanation);
 
-      // IMPORTANT: Also restore currentQuiz in AppProvider
-      // This is needed for answerQuestion() to work correctly
-      if (currentQuiz === null && quizState.quizSessionId) {
-        startNewQuiz(quizState.quizSessionId);
+      // CRITICAL: Restore currentQuiz in AppProvider with ALL previously answered questions
+      // This ensures answerQuestion() has correct question count for server validation
+      if (currentQuiz === null) {
+        if (quizState.currentQuiz) {
+          // Restore full quiz state including all answered questions
+          restoreQuiz(quizState.currentQuiz);
+        } else if (quizState.quizSessionId) {
+          // Fallback: if no currentQuiz was saved (old localStorage format), create empty one
+          startNewQuiz(quizState.quizSessionId);
+        }
       }
 
       console.log('Quiz restored from localStorage');

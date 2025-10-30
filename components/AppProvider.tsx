@@ -19,6 +19,7 @@ interface AppContextType {
   liquidGlass: boolean;
   toggleLiquidGlass: () => void;
   startNewQuiz: (quizSessionId?: string) => void;
+  restoreQuiz: (quiz: QuizSession) => void; // NEW: Restore full quiz state from localStorage
   answerQuestion: (question: Question, answer: number | number[], quizSessionId?: string) => Promise<{ correctAnswer: number | number[], explanation: string, incorrectExplanations: string[] } | undefined>;
   endQuiz: (unusedQuestions?: Question[]) => Promise<void>;
   refreshProgress: () => Promise<void>;
@@ -170,6 +171,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
       quizSessionId, // Store the server-side session ID
     };
     setCurrentQuiz(newQuiz);
+  };
+
+  // Restore quiz state from localStorage (used after page refresh/reload)
+  const restoreQuiz = (quiz: QuizSession) => {
+    setCurrentQuiz(quiz);
+    console.log('Quiz restored in AppProvider:', {
+      questionsCount: quiz.questions.length,
+      score: quiz.score,
+      totalPoints: quiz.totalPoints,
+      maxPoints: quiz.maxPoints
+    });
   };
 
   const answerQuestion = async (question: Question, answer: number | number[], quizSessionId?: string): Promise<{ correctAnswer: number | number[], explanation: string, incorrectExplanations: string[] } | undefined> => {
@@ -451,6 +463,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     liquidGlass,
     toggleLiquidGlass,
     startNewQuiz,
+    restoreQuiz,
     answerQuestion,
     endQuiz,
     refreshProgress,
