@@ -425,19 +425,19 @@ export default function QuizPerformance() {
                       <div className={`text-sm leading-relaxed space-y-3 ${liquidGlass ? '' : 'font-mono'}`}>
                         <div className="flex items-start gap-3">
                           <span className="text-emerald-400 font-semibold whitespace-nowrap w-40">High Confidence:</span>
-                          <span className="text-zinc-300">Excellent precision, 50+ questions</span>
+                          <span className="text-zinc-300">Narrow range (±0-25 points)</span>
                         </div>
                         <div className="flex items-start gap-3">
                           <span className="text-yellow-400 font-semibold whitespace-nowrap w-40">Medium Confidence:</span>
-                          <span className="text-zinc-300">Good precision, 20-50 questions</span>
+                          <span className="text-zinc-300">Moderate range (±26-50 points)</span>
                         </div>
                         <div className="flex items-start gap-3">
                           <span className="text-orange-400 font-semibold whitespace-nowrap w-40">Low Confidence:</span>
-                          <span className="text-zinc-300">Fair precision, 10-20 questions</span>
+                          <span className="text-zinc-300">Wide range (±51-75 points)</span>
                         </div>
                         <div className="flex items-start gap-3">
                           <span className="text-red-400 font-semibold whitespace-nowrap w-40">Very Low Confidence:</span>
-                          <span className="text-zinc-300">Poor precision, &lt;10 questions</span>
+                          <span className="text-zinc-300">Very wide range (±76+ points)</span>
                         </div>
                       </div>
                     </div>
@@ -672,7 +672,7 @@ export default function QuizPerformance() {
                 {/* Tooltip */}
                 <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 transition-opacity duration-700 ${liquidGlass ? 'bg-black/95 backdrop-blur-xl border-white/20 rounded-3xl' : 'bg-black border-zinc-800 rounded-md'} border p-4 z-50 pointer-events-none opacity-0 group-hover:opacity-100`}>
                   <p className={`text-sm text-zinc-300 leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>
-                    Total number of quiz questions you've answered across all quizzes. Each question contributes to your predicted exam score and ability estimate.
+                    Total number of quiz questions you&apos;ve answered across all quizzes. Each question contributes to your predicted exam score and ability estimate.
                   </p>
                 </div>
               </div>
