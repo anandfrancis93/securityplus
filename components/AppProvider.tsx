@@ -467,6 +467,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setPredictedScore(0);
       console.log('[DEBUG AppProvider] Predicted score reset to 0');
 
+      // Clear any saved quiz from localStorage
+      try {
+        localStorage.removeItem('quizInProgress');
+        console.log('[DEBUG AppProvider] Cleared quiz from localStorage');
+      } catch (e) {
+        console.error('[ERROR AppProvider] Failed to clear localStorage:', e);
+      }
+
       console.log('[DEBUG AppProvider] Progress reset complete');
     } catch (error) {
       console.error('[ERROR AppProvider] Error resetting progress:', error);
