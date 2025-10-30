@@ -1035,12 +1035,22 @@ export default function QuizPerformance() {
                             </div>
                           </div>
                           <div className="text-right">
-                            <div className={`text-4xl md:text-5xl font-bold text-cyan-400 ${liquidGlass ? '' : 'font-mono'}`}>
-                              {((quiz.totalPoints / quiz.maxPoints) * quiz.questions.length).toFixed(2)}/{quiz.questions.length}
-                            </div>
-                            <div className={`text-xl text-zinc-400 mt-2 ${liquidGlass ? '' : 'font-mono'}`}>
-                              {((quiz.totalPoints / quiz.maxPoints) * 100).toFixed(1)}%
-                            </div>
+                            {(() => {
+                              const percentage = (quiz.totalPoints / quiz.maxPoints) * 100;
+                              const scoreColor = percentage >= 81.25 ? 'text-emerald-400' :
+                                                percentage >= 62.5 ? 'text-yellow-400' :
+                                                'text-red-400';
+                              return (
+                                <>
+                                  <div className={`text-4xl md:text-5xl font-bold ${scoreColor} ${liquidGlass ? '' : 'font-mono'}`}>
+                                    {((quiz.totalPoints / quiz.maxPoints) * quiz.questions.length).toFixed(2)}/{quiz.questions.length}
+                                  </div>
+                                  <div className={`text-xl text-zinc-400 mt-2 ${liquidGlass ? '' : 'font-mono'}`}>
+                                    {percentage.toFixed(1)}%
+                                  </div>
+                                </>
+                              );
+                            })()}
                           </div>
                         </div>
                       </div>
