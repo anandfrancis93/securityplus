@@ -147,7 +147,6 @@ export default function Quiz() {
 
     // Priority order: Firebase (cross-device) → localStorage (same device) → New quiz
     initQuizWithRestore();
-  };
   }, [authLoading, user]); // Don't include hasInitialized - it triggers re-runs!
 
   // Automatically generate next question in background whenever a new question is added
