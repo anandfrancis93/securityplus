@@ -701,10 +701,30 @@ export default function QuizPerformance() {
                   'text-yellow-400'
                 }`}>{accuracy}%</div>
                 {/* Tooltip */}
-                <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 transition-opacity duration-700 ${liquidGlass ? 'bg-black/95 backdrop-blur-xl border-white/20 rounded-3xl' : 'bg-black border-zinc-800 rounded-md'} border p-4 z-50 pointer-events-none opacity-0 group-hover:opacity-100`}>
-                  <p className={`text-sm text-zinc-300 leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>
-                    Percentage of points earned out of maximum possible points across all questions. Accounts for partial credit on multiple-choice questions.
-                  </p>
+                <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-80 transition-opacity duration-700 ${liquidGlass ? 'bg-black/95 backdrop-blur-xl border-white/20 rounded-3xl' : 'bg-black border-zinc-800 rounded-md'} border p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100`}>
+                  <div className={`text-sm ${liquidGlass ? '' : 'font-mono'}`}>
+                    <div className="mb-3 pb-3 border-b border-zinc-700">
+                      <div className="text-zinc-400 font-semibold mb-1">Accuracy Levels</div>
+                      <div className="text-xs text-zinc-500">Points earned ÷ max points</div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-emerald-400 font-semibold">Excellent</span>
+                        <span className="text-zinc-300">80-100%</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-yellow-400 font-semibold">Good</span>
+                        <span className="text-zinc-300">60-79%</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-red-400 font-semibold">Needs Work</span>
+                        <span className="text-zinc-300">0-59%</span>
+                      </div>
+                    </div>
+                    <div className="mt-3 pt-3 border-t border-zinc-700 text-xs text-zinc-400">
+                      Includes partial credit for multi-select questions
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
