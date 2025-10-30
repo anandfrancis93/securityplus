@@ -1182,6 +1182,9 @@ export default function QuizPerformance() {
                             <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
                               <span className="text-zinc-500">Total Time:</span> {timeDisplay}
                             </div>
+                            <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
+                              <span className="text-zinc-500">Total Questions:</span> {quiz.questions.length}
+                            </div>
                             {(() => {
                               const percentage = (quiz.totalPoints / quiz.maxPoints) * 100;
                               const scoreColor = percentage >= 81.25 ? 'text-emerald-400' :
