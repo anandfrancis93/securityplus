@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebaseAdmin';
 import { authenticateAndAuthorize } from '@/lib/apiAuth';
 import { estimateAbilityWithError } from '@/lib/irt';
-import { updateMetadataAfterQuiz, ensureMetadataInitialized } from '@/lib/fsrsMetadataUpdate';
+import { updateMetadataAfterQuiz, ensureMetadataInitialized, syncTopicPerformanceToUserProgress } from '@/lib/fsrsMetadataUpdate';
 
 export async function POST(request: NextRequest) {
   try {
@@ -79,13 +79,31 @@ export async function POST(request: NextRequest) {
 
     // Recalculate FSRS metadata by processing quizzes in order
     try {
-      // First ensure metadata is initialized
-      await ensureMetadataInitialized(userId);
+      // Get current user document to get any existing metadata
+      const currentUserDoc = await userRef.get();
+      const currentUserData = currentUserDoc.data();
+
+      // Initialize metadata from scratch (or use existing as base)
+      let metadata = ensureMetadataInitialized(currentUserData || null);
+
+      // Reset counters since we're recalculating from scratch
+      metadata.totalQuizzesCompleted = 0;
+      metadata.topicCoverage = {};
+      metadata.topicPerformance = {};
+      metadata.questionHistory = {};
 
       // Process each quiz in chronological order to rebuild FSRS state
       for (const quiz of quizHistory) {
-        await updateMetadataAfterQuiz(userId, quiz.questions || []);
+        metadata = updateMetadataAfterQuiz(metadata, quiz.questions || []);
       }
+
+      // Save the recalculated metadata back to the user document
+      await userRef.update({
+        quizMetadata: metadata,
+      });
+
+      // Also sync topic performance to the main document
+      await syncTopicPerformanceToUserProgress(userId);
 
       console.log(`[RECALCULATE] FSRS metadata recalculated from ${quizHistory.length} quizzes`);
     } catch (error) {
