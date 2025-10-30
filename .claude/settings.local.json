@@ -6,7 +6,9 @@
       "WebFetch(domain:docs.x.ai)",
       "WebFetch(domain:neurorouters.com)",
       "WebFetch(domain:lablab.ai)",
-      "Bash(node test-ai-providers.js:*)"
+      "Bash(node test-ai-providers.js:*)",
+      "Bash(node test-grok-quick.js:*)",
+      "Bash(between X and Y with a margin of ±Z points\"\n\nChanges:\n- Increased tooltip width from 224px to 384px\n- Added structured layout with labeled sections\n- Included comprehensive summary at bottom\n- More educational and informative\n\nThis helps users understand the difference between confidence\nlevel (95% certainty), confidence interval (the range), and\nmargin of error (precision).\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []
