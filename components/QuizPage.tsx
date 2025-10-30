@@ -570,6 +570,8 @@ export default function Quiz() {
             <QuestionMetadata
               question={currentQuestion}
               liquidGlass={liquidGlass}
+              pointsEarned={currentQuiz?.questions[currentQuestionIndex]?.pointsEarned}
+              maxPoints={currentQuiz?.questions[currentQuestionIndex]?.maxPoints}
             />
 
             {/* Next Button */}

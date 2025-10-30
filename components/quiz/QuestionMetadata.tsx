@@ -7,6 +7,8 @@ import { ALL_SECURITY_PLUS_TOPICS } from '@/lib/topicData';
 interface QuestionMetadataProps {
   question: Question;
   liquidGlass?: boolean;
+  pointsEarned?: number;
+  maxPoints?: number;
 }
 
 // Domain color mapping - More vibrant and distinct colors
@@ -33,7 +35,7 @@ function getTopicDomain(topic: string): string {
   return '1.0 General Security Concepts';
 }
 
-export default function QuestionMetadata({ question, liquidGlass = true }: QuestionMetadataProps) {
+export default function QuestionMetadata({ question, liquidGlass = true, pointsEarned, maxPoints }: QuestionMetadataProps) {
   const domains = getDomainsFromTopics(question.topics);
 
   return (
@@ -121,6 +123,16 @@ export default function QuestionMetadata({ question, liquidGlass = true }: Quest
               {question.questionCategory === 'single-domain-single-topic' ? 'Single Domain, Single Topic' :
                question.questionCategory === 'single-domain-multiple-topics' ? 'Single Domain, Multiple Topics' :
                'Multiple Domains, Multiple Topics'}
+            </span>
+          </div>
+        )}
+
+        {/* Points */}
+        {pointsEarned !== undefined && maxPoints !== undefined && (
+          <div className="flex items-center gap-4 flex-wrap">
+            <span className="text-xl md:text-2xl text-white font-bold">Points:</span>
+            <span className={`px-6 py-4 text-lg md:text-xl font-bold ${liquidGlass ? 'bg-white/10 backdrop-blur-xl text-white border border-white/20 rounded-2xl' : 'bg-zinc-900 text-white border-2 border-zinc-700 rounded-md'}`}>
+              {pointsEarned}/{maxPoints}
             </span>
           </div>
         )}
