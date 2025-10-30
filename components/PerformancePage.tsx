@@ -701,13 +701,7 @@ export default function QuizPerformance() {
                     <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />
                   )}
                   <div className="relative flex items-center justify-between mb-6">
-                    <div className="relative group cursor-help">
-                      <h4 className={`text-2xl md:text-3xl font-bold text-white tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Ability Level</h4>
-                      {/* Hover tooltip */}
-                      <div className={`absolute bottom-full left-0 mb-2 w-80 transition-opacity duration-700 ${liquidGlass ? 'bg-black/80 backdrop-blur-xl border-white/20 rounded-3xl' : 'bg-black border-zinc-800 rounded-md'} border p-4 z-50 pointer-events-none opacity-0 group-hover:opacity-100`}>
-                        <p className={`text-base text-zinc-300 leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
-                      </div>
-                    </div>
+                    <h4 className={`text-2xl md:text-3xl font-bold text-white tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Ability Level</h4>
                     {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
                       <div className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold transition-all duration-700 flex items-center justify-center gap-2`}>
                         <span className={
