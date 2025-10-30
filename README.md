@@ -1,12 +1,18 @@
 # Security+ SY0-701 Learning Platform
 
-An AI-powered web application for CompTIA Security+ SY0-701 certification exam preparation with intelligent adaptive testing, performance analytics, and flashcard study system.
+An AI-powered web application for CompTIA Security+ SY0-701 certification exam preparation featuring intelligent adaptive testing with FSRS-based topic scheduling, comprehensive performance analytics with confidence intervals, and flashcard study system with spaced repetition.
 
 ## Features
 
-### Quiz Mode with Adaptive Testing
-- **AI-Generated Synthesis Questions**: Creates complex questions combining multiple security concepts using Google Gemini 2.5 Flash-Lite
-- **AI-Based Topic Identification**: Uses semantic understanding to accurately identify which topics each question tests (no false positives from distractors)
+### Quiz Mode with Adaptive Testing & FSRS Scheduling
+
+- **AI-Generated Synthesis Questions**: Creates complex questions combining multiple security concepts using xAI Grok (grok-2-1212 for generation, grok-vision-beta for topic identification)
+- **FSRS-Powered Topic Selection**: Uses Free Spaced Repetition Scheduler algorithm to determine which topics appear in your quiz based on:
+  - Topic stability and difficulty
+  - Time since last review
+  - Your performance history on each topic
+  - Three adaptive phases (Coverage → Practice → Mastery)
+- **AI-Based Topic Identification**: Uses vision-based semantic understanding to accurately identify which topics each question tests (no false positives from distractors)
 - **Deterministic Difficulty Classification**: Questions are automatically classified based on topic/domain complexity:
   - **EASY (100 points)**: Single domain, single topic questions
   - **MEDIUM (175 points)**: Single domain, multiple topics questions
@@ -19,27 +25,44 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
   - Subtle incorrectness (wrong answers are "close but not quite right")
 - **Instant Start with On-Demand Generation**: First question appears in ~10 seconds, remaining questions generate automatically in the background
 - **Progressive Loading**: Zero wait time between questions - next question is always ready when you click "Next"
-- **Multiple-Response Questions**: Includes "select all that apply" questions with partial credit support (70% single-choice, 30% multiple-response)
+- **Multiple-Response Questions**: Includes "select all that apply" questions with partial credit support
 - **Item Response Theory (IRT) Scoring**: Advanced psychometric scoring system that weighs questions by difficulty
-- **Phase 1 IRT Reliability**: Requires 15 questions minimum for reliable ability estimates with capped predictions until threshold is met
+- **Confidence Intervals**: Statistical confidence intervals shown for ability estimates and predicted scores
 - **Partial Credit System**: Earn proportional points for partially correct answers on multiple-response questions
 - **Intelligent Score Prediction**: IRT-based ability estimation predicts your exam score (100-900 scale)
+- **Cross-Device Resume**: Quiz state saved to cloud, resume on any device
+- **Local Storage Backup**: Quiz auto-saved to localStorage for reliability
 
 ### Performance Analytics & Progress Tracking
-- **5 Interactive Performance Graphs**:
-  1. **Ability Level Over Time**: Track your IRT ability (θ) progression from -3 (beginner) to +3 (expert)
-  2. **Predicted Score Over Time**: Monitor your exam readiness with 750 passing threshold
+
+- **7 Interactive Performance Graphs**:
+  1. **Ability Level Over Time**: Track your IRT ability (θ) progression with confidence intervals
+  2. **Predicted Score Over Time**: Monitor your exam readiness with 750 passing threshold and confidence bands
   3. **Accuracy by Difficulty**: See performance breakdown across easy/medium/hard questions
-  4. **Performance by Domain**: Track coverage and accuracy across all 5 SY0-701 domains (unique question counts)
+  4. **Performance by Domain**: Track coverage and accuracy across all 5 SY0-701 domains
   5. **Study Volume Over Time**: Cumulative question count showing study consistency
-- **Topic Coverage Tables**: 5 scrollable tables (one per domain) showing ALL Security+ topics with coverage count and accuracy, including topics with 0 occurrences
-- **Cross-Session Topic Tracking**: Comprehensive tracking of performance across all SY0-701 topics and domains
-- **IRT Performance Analysis**: Detailed ability metrics with visual progress indicators
-- **Domain Coverage Monitoring**: Automatic categorization and tracking across 5 exam domains
-- **Mastery Identification**: System identifies mastered topics (80%+ accuracy, 3+ questions)
-- **Phase 1 Warnings**: Clear indicators when insufficient data (<15 questions) with progress tracking
+  6. **Individual Domain Performance**: Collapsible detailed view for each domain
+  7. **Topic Coverage by Domain**: Shows all topics organized by their domains
+- **IRT Performance Insights**: Dynamic, specific insights generated from your IRT performance data considering:
+  - Overall ability level and confidence
+  - Performance by question category (single/multi-domain, single/multi-topic)
+  - Difficulty-specific performance patterns
+  - Statistical significance of patterns
+- **Topic Review Schedule**: FSRS-based scheduling showing which topics are due for review:
+  - Overdue topics (need immediate review)
+  - Due now (scheduled for current quiz)
+  - Due soon (coming up in next few quizzes)
+  - Future topics (well-learned, long intervals)
+- **Quiz History**: Review all past quizzes with detailed breakdowns
+- **Export/Import Progress**: Backup and restore your performance data
+  - Export all quiz history and performance metrics to JSON
+  - Import with merge or replace options
+  - Automatic recalculation of all metrics after import
+- **Confidence Intervals**: Wilson score intervals and IRT standard errors for statistical accuracy
+- **Cross-Session Topic Tracking**: Comprehensive tracking of performance across all SY0-701 topics with FSRS scheduling
 
 ### Flashcard Mode with Spaced Repetition
+
 - **Manual Flashcard Creation**: Create custom flashcards with terms, definitions, and optional context
 - **Image Support**: Add images to flashcards with Firebase Storage integration (up to 5MB per image)
 - **Image Lightbox**: Click images to view enlarged versions with zoom functionality
@@ -52,142 +75,99 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 - **Search Functionality**: Quickly find flashcards by term, definition, domain, or source file
 - **Progress Tracking**: Monitor Learning, Review, and Mastered cards
 - **Reset Progress**: Clear all review history while keeping flashcards
-- **Order Preservation**: Flashcards maintain the order they appear in your document
 - **Manual Creation & Editing**: Create or edit flashcards with custom terms, definitions, context, and images
 
 ### User Experience
+
 - **Google Sign-In**: Secure authentication via Google OAuth
-- **Multi-Subject Support**: Organized homepage with subjects (Cybersecurity active, others coming soon)
+- **Anonymous Mode**: Try the app without signing in (data not persisted)
 - **Cloud Sync**: All progress and flashcards automatically saved to Firebase (Firestore + Storage)
 - **Comprehensive Progress Tracking**: Track answered questions, points earned, ability estimate, predicted exam score, and topic mastery
-- **Dark Mode UI**: Eye-friendly dark interface with modern design
+- **Liquid Glass UI**: Modern, eye-friendly interface with glassmorphism design
 - **Smart Question Management**: Never repeats previously answered questions within a quiz session
 - **Detailed Explanations**: Learn why correct answers are right and incorrect answers are wrong
-- **Topic Tags**: Each question shows relevant Security+ topics covered
-- **Flexible Quiz Flow**: End quiz anytime and return to home page
-- **Reset Progress**: Clear quiz or flashcard progress independently
+- **Question Metadata**: Each question shows domains, topics, difficulty, question type, and points
+- **Flexible Quiz Flow**: Save and end quiz anytime, resume later on any device
+- **Reset Progress**: Clear quiz progress with localStorage cleanup
+- **Quiz Review**: Review completed quizzes with full question details and your answers
+- **Delete Quizzes**: Remove individual quizzes from history with automatic stat recalculation
 
 ## Tech Stack
 
-- **Frontend**: Next.js 15.0.0 (App Router), React 19, TypeScript, Tailwind CSS
+- **Frontend**: Next.js 15.5.6 (App Router), React 19, TypeScript, Tailwind CSS
 - **Charting**: Recharts 3.3.0 for data visualization
 - **AI**:
-  - Google Gemini 2.5 Flash-Lite ($0.10/$0.40 per million tokens) - Question generation and topic identification
-  - OpenAI text-embedding-3-small ($0.02 per million tokens) - Question similarity detection
+  - xAI Grok (grok-2-1212) - Question generation
+  - xAI Grok Vision (grok-vision-beta) - Topic identification
+  - OpenAI text-embedding-3-small - Question similarity detection (deduplication)
 - **Backend**: Firebase (Firestore Database + Firebase Storage + Google Authentication)
 - **Image Hosting**: Firebase Storage with CORS configuration
-- **Spaced Repetition**: ts-fsrs 5.2.3 (FSRS algorithm implementation)
+- **Spaced Repetition**: ts-fsrs 5.2.3 (FSRS algorithm for both flashcards and quiz topic scheduling)
 - **Deployment**: Vercel with automatic CI/CD
 
 ## How It Works
 
-### Quiz Mode with Adaptive Testing
-1. **Google Authentication**: Users sign in with Google OAuth for secure access
-2. **On-Demand Question Generation**:
+### Quiz Mode with FSRS Topic Scheduling
+
+1. **Google Authentication**: Users sign in with Google OAuth for secure access (or use anonymously)
+2. **FSRS Topic Selection**:
+   - System uses FSRS algorithm to determine which topics should appear in your next quiz
+   - Three adaptive phases:
+     - **Phase 1 (Coverage)**: Cover all topics at least once
+     - **Phase 2 (Practice)**: Focus on weak topics while maintaining strong ones
+     - **Phase 3 (Mastery)**: Optimal spaced repetition for long-term retention
+   - Topics scheduled based on stability, difficulty, and time since last review
+3. **On-Demand Question Generation**:
    - First question generates immediately (~10 seconds)
    - Subsequent questions generate automatically in the background
    - Each new question triggers generation of the next one
    - Zero wait time between questions for seamless experience
-3. **AI Question Generation**: Google Gemini AI creates unique synthesis questions from comprehensive SY0-701 exam objectives
-4. **AI-Based Topic Identification**:
-   - After generation, AI analyzes the question to identify which topics it actually tests
-   - Uses semantic understanding with temperature=0 for consistency
+4. **AI Question Generation**: xAI Grok creates unique synthesis questions from comprehensive SY0-701 exam objectives
+5. **AI-Based Topic Identification**:
+   - After generation, Grok Vision analyzes the question to identify which topics it actually tests
+   - Uses semantic understanding with vision capabilities for consistency
    - Considers only what's required to answer correctly (ignores distractors)
    - Provides exact topic strings from the Security+ SY0-701 topic inventory
-5. **Deterministic Difficulty Classification**:
+6. **Deterministic Difficulty Classification**:
    - System counts topics and domains from AI-identified topics
    - Classification logic:
      - 1 topic, 1 domain → **EASY** (100 points)
      - Multiple topics, 1 domain → **MEDIUM** (175 points)
      - Multiple topics, Multiple domains → **HARD** (325 points)
-   - No randomness - difficulty is purely based on question complexity
-6. **Partial Credit**: Multiple-response questions award proportional credit (e.g., 3/4 correct = 75% of points)
-7. **IRT Analysis**: System estimates your ability level (theta) using Maximum Likelihood Estimation with Phase 1 safeguards
-8. **Phase 1 Reliability**:
-   - Requires minimum 15 questions for reliable estimates
-   - Ability capped at ±2.0 (instead of ±3.0) until threshold met
-   - Clear warnings displayed when data is insufficient
-   - Prevents unrealistic predictions (e.g., "+3 ability after 1 question")
-9. **Score Prediction**: Maps your ability estimate to the 100-900 exam score scale
-10. **Topic Tracking**: Automatically categorizes questions into 5 SY0-701 domains and tracks performance
-11. **Cloud Sync**: All progress is stored in Firestore and synced across devices
-12. **Smart Tracking**: Keeps track of answered questions within quiz sessions to avoid repetition
+7. **Partial Credit**: Multiple-response questions award proportional credit
+8. **IRT Analysis**: System estimates your ability level (theta) using Maximum Likelihood Estimation
+9. **Confidence Intervals**: Statistical confidence bands shown for predictions
+10. **Score Prediction**: Maps your ability estimate to the 100-900 exam score scale
+11. **FSRS Update**: After each quiz, FSRS algorithm updates topic schedules based on performance
+12. **Cloud Sync**: All progress stored in Firestore and synced across devices
+13. **Local Backup**: Quiz state saved to localStorage for reliability
 
 ### Performance Analytics System
-1. **Ability Level Over Time**: Line chart showing θ progression with reference lines at average (0) and target (+1)
-2. **Predicted Score Over Time**: Line chart tracking score estimates with passing threshold (750) marked
-3. **Accuracy by Difficulty**: Bar chart showing percentage correct for easy/medium/hard questions
-4. **Domain Performance**: Horizontal bar chart showing accuracy across all 5 SY0-701 domains (counts unique questions, not topic occurrences)
-5. **Study Volume**: Cumulative line chart showing total questions answered over time
-6. **Topic Coverage Tables**: 5 scrollable tables (one per domain) displaying all Security+ SY0-701 topics with:
-   - Topic name
-   - Times covered (including 0 occurrences)
-   - Accuracy percentage (color-coded: green ≥80%, yellow ≥60%, red <60%)
-   - Coverage summary per domain (e.g., "45 of 93 topics covered")
-7. **Cross-Session Topic Tracking**:
-   - Tracks every topic across all quiz sessions
-   - Automatically maps topics to correct SY0-701 domain using keyword matching
-   - Identifies mastered topics (80%+ accuracy, 3+ questions answered)
-   - Can be used to exclude mastered topics from future quizzes
-8. **Interactive Tooltips**: Hover over graph elements for detailed statistics
 
-### Flashcard Mode
-1. **Manual Creation**: User creates flashcards by entering term, definition, optional context, and domain
-2. **Image Upload**: Optional image attachments stored in Firebase Storage (supports PNG, JPG, GIF, WebP up to 5MB)
+1. **Ability Level Over Time**: Line chart showing θ progression with confidence intervals
+2. **Predicted Score Over Time**: Line chart tracking score estimates with confidence bands and passing threshold (750)
+3. **Accuracy by Difficulty**: Bar chart showing percentage correct for easy/medium/hard questions
+4. **Domain Performance**: Horizontal bar chart showing accuracy across all 5 SY0-701 domains
+5. **Study Volume**: Cumulative line chart showing total questions answered over time
+6. **Individual Domain Tables**: Collapsible tables showing detailed stats for each domain
+7. **Topic Coverage**: Tables showing all topics with coverage count and accuracy
+8. **IRT Performance Insights**: AI-generated insights analyzing your performance patterns
+9. **Topic Review Schedule**: FSRS-based display of due topics and upcoming reviews
+10. **Quiz History**: Clickable cards showing all past quizzes with stats
+11. **Export/Import**: Backup and restore progress with automatic recalculation
+
+### Flashcard System
+
+1. **Manual Creation**: Create flashcards with term, definition, optional context, and domain
+2. **Image Upload**: Optional image attachments stored in Firebase Storage
 3. **Flashcard Storage**: Flashcards saved to Firestore with user association
-4. **Spaced Repetition**: FSRS algorithm calculates optimal review intervals using machine learning
-   - Difficulty: Measures card complexity, adjusts over time
-   - Stability: Predicts memory retention duration
-   - Intervals: Dynamically calculated based on recall performance
-   - Retrievability: Estimates current recall probability
+4. **Spaced Repetition**: FSRS algorithm calculates optimal review intervals
 5. **Review Tracking**: System monitors each card's review history and next due date
 6. **Automatic Scheduling**: Cards appear when due based on spaced repetition algorithm
-7. **Search & Filter**: Real-time search across terms, definitions, domains, and source files
+7. **Search & Filter**: Real-time search across terms, definitions, domains
 8. **Edit & Delete**: Modify or remove flashcards at any time
 
-## Features in Detail
-
-### Comprehensive SY0-701 Coverage
-
-Questions are generated from the complete CompTIA Security+ SY0-701 exam objectives:
-
-**1.0 General Security Concepts** (12% of exam)
-- Security controls (Technical, Managerial, Operational, Physical)
-- CIA Triad and AAA framework
-- Zero Trust architecture
-- Physical security
-- Change management
-- Cryptographic solutions (PKI, encryption, certificates)
-
-**2.0 Threats, Vulnerabilities, and Mitigations** (22% of exam)
-- Threat actors and motivations
-- Attack vectors and surfaces
-- Vulnerability types and indicators
-- Malware attacks and password attacks
-- Mitigation techniques
-
-**3.0 Security Architecture** (18% of exam)
-- Cloud, IaC, Serverless, Microservices
-- Network infrastructure and segmentation
-- Data protection strategies
-- Resilience and recovery
-
-**4.0 Security Operations** (28% of exam - largest domain)
-- Hardening and secure baselines
-- Asset management and vulnerability management
-- Monitoring and alerting (SIEM, DLP, IDS/IPS)
-- Identity and access management
-- Automation and orchestration
-- Incident response and digital forensics
-
-**5.0 Security Program Management and Oversight** (20% of exam)
-- Security governance and policies
-- Risk management process
-- Third-party risk assessment
-- Compliance and privacy
-- Audits and security awareness
-
-### Question Types & Distribution
+## Question Types & Distribution
 
 **Difficulty Levels (Deterministic Classification):**
 - **EASY** (100 points): Single domain, single topic - Straightforward concept testing
@@ -195,22 +175,16 @@ Questions are generated from the complete CompTIA Security+ SY0-701 exam objecti
 - **HARD** (325 points): Multiple domains, multiple topics - Complex cross-domain synthesis
 
 **Question Types:**
-- **Single-Choice** (70%): Select one correct answer from four options
-- **Multiple-Response** (30%): Select all correct answers (2-3 correct out of 4 options)
+- **Single-Choice**: Select one correct answer from four options
+- **Multiple-Response**: Select all correct answers with partial credit
 
-**Question Classification:**
-- Difficulty is determined by AI-identified topics and domains, not pre-assigned
-- Questions are classified after generation based on actual complexity
-- System counts unique topics and domains to determine appropriate difficulty level
-- Ensures consistent and fair scoring across all questions
-
-### Progress Tracking & IRT Scoring
+## Progress Tracking & IRT Scoring
 
 **IRT Ability Estimation (θ):**
 - Range: -3 (beginner) to +3 (expert)
-- Phase 1 capped at ±2.0 until 15 questions answered
 - Calculated using Maximum Likelihood Estimation (MLE)
 - Accounts for question difficulty and discrimination parameters
+- Statistical confidence intervals provided
 
 **Score Prediction Mapping:**
 - θ = -3: ~100 (very low ability)
@@ -226,165 +200,99 @@ Questions are generated from the complete CompTIA Security+ SY0-701 exam objecti
 - Total questions answered
 - Points earned vs. maximum possible points
 - Overall accuracy percentage
-- IRT ability estimate (theta)
-- Predicted exam score (100-900 scale)
+- IRT ability estimate with standard error
+- Predicted exam score with confidence interval
 - Domain-specific accuracy
 - Difficulty-specific accuracy
-- Topic mastery tracking
+- Topic mastery tracking with FSRS scheduling
 
-### Cross-Session Topic Tracking
+## FSRS Topic Scheduling
 
-**Automatic Domain Mapping:**
-- System uses authoritative topic-to-domain lookup from Security+ SY0-701 inventory
-- Tracks performance on every individual topic across all quiz sessions
-- Example: "Zero Trust" → automatically mapped to "1.0 General Security Concepts"
-- 400+ topics organized across 5 domains with precise categorization
+**Three Adaptive Phases:**
 
-**Mastery Criteria:**
-- 80%+ accuracy on a topic
-- At least 3 questions answered on that topic
-- Enables intelligent study planning
+1. **Phase 1: Coverage** - Ensure all topics covered at least once
+2. **Phase 2: Practice** - Focus on weak topics while maintaining strong ones
+3. **Phase 3: Mastery** - Optimal spaced repetition for long-term retention
+
+**Topic Selection Algorithm:**
+- Overdue topics (past review date) selected first
+- Struggling topics (low accuracy, frequent lapses) prioritized
+- Phase-appropriate topic selection
+- Balanced representation across domains
+- FSRS stability and difficulty factored in
+
+**Benefits:**
+- Efficient study time allocation
+- Automatic focus on weak areas
+- Long-term retention optimization
+- Natural progression from novice to expert
+
+## Export/Import System
+
+**Export Features:**
+- Download complete performance data as JSON
+- Includes all quiz history, questions, and answers
+- Includes all performance metrics and FSRS state
+- Timestamped backup files
+
+**Import Features:**
+- Two modes: Merge (add to existing) or Replace (overwrite)
+- Automatic data validation
+- Recalculation of all performance metrics
+- FSRS state reconstruction from quiz history
+- Safe two-dialog confirmation flow
 
 **Use Cases:**
-- Identify weak topics requiring more practice
-- See comprehensive exam coverage (all 400+ topics listed)
-- Track improvement on specific security concepts
-- Topic tables show both covered and uncovered topics for complete visibility
-
-### Flashcard System
-
-#### Spaced Repetition Algorithm (FSRS)
-
-The app uses the Free Spaced Repetition Scheduler (FSRS), a modern algorithm optimized for long-term retention through machine learning:
-
-**How It Works:**
-- **Difficulty**: Measures how challenging a card is to remember
-- **Stability**: How long the memory will last before forgetting
-- **Retrievability**: Current probability of successful recall
-- **State**: Learning, Review, or Relearning phase
-
-**Rating System:**
-- **Again (0)**: Forgot completely → Review in <1 minute
-- **Hard (3)**: Recalled with difficulty → Shorter interval
-- **Good (4)**: Recalled with some effort → Normal progression
-- **Easy (5)**: Perfect recall → Longer interval
-
-**Progression Example:**
-1. First review: Immediate
-2. Second review: 1 day later
-3. Third review: 6 days later
-4. Fourth review: ~15 days later (varies by performance)
-
-#### Card Statistics
-
-- **Learning**: Currently being learned (0 successful reviews)
-- **Review**: In review phase (1-2 successful reviews)
-- **Mastered**: Well-learned (3+ successful reviews)
-- **Total**: All flashcards in your collection
-
-#### Domain Categories
-
-Choose from predefined Security+ domains when creating flashcards:
-- 1.0 General Security Concepts
-- 2.0 Threats, Vulnerabilities, and Mitigations
-- 3.0 Security Architecture
-- 4.0 Security Operations
-- 5.0 Security Program Management and Oversight
-
-**Best Practices:**
-- Use concise terms (2+ characters)
-- Write clear definitions (10+ characters)
-- Add context for complex concepts
-- Include diagrams/images when helpful
-- Organize by domain for structured learning
-
-## Phase 1 IRT Reliability Features
-
-**Problem Solved:**
-- Previous issue: 1 correct answer → Ability +3, Score 900 (unrealistic)
-- Solution: Phase 1 threshold system ensures reliable estimates
-
-**Implementation:**
-1. **Minimum Data Threshold**: 15 questions required for full IRT analysis
-2. **Ability Capping**: Estimates capped at ±2.0 until threshold met
-3. **Visual Warnings**: Yellow banner appears when data insufficient
-4. **Progress Indicator**: Shows "X/15 questions" progress
-5. **Automatic Uncapping**: Full -3 to +3 range unlocked after 15 questions
-
-**User Experience:**
-- Clear communication about estimate reliability
-- No false sense of exam readiness with insufficient data
-- Smooth transition to full IRT once threshold met
-- Maintains user motivation while ensuring accuracy
+- Regular backups before major changes
+- Transfer data between accounts
+- Recover from accidental resets
+- Archive historical progress
 
 ## Technology Details
 
 **IRT Implementation:**
 - 2-Parameter Logistic (2PL) Model
 - Maximum Likelihood Estimation (MLE) for ability calculation
-- Newton-Raphson iterative convergence
+- Fisher Information for standard error
 - Partial credit support for multiple-response questions
-- Three difficulty categories with calibrated IRT parameters:
-  - EASY: difficulty=-1.0, discrimination=1.0
-  - MEDIUM: difficulty=0.3, discrimination=1.8
-  - HARD: difficulty=2.2, discrimination=2.5
+- Calibrated parameters per difficulty level
+
+**FSRS Implementation:**
+- ts-fsrs 5.2.3 library
+- Tracks stability, difficulty, and retrievability per topic
+- Updates after each quiz based on performance
+- Three-phase adaptive system
+- Integrates with IRT ability estimates
 
 **AI Question Quality System:**
-- **Google Gemini 2.5 Flash-Lite** for question generation with temperature=0.8 (creative)
-- **AI Topic Identification** with temperature=0 (deterministic, ~99% consistent)
-- **Anti-Telltale Controls** built into generation prompts:
-  - Length variation requirements (15-60 words per option)
-  - Plausible distractor guidelines (same domain, common misconceptions)
-  - Keyword avoidance strategies (use synonyms, avoid exact question text)
-  - Balanced technical depth across all options
-  - Subtle incorrectness (contextually wrong, not obviously absurd)
-- **Deterministic Classification** logic maps topics/domains to difficulty
-- **Semantic Understanding** ensures accurate topic extraction (no false positives)
+- xAI Grok for generation and topic identification
+- Anti-telltale controls built into prompts
+- Deterministic classification logic
+- Semantic topic extraction
+- Deduplication via embeddings
 
 **Data Visualization:**
 - Recharts library for responsive charts
 - Interactive tooltips with detailed statistics
-- Color-coded performance indicators (green/yellow/red)
-- Reference lines for targets and thresholds
-- Collapsible sections for better information density
+- Color-coded performance indicators
+- Confidence interval visualizations
+- Collapsible sections for information density
 
 **Performance Optimization:**
-- On-demand question generation (~10 seconds for first question)
-- Sequential background generation of remaining questions during quiz
-- Unused questions cached for next quiz session (eliminates waste)
-- Efficient Firebase queries with proper indexing
-- Client-side calculation caching for IRT and performance metrics
+- On-demand question generation
+- Background sequential generation
+- Question caching for next session
+- Efficient Firestore queries
+- Client-side calculation caching
+- Subcollection architecture for scalability
 
 ## Developer Documentation
 
-**Before implementing new features, read these guides to prevent code duplication:**
+**Before implementing new features, read these guides:**
 
-### 📖 Essential Reading
-
-1. **[CODING_GUIDELINES.md](./CODING_GUIDELINES.md)** - **READ THIS FIRST**
-   - Workflow to prevent duplicate code
-   - When to create shared components vs. inline code
-   - Pre-implementation checklist
-   - Common patterns reference
-
-2. **[COMPONENT_LIBRARY.md](./COMPONENT_LIBRARY.md)** - **CHECK BEFORE CODING**
-   - All available shared components, hooks, and utilities
-   - Usage examples for each component
-   - Props documentation
-   - Quick search commands
-
-3. **[REFACTORING_GUIDE.md](./REFACTORING_GUIDE.md)**
-   - How to refactor duplicate code
-   - Step-by-step refactoring process
-   - Examples and benefits
-
-### 🚀 Quick Start for Developers
-
-**Before implementing any feature:**
-1. ✅ Read [CODING_GUIDELINES.md](./CODING_GUIDELINES.md)
-2. ✅ Search [COMPONENT_LIBRARY.md](./COMPONENT_LIBRARY.md) for existing implementations
-3. ✅ Use grep/Glob to search codebase for similar patterns
-4. ✅ Reuse existing components or create shared ones
+1. **[CODING_GUIDELINES.md](./CODING_GUIDELINES.md)** - Workflow to prevent code duplication
+2. **[COMPONENT_LIBRARY.md](./COMPONENT_LIBRARY.md)** - Available shared components and utilities
+3. **[REFACTORING_GUIDE.md](./REFACTORING_GUIDE.md)** - How to refactor duplicate code
 
 **Golden Rule:** Search before you code. If a pattern exists, reuse it. If it will be used 2+ times, make it shared.
 
