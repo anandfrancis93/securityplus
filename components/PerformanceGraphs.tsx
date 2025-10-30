@@ -26,6 +26,36 @@ interface PerformanceGraphsProps {
   userProgress: UserProgress | null;
 }
 
+// Custom tooltip for Ability Level Over Time
+const AbilityTooltip = ({ active, payload }: TooltipProps<number, string>) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.95)', border: '2px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '12px', backdropFilter: 'blur(16px)' }}>
+        <p style={{ color: '#3b82f6', fontSize: '14px' }}>
+          {data.ciLower.toFixed(2)} to {data.ciUpper.toFixed(2)}
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
+// Custom tooltip for Predicted Score Over Time
+const ScoreTooltip = ({ active, payload }: TooltipProps<number, string>) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.95)', border: '2px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '12px', backdropFilter: 'blur(16px)' }}>
+        <p style={{ color: '#10b981', fontSize: '14px' }}>
+          {data.scoreLower} to {data.scoreUpper}
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 // Custom tooltip component for bar charts
 const CustomBarTooltip = ({ active, payload, label, color }: any) => {
   if (active && payload && payload.length) {
@@ -103,17 +133,24 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     };
   });
 
-  // Graph 2: Predicted Score Over Time
+  // Graph 2: Predicted Score Over Time with Confidence Intervals
   const scoreOverTime = userProgress.quizHistory.map((quiz, index) => {
     const ability = abilityOverTime[index].ability;
+    const ciLower = abilityOverTime[index].ciLower;
+    const ciUpper = abilityOverTime[index].ciUpper;
+
     // Map ability to score (same logic as calculateIRTScore)
     const baseScore = 550;
     const scaleFactor = 130;
     const score = Math.max(100, Math.min(900, Math.round(baseScore + (ability * scaleFactor))));
+    const scoreLower = Math.max(100, Math.min(900, Math.round(baseScore + (ciLower * scaleFactor))));
+    const scoreUpper = Math.max(100, Math.min(900, Math.round(baseScore + (ciUpper * scaleFactor))));
 
     return {
       quiz: `Quiz ${index + 1}`,
       score,
+      scoreLower,
+      scoreUpper,
       date: new Date(quiz.endedAt || quiz.startedAt).toLocaleDateString(),
     };
   });
@@ -321,11 +358,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
             <XAxis dataKey="quiz" stroke="#9ca3af" tick={false} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#9ca3af' }} />
             <YAxis domain={[-3, 3]} stroke="#9ca3af" label={{ value: 'Ability Level', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
-            <Tooltip
-              contentStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.95)', border: '2px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', backdropFilter: 'blur(16px)' }}
-              labelStyle={{ color: '#F3F4F6' }}
-              itemStyle={{ color: '#3b82f6' }}
-            />
+            <Tooltip content={<AbilityTooltip />} />
             <ReferenceLine y={0} stroke="#6b7280" strokeDasharray="3 3" label={{ value: 'Average', fill: '#9ca3af' }} />
             <ReferenceLine y={1} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Target', fill: '#10b981' }} />
             <Line
@@ -375,11 +408,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
                 <XAxis dataKey="quiz" stroke="#9ca3af" tick={false} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#9ca3af' }} />
                 <YAxis domain={[100, 900]} stroke="#9ca3af" label={{ value: 'Exam Score', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
-                <Tooltip
-                  contentStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.95)', border: '2px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', backdropFilter: 'blur(16px)' }}
-                  labelStyle={{ color: '#F3F4F6' }}
-                  itemStyle={{ color: '#10b981' }}
-                />
+                <Tooltip content={<ScoreTooltip />} />
                 <ReferenceLine y={750} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Passing', fill: '#10b981', position: 'right' }} />
                 <Line
                   type="monotone"
