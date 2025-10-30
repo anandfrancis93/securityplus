@@ -157,9 +157,6 @@ export default function QuizReviewPage() {
                   <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Accuracy</div>
                   <div className="text-2xl font-bold text-white">
                     {((quiz.score / quiz.questions.length) * 100).toFixed(1)}%
-                    <span className="text-zinc-400 ml-2 text-lg font-normal">
-                      ({quiz.score}/{quiz.questions.length})
-                    </span>
                   </div>
                 </div>
 
