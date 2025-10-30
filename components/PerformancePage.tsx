@@ -298,6 +298,16 @@ export default function QuizPerformance() {
   const scoreCI = calculateScoreConfidenceInterval(abilityCI.lower, abilityCI.upper);
   const accuracyCI = wilsonScoreInterval(correctAnswers, totalAnswered);
 
+  // Debug logging
+  console.log('[Performance Page] IRT Data:', {
+    totalAnswered,
+    estimatedAbility,
+    abilityStandardError,
+    isFinite: isFinite(abilityStandardError),
+    scoreCI,
+    showRange: isFinite(abilityStandardError) && totalAnswered >= 1
+  });
+
   // Minimum questions needed for reliable IRT prediction
   const MIN_QUESTIONS_FOR_PREDICTION = 10;
   const hasEnoughQuestions = totalAnswered >= MIN_QUESTIONS_FOR_PREDICTION;

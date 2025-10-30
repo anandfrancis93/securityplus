@@ -274,6 +274,7 @@ export function estimateAbilityWithError(attempts: QuestionAttempt[]): { theta: 
   const theta = estimateAbility(attempts);
 
   if (attempts.length === 0) {
+    console.log('[IRT] No attempts, returning Infinity standard error');
     return { theta: 0, standardError: Infinity };
   }
 
@@ -289,11 +290,20 @@ export function estimateAbilityWithError(attempts: QuestionAttempt[]): { theta: 
     const p = irtProbability(theta, b, a);
 
     // Fisher Information contribution: I(θ) = a² * P(θ) * (1 - P(θ))
-    fisherInformation += a * a * p * (1 - p);
+    const contribution = a * a * p * (1 - p);
+    fisherInformation += contribution;
   }
 
   // Standard error is inverse square root of Fisher Information
   const standardError = fisherInformation > 0 ? 1 / Math.sqrt(fisherInformation) : Infinity;
+
+  console.log('[IRT] Ability estimation:', {
+    attempts: attempts.length,
+    theta,
+    fisherInformation,
+    standardError,
+    isFinite: isFinite(standardError)
+  });
 
   return { theta, standardError };
 }
