@@ -1206,21 +1206,6 @@ export default function QuizPerformance() {
                               </span>
                             </div>
                           </div>
-                          <div className="text-right">
-                            {(() => {
-                              const percentage = (quiz.totalPoints / quiz.maxPoints) * 100;
-                              const scoreColor = percentage >= 81.25 ? 'text-emerald-400' :
-                                                percentage >= 62.5 ? 'text-yellow-400' :
-                                                'text-red-400';
-                              const correctAnswers = (quiz.totalPoints / quiz.maxPoints) * quiz.questions.length;
-                              const displayScore = correctAnswers === 0 ? '0' : correctAnswers.toFixed(2);
-                              return (
-                                <div className={`text-4xl md:text-5xl font-bold ${scoreColor} ${liquidGlass ? '' : 'font-mono'}`}>
-                                  {displayScore}/{quiz.questions.length}
-                                </div>
-                              );
-                            })()}
-                          </div>
                         </div>
                       </div>
 
