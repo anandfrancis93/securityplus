@@ -88,7 +88,18 @@ export async function POST(request: NextRequest) {
 
       // Reset counters since we're recalculating from scratch
       metadata.totalQuizzesCompleted = 0;
-      metadata.topicCoverage = {};
+
+      // Reset topic coverage data but keep the topic entries
+      // (topicCoverage is initialized by ensureMetadataInitialized with all known topics)
+      Object.keys(metadata.topicCoverage).forEach(topicName => {
+        metadata.topicCoverage[topicName] = {
+          ...metadata.topicCoverage[topicName],
+          firstCoveredQuiz: null,
+          timesCovered: 0,
+          lastCoveredQuiz: null,
+        };
+      });
+
       metadata.topicPerformance = {};
       metadata.questionHistory = {};
 
