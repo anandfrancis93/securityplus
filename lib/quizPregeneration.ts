@@ -646,6 +646,19 @@ export async function pregenerateQuiz(
   const questions: Question[] = [];
   const QUIZ_LENGTH = 10;
 
+  // Deterministic difficulty distribution: exactly 3 easy, 4 medium, 3 hard
+  // Create array and shuffle to randomize order
+  const difficultyDistribution: Array<'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics'> = [
+    'single-domain-single-topic', 'single-domain-single-topic', 'single-domain-single-topic',           // 3 easy
+    'single-domain-multiple-topics', 'single-domain-multiple-topics', 'single-domain-multiple-topics', 'single-domain-multiple-topics', // 4 medium
+    'multiple-domains-multiple-topics', 'multiple-domains-multiple-topics', 'multiple-domains-multiple-topics'  // 3 hard
+  ];
+  // Shuffle using Fisher-Yates algorithm
+  for (let i = difficultyDistribution.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [difficultyDistribution[i], difficultyDistribution[j]] = [difficultyDistribution[j], difficultyDistribution[i]];
+  }
+
   if (!phase1Complete) {
     // PHASE 1: Prioritize uncovered topics, 100% new questions
     console.log('Phase 1: Generating questions to cover all topics');
@@ -661,8 +674,8 @@ export async function pregenerateQuiz(
       while (!question && attempts < MAX_ATTEMPTS) {
         attempts++;
 
-        // Select question category (30% easy, 40% medium, 30% hard)
-        const questionCategory = selectQuestionCategory();
+        // Use deterministic difficulty distribution (guaranteed 3 easy, 4 medium, 3 hard)
+        const questionCategory = difficultyDistribution[i];
 
         // Select topics based on category, prioritizing uncovered topics
         const selectedTopics = selectTopicsForQuestion(
@@ -707,7 +720,19 @@ export async function pregenerateQuiz(
     const newCount = 7; // 70%
     const repeatCount = 3; // 30%
 
-    // Generate 7 new questions
+    // Generate 7 new questions with deterministic distribution
+    // For 7 questions: 2 easy, 3 medium, 2 hard (closest to 30%/40%/30%)
+    const newQuestionDistribution: Array<'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics'> = [
+      'single-domain-single-topic', 'single-domain-single-topic',           // 2 easy (~29%)
+      'single-domain-multiple-topics', 'single-domain-multiple-topics', 'single-domain-multiple-topics', // 3 medium (~43%)
+      'multiple-domains-multiple-topics', 'multiple-domains-multiple-topics'  // 2 hard (~29%)
+    ];
+    // Shuffle
+    for (let i = newQuestionDistribution.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newQuestionDistribution[i], newQuestionDistribution[j]] = [newQuestionDistribution[j], newQuestionDistribution[i]];
+    }
+
     for (let i = 0; i < newCount; i++) {
       let question: Question | null = null;
       let attempts = 0;
@@ -716,8 +741,8 @@ export async function pregenerateQuiz(
       while (!question && attempts < MAX_ATTEMPTS) {
         attempts++;
 
-        // Select question category (30% easy, 40% medium, 30% hard)
-        const questionCategory = selectQuestionCategory();
+        // Use deterministic difficulty distribution for Phase 2 new questions
+        const questionCategory = newQuestionDistribution[i];
 
         // Select topics based on category (no priority topics in Phase 2)
         const selectedTopics = selectTopicsForQuestion(
