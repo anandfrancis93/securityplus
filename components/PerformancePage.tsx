@@ -638,16 +638,16 @@ export default function QuizPerformance() {
                     </div>
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-emerald-400 font-semibold">Passing (≥750)</span>
-                        <span className="text-zinc-300">≥83.3%</span>
+                        <span className="text-emerald-400 font-semibold">≥83.3%</span>
+                        <span className="text-zinc-300">Passing (≥750)</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-yellow-400 font-semibold">Close (600-749)</span>
-                        <span className="text-zinc-300">66.7-83.2%</span>
+                        <span className="text-yellow-400 font-semibold">66.7-83.2%</span>
+                        <span className="text-zinc-300">Close (600-749)</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-red-400 font-semibold">Needs Work (&lt;600)</span>
-                        <span className="text-zinc-300">&lt;66.7%</span>
+                        <span className="text-red-400 font-semibold">&lt;66.7%</span>
+                        <span className="text-zinc-300">Needs Work (&lt;600)</span>
                       </div>
                     </div>
                     <div className="mt-3 pt-3 border-t border-zinc-700 text-xs text-zinc-400">
