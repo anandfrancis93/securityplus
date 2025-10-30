@@ -1016,23 +1016,29 @@ export default function QuizPerformance() {
                           </svg>
                         </button>
 
-                        <div className="relative flex justify-between items-center pr-12">
-                          <div>
-                            <div className={`text-lg md:text-xl text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>
-                              {formattedDate} • {formattedTime}
+                        <div className="relative flex justify-between items-start pr-12">
+                          <div className="space-y-3">
+                            <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
+                              <span className="text-zinc-500">Date:</span> {formattedDate}
                             </div>
-                            <div className="text-lg md:text-xl mt-4 space-y-3">
-                              <div>
-                                <span className={`text-zinc-300 font-medium ${liquidGlass ? '' : 'font-mono'}`}>{quiz.questions.length} questions</span>
-                                {isIncomplete && (
-                                  <span className={`ml-4 text-base px-4 py-2 transition-all duration-700 ${liquidGlass ? 'rounded-2xl' : 'rounded-md'} bg-black text-yellow-400 border border-yellow-500/50 ${liquidGlass ? '' : 'font-mono'}`}>
-                                    Incomplete
-                                  </span>
-                                )}
-                              </div>
-                              <div className={`text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>
-                                Time: {timeDisplay}
-                              </div>
+                            <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
+                              <span className="text-zinc-500">Time Started:</span> {formattedTime}
+                            </div>
+                            <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
+                              <span className="text-zinc-500">Time Ended:</span> {quiz.endedAt ? new Date(quiz.endedAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) : 'N/A'}
+                            </div>
+                            <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'}`}>
+                              <span className="text-zinc-500">Total Time:</span> {timeDisplay}
+                            </div>
+                            <div className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400 font-mono'} flex items-center gap-3`}>
+                              <span className="text-zinc-500">Status:</span>
+                              <span className={`px-4 py-1 text-base transition-all duration-700 ${liquidGlass ? 'rounded-2xl' : 'rounded-md'} ${
+                                isIncomplete
+                                  ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/50'
+                                  : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/50'
+                              } ${liquidGlass ? '' : 'font-mono'}`}>
+                                {isIncomplete ? 'Incomplete' : 'Completed'}
+                              </span>
                             </div>
                           </div>
                           <div className="text-right">
