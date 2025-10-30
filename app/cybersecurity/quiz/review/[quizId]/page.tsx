@@ -124,28 +124,60 @@ export default function QuizReviewPage() {
         {/* Header */}
         <div className="mb-8 md:mb-12">
           <div className="mb-6">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-4">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-8">
               Quiz Review
             </h1>
-            <div className="flex flex-col gap-2 text-lg md:text-xl text-zinc-400">
-              <span>{formattedDate} • {formattedTime}</span>
-              <span>{quiz.questions.length} questions</span>
-              <span>Time: {timeDisplay}</span>
-            </div>
-            <div className="mt-4 flex items-center gap-4">
-              <div className="text-2xl md:text-3xl font-bold">
-                <span className="text-white">{quiz.score}</span>
-                <span className="text-zinc-500">/</span>
-                <span className="text-zinc-300">{quiz.questions.length}</span>
-                <span className="text-zinc-500 ml-3 text-xl md:text-2xl">
-                  ({((quiz.score / quiz.questions.length) * 100).toFixed(0)}%)
-                </span>
-              </div>
-              {!quiz.completed && (
-                <span className={`px-4 py-2 text-sm font-bold ${liquidGlass ? 'bg-yellow-500/20 backdrop-blur-xl border border-yellow-500/50 rounded-2xl text-yellow-300' : 'bg-yellow-950 text-yellow-300 border border-yellow-500 rounded-md'}`}>
-                  Incomplete Quiz
-                </span>
+
+            {/* Quiz Summary Card */}
+            <div className={`p-8 md:p-10 ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl' : 'bg-zinc-900 border border-zinc-800 rounded-xl'}`}>
+              {liquidGlass && (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl pointer-events-none" />
               )}
+              <div className="relative space-y-4">
+                {/* Date */}
+                <div className="flex items-baseline gap-3">
+                  <span className="text-lg font-semibold text-zinc-400 min-w-[140px]">Date:</span>
+                  <span className="text-xl font-medium text-white">{formattedDate}</span>
+                </div>
+
+                {/* Time Started */}
+                <div className="flex items-baseline gap-3">
+                  <span className="text-lg font-semibold text-zinc-400 min-w-[140px]">Time Started:</span>
+                  <span className="text-xl font-medium text-white">{formattedTime}</span>
+                </div>
+
+                {/* Total Time */}
+                <div className="flex items-baseline gap-3">
+                  <span className="text-lg font-semibold text-zinc-400 min-w-[140px]">Total Time:</span>
+                  <span className="text-xl font-medium text-white">{timeDisplay}</span>
+                </div>
+
+                {/* Accuracy */}
+                <div className="flex items-baseline gap-3">
+                  <span className="text-lg font-semibold text-zinc-400 min-w-[140px]">Accuracy:</span>
+                  <span className="text-xl font-medium text-white">
+                    {((quiz.score / quiz.questions.length) * 100).toFixed(1)}%
+                    <span className="text-zinc-500 ml-2 text-lg">
+                      ({quiz.score}/{quiz.questions.length})
+                    </span>
+                  </span>
+                </div>
+
+                {/* Total Questions */}
+                <div className="flex items-baseline gap-3">
+                  <span className="text-lg font-semibold text-zinc-400 min-w-[140px]">Total Questions:</span>
+                  <span className="text-xl font-medium text-white">{quiz.questions.length}</span>
+                </div>
+
+                {/* Incomplete Quiz Badge */}
+                {!quiz.completed && (
+                  <div className="pt-4">
+                    <span className={`inline-block px-4 py-2 text-sm font-bold ${liquidGlass ? 'bg-yellow-500/20 backdrop-blur-xl border border-yellow-500/50 rounded-2xl text-yellow-300' : 'bg-yellow-950 text-yellow-300 border border-yellow-500 rounded-md'}`}>
+                      Incomplete Quiz
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
