@@ -438,28 +438,61 @@ export default function QuizPerformance() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-zinc-950 relative overflow-hidden">
-        {/* Gradient mesh background */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-          <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-        </div>
-
-        <div className="relative">
-          <div className="bg-zinc-900/50 backdrop-blur-sm border border-zinc-800/50 rounded-2xl p-16 md:p-20 shadow-2xl">
-            <div className="text-center">
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        backgroundColor: '#0f0f0f',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <div style={{ position: 'relative' }}>
+          <div style={{
+            background: '#0f0f0f',
+            borderRadius: '1.5rem',
+            padding: '4rem 5rem',
+            boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919'
+          }}>
+            <div style={{ textAlign: 'center' }}>
               {/* Animated icon */}
-              <div className="relative mx-auto w-32 h-32 md:w-40 md:h-40 mb-8">
+              <div style={{
+                position: 'relative',
+                margin: '0 auto 2rem',
+                width: '10rem',
+                height: '10rem'
+              }}>
                 {/* Outer ring */}
-                <div className="absolute inset-0 border-4 border-zinc-800 rounded-full"></div>
+                <div style={{
+                  position: 'absolute',
+                  inset: '0',
+                  border: '4px solid #1a1a1a',
+                  borderRadius: '50%'
+                }}></div>
                 {/* Spinning gradient ring */}
-                <div className="absolute inset-0 animate-spin">
-                  <div className="w-full h-full rounded-full border-4 border-transparent border-t-cyan-400 border-r-cyan-400/50"></div>
+                <div style={{
+                  position: 'absolute',
+                  inset: '0',
+                  animation: 'spin 1s linear infinite'
+                }}>
+                  <div style={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: '50%',
+                    border: '4px solid transparent',
+                    borderTopColor: '#06b6d4',
+                    borderRightColor: 'rgba(6, 182, 212, 0.5)'
+                  }}></div>
                 </div>
                 {/* Center icon - graduation cap */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <svg className="w-16 h-16 md:w-20 md:h-20 text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
+                <div style={{
+                  position: 'absolute',
+                  inset: '0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <svg style={{ width: '5rem', height: '5rem', color: '#06b6d4' }} fill="currentColor" viewBox="0 0 24 24">
                     <path d="M11.7 2.805a.75.75 0 01.6 0A60.65 60.65 0 0122.83 8.72a.75.75 0 01-.231 1.337 49.949 49.949 0 00-9.902 3.912l-.003.002-.34.18a.75.75 0 01-.707 0A50.009 50.009 0 007.5 12.174v-.224c0-.131.067-.248.172-.311a54.614 54.614 0 014.653-2.52.75.75 0 00-.65-1.352 56.129 56.129 0 00-4.78 2.589 1.858 1.858 0 00-.859 1.228 49.803 49.803 0 00-4.634-1.527.75.75 0 01-.231-1.337A60.653 60.653 0 0111.7 2.805z" />
                     <path d="M13.06 15.473a48.45 48.45 0 017.666-3.282c.134 1.414.22 2.843.255 4.285a.75.75 0 01-.46.71 47.878 47.878 0 00-8.105 4.342.75.75 0 01-.832 0 47.877 47.877 0 00-8.104-4.342.75.75 0 01-.461-.71c.035-1.442.121-2.87.255-4.286A48.4 48.4 0 016 13.18v1.27a1.5 1.5 0 00-.14 2.508c-.09.38-.222.753-.397 1.11.452.213.901.434 1.346.661a6.729 6.729 0 00.551-1.608 1.5 1.5 0 00.14-2.67v-.645a48.549 48.549 0 013.44 1.668 2.25 2.25 0 002.12 0z" />
                     <path d="M4.462 19.462c.42-.419.753-.89 1-1.394.453.213.902.434 1.347.661a6.743 6.743 0 01-1.286 1.794.75.75 0 11-1.06-1.06z" />
@@ -467,15 +500,30 @@ export default function QuizPerformance() {
                 </div>
               </div>
               {/* Loading text */}
-              <p className="text-2xl md:text-3xl font-bold tracking-tight text-white">
+              <p style={{
+                fontSize: '2rem',
+                fontWeight: 'bold',
+                letterSpacing: '-0.025em',
+                color: '#e5e5e5'
+              }}>
                 Loading performance data...
               </p>
-              <p className="text-base md:text-lg mt-4 text-zinc-400">
+              <p style={{
+                fontSize: '1.125rem',
+                marginTop: '1rem',
+                color: '#a8a8a8'
+              }}>
                 Please wait
               </p>
             </div>
           </div>
         </div>
+        <style jsx>{`
+          @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
     );
   }
@@ -564,16 +612,15 @@ export default function QuizPerformance() {
   const upperAbilityColor = getAbilityColor(abilityCI.upper);
 
   return (
-    <div className="min-h-screen text-white relative overflow-hidden bg-zinc-950">
-      {/* Animated Background Gradients */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-      </div>
-
+    <div style={{
+      minHeight: '100vh',
+      color: '#e5e5e5',
+      position: 'relative',
+      overflow: 'hidden',
+      backgroundColor: '#0f0f0f'
+    }}>
       {/* Header - Full width */}
-      <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
+      <div style={{ position: 'relative', paddingTop: '2rem', paddingBottom: '1.5rem' }}>
         <Header
           onExportData={handleExportData}
           onImportData={handleImportData}
@@ -582,102 +629,202 @@ export default function QuizPerformance() {
         />
       </div>
 
-      <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
+      <div style={{
+        position: 'relative',
+        maxWidth: '80rem',
+        margin: '0 auto',
+        padding: '0 3rem'
+      }}>
         {/* Hero Section */}
-        <section className="text-center mb-8">
-            <div className="max-w-5xl mx-auto space-y-8">
-              <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight leading-[0.95]">
-                <span className="block bg-gradient-to-br from-white via-zinc-100 to-zinc-300 bg-clip-text text-transparent">
-                  Your
-                </span>
-                <span className="block bg-gradient-to-br from-cyan-400 via-blue-400 to-cyan-500 bg-clip-text text-transparent">
-                  Performance
-                </span>
-              </h1>
-              <p className="text-xl sm:text-2xl md:text-3xl font-light max-w-3xl mx-auto leading-relaxed text-zinc-400">
-                Track your progress and master Security+
-              </p>
-            </div>
+        <section style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <div style={{ maxWidth: '80rem', margin: '0 auto' }}>
+            <h1 style={{
+              fontSize: 'clamp(4rem, 12vw, 9rem)',
+              fontWeight: 'bold',
+              letterSpacing: '-0.05em',
+              lineHeight: '0.95',
+              marginBottom: '2rem'
+            }}>
+              <span style={{ display: 'block', color: '#e5e5e5' }}>
+                Your
+              </span>
+              <span style={{ display: 'block', color: '#8b5cf6' }}>
+                Performance
+              </span>
+            </h1>
+            <p style={{
+              fontSize: 'clamp(1.25rem, 4vw, 2rem)',
+              fontWeight: '300',
+              maxWidth: '48rem',
+              margin: '0 auto',
+              lineHeight: '1.6',
+              color: '#a8a8a8'
+            }}>
+              Track your progress and master Security+
+            </p>
+          </div>
         </section>
 
         {/* Predicted Score Card */}
-        <div className="relative p-12 md:p-16 mb-12 bg-zinc-900/50 border border-zinc-800/50 rounded-2xl shadow-2xl transition-all duration-300 hover:bg-zinc-900/60 hover:border-zinc-700/50">
-          <div className="relative text-center mb-10">
-            <h2 className="text-3xl md:text-4xl text-white mb-2 tracking-tight font-bold">Predicted Exam Score</h2>
+        <div style={{
+          position: 'relative',
+          padding: 'clamp(2rem, 5vw, 4rem)',
+          marginBottom: '3rem',
+          background: '#0f0f0f',
+          borderRadius: '1.5rem',
+          boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+          transition: 'all 0.3s ease'
+        }}>
+          <div style={{ position: 'relative', textAlign: 'center', marginBottom: '2.5rem' }}>
+            <h2 style={{
+              fontSize: 'clamp(2rem, 5vw, 2.5rem)',
+              color: '#e5e5e5',
+              marginBottom: '0.5rem',
+              letterSpacing: '-0.025em',
+              fontWeight: 'bold'
+            }}>Predicted Exam Score</h2>
             {totalAnswered >= MIN_QUESTIONS_FOR_PREDICTION && (
-              <p className="text-sm md:text-base text-zinc-500 mb-8">
+              <p style={{
+                fontSize: 'clamp(0.875rem, 2vw, 1rem)',
+                color: '#666666',
+                marginBottom: '2rem'
+              }}>
                 Based on {totalAnswered} question{totalAnswered !== 1 ? 's' : ''}
               </p>
             )}
 
             {hasEnoughQuestions ? (
               <>
-                <div className="relative group cursor-help">
+                <div className="score-display">
                   {/* Score Range Display */}
                   {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
                     <>
-                      <div className="text-7xl md:text-8xl font-bold transition-all duration-300 flex items-center justify-center gap-2 sm:gap-4">
-                        <span className={
-                          lowerColor === 'emerald' ? 'text-emerald-400' :
-                          lowerColor === 'yellow' ? 'text-yellow-400' :
-                          'text-red-400'
-                        }>
+                      <div style={{
+                        fontSize: 'clamp(3rem, 10vw, 6rem)',
+                        fontWeight: 'bold',
+                        transition: 'all 0.3s ease',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 'clamp(0.5rem, 2vw, 1rem)',
+                        flexWrap: 'wrap'
+                      }}>
+                        <span style={{
+                          color: lowerColor === 'emerald' ? '#10b981' :
+                                 lowerColor === 'yellow' ? '#f59e0b' :
+                                 '#f43f5e'
+                        }}>
                           {scoreCI.lower}
                         </span>
-                        <span className="text-zinc-500">-</span>
-                        <span className={
-                          upperColor === 'emerald' ? 'text-emerald-400' :
-                          upperColor === 'yellow' ? 'text-yellow-400' :
-                          'text-red-400'
-                        }>
+                        <span style={{ color: '#666666' }}>-</span>
+                        <span style={{
+                          color: upperColor === 'emerald' ? '#10b981' :
+                                 upperColor === 'yellow' ? '#f59e0b' :
+                                 '#f43f5e'
+                        }}>
                           {scoreCI.upper}
                         </span>
                       </div>
                     </>
                   ) : (
                     <>
-                      <div className={`text-8xl md:text-9xl font-bold mb-2 transition-all duration-300 ${
-                        totalAnswered === 0 ? 'text-zinc-400' :
-                        isGoodPerformance ? 'text-emerald-400' :
-                        isNeedsWork ? 'text-red-400' :
-                        'text-yellow-400'
-                      }`}>
+                      <div style={{
+                        fontSize: 'clamp(4rem, 12vw, 7rem)',
+                        fontWeight: 'bold',
+                        marginBottom: '0.5rem',
+                        transition: 'all 0.3s ease',
+                        color: totalAnswered === 0 ? '#666666' :
+                               isGoodPerformance ? '#10b981' :
+                               isNeedsWork ? '#f43f5e' :
+                               '#f59e0b'
+                      }}>
                         {predictedScore}
                       </div>
-                      <div className="text-xl md:text-2xl text-zinc-500 mb-6">
+                      <div style={{
+                        fontSize: 'clamp(1.25rem, 3vw, 1.5rem)',
+                        color: '#666666',
+                        marginBottom: '1.5rem'
+                      }}>
                         Point Estimate (need more data for CI)
                       </div>
                     </>
                   )}
                   {/* Hover tooltip */}
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 w-80 max-w-[90vw] bg-zinc-900/95 backdrop-blur-sm rounded-2xl border border-zinc-800/50 shadow-2xl p-5 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <div className="relative">
-                      <p className="text-sm leading-relaxed text-zinc-300">
-                        We are 95% confident your exam score will fall between <strong className="text-white">{scoreCI.lower}</strong> and <strong className="text-white">{scoreCI.upper}</strong>.
+                  <div className="tooltip" style={{
+                    position: 'absolute',
+                    bottom: '100%',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    marginBottom: '0.75rem',
+                    width: '20rem',
+                    maxWidth: '90vw',
+                    background: '#0f0f0f',
+                    borderRadius: '1.5rem',
+                    boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
+                    padding: '1.25rem',
+                    zIndex: '50',
+                    pointerEvents: 'none',
+                    opacity: '0',
+                    transition: 'opacity 0.3s ease'
+                  }}>
+                    <div style={{ position: 'relative' }}>
+                      <p style={{
+                        fontSize: '0.875rem',
+                        lineHeight: '1.6',
+                        color: '#a8a8a8'
+                      }}>
+                        We are 95% confident your exam score will fall between <strong style={{ color: '#e5e5e5' }}>{scoreCI.lower}</strong> and <strong style={{ color: '#e5e5e5' }}>{scoreCI.upper}</strong>.
                       </p>
                     </div>
                   </div>
                 </div>
-                <div className="text-xl md:text-2xl text-zinc-500">out of 900</div>
+                <div style={{
+                  fontSize: 'clamp(1.25rem, 3vw, 1.5rem)',
+                  color: '#666666'
+                }}>out of 900</div>
               </>
             ) : (
-              <div className="space-y-6 mt-8">
-                <div className="relative p-8 bg-zinc-900/50 rounded-2xl border border-zinc-800/50">
-                  <div className="relative">
-                    <svg className="w-16 h-16 mx-auto mb-4 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+              <div style={{ marginTop: '2rem' }}>
+                <div style={{
+                  position: 'relative',
+                  padding: '2rem',
+                  background: '#0f0f0f',
+                  borderRadius: '1.5rem',
+                  boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+                }}>
+                  <div style={{ position: 'relative' }}>
+                    <svg style={{
+                      width: '4rem',
+                      height: '4rem',
+                      margin: '0 auto 1rem',
+                      color: '#666666',
+                      display: 'block'
+                    }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
                     </svg>
-                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                    <h3 style={{
+                      fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+                      fontWeight: 'bold',
+                      color: '#e5e5e5',
+                      marginBottom: '0.75rem'
+                    }}>
                       Insufficient Data
                     </h3>
-                    <p className="text-lg md:text-xl text-zinc-400 mb-4">
+                    <p style={{
+                      fontSize: 'clamp(1.125rem, 3vw, 1.25rem)',
+                      color: '#a8a8a8',
+                      marginBottom: '1rem'
+                    }}>
                       {totalAnswered === 0 ? (
                         <>Start answering questions to generate your predicted score</>
                       ) : (
-                        <>Answer <span className="text-white font-bold">{questionsNeeded} more</span> {questionsNeeded === 1 ? 'question' : 'questions'} for a reliable IRT prediction</>
+                        <>Answer <span style={{ color: '#e5e5e5', fontWeight: 'bold' }}>{questionsNeeded} more</span> {questionsNeeded === 1 ? 'question' : 'questions'} for a reliable IRT prediction</>
                       )}
                     </p>
-                    <p className="text-sm md:text-base text-zinc-600">
+                    <p style={{
+                      fontSize: 'clamp(0.875rem, 2vw, 1rem)',
+                      color: '#666666'
+                    }}>
                       Minimum {MIN_QUESTIONS_FOR_PREDICTION} questions required for analysis
                     </p>
                   </div>
@@ -686,8 +833,16 @@ export default function QuizPerformance() {
             )}
           </div>
 
-          <div className="relative mt-12">
-            <div className="w-full h-6 relative overflow-hidden bg-zinc-900/50 border border-zinc-800/50 rounded-2xl">
+          <div style={{ position: 'relative', marginTop: '3rem' }}>
+            <div style={{
+              width: '100%',
+              height: '1.5rem',
+              position: 'relative',
+              overflow: 'hidden',
+              background: '#0f0f0f',
+              boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
+              borderRadius: '1.5rem'
+            }}>
               {/* Progress bar fill - show range if CI available, otherwise point estimate */}
               {hasEnoughQuestions && (
                 isFinite(abilityStandardError) && totalAnswered >= 1 ? (
@@ -696,14 +851,17 @@ export default function QuizPerformance() {
                     {/* Red segment: 100-599 */}
                     {scoreCI.lower < 600 && (
                       <div
-                        className="h-6 absolute transition-all duration-300 bg-gradient-to-r from-red-500 to-red-600 shadow-[0_0_20px_rgba(239,68,68,0.3)]"
                         style={{
+                          height: '1.5rem',
+                          position: 'absolute',
+                          transition: 'all 0.3s ease',
+                          background: '#f43f5e',
                           left: `${Math.max(0, ((scoreCI.lower - 100) / 800) * 100)}%`,
                           width: `${((Math.min(scoreCI.upper, 599) - scoreCI.lower) / 800) * 100}%`,
                           borderTopLeftRadius: '1rem',
                           borderBottomLeftRadius: '1rem',
                           borderTopRightRadius: scoreCI.upper < 600 ? '1rem' : '0',
-                          borderBottomRightRadius: scoreCI.upper < 600 ? '1rem' : '0',
+                          borderBottomRightRadius: scoreCI.upper < 600 ? '1rem' : '0'
                         }}
                       />
                     )}
@@ -711,14 +869,17 @@ export default function QuizPerformance() {
                     {/* Yellow segment: 600-749 */}
                     {scoreCI.lower < 750 && scoreCI.upper >= 600 && (
                       <div
-                        className="h-6 absolute transition-all duration-300 bg-gradient-to-r from-yellow-500 to-yellow-600 shadow-[0_0_20px_rgba(234,179,8,0.3)]"
                         style={{
+                          height: '1.5rem',
+                          position: 'absolute',
+                          transition: 'all 0.3s ease',
+                          background: '#f59e0b',
                           left: `${((Math.max(scoreCI.lower, 600) - 100) / 800) * 100}%`,
                           width: `${((Math.min(scoreCI.upper, 749) - Math.max(scoreCI.lower, 600)) / 800) * 100}%`,
                           borderTopLeftRadius: scoreCI.lower >= 600 ? '1rem' : '0',
                           borderBottomLeftRadius: scoreCI.lower >= 600 ? '1rem' : '0',
                           borderTopRightRadius: scoreCI.upper < 750 ? '1rem' : '0',
-                          borderBottomRightRadius: scoreCI.upper < 750 ? '1rem' : '0',
+                          borderBottomRightRadius: scoreCI.upper < 750 ? '1rem' : '0'
                         }}
                       />
                     )}
@@ -726,14 +887,17 @@ export default function QuizPerformance() {
                     {/* Green segment: 750-900 */}
                     {scoreCI.upper >= 750 && (
                       <div
-                        className="h-6 absolute transition-all duration-300 bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
                         style={{
+                          height: '1.5rem',
+                          position: 'absolute',
+                          transition: 'all 0.3s ease',
+                          background: '#10b981',
                           left: `${((Math.max(scoreCI.lower, 750) - 100) / 800) * 100}%`,
                           width: `${((scoreCI.upper - Math.max(scoreCI.lower, 750)) / 800) * 100}%`,
                           borderTopLeftRadius: scoreCI.lower >= 750 ? '1rem' : '0',
                           borderBottomLeftRadius: scoreCI.lower >= 750 ? '1rem' : '0',
                           borderTopRightRadius: '1rem',
-                          borderBottomRightRadius: '1rem',
+                          borderBottomRightRadius: '1rem'
                         }}
                       />
                     )}
@@ -741,31 +905,51 @@ export default function QuizPerformance() {
                 ) : (
                   // Show point estimate
                   <div
-                    className={`h-6 relative transition-all duration-300 ${
-                      isGoodPerformance
-                        ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-[0_0_20px_rgba(16,185,129,0.3)] rounded-2xl'
-                      : isNeedsWork
-                        ? 'bg-gradient-to-r from-red-500 to-red-600 shadow-[0_0_20px_rgba(239,68,68,0.3)] rounded-2xl'
-                      : 'bg-gradient-to-r from-yellow-500 to-yellow-600 shadow-[0_0_20px_rgba(234,179,8,0.3)] rounded-2xl'
-                    }`}
-                    style={{ width: `${Math.min(((predictedScore - 100) / 800) * 100, 100)}%` }}
+                    style={{
+                      height: '1.5rem',
+                      position: 'relative',
+                      transition: 'all 0.3s ease',
+                      background: isGoodPerformance ? '#10b981' :
+                                  isNeedsWork ? '#f43f5e' : '#f59e0b',
+                      borderRadius: '1.5rem',
+                      width: `${Math.min(((predictedScore - 100) / 800) * 100, 100)}%`
+                    }}
                   />
                 )
               )}
 
               {/* Passing line marker at 750 */}
               <div
-                className="absolute top-0 bottom-0 w-0.5 bg-white opacity-50"
-                style={{ left: `${((750 - 100) / 800) * 100}%` }}
+                style={{
+                  position: 'absolute',
+                  top: '0',
+                  bottom: '0',
+                  width: '2px',
+                  background: '#e5e5e5',
+                  opacity: '0.5',
+                  left: `${((750 - 100) / 800) * 100}%`
+                }}
               ></div>
             </div>
 
             {/* Scale labels */}
-            <div className="flex justify-between text-sm text-zinc-400 mt-2 relative">
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              fontSize: '0.875rem',
+              color: '#a8a8a8',
+              marginTop: '0.5rem',
+              position: 'relative'
+            }}>
               <span>100</span>
               <span
-                className="absolute text-white font-medium"
-                style={{ left: `${((750 - 100) / 800) * 100}%`, transform: 'translateX(-50%)' }}
+                style={{
+                  position: 'absolute',
+                  color: '#e5e5e5',
+                  fontWeight: '500',
+                  left: `${((750 - 100) / 800) * 100}%`,
+                  transform: 'translateX(-50%)'
+                }}
               >
                 750
               </span>
@@ -775,40 +959,109 @@ export default function QuizPerformance() {
         </div>
 
         {/* Combined Stats Box */}
-        <div className="relative p-10 md:p-12 transition-all duration-300 mb-12 bg-zinc-900/50 border border-zinc-800/50 rounded-2xl hover:bg-zinc-900/60 hover:border-zinc-700/50">
-          <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-            <div className="text-center">
-              <div className="text-zinc-400 text-xl md:text-2xl mb-4 tracking-tight">Questions Attempted</div>
-              <div className={`text-5xl md:text-6xl font-bold transition-all duration-300 ${totalAnswered === 0 ? 'text-zinc-400' : 'text-white'}`}>{totalAnswered}</div>
+        <div style={{
+          position: 'relative',
+          padding: 'clamp(2rem, 4vw, 3rem)',
+          transition: 'all 0.3s ease',
+          marginBottom: '3rem',
+          background: '#0f0f0f',
+          borderRadius: '1.5rem',
+          boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919'
+        }}>
+          <div style={{
+            position: 'relative',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: 'clamp(2rem, 4vw, 3rem)'
+          }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{
+                color: '#a8a8a8',
+                fontSize: 'clamp(1.25rem, 3vw, 1.5rem)',
+                marginBottom: '1rem',
+                letterSpacing: '-0.025em'
+              }}>Questions Attempted</div>
+              <div style={{
+                fontSize: 'clamp(3rem, 8vw, 4rem)',
+                fontWeight: 'bold',
+                transition: 'all 0.3s ease',
+                color: totalAnswered === 0 ? '#666666' : '#e5e5e5'
+              }}>{totalAnswered}</div>
             </div>
-            <div className="text-center">
-              <div className="text-zinc-400 text-xl md:text-2xl mb-4 tracking-tight">Accuracy</div>
-              <div className="relative group inline-block cursor-help">
-                <div className={`text-5xl md:text-6xl font-bold transition-all duration-300 ${
-                  totalAnswered === 0 ? 'text-zinc-400' :
-                  parseFloat(accuracy.toString()) >= 81.25 ? 'text-emerald-400' :
-                  parseFloat(accuracy.toString()) >= 62.5 ? 'text-yellow-400' :
-                  'text-red-400'
-                }`}>{accuracy}%</div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{
+                color: '#a8a8a8',
+                fontSize: 'clamp(1.25rem, 3vw, 1.5rem)',
+                marginBottom: '1rem',
+                letterSpacing: '-0.025em'
+              }}>Accuracy</div>
+              <div className="accuracy-display">
+                <div style={{
+                  fontSize: 'clamp(3rem, 8vw, 4rem)',
+                  fontWeight: 'bold',
+                  transition: 'all 0.3s ease',
+                  color: totalAnswered === 0 ? '#666666' :
+                         parseFloat(accuracy.toString()) >= 81.25 ? '#10b981' :
+                         parseFloat(accuracy.toString()) >= 62.5 ? '#f59e0b' :
+                         '#f43f5e'
+                }}>{accuracy}%</div>
                 {/* Tooltip */}
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-80 transition-opacity duration-300 bg-zinc-900/95 backdrop-blur-sm rounded-2xl border border-zinc-800/50 p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100">
-                  <div className="text-sm">
-                    <div className="mb-3 pb-3 border-b border-zinc-700">
-                      <div className="text-zinc-400 font-semibold mb-1">Accuracy Levels</div>
-                      <div className="text-xs text-zinc-500">Maps to exam scores (100-900 scale)</div>
+                <div className="tooltip" style={{
+                  position: 'absolute',
+                  bottom: '100%',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  marginBottom: '0.5rem',
+                  width: '20rem',
+                  transition: 'opacity 0.3s ease',
+                  background: '#0f0f0f',
+                  borderRadius: '1.5rem',
+                  boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
+                  padding: '1.5rem',
+                  zIndex: '50',
+                  pointerEvents: 'none',
+                  opacity: '0'
+                }}>
+                  <div style={{ fontSize: '0.875rem' }}>
+                    <div style={{
+                      marginBottom: '0.75rem',
+                      paddingBottom: '0.75rem',
+                      borderBottom: '1px solid #333333'
+                    }}>
+                      <div style={{
+                        color: '#a8a8a8',
+                        fontWeight: '600',
+                        marginBottom: '0.25rem'
+                      }}>Accuracy Levels</div>
+                      <div style={{
+                        fontSize: '0.75rem',
+                        color: '#666666'
+                      }}>Maps to exam scores (100-900 scale)</div>
                     </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-emerald-400 font-semibold">≥81.25%</span>
-                        <span className="text-zinc-300">Passing (≥750)</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                      }}>
+                        <span style={{ color: '#10b981', fontWeight: '600' }}>≥81.25%</span>
+                        <span style={{ color: '#a8a8a8' }}>Passing (≥750)</span>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-yellow-400 font-semibold">62.5-81.24%</span>
-                        <span className="text-zinc-300">Close (600-749)</span>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                      }}>
+                        <span style={{ color: '#f59e0b', fontWeight: '600' }}>62.5-81.24%</span>
+                        <span style={{ color: '#a8a8a8' }}>Close (600-749)</span>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-red-400 font-semibold">&lt;62.5%</span>
-                        <span className="text-zinc-300">Needs Work (&lt;600)</span>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                      }}>
+                        <span style={{ color: '#f43f5e', fontWeight: '600' }}>&lt;62.5%</span>
+                        <span style={{ color: '#a8a8a8' }}>Needs Work (&lt;600)</span>
                       </div>
                     </div>
                   </div>
@@ -820,17 +1073,48 @@ export default function QuizPerformance() {
 
         {/* IRT Score Analysis - Collapsible */}
         {totalAnswered > 0 && (
-          <div className="relative p-10 md:p-12 mb-12 transition-all duration-300 bg-zinc-900/50 border border-zinc-800/50 rounded-2xl shadow-2xl">
-            <div className="relative flex items-center justify-between">
-              <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Performance Analysis</h3>
+          <div style={{
+            position: 'relative',
+            padding: 'clamp(2rem, 4vw, 3rem)',
+            marginBottom: '3rem',
+            transition: 'all 0.3s ease',
+            background: '#0f0f0f',
+            borderRadius: '1.5rem',
+            boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919'
+          }}>
+            <div style={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
+              <h3 style={{
+                fontSize: 'clamp(1.875rem, 5vw, 2.5rem)',
+                fontWeight: 'bold',
+                color: '#e5e5e5',
+                letterSpacing: '-0.025em'
+              }}>Performance Analysis</h3>
               <button
                 id="toggle-irt"
                 onClick={() => setIrtExpanded(!irtExpanded)}
-                className="p-4 hover:bg-white/5 active:bg-white/10 transition-all duration-200 rounded-2xl"
+                style={{
+                  padding: '1rem',
+                  background: 'transparent',
+                  border: 'none',
+                  borderRadius: '1.5rem',
+                  transition: 'all 0.2s ease',
+                  cursor: 'pointer'
+                }}
                 aria-label="Toggle Performance Analysis"
               >
                 <svg
-                  className={`w-8 h-8 text-zinc-400 transition-transform duration-300 ${irtExpanded ? 'rotate-180' : ''}`}
+                  style={{
+                    width: '2rem',
+                    height: '2rem',
+                    color: '#a8a8a8',
+                    transition: 'transform 0.3s ease',
+                    transform: irtExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
+                  }}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -845,179 +1129,326 @@ export default function QuizPerformance() {
               <>
                 {hasEnoughQuestions ? (
                   <>
-                    <div className="relative p-8 md:p-10 mb-8 mt-8 transition-all duration-300 bg-zinc-900/50 border border-zinc-800/50 rounded-2xl">
-                    <div className="relative flex items-center justify-between mb-6">
-                      <h4 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Ability Level</h4>
-                      <div className="relative group cursor-help">
-                        {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
-                          <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold transition-all duration-300 flex items-center justify-center gap-2">
-                            <span className={
-                              lowerAbilityColor === 'emerald' ? 'text-emerald-400' :
-                              lowerAbilityColor === 'yellow' ? 'text-yellow-400' :
-                              'text-red-400'
-                            }>
-                              {abilityCI.lower.toFixed(2)}
-                            </span>
-                            <span className="text-zinc-500">-</span>
-                            <span className={
-                              upperAbilityColor === 'emerald' ? 'text-emerald-400' :
-                              upperAbilityColor === 'yellow' ? 'text-yellow-400' :
-                              'text-red-400'
-                            }>
-                              {abilityCI.upper.toFixed(2)}
-                            </span>
-                          </div>
-                        ) : (
-                          <div className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold transition-all duration-300 ${
-                            estimatedAbility >= 1.54 ? 'text-emerald-400' :
-                            estimatedAbility >= 0.38 ? 'text-yellow-400' :
-                            'text-red-400'
-                          }`}>
-                            {estimatedAbility.toFixed(2)}
-                          </div>
-                        )}
-                      {/* Tooltip */}
-                      <div className="absolute bottom-full right-0 mb-2 w-80 transition-opacity duration-300 bg-zinc-900/95 backdrop-blur-sm rounded-2xl border border-zinc-800/50 p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100">
-                        <div className="text-sm">
-                          <div className="mb-3 pb-3 border-b border-zinc-700">
-                            <div className="text-zinc-400 font-semibold mb-1">Ability Level (θ)</div>
-                            <div className="text-xs text-zinc-500">IRT measure adjusted for question difficulty</div>
-                          </div>
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <span className="text-emerald-400 font-semibold">≥1.54</span>
-                              <span className="text-zinc-300">Passing (≥750)</span>
+                    <div style={{
+                      position: 'relative',
+                      padding: 'clamp(2rem, 4vw, 2.5rem)',
+                      marginBottom: '2rem',
+                      marginTop: '2rem',
+                      transition: 'all 0.3s ease',
+                      background: '#0f0f0f',
+                      borderRadius: '1.5rem',
+                      boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+                    }}>
+                      <div style={{
+                        position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginBottom: '1.5rem',
+                        flexWrap: 'wrap',
+                        gap: '1rem'
+                      }}>
+                        <h4 style={{
+                          fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+                          fontWeight: 'bold',
+                          color: '#e5e5e5',
+                          letterSpacing: '-0.025em'
+                        }}>Ability Level</h4>
+                        <div className="ability-display">
+                          {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
+                            <div style={{
+                              fontSize: 'clamp(1.5rem, 6vw, 3rem)',
+                              fontWeight: 'bold',
+                              transition: 'all 0.3s ease',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '0.5rem'
+                            }}>
+                              <span style={{
+                                color: lowerAbilityColor === 'emerald' ? '#10b981' :
+                                       lowerAbilityColor === 'yellow' ? '#f59e0b' :
+                                       '#f43f5e'
+                              }}>
+                                {abilityCI.lower.toFixed(2)}
+                              </span>
+                              <span style={{ color: '#666666' }}>-</span>
+                              <span style={{
+                                color: upperAbilityColor === 'emerald' ? '#10b981' :
+                                       upperAbilityColor === 'yellow' ? '#f59e0b' :
+                                       '#f43f5e'
+                              }}>
+                                {abilityCI.upper.toFixed(2)}
+                              </span>
                             </div>
-                            <div className="flex items-center justify-between">
-                              <span className="text-yellow-400 font-semibold">0.38 to 1.54</span>
-                              <span className="text-zinc-300">Close (600-749)</span>
+                          ) : (
+                            <div style={{
+                              fontSize: 'clamp(1.5rem, 6vw, 3rem)',
+                              fontWeight: 'bold',
+                              transition: 'all 0.3s ease',
+                              color: estimatedAbility >= 1.54 ? '#10b981' :
+                                     estimatedAbility >= 0.38 ? '#f59e0b' :
+                                     '#f43f5e'
+                            }}>
+                              {estimatedAbility.toFixed(2)}
                             </div>
-                            <div className="flex items-center justify-between">
-                              <span className="text-red-400 font-semibold">&lt;0.38</span>
-                              <span className="text-zinc-300">Needs Work (&lt;600)</span>
+                          )}
+                          {/* Tooltip */}
+                          <div className="tooltip" style={{
+                            position: 'absolute',
+                            bottom: '100%',
+                            right: '0',
+                            marginBottom: '0.5rem',
+                            width: '20rem',
+                            transition: 'opacity 0.3s ease',
+                            background: '#0f0f0f',
+                            borderRadius: '1.5rem',
+                            boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
+                            padding: '1.5rem',
+                            zIndex: '50',
+                            pointerEvents: 'none',
+                            opacity: '0'
+                          }}>
+                            <div style={{ fontSize: '0.875rem' }}>
+                              <div style={{
+                                marginBottom: '0.75rem',
+                                paddingBottom: '0.75rem',
+                                borderBottom: '1px solid #333333'
+                              }}>
+                                <div style={{
+                                  color: '#a8a8a8',
+                                  fontWeight: '600',
+                                  marginBottom: '0.25rem'
+                                }}>Ability Level (θ)</div>
+                                <div style={{
+                                  fontSize: '0.75rem',
+                                  color: '#666666'
+                                }}>IRT measure adjusted for question difficulty</div>
+                              </div>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                <div style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'space-between'
+                                }}>
+                                  <span style={{ color: '#10b981', fontWeight: '600' }}>≥1.54</span>
+                                  <span style={{ color: '#a8a8a8' }}>Passing (≥750)</span>
+                                </div>
+                                <div style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'space-between'
+                                }}>
+                                  <span style={{ color: '#f59e0b', fontWeight: '600' }}>0.38 to 1.54</span>
+                                  <span style={{ color: '#a8a8a8' }}>Close (600-749)</span>
+                                </div>
+                                <div style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'space-between'
+                                }}>
+                                  <span style={{ color: '#f43f5e', fontWeight: '600' }}>&lt;0.38</span>
+                                  <span style={{ color: '#a8a8a8' }}>Needs Work (&lt;600)</span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                  <div className="relative mt-6">
-                    <div className="h-6 relative overflow-hidden bg-zinc-900/50 border border-zinc-800/50 rounded-2xl">
-                      {/* Show range if CI available, otherwise point estimate */}
-                      {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
-                        // Show range (confidence interval) with multiple color segments
-                        <>
-                          {/* Red segment: -3 to 0.38 (Needs Work <600) */}
-                          {abilityCI.lower < 0.38 && (
+                      <div style={{ position: 'relative', marginTop: '1.5rem' }}>
+                        <div style={{
+                          height: '1.5rem',
+                          position: 'relative',
+                          overflow: 'hidden',
+                          background: '#0f0f0f',
+                          boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
+                          borderRadius: '1.5rem'
+                        }}>
+                          {/* Show range if CI available, otherwise point estimate */}
+                          {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
+                            // Show range (confidence interval) with multiple color segments
+                            <>
+                              {/* Red segment: -3 to 0.38 (Needs Work <600) */}
+                              {abilityCI.lower < 0.38 && (
+                                <div
+                                  style={{
+                                    height: '1.5rem',
+                                    position: 'absolute',
+                                    transition: 'all 0.3s ease',
+                                    background: '#f43f5e',
+                                    left: `${Math.max(0, ((abilityCI.lower + 3) / 6) * 100)}%`,
+                                    width: `${((Math.min(abilityCI.upper, 0.38) - abilityCI.lower) / 6) * 100}%`,
+                                    borderTopLeftRadius: '1rem',
+                                    borderBottomLeftRadius: '1rem',
+                                    borderTopRightRadius: abilityCI.upper < 0.38 ? '1rem' : '0',
+                                    borderBottomRightRadius: abilityCI.upper < 0.38 ? '1rem' : '0'
+                                  }}
+                                />
+                              )}
+
+                              {/* Yellow segment: 0.38 to 1.54 (Close 600-749) */}
+                              {abilityCI.lower < 1.54 && abilityCI.upper >= 0.38 && (
+                                <div
+                                  style={{
+                                    height: '1.5rem',
+                                    position: 'absolute',
+                                    transition: 'all 0.3s ease',
+                                    background: '#f59e0b',
+                                    left: `${((Math.max(abilityCI.lower, 0.38) + 3) / 6) * 100}%`,
+                                    width: `${((Math.min(abilityCI.upper, 1.54) - Math.max(abilityCI.lower, 0.38)) / 6) * 100}%`,
+                                    borderTopLeftRadius: abilityCI.lower >= 0.38 ? '1rem' : '0',
+                                    borderBottomLeftRadius: abilityCI.lower >= 0.38 ? '1rem' : '0',
+                                    borderTopRightRadius: abilityCI.upper < 1.54 ? '1rem' : '0',
+                                    borderBottomRightRadius: abilityCI.upper < 1.54 ? '1rem' : '0'
+                                  }}
+                                />
+                              )}
+
+                              {/* Green segment: 1.54 to 3 (Passing ≥750) */}
+                              {abilityCI.upper >= 1.54 && (
+                                <div
+                                  style={{
+                                    height: '1.5rem',
+                                    position: 'absolute',
+                                    transition: 'all 0.3s ease',
+                                    background: '#10b981',
+                                    left: `${((Math.max(abilityCI.lower, 1.54) + 3) / 6) * 100}%`,
+                                    width: `${((abilityCI.upper - Math.max(abilityCI.lower, 1.54)) / 6) * 100}%`,
+                                    borderTopLeftRadius: abilityCI.lower >= 1.54 ? '1rem' : '0',
+                                    borderBottomLeftRadius: abilityCI.lower >= 1.54 ? '1rem' : '0',
+                                    borderTopRightRadius: '1rem',
+                                    borderBottomRightRadius: '1rem'
+                                  }}
+                                />
+                              )}
+                            </>
+                          ) : (
+                            // Show point estimate
                             <div
-                              className="h-6 absolute transition-all duration-300 bg-gradient-to-r from-red-500 to-red-600 shadow-[0_0_20px_rgba(239,68,68,0.3)]"
                               style={{
-                                left: `${Math.max(0, ((abilityCI.lower + 3) / 6) * 100)}%`,
-                                width: `${((Math.min(abilityCI.upper, 0.38) - abilityCI.lower) / 6) * 100}%`,
-                                borderTopLeftRadius: '1rem',
-                                borderBottomLeftRadius: '1rem',
-                                borderTopRightRadius: abilityCI.upper < 0.38 ? '1rem' : '0',
-                                borderBottomRightRadius: abilityCI.upper < 0.38 ? '1rem' : '0',
+                                height: '1.5rem',
+                                position: 'relative',
+                                transition: 'all 0.3s ease',
+                                background: estimatedAbility >= 1.0 ? '#10b981' :
+                                            estimatedAbility >= -1.0 ? '#f59e0b' : '#f43f5e',
+                                borderRadius: '1.5rem',
+                                width: `${((estimatedAbility + 3) / 6) * 100}%`
                               }}
                             />
                           )}
-
-                          {/* Yellow segment: 0.38 to 1.54 (Close 600-749) */}
-                          {abilityCI.lower < 1.54 && abilityCI.upper >= 0.38 && (
-                            <div
-                              className="h-6 absolute transition-all duration-300 bg-gradient-to-r from-yellow-500 to-yellow-600 shadow-[0_0_20px_rgba(234,179,8,0.3)]"
-                              style={{
-                                left: `${((Math.max(abilityCI.lower, 0.38) + 3) / 6) * 100}%`,
-                                width: `${((Math.min(abilityCI.upper, 1.54) - Math.max(abilityCI.lower, 0.38)) / 6) * 100}%`,
-                                borderTopLeftRadius: abilityCI.lower >= 0.38 ? '1rem' : '0',
-                                borderBottomLeftRadius: abilityCI.lower >= 0.38 ? '1rem' : '0',
-                                borderTopRightRadius: abilityCI.upper < 1.54 ? '1rem' : '0',
-                                borderBottomRightRadius: abilityCI.upper < 1.54 ? '1rem' : '0',
-                              }}
-                            />
-                          )}
-
-                          {/* Green segment: 1.54 to 3 (Passing ≥750) */}
-                          {abilityCI.upper >= 1.54 && (
-                            <div
-                              className="h-6 absolute transition-all duration-300 bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
-                              style={{
-                                left: `${((Math.max(abilityCI.lower, 1.54) + 3) / 6) * 100}%`,
-                                width: `${((abilityCI.upper - Math.max(abilityCI.lower, 1.54)) / 6) * 100}%`,
-                                borderTopLeftRadius: abilityCI.lower >= 1.54 ? '1rem' : '0',
-                                borderBottomLeftRadius: abilityCI.lower >= 1.54 ? '1rem' : '0',
-                                borderTopRightRadius: '1rem',
-                                borderBottomRightRadius: '1rem',
-                              }}
-                            />
-                          )}
-                        </>
-                      ) : (
-                        // Show point estimate
-                        <div
-                          className={`h-6 relative transition-all duration-300 ${
-                            estimatedAbility >= 1.0
-                              ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-[0_0_20px_rgba(16,185,129,0.3)] rounded-2xl'
-                              : estimatedAbility >= -1.0
-                                ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 shadow-[0_0_20px_rgba(234,179,8,0.3)] rounded-2xl'
-                                : 'bg-gradient-to-r from-red-500 to-red-600 shadow-[0_0_20px_rgba(239,68,68,0.3)] rounded-2xl'
-                          }`}
-                          style={{ width: `${((estimatedAbility + 3) / 6) * 100}%` }}
-                        />
-                      )}
+                        </div>
+                        <div style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          fontSize: '1.125rem',
+                          color: '#666666',
+                          marginTop: '0.75rem'
+                        }}>
+                          <span>Beginner</span>
+                          <span>Average</span>
+                          <span>Expert</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex justify-between text-lg text-zinc-500 mt-3">
-                      <span>Beginner</span>
-                      <span>Average</span>
-                      <span>Expert</span>
-                    </div>
-                  </div>
-                </div>
 
-                <div className="relative p-8 md:p-10 transition-all duration-300 bg-zinc-900/50 border border-zinc-800/50 rounded-2xl">
-                  <div className="relative text-xl text-zinc-300 leading-relaxed">
-                    <p className={`font-bold mb-6 flex items-center gap-2 text-2xl md:text-3xl ${
-                      estimatedAbility >= 1.5 ? 'text-emerald-400' :
-                      estimatedAbility >= 1.0 ? 'text-emerald-400' :
-                      estimatedAbility >= 0 ? 'text-yellow-400' :
-                      estimatedAbility >= -1 ? 'text-yellow-400' :
-                      'text-red-400'
-                    }`}>
-                      {estimatedAbility >= 1.5 ? 'Excellent Performance!' :
-                       estimatedAbility >= 1.0 ? 'Good Performance' :
-                       estimatedAbility >= 0 ? 'Average Performance' :
-                       estimatedAbility >= -1 ? 'Below Average' :
-                       'Needs Improvement'}
-                    </p>
-                    <ul className="space-y-4 text-lg md:text-xl">
-                      {generatePerformanceInsights(userProgress, estimatedAbility).map((insight, index) => (
-                        <li key={index} className="flex items-start gap-4">
-                          <svg className={`w-5 h-5 mt-1 flex-shrink-0 ${
-                            estimatedAbility >= 1.0 ? 'text-cyan-400' :
-                            estimatedAbility >= -1 ? 'text-yellow-400' :
-                            'text-red-400'
-                          }`} fill="currentColor" viewBox="0 0 20 20">
-                            <circle cx="10" cy="10" r="3" />
-                          </svg>
-                          <span>{insight}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+                    <div style={{
+                      position: 'relative',
+                      padding: 'clamp(2rem, 4vw, 2.5rem)',
+                      transition: 'all 0.3s ease',
+                      background: '#0f0f0f',
+                      borderRadius: '1.5rem',
+                      boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+                    }}>
+                      <div style={{
+                        position: 'relative',
+                        fontSize: '1.25rem',
+                        color: '#a8a8a8',
+                        lineHeight: '1.6'
+                      }}>
+                        <p style={{
+                          fontWeight: 'bold',
+                          marginBottom: '1.5rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+                          color: estimatedAbility >= 1.5 ? '#10b981' :
+                                 estimatedAbility >= 1.0 ? '#10b981' :
+                                 estimatedAbility >= 0 ? '#f59e0b' :
+                                 estimatedAbility >= -1 ? '#f59e0b' :
+                                 '#f43f5e'
+                        }}>
+                          {estimatedAbility >= 1.5 ? 'Excellent Performance!' :
+                           estimatedAbility >= 1.0 ? 'Good Performance' :
+                           estimatedAbility >= 0 ? 'Average Performance' :
+                           estimatedAbility >= -1 ? 'Below Average' :
+                           'Needs Improvement'}
+                        </p>
+                        <ul style={{
+                          listStyle: 'none',
+                          padding: '0',
+                          margin: '0',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '1rem',
+                          fontSize: 'clamp(1.125rem, 3vw, 1.25rem)'
+                        }}>
+                          {generatePerformanceInsights(userProgress, estimatedAbility).map((insight, index) => (
+                            <li key={index} style={{
+                              display: 'flex',
+                              alignItems: 'flex-start',
+                              gap: '1rem'
+                            }}>
+                              <svg style={{
+                                width: '1.25rem',
+                                height: '1.25rem',
+                                marginTop: '0.25rem',
+                                flexShrink: '0',
+                                color: estimatedAbility >= 1.0 ? '#06b6d4' :
+                                       estimatedAbility >= -1 ? '#f59e0b' :
+                                       '#f43f5e'
+                              }} fill="currentColor" viewBox="0 0 20 20">
+                                <circle cx="10" cy="10" r="3" />
+                              </svg>
+                              <span>{insight}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
                   </>
                 ) : (
-                  <div className="mt-8">
-                    <div className="relative p-8 bg-zinc-900/50 rounded-2xl border border-zinc-800/50">
-                      <div className="relative text-center">
-                        <svg className="w-16 h-16 mx-auto mb-4 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                  <div style={{ marginTop: '2rem' }}>
+                    <div style={{
+                      position: 'relative',
+                      padding: '2rem',
+                      background: '#0f0f0f',
+                      borderRadius: '1.5rem',
+                      boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+                    }}>
+                      <div style={{ position: 'relative', textAlign: 'center' }}>
+                        <svg style={{
+                          width: '4rem',
+                          height: '4rem',
+                          margin: '0 auto 1rem',
+                          color: '#666666',
+                          display: 'block'
+                        }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
                         </svg>
-                        <h4 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                        <h4 style={{
+                          fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+                          fontWeight: 'bold',
+                          color: '#e5e5e5',
+                          marginBottom: '0.75rem'
+                        }}>
                           Insufficient Data
                         </h4>
-                        <p className="text-lg md:text-xl text-zinc-400">
-                          Answer <span className="text-white font-bold">{questionsNeeded} more</span> {questionsNeeded === 1 ? 'question' : 'questions'} for ability level analysis
+                        <p style={{
+                          fontSize: 'clamp(1.125rem, 3vw, 1.25rem)',
+                          color: '#a8a8a8'
+                        }}>
+                          Answer <span style={{ color: '#e5e5e5', fontWeight: 'bold' }}>{questionsNeeded} more</span> {questionsNeeded === 1 ? 'question' : 'questions'} for ability level analysis
                         </p>
                       </div>
                     </div>
@@ -1025,7 +1456,12 @@ export default function QuizPerformance() {
                 )}
               </>
             ) : (
-              <div className="relative mt-8 text-xl text-zinc-400">
+              <div style={{
+                position: 'relative',
+                marginTop: '2rem',
+                fontSize: '1.25rem',
+                color: '#a8a8a8'
+              }}>
                 Click to view detailed performance analysis
               </div>
             )}
@@ -1034,33 +1470,71 @@ export default function QuizPerformance() {
 
         {/* Topic Review Schedule - Verification Tool */}
         {userProgress && (
-          <div className="mt-16">
+          <div style={{ marginTop: '4rem' }}>
             <TopicReviewSchedule userProgress={userProgress} />
           </div>
         )}
 
         {/* Performance Graphs Section */}
         {userProgress && (
-          <div className="mt-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 tracking-tight">Progress Charts</h2>
+          <div style={{ marginTop: '4rem' }}>
+            <h2 style={{
+              fontSize: 'clamp(2.25rem, 6vw, 3rem)',
+              fontWeight: 'bold',
+              color: '#e5e5e5',
+              marginBottom: '3rem',
+              letterSpacing: '-0.025em'
+            }}>Progress Charts</h2>
             <PerformanceGraphs userProgress={userProgress} />
           </div>
         )}
 
         {/* Past Activity - Collapsible */}
         {userProgress && (
-          <div className="relative mt-16 mb-16 p-10 md:p-12 transition-all duration-300 bg-zinc-900/50 border border-zinc-800/50 rounded-2xl shadow-2xl">
-            <div className="relative flex items-center justify-between">
-              <h3 className="text-3xl md:text-4xl font-bold tracking-tight">Past Quizzes ({userProgress.quizHistory.length})</h3>
+          <div style={{
+            position: 'relative',
+            marginTop: '4rem',
+            marginBottom: '4rem',
+            padding: 'clamp(2rem, 4vw, 3rem)',
+            transition: 'all 0.3s ease',
+            background: '#0f0f0f',
+            borderRadius: '1.5rem',
+            boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919'
+          }}>
+            <div style={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
+              <h3 style={{
+                fontSize: 'clamp(1.875rem, 5vw, 2.5rem)',
+                fontWeight: 'bold',
+                letterSpacing: '-0.025em',
+                color: '#e5e5e5'
+              }}>Past Quizzes ({userProgress.quizHistory.length})</h3>
               {userProgress.quizHistory.length > 0 && (
                 <button
                   id="toggle-past-quizzes"
                   onClick={() => setRecentQuizzesExpanded(!recentQuizzesExpanded)}
-                  className="p-4 hover:bg-white/5 active:bg-white/10 transition-all duration-200 rounded-2xl"
+                  style={{
+                    padding: '1rem',
+                    background: 'transparent',
+                    border: 'none',
+                    borderRadius: '1.5rem',
+                    transition: 'all 0.2s ease',
+                    cursor: 'pointer'
+                  }}
                   aria-label="Toggle Past Quizzes"
                 >
                   <svg
-                    className={`w-8 h-8 text-zinc-400 transition-transform duration-300 ${recentQuizzesExpanded ? 'rotate-180' : ''}`}
+                    style={{
+                      width: '2rem',
+                      height: '2rem',
+                      color: '#a8a8a8',
+                      transition: 'transform 0.3s ease',
+                      transform: recentQuizzesExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
+                    }}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -1073,11 +1547,18 @@ export default function QuizPerformance() {
             </div>
 
             {userProgress.quizHistory.length === 0 ? (
-              <div className="relative text-center py-12 mt-6 text-xl text-zinc-400">
+              <div style={{
+                position: 'relative',
+                textAlign: 'center',
+                padding: '3rem 0',
+                marginTop: '1.5rem',
+                fontSize: '1.25rem',
+                color: '#a8a8a8'
+              }}>
                 No quizzes taken yet. Take a quiz to see your history here.
               </div>
             ) : recentQuizzesExpanded ? (
-              <div className="space-y-4 mt-6">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1.5rem' }}>
                 {userProgress.quizHistory.slice(-5).reverse().map((quiz) => {
                   // Format quiz summary using shared utility
                   const { formattedTime, timeDisplay, accuracy, accuracyColor, totalQuestions, isIncomplete } = formatQuizSummary(quiz);
@@ -1086,12 +1567,21 @@ export default function QuizPerformance() {
                   return (
                     <div
                       key={quiz.id}
-                      className="relative"
+                      style={{ position: 'relative' }}
                     >
                       <div
                         id={`quiz-review-${quiz.id}`}
                         onClick={() => router.push(`/cybersecurity/quiz/review/${quiz.id}`)}
-                        className="relative w-full p-8 md:p-10 transition-all duration-200 hover:scale-[1.01] cursor-pointer bg-zinc-900/50 border border-zinc-800/50 rounded-2xl hover:bg-zinc-900/60 hover:border-zinc-700/50"
+                        style={{
+                          position: 'relative',
+                          width: '100%',
+                          padding: 'clamp(2rem, 4vw, 2.5rem)',
+                          transition: 'all 0.2s ease',
+                          cursor: 'pointer',
+                          background: '#0f0f0f',
+                          borderRadius: '1.5rem',
+                          boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919'
+                        }}
                       >
                         {/* Delete Button */}
                         <button
@@ -1099,52 +1589,129 @@ export default function QuizPerformance() {
                             e.stopPropagation();
                             setDeleteConfirmId(quiz.id);
                           }}
-                          className="absolute top-4 right-4 z-10 p-3 transition-all duration-200 group bg-red-500/10 hover:bg-red-500/20 rounded-xl border border-red-500/30 hover:border-red-500/50"
+                          style={{
+                            position: 'absolute',
+                            top: '1rem',
+                            right: '1rem',
+                            zIndex: '10',
+                            padding: '0.75rem',
+                            transition: 'all 0.2s ease',
+                            background: 'rgba(244, 63, 94, 0.1)',
+                            borderRadius: '0.75rem',
+                            border: '1px solid rgba(244, 63, 94, 0.3)',
+                            cursor: 'pointer'
+                          }}
                           title="Delete quiz"
                         >
-                          <svg className="w-5 h-5 text-red-400 group-hover:text-red-300 transition-colors duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg style={{ width: '1.25rem', height: '1.25rem', color: '#f43f5e' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
                         </button>
 
-                        <div className="relative pr-12">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                        <div style={{ position: 'relative', paddingRight: '3rem' }}>
+                          <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                            gap: 'clamp(1.5rem, 3vw, 2rem)'
+                          }}>
                             {/* Date */}
-                            <div className="space-y-2">
-                              <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Date</div>
-                              <div className="text-2xl font-bold text-white">{formattedDate}</div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                              <div style={{
+                                fontSize: '0.875rem',
+                                fontWeight: '600',
+                                color: '#666666',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.05em'
+                              }}>Date</div>
+                              <div style={{
+                                fontSize: '1.5rem',
+                                fontWeight: 'bold',
+                                color: '#e5e5e5'
+                              }}>{formattedDate}</div>
                             </div>
 
                             {/* Time Started */}
-                            <div className="space-y-2">
-                              <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Time Started</div>
-                              <div className="text-2xl font-bold text-white">{formattedTime}</div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                              <div style={{
+                                fontSize: '0.875rem',
+                                fontWeight: '600',
+                                color: '#666666',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.05em'
+                              }}>Time Started</div>
+                              <div style={{
+                                fontSize: '1.5rem',
+                                fontWeight: 'bold',
+                                color: '#e5e5e5'
+                              }}>{formattedTime}</div>
                             </div>
 
                             {/* Total Time */}
-                            <div className="space-y-2">
-                              <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Total Time</div>
-                              <div className="text-2xl font-bold text-white">{timeDisplay}</div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                              <div style={{
+                                fontSize: '0.875rem',
+                                fontWeight: '600',
+                                color: '#666666',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.05em'
+                              }}>Total Time</div>
+                              <div style={{
+                                fontSize: '1.5rem',
+                                fontWeight: 'bold',
+                                color: '#e5e5e5'
+                              }}>{timeDisplay}</div>
                             </div>
 
                             {/* Total Questions */}
-                            <div className="space-y-2">
-                              <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Total Questions</div>
-                              <div className="text-2xl font-bold text-white">{totalQuestions}</div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                              <div style={{
+                                fontSize: '0.875rem',
+                                fontWeight: '600',
+                                color: '#666666',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.05em'
+                              }}>Total Questions</div>
+                              <div style={{
+                                fontSize: '1.5rem',
+                                fontWeight: 'bold',
+                                color: '#e5e5e5'
+                              }}>{totalQuestions}</div>
                             </div>
 
                             {/* Accuracy */}
-                            <div className="space-y-2">
-                              <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Accuracy</div>
-                              <div className={`text-2xl font-bold ${accuracyColor}`}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                              <div style={{
+                                fontSize: '0.875rem',
+                                fontWeight: '600',
+                                color: '#666666',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.05em'
+                              }}>Accuracy</div>
+                              <div style={{
+                                fontSize: '1.5rem',
+                                fontWeight: 'bold',
+                                color: accuracyColor === 'text-emerald-400' ? '#10b981' :
+                                       accuracyColor === 'text-yellow-400' ? '#f59e0b' :
+                                       '#f43f5e'
+                              }}>
                                 {accuracy}%
                               </div>
                             </div>
 
                             {/* Status */}
-                            <div className="space-y-2">
-                              <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Status</div>
-                              <div className={`text-2xl font-bold ${isIncomplete ? 'text-yellow-400' : 'text-emerald-400'}`}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                              <div style={{
+                                fontSize: '0.875rem',
+                                fontWeight: '600',
+                                color: '#666666',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.05em'
+                              }}>Status</div>
+                              <div style={{
+                                fontSize: '1.5rem',
+                                fontWeight: 'bold',
+                                color: isIncomplete ? '#f59e0b' : '#10b981'
+                              }}>
                                 {isIncomplete ? 'Incomplete' : 'Completed'}
                               </div>
                             </div>
@@ -1154,25 +1721,78 @@ export default function QuizPerformance() {
 
                       {/* Delete Confirmation Dialog */}
                       {deleteConfirmId === quiz.id && (
-                        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                          <div className="relative w-full max-w-md p-8 md:p-10 transition-all duration-300 bg-zinc-900/95 backdrop-blur-sm rounded-2xl border border-zinc-800/50">
-                            <div className="relative">
-                              <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">Delete Quiz?</h3>
-                              <p className="text-lg text-zinc-300 mb-8">
+                        <div style={{
+                          position: 'fixed',
+                          inset: '0',
+                          background: 'rgba(0, 0, 0, 0.8)',
+                          backdropFilter: 'blur(8px)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          zIndex: '50',
+                          padding: '1rem'
+                        }}>
+                          <div style={{
+                            position: 'relative',
+                            width: '100%',
+                            maxWidth: '28rem',
+                            padding: 'clamp(2rem, 4vw, 2.5rem)',
+                            transition: 'all 0.3s ease',
+                            background: '#0f0f0f',
+                            borderRadius: '1.5rem',
+                            boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919'
+                          }}>
+                            <div style={{ position: 'relative' }}>
+                              <h3 style={{
+                                fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+                                fontWeight: 'bold',
+                                color: '#e5e5e5',
+                                marginBottom: '1rem'
+                              }}>Delete Quiz?</h3>
+                              <p style={{
+                                fontSize: '1.125rem',
+                                color: '#a8a8a8',
+                                marginBottom: '2rem'
+                              }}>
                                 Are you sure you want to delete this quiz? This will remove all associated data and recalculate your performance metrics. This action cannot be undone.
                               </p>
-                              <div className="flex gap-4">
+                              <div style={{ display: 'flex', gap: '1rem' }}>
                                 <button
                                   onClick={() => handleDeleteQuiz(quiz.id)}
                                   disabled={isDeleting}
-                                  className="flex-1 py-4 px-6 font-bold text-lg transition-all duration-200 bg-red-500/20 hover:bg-red-500/30 rounded-xl border border-red-500/50 hover:border-red-500/70 text-red-300 hover:text-red-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                  style={{
+                                    flex: '1',
+                                    padding: '1rem 1.5rem',
+                                    fontWeight: 'bold',
+                                    fontSize: '1.125rem',
+                                    transition: 'all 0.2s ease',
+                                    background: 'rgba(244, 63, 94, 0.2)',
+                                    borderRadius: '0.75rem',
+                                    border: '1px solid rgba(244, 63, 94, 0.5)',
+                                    color: '#f43f5e',
+                                    cursor: isDeleting ? 'not-allowed' : 'pointer',
+                                    opacity: isDeleting ? '0.5' : '1'
+                                  }}
                                 >
                                   {isDeleting ? 'Deleting...' : 'Delete'}
                                 </button>
                                 <button
                                   onClick={() => setDeleteConfirmId(null)}
                                   disabled={isDeleting}
-                                  className="flex-1 py-4 px-6 font-bold text-lg transition-all duration-200 bg-white/10 hover:bg-white/15 rounded-xl border border-zinc-700/50 hover:border-zinc-600/50 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                                  style={{
+                                    flex: '1',
+                                    padding: '1rem 1.5rem',
+                                    fontWeight: 'bold',
+                                    fontSize: '1.125rem',
+                                    transition: 'all 0.2s ease',
+                                    background: '#0f0f0f',
+                                    borderRadius: '0.75rem',
+                                    boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
+                                    border: 'none',
+                                    color: '#e5e5e5',
+                                    cursor: isDeleting ? 'not-allowed' : 'pointer',
+                                    opacity: isDeleting ? '0.5' : '1'
+                                  }}
                                 >
                                   Cancel
                                 </button>
@@ -1187,10 +1807,22 @@ export default function QuizPerformance() {
 
                 {/* Show More button if there are more than 5 quizzes */}
                 {userProgress.quizHistory.length > 5 && (
-                  <div className="mt-6">
+                  <div style={{ marginTop: '1.5rem' }}>
                     <button
                       onClick={() => router.push('/cybersecurity/quiz/history')}
-                      className="w-full py-5 md:py-6 text-xl md:text-2xl font-bold transition-all duration-200 bg-zinc-800/50 hover:bg-zinc-800/70 rounded-2xl border border-zinc-700/50 hover:border-zinc-600/50 hover:scale-[1.01] text-white"
+                      style={{
+                        width: '100%',
+                        padding: 'clamp(1.25rem, 3vw, 1.5rem)',
+                        fontSize: 'clamp(1.25rem, 3vw, 1.5rem)',
+                        fontWeight: 'bold',
+                        transition: 'all 0.2s ease',
+                        background: '#0f0f0f',
+                        borderRadius: '1.5rem',
+                        boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
+                        border: 'none',
+                        color: '#e5e5e5',
+                        cursor: 'pointer'
+                      }}
                     >
                       Show More ({userProgress.quizHistory.length - 5} older quizzes)
                     </button>
@@ -1198,7 +1830,12 @@ export default function QuizPerformance() {
                 )}
               </div>
             ) : (
-              <div className="relative mt-8 text-xl text-zinc-400">
+              <div style={{
+                position: 'relative',
+                marginTop: '2rem',
+                fontSize: '1.25rem',
+                color: '#a8a8a8'
+              }}>
                 {userProgress.quizHistory.length === 0
                   ? 'No quizzes taken yet'
                   : `Click to view your last ${Math.min(5, userProgress.quizHistory.length)} quiz${userProgress.quizHistory.length === 1 ? '' : 'es'}`
@@ -1209,21 +1846,56 @@ export default function QuizPerformance() {
         )}
 
         {/* Reset Progress - Destructive Action (Always visible, disabled when no data) */}
-        <div className="mt-12 text-center pb-8">
+        <div style={{ marginTop: '3rem', textAlign: 'center', paddingBottom: '2rem' }}>
           <button
             id="reset-progress"
             onClick={handleResetProgress}
             disabled={totalAnswered === 0}
-            className={`relative px-12 md:px-16 py-5 md:py-6 text-xl md:text-2xl font-bold transition-all duration-200 ${
-              totalAnswered === 0
-                ? 'bg-zinc-800/30 border border-zinc-700/30 text-zinc-600 rounded-2xl cursor-not-allowed opacity-50'
-                : 'bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 hover:border-red-500/80 text-red-300 hover:text-red-200 rounded-2xl hover:scale-105 shadow-[0_0_30px_rgba(239,68,68,0.3)]'
-            }`}
+            style={{
+              position: 'relative',
+              padding: 'clamp(1.25rem, 3vw, 1.5rem) clamp(3rem, 6vw, 4rem)',
+              fontSize: 'clamp(1.25rem, 3vw, 1.5rem)',
+              fontWeight: 'bold',
+              transition: 'all 0.2s ease',
+              background: totalAnswered === 0 ? '#1a1a1a' : 'rgba(244, 63, 94, 0.2)',
+              borderRadius: '1.5rem',
+              border: totalAnswered === 0 ? '1px solid #333333' : '1px solid rgba(244, 63, 94, 0.5)',
+              color: totalAnswered === 0 ? '#666666' : '#f43f5e',
+              cursor: totalAnswered === 0 ? 'not-allowed' : 'pointer',
+              opacity: totalAnswered === 0 ? '0.5' : '1',
+              boxShadow: totalAnswered === 0 ? 'none' : '6px 6px 12px #050505, -6px -6px 12px #191919'
+            }}
           >
-            <span className="relative">Reset Progress</span>
+            <span style={{ position: 'relative' }}>Reset Progress</span>
           </button>
         </div>
       </div>
+
+      <style jsx>{`
+        .score-display:hover .tooltip,
+        .accuracy-display:hover .tooltip,
+        .ability-display:hover .tooltip {
+          opacity: 1;
+        }
+
+        button:not(:disabled):hover {
+          transform: scale(1.02);
+          box-shadow: 8px 8px 16px #050505, -8px -8px 16px #191919;
+        }
+
+        button:not(:disabled):active {
+          transform: scale(0.98);
+          box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #191919;
+        }
+
+        @media (max-width: 768px) {
+          .tooltip {
+            left: 50%;
+            right: auto;
+            transform: translateX(-50%);
+          }
+        }
+      `}</style>
     </div>
   );
 }
