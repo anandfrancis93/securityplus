@@ -5,19 +5,6 @@ import { useRouter } from 'next/navigation';
 import { signInWithGoogle } from '@/lib/firebase';
 import { useApp } from './AppProvider';
 
-// Material Design 3 uses Web Components, so we need to register them
-if (typeof window !== 'undefined') {
-  import('@material/web/button/filled-button.js');
-  import('@material/web/button/outlined-button.js');
-  import('@material/web/button/text-button.js');
-  import('@material/web/elevation/elevation.js');
-  import('@material/web/ripple/ripple.js');
-  import('@material/web/icon/icon.js');
-  import('@material/web/iconbutton/icon-button.js');
-  import('@material/web/progress/circular-progress.js');
-  import('@material/web/divider/divider.js');
-}
-
 export default function Login() {
   const router = useRouter();
   const { user, loading: authLoading } = useApp();
@@ -46,7 +33,7 @@ export default function Login() {
   if (authLoading) {
     return (
       <div className="md3-loading-screen">
-        <md-circular-progress indeterminate></md-circular-progress>
+        <div className="md3-loading-spinner"></div>
       </div>
     );
   }
@@ -377,7 +364,7 @@ export default function Login() {
               <a href="#" className="md3-body-small">Status</a>
             </div>
           </div>
-          <md-divider></md-divider>
+          <div className="md3-divider"></div>
           <div className="md3-footer-legal">
             <p className="md3-body-small">© 2024 SecurityPlus AI. All rights reserved.</p>
           </div>
@@ -402,9 +389,17 @@ export default function Login() {
           background: var(--md-sys-color-background, #1c1b1f);
         }
 
-        md-circular-progress {
-          --md-circular-progress-size: 64px;
-          --md-circular-progress-active-indicator-color: var(--md-sys-color-primary, #d0bcff);
+        .md3-loading-spinner {
+          width: 64px;
+          height: 64px;
+          border: 4px solid rgba(208, 188, 255, 0.2);
+          border-top-color: #d0bcff;
+          border-radius: 50%;
+          animation: md3-spin 1s linear infinite;
+        }
+
+        @keyframes md3-spin {
+          to { transform: rotate(360deg); }
         }
 
         /* Top App Bar */
@@ -893,7 +888,9 @@ export default function Login() {
           color: #e8def8;
         }
 
-        md-divider {
+        .md3-divider {
+          height: 1px;
+          background: var(--md-sys-color-outline-variant, #49454f);
           margin: 32px 0;
         }
 
