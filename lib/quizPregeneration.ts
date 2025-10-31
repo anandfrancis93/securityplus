@@ -729,104 +729,125 @@ export async function pregenerateQuiz(
     }
   } else {
     // PHASE 2: 70% new / 30% repeated (spaced repetition)
-    console.log('Phase 2: Generating questions with spaced repetition');
+    // IMPORTANT: Must maintain 3 easy, 4 medium, 3 hard regardless of new vs repeated
+    console.log('Phase 2: Generating questions with spaced repetition (maintaining 3/4/3 distribution)');
 
-    const newCount = 7; // 70%
-    const repeatCount = 3; // 30%
+    // Use the same full distribution (reused from Phase 1)
+    // Already shuffled above, so just use it
 
-    // Generate 7 new questions with deterministic distribution
-    // For 7 questions: 2 easy, 3 medium, 2 hard (closest to 30%/40%/30%)
-    const newQuestionDistribution: Array<'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics'> = [
-      'single-domain-single-topic', 'single-domain-single-topic',           // 2 easy (~29%)
-      'single-domain-multiple-topics', 'single-domain-multiple-topics', 'single-domain-multiple-topics', // 3 medium (~43%)
-      'multiple-domains-multiple-topics', 'multiple-domains-multiple-topics'  // 2 hard (~29%)
-    ];
-    // Shuffle
-    for (let i = newQuestionDistribution.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [newQuestionDistribution[i], newQuestionDistribution[j]] = [newQuestionDistribution[j], newQuestionDistribution[i]];
-    }
+    // Decide which question slots will be repeated vs new
+    // We want ~30% repeated (3 out of 10), but need to match difficulty distribution
+    const repeatIndices = new Set<number>();
 
-    for (let i = 0; i < newCount; i++) {
+    // Try to get 1 easy, 1 medium, 1 hard for repeats (balanced)
+    const easyIndices = difficultyDistribution.map((cat, idx) => cat === 'single-domain-single-topic' ? idx : -1).filter(idx => idx !== -1);
+    const mediumIndices = difficultyDistribution.map((cat, idx) => cat === 'single-domain-multiple-topics' ? idx : -1).filter(idx => idx !== -1);
+    const hardIndices = difficultyDistribution.map((cat, idx) => cat === 'multiple-domains-multiple-topics' ? idx : -1).filter(idx => idx !== -1);
+
+    // Pick one from each difficulty for repeats
+    if (easyIndices.length > 0) repeatIndices.add(easyIndices[Math.floor(Math.random() * easyIndices.length)]);
+    if (mediumIndices.length > 0) repeatIndices.add(mediumIndices[Math.floor(Math.random() * mediumIndices.length)]);
+    if (hardIndices.length > 0) repeatIndices.add(hardIndices[Math.floor(Math.random() * hardIndices.length)]);
+
+    console.log(`[DIFFICULTY DEBUG] Phase 2: Repeat slots: ${Array.from(repeatIndices).sort().join(', ')}`);
+    console.log(`[DIFFICULTY DEBUG] Phase 2: New slots: ${Array.from({length: 10}, (_, i) => i).filter(i => !repeatIndices.has(i)).join(', ')}`);
+
+    // Get eligible repeat questions from history
+    const eligibleRepeats = getEligibleRepeatQuestions(metadata, currentQuizNumber, true);
+
+    // Organize eligible repeats by category
+    const repeatsByCategory: { [key: string]: QuestionHistory[] } = {
+      'single-domain-single-topic': [],
+      'single-domain-multiple-topics': [],
+      'multiple-domains-multiple-topics': []
+    };
+
+    eligibleRepeats.forEach(history => {
+      if (history.questionCategory && repeatsByCategory[history.questionCategory]) {
+        repeatsByCategory[history.questionCategory].push(history);
+      }
+    });
+
+    console.log(`[DIFFICULTY DEBUG] Phase 2: Available repeats: ${repeatsByCategory['single-domain-single-topic'].length} easy, ${repeatsByCategory['single-domain-multiple-topics'].length} medium, ${repeatsByCategory['multiple-domains-multiple-topics'].length} hard`);
+
+    // Generate all 10 questions with correct distribution
+    for (let i = 0; i < QUIZ_LENGTH; i++) {
+      const questionCategory = difficultyDistribution[i];
+      const isRepeatSlot = repeatIndices.has(i);
+
       let question: Question | null = null;
-      let attempts = 0;
-      const MAX_ATTEMPTS = 5;
 
-      while (!question && attempts < MAX_ATTEMPTS) {
-        attempts++;
+      if (isRepeatSlot && repeatsByCategory[questionCategory].length > 0) {
+        // Try to use a repeated question
+        console.log(`[DIFFICULTY DEBUG] Phase 2 Q${i + 1}: Attempting repeat ${questionCategory}`);
+        // TODO: Implement actual question retrieval from history
+        // For now, skip and generate new
+        console.log(`[DIFFICULTY DEBUG] Phase 2 Q${i + 1}: Question retrieval not implemented, generating new instead`);
+      }
 
-        // Use deterministic difficulty distribution for Phase 2 new questions
-        const questionCategory = newQuestionDistribution[i];
-        console.log(`[DIFFICULTY DEBUG] Phase 2 Q${i + 1}: Using category ${questionCategory}`);
+      // Generate new question if we don't have a repeat
+      if (!question) {
+        let attempts = 0;
+        const MAX_ATTEMPTS = 5;
 
-        // Select topics based on category (no priority topics in Phase 2)
-        const selectedTopics = selectTopicsForQuestion(
-          questionCategory,
-          [], // No restrictions on topics in Phase 2
-          metadata
-        );
+        while (!question && attempts < MAX_ATTEMPTS) {
+          attempts++;
 
-        const questionType = selectQuestionType();
+          console.log(`[DIFFICULTY DEBUG] Phase 2 Q${i + 1}: Generating new ${questionCategory} (attempt ${attempts})`);
 
-        try {
-          const generatedQuestion = await generateQuestionWithTopics(
-            selectedTopics,
+          const selectedTopics = selectTopicsForQuestion(
             questionCategory,
-            questionType
+            [], // No restrictions on topics in Phase 2
+            metadata
           );
 
-          // Check for duplicate using metadata
-          if (generatedQuestion.metadata &&
-              !isDuplicateQuestion(generatedQuestion.metadata, metadata.questionHistory)) {
-            question = generatedQuestion;
-            console.log(`Generated new Q${i + 1}: ${questionCategory} (${generatedQuestion.difficulty}) ${questionType}, Topics: ${selectedTopics.join(', ')}`);
-          } else {
-            console.log(`Duplicate detected, regenerating (attempt ${attempts}/${MAX_ATTEMPTS})`);
+          const questionType = selectQuestionType();
+
+          try {
+            const generatedQuestion = await generateQuestionWithTopics(
+              selectedTopics,
+              questionCategory,
+              questionType
+            );
+
+            // Check for duplicate using metadata
+            if (generatedQuestion.metadata &&
+                !isDuplicateQuestion(generatedQuestion.metadata, metadata.questionHistory)) {
+              question = generatedQuestion;
+              console.log(`Generated new Q${i + 1}: ${questionCategory} (${generatedQuestion.difficulty}) ${questionType}, Topics: ${selectedTopics.join(', ')}`);
+            } else {
+              console.log(`Duplicate detected, regenerating (attempt ${attempts}/${MAX_ATTEMPTS})`);
+            }
+          } catch (error) {
+            console.error(`Error generating question (attempt ${attempts}/${MAX_ATTEMPTS}):`, error);
           }
-        } catch (error) {
-          console.error(`Error generating question (attempt ${attempts}/${MAX_ATTEMPTS}):`, error);
         }
       }
 
       if (question) {
         questions.push(question);
-      }
-    }
-
-    // Get 3 repeated questions (prioritize wrong answers)
-    const eligibleRepeats = getEligibleRepeatQuestions(metadata, currentQuizNumber, true);
-
-    if (eligibleRepeats.length >= repeatCount) {
-      console.log(`Adding ${repeatCount} repeated questions from ${eligibleRepeats.length} eligible`);
-
-      // Get the actual Question objects for the top 3 eligible repeats
-      // Note: We would need to fetch these from Firebase or reconstruct them
-      // For now, we'll just log that we would add them
-      // TODO: Implement question retrieval from history
-      console.log('Repeated question IDs:', eligibleRepeats.slice(0, repeatCount).map(h => h.questionId));
-    } else {
-      console.log(`Not enough eligible repeats (${eligibleRepeats.length}), generating more new questions`);
-
-      // Generate additional new questions to make up the difference
-      const additionalNew = repeatCount - eligibleRepeats.length;
-      for (let i = 0; i < additionalNew; i++) {
-        const questionType = selectQuestionType();
-
-        try {
-          const question = await generateSynthesisQuestion([], questionType);
-          if (question.metadata && !isDuplicateQuestion(question.metadata, metadata.questionHistory)) {
-            questions.push(question);
-            console.log(`Generated additional new Q${newCount + i + 1}: ${question.difficulty} ${questionType}`);
-          }
-        } catch (error) {
-          console.error(`Error generating additional question:`, error);
-        }
+      } else {
+        console.error(`Failed to generate question ${i + 1} (${questionCategory}) after all attempts`);
       }
     }
   }
 
   // Shuffle questions to randomize order
   const shuffled = questions.sort(() => Math.random() - 0.5);
+
+  // Verify final distribution
+  const finalCounts = {
+    easy: shuffled.filter(q => q.questionCategory === 'single-domain-single-topic').length,
+    medium: shuffled.filter(q => q.questionCategory === 'single-domain-multiple-topics').length,
+    hard: shuffled.filter(q => q.questionCategory === 'multiple-domains-multiple-topics').length
+  };
+  console.log(`[DIFFICULTY DEBUG] FINAL QUIZ: ${finalCounts.easy} easy, ${finalCounts.medium} medium, ${finalCounts.hard} hard (Expected: 3/4/3)`);
+
+  if (finalCounts.easy !== 3 || finalCounts.medium !== 4 || finalCounts.hard !== 3) {
+    console.error(`⚠️ [DIFFICULTY DEBUG] DISTRIBUTION MISMATCH! Expected 3/4/3, got ${finalCounts.easy}/${finalCounts.medium}/${finalCounts.hard}`);
+  } else {
+    console.log(`✅ [DIFFICULTY DEBUG] Distribution verified: Perfect 3/4/3 split!`);
+  }
 
   return {
     questions: shuffled,
@@ -859,6 +880,7 @@ export function updateMetadataAfterQuiz(
       updatedMetadata.questionHistory[questionId] = {
         questionId,
         metadata: question.metadata,
+        questionCategory: question.questionCategory,
         firstAskedQuiz: currentQuizNumber,
         lastAskedQuiz: currentQuizNumber,
         timesAsked: 1,

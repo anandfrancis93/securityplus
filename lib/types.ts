@@ -154,6 +154,7 @@ export interface QuestionHistory {
     scenario: string;
     keyConcept: string;
   };
+  questionCategory?: 'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics'; // Question complexity for difficulty distribution
   firstAskedQuiz: number; // Quiz number when first asked
   lastAskedQuiz: number; // Quiz number when last asked
   timesAsked: number;

@@ -205,6 +205,7 @@ export function updateMetadataAfterQuiz(
         updatedMetadata.questionHistory[question.id] = {
           questionId: question.id,
           metadata: question.metadata,
+          questionCategory: question.questionCategory,
           firstAskedQuiz: currentQuizNumber,
           lastAskedQuiz: currentQuizNumber,
           timesAsked: 1,
