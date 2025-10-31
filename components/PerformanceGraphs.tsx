@@ -31,9 +31,9 @@ interface PerformanceGraphsProps {
 
 // Helper function to get color based on ability level
 const getAbilityColor = (ability: number) => {
-  if (ability >= 1.54) return '#22c55e'; // Green for passing
-  if (ability >= 0) return '#f5a623'; // Yellow for marginal
-  return '#ef4444'; // Red for failing
+  if (ability >= 1.54) return '#10b981'; // Emerald for passing
+  if (ability >= 0) return '#f59e0b'; // Amber for marginal
+  return '#f43f5e'; // Rose for failing
 };
 
 // Custom tooltip for Ability Level Over Time
@@ -41,8 +41,13 @@ const AbilityTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
-      <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.95)', border: '2px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '12px', backdropFilter: 'blur(16px)' }}>
-        <p style={{ color: '#ffffff', fontSize: '14px' }}>
+      <div style={{
+        backgroundColor: '#0f0f0f',
+        borderRadius: '16px',
+        padding: '16px',
+        boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919'
+      }}>
+        <p style={{ color: '#e5e5e5', fontSize: '14px', margin: 0 }}>
           {data.ciLower.toFixed(2)} to {data.ciUpper.toFixed(2)}
         </p>
       </div>
@@ -56,8 +61,13 @@ const ScoreTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
-      <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.95)', border: '2px solid rgba(255, 255, 255, 0.2)', borderRadius: '16px', padding: '12px', backdropFilter: 'blur(16px)' }}>
-        <p style={{ color: '#ffffff', fontSize: '14px' }}>
+      <div style={{
+        backgroundColor: '#0f0f0f',
+        borderRadius: '16px',
+        padding: '16px',
+        boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919'
+      }}>
+        <p style={{ color: '#e5e5e5', fontSize: '14px', margin: 0 }}>
           {data.scoreLower} to {data.scoreUpper}
         </p>
       </div>
@@ -70,25 +80,49 @@ const ScoreTooltip = ({ active, payload }: any) => {
 const CustomBarTooltip = ({ active, payload, label, color }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="relative bg-black/90 backdrop-blur-2xl border border-white/20 rounded-3xl p-5 shadow-2xl">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />
-        <p className="relative text-white font-bold mb-3 text-lg">{label}</p>
-        <p className="relative text-base mb-4 font-medium" style={{ color: color || '#3b82f6' }}>
+      <div style={{
+        position: 'relative',
+        backgroundColor: '#0f0f0f',
+        borderRadius: '24px',
+        padding: '20px',
+        boxShadow: '8px 8px 16px #050505, -8px -8px 16px #191919'
+      }}>
+        <p style={{
+          color: '#e5e5e5',
+          fontWeight: 'bold',
+          marginBottom: '12px',
+          fontSize: '18px',
+          marginTop: 0
+        }}>
+          {label}
+        </p>
+        <p style={{
+          fontSize: '16px',
+          marginBottom: '16px',
+          fontWeight: '500',
+          color: color || '#8b5cf6',
+          marginTop: 0
+        }}>
           Accuracy: {payload[0].value}% ({payload[0].payload.questions} questions)
         </p>
-        <div className="relative border-t border-white/20 pt-4 space-y-2">
-          <p className="text-sm text-zinc-400 font-medium">Performance Ranges:</p>
-          <div className="flex items-center gap-3">
-            <div className="w-4 h-4 rounded-lg" style={{ backgroundColor: '#ff0000' }}></div>
-            <span className="text-sm text-zinc-300">&lt; 70% (Low)</span>
+        <div style={{
+          borderTop: '1px solid #191919',
+          paddingTop: '16px'
+        }}>
+          <p style={{ fontSize: '14px', color: '#a8a8a8', fontWeight: '500', marginTop: 0, marginBottom: '8px' }}>
+            Performance Ranges:
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <div style={{ width: '16px', height: '16px', borderRadius: '8px', backgroundColor: '#f43f5e' }}></div>
+            <span style={{ fontSize: '14px', color: '#e5e5e5' }}>&lt; 70% (Low)</span>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="w-4 h-4 rounded-lg" style={{ backgroundColor: '#f5a623' }}></div>
-            <span className="text-sm text-zinc-300">70-84% (Good)</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <div style={{ width: '16px', height: '16px', borderRadius: '8px', backgroundColor: '#f59e0b' }}></div>
+            <span style={{ fontSize: '14px', color: '#e5e5e5' }}>70-84% (Good)</span>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="w-4 h-4 rounded-lg" style={{ backgroundColor: '#22c55e' }}></div>
-            <span className="text-sm text-zinc-300">≥ 85% (Excellent)</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ width: '16px', height: '16px', borderRadius: '8px', backgroundColor: '#10b981' }}></div>
+            <span style={{ fontSize: '14px', color: '#e5e5e5' }}>≥ 85% (Excellent)</span>
           </div>
         </div>
       </div>
@@ -114,9 +148,21 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
   if (!userProgress || userProgress.totalQuestions === 0) {
     return (
-      <div className="relative bg-white/5 backdrop-blur-2xl rounded-[40px] p-12 md:p-16 border border-white/10 shadow-2xl text-center">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
-        <p className="relative text-zinc-400 text-xl md:text-2xl">Take quizzes to see your progress charts</p>
+      <div style={{
+        position: 'relative',
+        backgroundColor: '#0f0f0f',
+        borderRadius: '32px',
+        padding: '64px',
+        boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+        textAlign: 'center'
+      }}>
+        <p style={{
+          color: '#a8a8a8',
+          fontSize: '24px',
+          margin: 0
+        }}>
+          Take quizzes to see your progress charts
+        </p>
       </div>
     );
   }
@@ -362,17 +408,46 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
   });
 
   return (
-    <div className="space-y-12">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
       {/* Graph 1: Ability Level Over Time */}
-      <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl transition-all duration-700 hover:border-white/30">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
+      <div style={{
+        position: 'relative',
+        backgroundColor: '#0f0f0f',
+        borderRadius: '32px',
+        boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+        transition: 'all 0.3s ease'
+      }}>
         <button
           onClick={() => setIsAbilityGraphOpen(!isAbilityGraphOpen)}
-          className="relative w-full p-10 md:p-12 flex items-center justify-between text-left focus:outline-none"
+          style={{
+            width: '100%',
+            padding: '48px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            textAlign: 'left',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer'
+          }}
         >
-          <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Ability Level Over Time</h3>
+          <h3 style={{
+            fontSize: '32px',
+            fontWeight: 'bold',
+            color: '#e5e5e5',
+            margin: 0,
+            letterSpacing: '-0.025em'
+          }}>
+            Ability Level Over Time
+          </h3>
           <svg
-            className={`w-8 h-8 text-zinc-400 transition-transform duration-700 ${isAbilityGraphOpen ? 'rotate-180' : ''}`}
+            style={{
+              width: '32px',
+              height: '32px',
+              color: '#a8a8a8',
+              transition: 'transform 0.3s ease',
+              transform: isAbilityGraphOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+            }}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -381,7 +456,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           </svg>
         </button>
         {isAbilityGraphOpen && (
-          <div className="relative px-10 md:px-12 pb-10 md:pb-12">
+          <div style={{ padding: '0 48px 48px 48px' }}>
             <ResponsiveContainer width="100%" height={400}>
           <LineChart data={abilityOverTime}>
             <defs>
@@ -396,11 +471,11 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 );
               })}
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-            <XAxis dataKey="quiz" stroke="#9ca3af" tick={false} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#9ca3af' }} />
-            <YAxis domain={[-3, 3]} stroke="#9ca3af" label={{ value: 'Ability Level', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#191919" />
+            <XAxis dataKey="quiz" stroke="#a8a8a8" tick={false} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#a8a8a8' }} />
+            <YAxis domain={[-3, 3]} stroke="#a8a8a8" label={{ value: 'Ability Level', angle: -90, position: 'insideLeft', fill: '#a8a8a8', style: { textAnchor: 'middle' } }} />
             <Tooltip content={<AbilityTooltip />} />
-            <ReferenceLine y={1.54} stroke="#22c55e" strokeDasharray="3 3" label={{ value: 'Passing (750)', fill: '#22c55e', position: 'right' }} />
+            <ReferenceLine y={1.54} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Passing (750)', fill: '#10b981', position: 'right' }} />
 
             {/* Render colored confidence bands as reference areas between consecutive points */}
             {abilityOverTime.map((point, index) => {
@@ -428,7 +503,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             <Line
               type="monotone"
               dataKey="ability"
-              stroke="#ffffff"
+              stroke="#e5e5e5"
               strokeWidth={3}
               dot={(props: any) => {
                 const { cx, cy, payload } = props;
@@ -437,7 +512,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 return <circle cx={cx} cy={cy} r={5} fill={fill} />;
               }}
             >
-              <ErrorBar dataKey="abilityError" stroke="#888" strokeWidth={2} />
+              <ErrorBar dataKey="abilityError" stroke="#666666" strokeWidth={2} />
             </Line>
           </LineChart>
         </ResponsiveContainer>
@@ -446,15 +521,44 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       </div>
 
       {/* Graph 2: Predicted Score Over Time */}
-      <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl transition-all duration-700 hover:border-white/30">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
+      <div style={{
+        position: 'relative',
+        backgroundColor: '#0f0f0f',
+        borderRadius: '32px',
+        boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+        transition: 'all 0.3s ease'
+      }}>
         <button
           onClick={() => setIsPredictedScoreGraphOpen(!isPredictedScoreGraphOpen)}
-          className="relative w-full p-10 md:p-12 flex items-center justify-between text-left focus:outline-none"
+          style={{
+            width: '100%',
+            padding: '48px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            textAlign: 'left',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer'
+          }}
         >
-          <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Predicted Score Over Time</h3>
+          <h3 style={{
+            fontSize: '32px',
+            fontWeight: 'bold',
+            color: '#e5e5e5',
+            margin: 0,
+            letterSpacing: '-0.025em'
+          }}>
+            Predicted Score Over Time
+          </h3>
           <svg
-            className={`w-8 h-8 text-zinc-400 transition-transform duration-700 ${isPredictedScoreGraphOpen ? 'rotate-180' : ''}`}
+            style={{
+              width: '32px',
+              height: '32px',
+              color: '#a8a8a8',
+              transition: 'transform 0.3s ease',
+              transform: isPredictedScoreGraphOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+            }}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -463,14 +567,14 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           </svg>
         </button>
         {isPredictedScoreGraphOpen && (
-          <div className="relative px-10 md:px-12 pb-10 md:pb-12">
+          <div style={{ padding: '0 48px 48px 48px' }}>
             <ResponsiveContainer width="100%" height={400}>
               <LineChart data={scoreOverTime}>
                 <defs>
                   {/* Define individual gradients for confidence bands based on score */}
                   {scoreOverTime.map((point, index) => {
                     const score = point.score;
-                    const color = score >= 800 ? '#22c55e' : score >= 750 ? '#f5a623' : '#ef4444';
+                    const color = score >= 800 ? '#10b981' : score >= 750 ? '#f59e0b' : '#f43f5e';
                     return (
                       <linearGradient key={`score-gradient-${index}`} id={`scoreGradient-${index}`} x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor={color} stopOpacity={0.3} />
@@ -479,11 +583,11 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                     );
                   })}
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-                <XAxis dataKey="quiz" stroke="#9ca3af" tick={false} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#9ca3af' }} />
-                <YAxis domain={[100, 900]} stroke="#9ca3af" label={{ value: 'Exam Score', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#191919" />
+                <XAxis dataKey="quiz" stroke="#a8a8a8" tick={false} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#a8a8a8' }} />
+                <YAxis domain={[100, 900]} stroke="#a8a8a8" label={{ value: 'Exam Score', angle: -90, position: 'insideLeft', fill: '#a8a8a8', style: { textAnchor: 'middle' } }} />
                 <Tooltip content={<ScoreTooltip />} />
-                <ReferenceLine y={750} stroke="#22c55e" strokeDasharray="3 3" label={{ value: 'Passing (750)', fill: '#22c55e', position: 'right' }} />
+                <ReferenceLine y={750} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Passing (750)', fill: '#10b981', position: 'right' }} />
 
                 {/* Colored confidence bands between consecutive points */}
                 {scoreOverTime.map((point, index) => {
@@ -491,7 +595,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
                   const nextPoint = scoreOverTime[index + 1];
                   const avgScore = (point.score + nextPoint.score) / 2;
-                  const color = avgScore >= 800 ? '#22c55e' : avgScore >= 750 ? '#f5a623' : '#ef4444';
+                  const color = avgScore >= 800 ? '#10b981' : avgScore >= 750 ? '#f59e0b' : '#f43f5e';
 
                   return (
                     <ReferenceArea
@@ -510,18 +614,18 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 <Line
                   type="monotone"
                   dataKey="score"
-                  stroke="#ffffff"
+                  stroke="#e5e5e5"
                   strokeWidth={3}
                   dot={(props: any) => {
                     const { cx, cy, payload } = props;
                     const score = payload.score;
-                    let fill = '#ef4444'; // Red for below passing
-                    if (score >= 800) fill = '#22c55e'; // Green for excellent
-                    else if (score >= 750) fill = '#f5a623'; // Yellow for passing
+                    let fill = '#f43f5e'; // Rose for below passing
+                    if (score >= 800) fill = '#10b981'; // Emerald for excellent
+                    else if (score >= 750) fill = '#f59e0b'; // Amber for passing
                     return <circle cx={cx} cy={cy} r={5} fill={fill} />;
                   }}
                 >
-                  <ErrorBar dataKey="scoreError" stroke="#888" strokeWidth={2} />
+                  <ErrorBar dataKey="scoreError" stroke="#666666" strokeWidth={2} />
                 </Line>
               </LineChart>
             </ResponsiveContainer>
@@ -530,15 +634,44 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       </div>
 
       {/* Graph 3: Accuracy by Difficulty */}
-      <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl transition-all duration-700 hover:border-white/30">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
+      <div style={{
+        position: 'relative',
+        backgroundColor: '#0f0f0f',
+        borderRadius: '32px',
+        boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+        transition: 'all 0.3s ease'
+      }}>
         <button
           onClick={() => setIsAccuracyByDifficultyOpen(!isAccuracyByDifficultyOpen)}
-          className="relative w-full p-10 md:p-12 flex items-center justify-between text-left focus:outline-none"
+          style={{
+            width: '100%',
+            padding: '48px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            textAlign: 'left',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer'
+          }}
         >
-          <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Accuracy by Difficulty Level</h3>
+          <h3 style={{
+            fontSize: '32px',
+            fontWeight: 'bold',
+            color: '#e5e5e5',
+            margin: 0,
+            letterSpacing: '-0.025em'
+          }}>
+            Accuracy by Difficulty Level
+          </h3>
           <svg
-            className={`w-8 h-8 text-zinc-400 transition-transform duration-700 ${isAccuracyByDifficultyOpen ? 'rotate-180' : ''}`}
+            style={{
+              width: '32px',
+              height: '32px',
+              color: '#a8a8a8',
+              transition: 'transform 0.3s ease',
+              transform: isAccuracyByDifficultyOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+            }}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -547,32 +680,32 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           </svg>
         </button>
         {isAccuracyByDifficultyOpen && (
-          <div className="relative px-10 md:px-12 pb-10 md:pb-12">
+          <div style={{ padding: '0 48px 48px 48px' }}>
             <ResponsiveContainer width="100%" height={350}>
               <BarChart data={accuracyByDifficulty}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-                <XAxis dataKey="difficulty" stroke="#9ca3af" tickLine={false} />
-                <YAxis domain={[0, 100]} stroke="#9ca3af" label={{ value: '% Correct', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#191919" />
+                <XAxis dataKey="difficulty" stroke="#a8a8a8" tickLine={false} />
+                <YAxis domain={[0, 100]} stroke="#a8a8a8" label={{ value: '% Correct', angle: -90, position: 'insideLeft', fill: '#a8a8a8', style: { textAnchor: 'middle' } }} />
                 <Tooltip content={(props) => {
                   if (props.active && props.payload && props.payload.length) {
                     const accuracy = props.payload[0].payload.accuracy;
-                    let color = '#ff0000'; // Red
-                    if (accuracy >= 85) color = '#22c55e'; // Green
-                    else if (accuracy >= 70) color = '#f5a623'; // Yellow
+                    let color = '#f43f5e'; // Rose
+                    if (accuracy >= 85) color = '#10b981'; // Emerald
+                    else if (accuracy >= 70) color = '#f59e0b'; // Amber
                     return <CustomBarTooltip {...props} color={color} />;
                   }
                   return null;
-                }} cursor={{ fill: 'rgba(71, 85, 105, 0.1)' }} />
+                }} cursor={{ fill: 'rgba(25, 25, 25, 0.3)' }} />
                 <Bar dataKey="accuracy" radius={[8, 8, 0, 0]}>
                   {accuracyByDifficulty.map((entry, index) => {
                     const accuracy = entry.accuracy;
-                    let fill = '#ff0000'; // Red for low accuracy
-                    if (accuracy >= 85) fill = '#22c55e'; // Green for excellent
-                    else if (accuracy >= 70) fill = '#f5a623'; // Yellow for good
+                    let fill = '#f43f5e'; // Rose for low accuracy
+                    if (accuracy >= 85) fill = '#10b981'; // Emerald for excellent
+                    else if (accuracy >= 70) fill = '#f59e0b'; // Amber for good
                     return <Cell key={`cell-${index}`} fill={fill} />;
                   })}
-                  <ErrorBar dataKey="errorLower" direction="y" stroke="#888" strokeWidth={2} />
-                  <ErrorBar dataKey="errorUpper" direction="y" stroke="#888" strokeWidth={2} />
+                  <ErrorBar dataKey="errorLower" direction="y" stroke="#666666" strokeWidth={2} />
+                  <ErrorBar dataKey="errorUpper" direction="y" stroke="#666666" strokeWidth={2} />
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
@@ -582,15 +715,44 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
       {/* Graph 4: Topic Performance by Domain */}
       {domainPerformance.length > 0 && (
-        <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl transition-all duration-700 hover:border-white/30">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
+        <div style={{
+          position: 'relative',
+          backgroundColor: '#0f0f0f',
+          borderRadius: '32px',
+          boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+          transition: 'all 0.3s ease'
+        }}>
           <button
             onClick={() => setIsPerformanceByDomainOpen(!isPerformanceByDomainOpen)}
-            className="relative w-full p-10 md:p-12 flex items-center justify-between text-left focus:outline-none"
+            style={{
+              width: '100%',
+              padding: '48px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              textAlign: 'left',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer'
+            }}
           >
-            <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Performance by SY0-701 Domain</h3>
+            <h3 style={{
+              fontSize: '32px',
+              fontWeight: 'bold',
+              color: '#e5e5e5',
+              margin: 0,
+              letterSpacing: '-0.025em'
+            }}>
+              Performance by SY0-701 Domain
+            </h3>
             <svg
-              className={`w-8 h-8 text-zinc-400 transition-transform duration-700 ${isPerformanceByDomainOpen ? 'rotate-180' : ''}`}
+              style={{
+                width: '32px',
+                height: '32px',
+                color: '#a8a8a8',
+                transition: 'transform 0.3s ease',
+                transform: isPerformanceByDomainOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+              }}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -599,28 +761,28 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             </svg>
           </button>
           {isPerformanceByDomainOpen && (
-            <div className="relative px-10 md:px-12 pb-10 md:pb-12">
+            <div style={{ padding: '0 48px 48px 48px' }}>
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={domainPerformance} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-                  <XAxis type="number" domain={[0, 100]} stroke="#9ca3af" label={{ value: '% Correct', position: 'insideBottom', offset: -5, fill: '#9ca3af' }} />
-                  <YAxis type="category" dataKey="domain" stroke="#9ca3af" width={60} tick={false} label={{ value: 'Domains', angle: -90, position: 'insideLeft', fill: '#9ca3af', style: { textAnchor: 'middle' } }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#191919" />
+                  <XAxis type="number" domain={[0, 100]} stroke="#a8a8a8" label={{ value: '% Correct', position: 'insideBottom', offset: -5, fill: '#a8a8a8' }} />
+                  <YAxis type="category" dataKey="domain" stroke="#a8a8a8" width={60} tick={false} label={{ value: 'Domains', angle: -90, position: 'insideLeft', fill: '#a8a8a8', style: { textAnchor: 'middle' } }} />
                   <Tooltip content={(props) => {
                     if (props.active && props.payload && props.payload.length) {
                       const accuracy = props.payload[0].payload.accuracy;
-                      let color = '#ff0000'; // Red
-                      if (accuracy >= 85) color = '#22c55e'; // Green
-                      else if (accuracy >= 70) color = '#f5a623'; // Yellow
+                      let color = '#f43f5e'; // Rose
+                      if (accuracy >= 85) color = '#10b981'; // Emerald
+                      else if (accuracy >= 70) color = '#f59e0b'; // Amber
                       return <CustomBarTooltip {...props} color={color} />;
                     }
                     return null;
-                  }} cursor={{ fill: 'rgba(71, 85, 105, 0.1)' }} />
+                  }} cursor={{ fill: 'rgba(25, 25, 25, 0.3)' }} />
                   <Bar dataKey="accuracy" radius={[0, 8, 8, 0]}>
                     {domainPerformance.map((entry, index) => {
                       const accuracy = entry.accuracy;
-                      let fill = '#ff0000'; // Red for low accuracy
-                      if (accuracy >= 85) fill = '#22c55e'; // Green for excellent
-                      else if (accuracy >= 70) fill = '#f5a623'; // Yellow for good
+                      let fill = '#f43f5e'; // Rose for low accuracy
+                      if (accuracy >= 85) fill = '#10b981'; // Emerald for excellent
+                      else if (accuracy >= 70) fill = '#f59e0b'; // Amber for good
                       return <Cell key={`cell-${index}`} fill={fill} />;
                     })}
                   </Bar>
@@ -632,15 +794,44 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       )}
 
       {/* Topic Coverage Tables by Domain */}
-      <div className="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl transition-all duration-700 hover:border-white/30">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
+      <div style={{
+        position: 'relative',
+        backgroundColor: '#0f0f0f',
+        borderRadius: '32px',
+        boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+        transition: 'all 0.3s ease'
+      }}>
         <button
           onClick={() => setIsTopicCoverageOpen(!isTopicCoverageOpen)}
-          className="relative w-full p-10 md:p-12 flex items-center justify-between text-left focus:outline-none"
+          style={{
+            width: '100%',
+            padding: '48px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            textAlign: 'left',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer'
+          }}
         >
-          <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Topic Coverage by Domain</h3>
+          <h3 style={{
+            fontSize: '32px',
+            fontWeight: 'bold',
+            color: '#e5e5e5',
+            margin: 0,
+            letterSpacing: '-0.025em'
+          }}>
+            Topic Coverage by Domain
+          </h3>
           <svg
-            className={`w-8 h-8 text-zinc-400 transition-transform duration-700 ${isTopicCoverageOpen ? 'rotate-180' : ''}`}
+            style={{
+              width: '32px',
+              height: '32px',
+              color: '#a8a8a8',
+              transition: 'transform 0.3s ease',
+              transform: isTopicCoverageOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+            }}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -649,8 +840,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           </svg>
         </button>
         {isTopicCoverageOpen && (
-          <div className="relative px-10 md:px-12 pb-10 md:pb-12">
-            <div className="space-y-8">
+          <div style={{ padding: '0 48px 48px 48px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
           {Object.entries(topicCoverageData)
             .sort(([domainA], [domainB]) => {
               const numA = domainA.split(' ')[0];
@@ -664,17 +855,51 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               const totalTopics = topics.length;
 
               return (
-                <div key={domain} className="relative border border-white/10 rounded-3xl bg-white/5 backdrop-blur-xl overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-3xl" />
+                <div key={domain} style={{
+                  position: 'relative',
+                  borderRadius: '24px',
+                  backgroundColor: '#0f0f0f',
+                  boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
+                  overflow: 'hidden'
+                }}>
                   <button
                     onClick={() => toggleDomainTable(domain)}
-                    className="relative w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/5 transition-all duration-700 focus:outline-none"
+                    style={{
+                      width: '100%',
+                      padding: '24px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      textAlign: 'left',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(25, 25, 25, 0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
                   >
-                    <h4 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
-                      <span className="mr-2">{domainNum}</span>{domainName}
+                    <h4 style={{
+                      fontSize: '24px',
+                      fontWeight: 'bold',
+                      color: '#e5e5e5',
+                      margin: 0,
+                      letterSpacing: '-0.025em'
+                    }}>
+                      <span style={{ marginRight: '8px' }}>{domainNum}</span>{domainName}
                     </h4>
                     <svg
-                      className={`w-6 h-6 text-zinc-400 transition-transform duration-700 ${openDomainTables[domain] ? 'rotate-180' : ''}`}
+                      style={{
+                        width: '24px',
+                        height: '24px',
+                        color: '#a8a8a8',
+                        transition: 'transform 0.3s ease',
+                        transform: openDomainTables[domain] ? 'rotate(180deg)' : 'rotate(0deg)'
+                      }}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -684,17 +909,53 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                   </button>
 
                   {openDomainTables[domain] && (
-                    <div className="relative border-t border-white/10">
-                    <div className="max-h-96 overflow-y-auto">
-                      <table className="w-full">
-                        <thead className="bg-zinc-900/85 backdrop-blur-2xl border-b border-white/10 sticky top-0 z-10">
+                    <div style={{
+                      borderTop: '1px solid #191919'
+                    }}>
+                    <div style={{ maxHeight: '384px', overflowY: 'auto' }}>
+                      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                        <thead style={{
+                          backgroundColor: '#0f0f0f',
+                          borderBottom: '1px solid #191919',
+                          position: 'sticky',
+                          top: 0,
+                          zIndex: 10,
+                          boxShadow: '4px 4px 8px #050505, -4px -4px 8px #191919'
+                        }}>
                           <tr>
-                            <th className="text-left px-6 py-4 text-lg md:text-xl font-bold text-white w-3/5">Topic</th>
-                            <th className="text-center px-6 py-4 text-lg md:text-xl font-bold text-white w-1/5">Times Covered</th>
-                            <th className="text-center px-6 py-4 text-lg md:text-xl font-bold text-white w-1/5">Accuracy</th>
+                            <th style={{
+                              textAlign: 'left',
+                              padding: '16px 24px',
+                              fontSize: '18px',
+                              fontWeight: 'bold',
+                              color: '#e5e5e5',
+                              width: '60%'
+                            }}>
+                              Topic
+                            </th>
+                            <th style={{
+                              textAlign: 'center',
+                              padding: '16px 24px',
+                              fontSize: '18px',
+                              fontWeight: 'bold',
+                              color: '#e5e5e5',
+                              width: '20%'
+                            }}>
+                              Times Covered
+                            </th>
+                            <th style={{
+                              textAlign: 'center',
+                              padding: '16px 24px',
+                              fontSize: '18px',
+                              fontWeight: 'bold',
+                              color: '#e5e5e5',
+                              width: '20%'
+                            }}>
+                              Accuracy
+                            </th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/10">
+                        <tbody>
                           {topics
                             .slice()
                             .sort((a, b) => {
@@ -710,41 +971,75 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                               }
                               return a.accuracy - b.accuracy;
                             })
-                            .map((topic, index) => (
-                            <tr
-                              key={index}
-                              className="hover:bg-white/5 transition-all duration-700"
-                            >
-                              <td className="px-6 py-4 text-base md:text-lg text-zinc-300">{topic.topicName}</td>
-                              <td className={`px-6 py-4 text-base md:text-lg text-center font-bold ${
-                                topic.count === 0
-                                  ? 'text-zinc-500'
-                                  : topic.accuracy >= 80
-                                  ? 'text-emerald-400'
-                                  : topic.accuracy >= 60
-                                  ? 'text-yellow-400'
-                                  : 'text-red-400'
-                              }`}>
-                                {topic.count}
-                              </td>
-                              <td className={`px-6 py-4 text-base md:text-lg text-center font-bold ${
-                                topic.count === 0
-                                  ? 'text-zinc-500'
-                                  : topic.accuracy >= 80
-                                  ? 'text-emerald-400'
-                                  : topic.accuracy >= 60
-                                  ? 'text-yellow-400'
-                                  : 'text-red-400'
-                              }`}>
-                                {topic.count > 0 ? `${topic.accuracy}%` : '-'}
-                              </td>
-                            </tr>
-                          ))}
-                          <tr className="bg-white/10 backdrop-blur-xl border-t-2 border-white/20">
-                            <td className="px-6 py-5 text-lg md:text-xl font-bold text-white">
+                            .map((topic, index) => {
+                              const getCountColor = () => {
+                                if (topic.count === 0) return '#666666';
+                                if (topic.accuracy >= 80) return '#10b981';
+                                if (topic.accuracy >= 60) return '#f59e0b';
+                                return '#f43f5e';
+                              };
+
+                              return (
+                                <tr
+                                  key={index}
+                                  style={{
+                                    borderBottom: '1px solid #191919',
+                                    transition: 'all 0.3s ease'
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'rgba(25, 25, 25, 0.3)';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'transparent';
+                                  }}
+                                >
+                                  <td style={{
+                                    padding: '16px 24px',
+                                    fontSize: '16px',
+                                    color: '#e5e5e5'
+                                  }}>
+                                    {topic.topicName}
+                                  </td>
+                                  <td style={{
+                                    padding: '16px 24px',
+                                    fontSize: '16px',
+                                    textAlign: 'center',
+                                    fontWeight: 'bold',
+                                    color: getCountColor()
+                                  }}>
+                                    {topic.count}
+                                  </td>
+                                  <td style={{
+                                    padding: '16px 24px',
+                                    fontSize: '16px',
+                                    textAlign: 'center',
+                                    fontWeight: 'bold',
+                                    color: getCountColor()
+                                  }}>
+                                    {topic.count > 0 ? `${topic.accuracy}%` : '-'}
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          <tr style={{
+                            backgroundColor: 'rgba(25, 25, 25, 0.5)',
+                            borderTop: '2px solid #191919'
+                          }}>
+                            <td style={{
+                              padding: '20px 24px',
+                              fontSize: '18px',
+                              fontWeight: 'bold',
+                              color: '#e5e5e5'
+                            }}>
                               Total Coverage
                             </td>
-                            <td colSpan={2} className="px-6 py-5 text-lg md:text-xl text-center font-bold text-white">
+                            <td colSpan={2} style={{
+                              padding: '20px 24px',
+                              fontSize: '18px',
+                              textAlign: 'center',
+                              fontWeight: 'bold',
+                              color: '#e5e5e5'
+                            }}>
                               {totalCovered} / {totalTopics}
                             </td>
                           </tr>

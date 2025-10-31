@@ -26,6 +26,8 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
   const [isExpanded, setIsExpanded] = useState(false);
   const [filterStatus, setFilterStatus] = useState<'all' | 'overdue' | 'due-soon' | 'future'>('all');
   const [hoveredCard, setHoveredCard] = useState<'current' | 'overdue' | 'due-now' | 'due-soon' | null>(null);
+  const [hoveredButton, setHoveredButton] = useState<string | null>(null);
+  const [activeButton, setActiveButton] = useState<string | null>(null);
 
   // Use FSRS-enabled topic performance from quizMetadata (has proper scheduling)
   // Falls back to legacy topicPerformance if quizMetadata doesn't exist yet
@@ -98,28 +100,300 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
   const dueNowCount = topicsWithSchedule.filter(t => t.status === 'due-now').length;
   const dueSoonCount = topicsWithSchedule.filter(t => t.status === 'due-soon').length;
 
-  return (
-    <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'}`}>
-      {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
+  // Styles
+  const containerStyle: React.CSSProperties = {
+    position: 'relative',
+    background: '#0f0f0f',
+    borderRadius: '32px',
+    boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+    overflow: 'hidden',
+  };
 
+  const headerStyle: React.CSSProperties = {
+    position: 'relative',
+    padding: '40px',
+  };
+
+  const titleStyle: React.CSSProperties = {
+    fontSize: '36px',
+    fontWeight: 'bold',
+    color: '#e5e5e5',
+    marginBottom: '8px',
+    letterSpacing: '-0.025em',
+  };
+
+  const subtitleStyle: React.CSSProperties = {
+    fontSize: '18px',
+    color: '#a8a8a8',
+    lineHeight: '1.5',
+  };
+
+  const expandButtonStyle: React.CSSProperties = {
+    padding: '16px',
+    background: '#0f0f0f',
+    borderRadius: '20px',
+    boxShadow: hoveredButton === 'expand'
+      ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+      : '8px 8px 16px #050505, -8px -8px 16px #191919',
+    border: 'none',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  };
+
+  const expandIconStyle: React.CSSProperties = {
+    width: '32px',
+    height: '32px',
+    color: '#a8a8a8',
+    transition: 'transform 0.7s ease',
+    transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+  };
+
+  const statsGridStyle: React.CSSProperties = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+    gap: '16px',
+  };
+
+  const statCardBaseStyle: React.CSSProperties = {
+    position: 'relative',
+    background: '#0f0f0f',
+    borderRadius: '16px',
+    padding: '24px',
+    cursor: 'help',
+    transition: 'all 0.3s ease',
+  };
+
+  const statCardRaisedStyle: React.CSSProperties = {
+    ...statCardBaseStyle,
+    boxShadow: '8px 8px 16px #050505, -8px -8px 16px #191919',
+  };
+
+  const statCardOverdueStyle: React.CSSProperties = {
+    ...statCardBaseStyle,
+    boxShadow: '8px 8px 16px #050505, -8px -8px 16px #191919, inset 0 0 20px rgba(244, 63, 94, 0.1)',
+  };
+
+  const statCardDueNowStyle: React.CSSProperties = {
+    ...statCardBaseStyle,
+    boxShadow: '8px 8px 16px #050505, -8px -8px 16px #191919, inset 0 0 20px rgba(245, 158, 11, 0.1)',
+  };
+
+  const statCardDueSoonStyle: React.CSSProperties = {
+    ...statCardBaseStyle,
+    boxShadow: '8px 8px 16px #050505, -8px -8px 16px #191919, inset 0 0 20px rgba(16, 185, 129, 0.1)',
+  };
+
+  const statLabelStyle: React.CSSProperties = {
+    fontSize: '14px',
+    color: '#a8a8a8',
+    marginBottom: '8px',
+  };
+
+  const statValueStyle: React.CSSProperties = {
+    fontSize: '32px',
+    fontWeight: 'bold',
+    color: '#e5e5e5',
+  };
+
+  const tooltipStyle: React.CSSProperties = {
+    position: 'absolute',
+    bottom: '100%',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    marginBottom: '8px',
+    width: '256px',
+    zIndex: 50,
+    background: '#0f0f0f',
+    borderRadius: '16px',
+    padding: '16px',
+    boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+  };
+
+  const tooltipTextStyle: React.CSSProperties = {
+    fontSize: '14px',
+    color: '#e5e5e5',
+    lineHeight: '1.6',
+  };
+
+  const separatorStyle: React.CSSProperties = {
+    height: '1px',
+    background: 'linear-gradient(90deg, transparent, #191919, transparent)',
+    margin: '0',
+  };
+
+  const sectionStyle: React.CSSProperties = {
+    padding: '40px',
+  };
+
+  const sectionTitleStyle: React.CSSProperties = {
+    fontSize: '28px',
+    fontWeight: 'bold',
+    color: '#e5e5e5',
+    marginBottom: '16px',
+  };
+
+  const sectionDescStyle: React.CSSProperties = {
+    fontSize: '16px',
+    color: '#a8a8a8',
+    marginBottom: '24px',
+    lineHeight: '1.6',
+  };
+
+  const topicGridStyle: React.CSSProperties = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gap: '16px',
+  };
+
+  const topicCardStyle: React.CSSProperties = {
+    background: '#0f0f0f',
+    borderRadius: '16px',
+    padding: '24px',
+    boxShadow: '8px 8px 16px #050505, -8px -8px 16px #191919',
+    transition: 'all 0.3s ease',
+  };
+
+  const topicNameStyle: React.CSSProperties = {
+    fontSize: '16px',
+    fontWeight: 'bold',
+    color: '#e5e5e5',
+    marginBottom: '8px',
+  };
+
+  const topicDomainStyle: React.CSSProperties = {
+    fontSize: '14px',
+    fontWeight: 'bold',
+  };
+
+  const filterButtonsStyle: React.CSSProperties = {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '12px',
+  };
+
+  const getFilterButtonStyle = (isActive: boolean, buttonId: string): React.CSSProperties => {
+    const baseStyle: React.CSSProperties = {
+      padding: '12px 24px',
+      fontSize: '14px',
+      fontWeight: '600',
+      borderRadius: '16px',
+      border: 'none',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      background: '#0f0f0f',
+      color: isActive ? '#e5e5e5' : '#a8a8a8',
+    };
+
+    if (isActive) {
+      return {
+        ...baseStyle,
+        boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
+      };
+    }
+
+    if (hoveredButton === buttonId) {
+      return {
+        ...baseStyle,
+        boxShadow: 'inset 2px 2px 4px #050505, inset -2px -2px 4px #191919',
+      };
+    }
+
+    return {
+      ...baseStyle,
+      boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
+    };
+  };
+
+  const tableStyle: React.CSSProperties = {
+    width: '100%',
+    borderCollapse: 'separate',
+    borderSpacing: '0 8px',
+  };
+
+  const tableHeaderStyle: React.CSSProperties = {
+    textAlign: 'left',
+    padding: '16px',
+    fontSize: '14px',
+    fontWeight: 'bold',
+    color: '#e5e5e5',
+  };
+
+  const tableHeaderCenterStyle: React.CSSProperties = {
+    ...tableHeaderStyle,
+    textAlign: 'center',
+  };
+
+  const getTableRowStyle = (index: number): React.CSSProperties => {
+    return {
+      background: '#0f0f0f',
+      borderRadius: '12px',
+      boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
+      transition: 'all 0.3s ease',
+    };
+  };
+
+  const tableCellStyle: React.CSSProperties = {
+    padding: '16px',
+    fontSize: '14px',
+    color: '#e5e5e5',
+  };
+
+  const tableCellCenterStyle: React.CSSProperties = {
+    ...tableCellStyle,
+    textAlign: 'center',
+  };
+
+  const statusBadgeStyle = (status: string): React.CSSProperties => {
+    let color = '#a8a8a8';
+    if (status === 'overdue') color = '#f43f5e';
+    if (status === 'due-now') color = '#f59e0b';
+    if (status === 'due-soon') color = '#10b981';
+    if (status === 'future') color = '#8b5cf6';
+
+    return {
+      display: 'inline-block',
+      padding: '6px 12px',
+      fontSize: '12px',
+      fontWeight: '600',
+      color: color,
+      background: '#0f0f0f',
+      borderRadius: '8px',
+      boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
+    };
+  };
+
+  const emptyStateStyle: React.CSSProperties = {
+    textAlign: 'center',
+    padding: '48px 24px',
+    color: '#a8a8a8',
+    fontSize: '16px',
+  };
+
+  return (
+    <div style={containerStyle}>
       {/* Header */}
-      <div className="relative p-8 md:p-10">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h3 className={`text-3xl md:text-4xl font-bold text-white tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>
+      <div style={headerStyle}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '24px' }}>
+          <div style={{ flex: 1 }}>
+            <h3 style={titleStyle}>
               Topic Review Schedule
             </h3>
-            <p className={`text-lg md:text-xl mt-2 ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
+            <p style={subtitleStyle}>
               Verify when topics are scheduled for review
             </p>
           </div>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className={`p-4 hover:bg-white/5 active:bg-white/10 transition-all duration-700 ${liquidGlass ? 'rounded-3xl' : 'rounded-md'}`}
+            onMouseEnter={() => setHoveredButton('expand')}
+            onMouseLeave={() => setHoveredButton(null)}
+            style={expandButtonStyle}
             aria-label="Toggle Topic Review Schedule"
           >
             <svg
-              className={`w-8 h-8 text-zinc-400 transition-transform duration-700 ${isExpanded ? 'rotate-180' : ''}`}
+              style={expandIconStyle}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -131,99 +405,127 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
         </div>
 
         {/* Statistics Summary */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div style={statsGridStyle}>
           {/* Quizzes Completed Card */}
           <div
-            className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10' : 'bg-zinc-900 rounded-md border border-zinc-800'} p-4 cursor-help transition-all duration-300`}
+            style={statCardRaisedStyle}
             onMouseEnter={() => setHoveredCard('current')}
             onMouseLeave={() => setHoveredCard(null)}
           >
-            <div className="text-sm text-zinc-400 mb-1">Quizzes Completed</div>
-            <div className="text-2xl font-bold text-white">{currentQuizNumber}</div>
+            <div style={statLabelStyle}>Quizzes Completed</div>
+            <div style={statValueStyle}>{currentQuizNumber}</div>
 
             {/* Tooltip */}
             {hoveredCard === 'current' && (
-              <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 z-50 ${liquidGlass ? 'bg-black/95 backdrop-blur-2xl border border-white/20 rounded-2xl' : 'bg-zinc-900 border-2 border-zinc-700 rounded-md'} p-4 shadow-2xl`}>
-                {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl" />}
-                <div className="relative text-sm text-white leading-relaxed">
+              <div style={tooltipStyle}>
+                <div style={tooltipTextStyle}>
                   The total number of quizzes you have completed so far. Topics are scheduled based on this number.
                 </div>
                 {/* Arrow */}
-                <div className={`absolute top-full left-1/2 transform -translate-x-1/2 -mt-px`}>
-                  <div className={`w-0 h-0 border-l-8 border-r-8 border-t-8 ${liquidGlass ? 'border-l-transparent border-r-transparent border-t-white/20' : 'border-l-transparent border-r-transparent border-t-zinc-700'}`}></div>
-                </div>
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: '50%',
+                  transform: 'translateX(-50%) translateY(-1px)',
+                  width: 0,
+                  height: 0,
+                  borderLeft: '8px solid transparent',
+                  borderRight: '8px solid transparent',
+                  borderTop: '8px solid #191919',
+                }} />
               </div>
             )}
           </div>
 
           {/* Overdue Card */}
           <div
-            className={`relative ${liquidGlass ? 'bg-red-500/20 backdrop-blur-xl rounded-2xl border-2 border-red-500/50' : 'bg-red-900 rounded-md border-2 border-red-700'} p-4 cursor-help transition-all duration-300`}
+            style={statCardOverdueStyle}
             onMouseEnter={() => setHoveredCard('overdue')}
             onMouseLeave={() => setHoveredCard(null)}
           >
-            <div className="text-sm text-red-200 mb-1">Overdue</div>
-            <div className="text-2xl font-bold text-red-300">{overdueCount}</div>
+            <div style={{ ...statLabelStyle, color: '#f43f5e' }}>Overdue</div>
+            <div style={{ ...statValueStyle, color: '#f43f5e' }}>{overdueCount}</div>
 
             {/* Tooltip */}
             {hoveredCard === 'overdue' && (
-              <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 z-50 ${liquidGlass ? 'bg-black/95 backdrop-blur-2xl border border-red-500/40 rounded-2xl' : 'bg-zinc-900 border-2 border-red-700 rounded-md'} p-4 shadow-2xl shadow-red-500/20`}>
-                {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 via-transparent to-transparent rounded-2xl" />}
-                <div className="relative text-sm text-white leading-relaxed">
+              <div style={tooltipStyle}>
+                <div style={tooltipTextStyle}>
                   Topics that were scheduled to be reviewed in previous quizzes but haven&apos;t appeared yet. These should be prioritized in your next quiz.
                 </div>
                 {/* Arrow */}
-                <div className={`absolute top-full left-1/2 transform -translate-x-1/2 -mt-px`}>
-                  <div className={`w-0 h-0 border-l-8 border-r-8 border-t-8 ${liquidGlass ? 'border-l-transparent border-r-transparent border-t-red-500/40' : 'border-l-transparent border-r-transparent border-t-red-700'}`}></div>
-                </div>
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: '50%',
+                  transform: 'translateX(-50%) translateY(-1px)',
+                  width: 0,
+                  height: 0,
+                  borderLeft: '8px solid transparent',
+                  borderRight: '8px solid transparent',
+                  borderTop: '8px solid #191919',
+                }} />
               </div>
             )}
           </div>
 
           {/* Due Now Card */}
           <div
-            className={`relative ${liquidGlass ? 'bg-yellow-500/20 backdrop-blur-xl rounded-2xl border-2 border-yellow-500/50' : 'bg-yellow-900 rounded-md border-2 border-yellow-700'} p-4 cursor-help transition-all duration-300`}
+            style={statCardDueNowStyle}
             onMouseEnter={() => setHoveredCard('due-now')}
             onMouseLeave={() => setHoveredCard(null)}
           >
-            <div className="text-sm text-yellow-200 mb-1">Due Now</div>
-            <div className="text-2xl font-bold text-yellow-300">{dueNowCount}</div>
+            <div style={{ ...statLabelStyle, color: '#f59e0b' }}>Due Now</div>
+            <div style={{ ...statValueStyle, color: '#f59e0b' }}>{dueNowCount}</div>
 
             {/* Tooltip */}
             {hoveredCard === 'due-now' && (
-              <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 z-50 ${liquidGlass ? 'bg-black/95 backdrop-blur-2xl border border-yellow-500/40 rounded-2xl' : 'bg-zinc-900 border-2 border-yellow-700 rounded-md'} p-4 shadow-2xl shadow-yellow-500/20`}>
-                {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-transparent rounded-2xl" />}
-                <div className="relative text-sm text-white leading-relaxed">
+              <div style={tooltipStyle}>
+                <div style={tooltipTextStyle}>
                   Topics scheduled to be reviewed in your next quiz (Quiz #{nextQuizNumber}). These are ready for review based on FSRS optimal spacing.
                 </div>
                 {/* Arrow */}
-                <div className={`absolute top-full left-1/2 transform -translate-x-1/2 -mt-px`}>
-                  <div className={`w-0 h-0 border-l-8 border-r-8 border-t-8 ${liquidGlass ? 'border-l-transparent border-r-transparent border-t-yellow-500/40' : 'border-l-transparent border-r-transparent border-t-yellow-700'}`}></div>
-                </div>
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: '50%',
+                  transform: 'translateX(-50%) translateY(-1px)',
+                  width: 0,
+                  height: 0,
+                  borderLeft: '8px solid transparent',
+                  borderRight: '8px solid transparent',
+                  borderTop: '8px solid #191919',
+                }} />
               </div>
             )}
           </div>
 
           {/* Due Soon Card */}
           <div
-            className={`relative ${liquidGlass ? 'bg-cyan-500/20 backdrop-blur-xl rounded-2xl border-2 border-cyan-500/50' : 'bg-cyan-900 rounded-md border-2 border-cyan-700'} p-4 cursor-help transition-all duration-300`}
+            style={statCardDueSoonStyle}
             onMouseEnter={() => setHoveredCard('due-soon')}
             onMouseLeave={() => setHoveredCard(null)}
           >
-            <div className="text-sm text-cyan-200 mb-1">Due Soon</div>
-            <div className="text-2xl font-bold text-cyan-300">{dueSoonCount}</div>
+            <div style={{ ...statLabelStyle, color: '#10b981' }}>Due Soon</div>
+            <div style={{ ...statValueStyle, color: '#10b981' }}>{dueSoonCount}</div>
 
             {/* Tooltip */}
             {hoveredCard === 'due-soon' && (
-              <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 z-50 ${liquidGlass ? 'bg-black/95 backdrop-blur-2xl border border-cyan-500/40 rounded-2xl' : 'bg-zinc-900 border-2 border-cyan-700 rounded-md'} p-4 shadow-2xl shadow-cyan-500/20`}>
-                {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-transparent rounded-2xl" />}
-                <div className="relative text-sm text-white leading-relaxed">
+              <div style={tooltipStyle}>
+                <div style={tooltipTextStyle}>
                   Topics scheduled to be reviewed within the next 1-3 quizzes. These will appear soon as you continue taking quizzes.
                 </div>
                 {/* Arrow */}
-                <div className={`absolute top-full left-1/2 transform -translate-x-1/2 -mt-px`}>
-                  <div className={`w-0 h-0 border-l-8 border-r-8 border-t-8 ${liquidGlass ? 'border-l-transparent border-r-transparent border-t-cyan-500/40' : 'border-l-transparent border-r-transparent border-t-cyan-700'}`}></div>
-                </div>
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: '50%',
+                  transform: 'translateX(-50%) translateY(-1px)',
+                  width: 0,
+                  height: 0,
+                  borderLeft: '8px solid transparent',
+                  borderRight: '8px solid transparent',
+                  borderTop: '8px solid #191919',
+                }} />
               </div>
             )}
           </div>
@@ -232,34 +534,35 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
 
       {/* Expanded Content */}
       {isExpanded && (
-        <div className="relative border-t border-white/10">
+        <div style={{ position: 'relative' }}>
+          <div style={separatorStyle} />
+
           {/* Next Quiz Preview */}
-          <div className="p-8 md:p-10 border-b border-white/10">
-            <h4 className={`text-2xl md:text-3xl font-bold text-white mb-4 ${liquidGlass ? '' : 'font-mono'}`}>
+          <div style={sectionStyle}>
+            <h4 style={sectionTitleStyle}>
               Expected Topics in Quiz #{nextQuizNumber}
             </h4>
             {nextQuizTopics.length === 0 ? (
-              <div className={`text-center py-8 ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
-                <p className="text-base md:text-lg mb-2">No topic data available yet</p>
-                <p className="text-sm md:text-base">Take your first quiz to start tracking topic performance and scheduling</p>
+              <div style={emptyStateStyle}>
+                <p style={{ marginBottom: '8px', fontSize: '18px' }}>No topic data available yet</p>
+                <p style={{ fontSize: '14px' }}>Take your first quiz to start tracking topic performance and scheduling</p>
               </div>
             ) : (
               <>
-                <p className={`text-base md:text-lg mb-6 ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
+                <p style={sectionDescStyle}>
                   Based on FSRS scheduling, these {nextQuizTopics.length} topics are likely to appear in your next quiz:
                 </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div style={topicGridStyle}>
                   {nextQuizTopics.slice(0, 10).map((topic, index) => {
                 const domainColor = getDomainColor(topic.domain);
                 return (
                   <div
                     key={index}
-                    className={`${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10' : 'bg-zinc-900 rounded-md border border-zinc-800'} p-6`}
+                    style={topicCardStyle}
                   >
-                    <div className="text-base md:text-lg font-bold text-white">{topic.topicName}</div>
+                    <div style={topicNameStyle}>{topic.topicName}</div>
                     <div
-                      className="text-sm md:text-base font-bold mt-2"
-                      style={{ color: domainColor }}
+                      style={{ ...topicDomainStyle, color: domainColor }}
                     >
                       {topic.domain.replace('.0', '.')}
                     </div>
@@ -268,7 +571,7 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
               })}
                 </div>
                 {nextQuizTopics.length > 10 && (
-                  <p className={`mt-4 text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600 font-mono'}`}>
+                  <p style={{ marginTop: '16px', fontSize: '14px', color: '#666666' }}>
                     + {nextQuizTopics.length - 10} more topics may appear
                   </p>
                 )}
@@ -276,100 +579,94 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
             )}
           </div>
 
+          <div style={separatorStyle} />
+
           {/* Filter Buttons */}
-          <div className="p-8 md:p-10 border-b border-white/10">
-            <div className="flex flex-wrap gap-3">
+          <div style={sectionStyle}>
+            <div style={filterButtonsStyle}>
               <button
                 onClick={() => setFilterStatus('all')}
-                className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
-                  filterStatus === 'all'
-                    ? liquidGlass
-                      ? 'bg-white/20 text-white border-2 border-white/30'
-                      : 'bg-zinc-700 text-white border-2 border-zinc-600'
-                    : liquidGlass
-                      ? 'bg-white/5 text-zinc-400 border border-white/10 hover:bg-white/10'
-                      : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:bg-zinc-800'
-                }`}
+                onMouseEnter={() => setHoveredButton('filter-all')}
+                onMouseLeave={() => setHoveredButton(null)}
+                onMouseDown={() => setActiveButton('filter-all')}
+                onMouseUp={() => setActiveButton(null)}
+                style={getFilterButtonStyle(filterStatus === 'all', 'filter-all')}
               >
                 All Topics ({topicsWithSchedule.length})
               </button>
               <button
                 onClick={() => setFilterStatus('overdue')}
-                className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
-                  filterStatus === 'overdue'
-                    ? 'bg-red-500/30 text-red-200 border-2 border-red-500/50'
-                    : liquidGlass
-                      ? 'bg-white/5 text-zinc-400 border border-white/10 hover:bg-red-500/20'
-                      : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:bg-red-900'
-                }`}
+                onMouseEnter={() => setHoveredButton('filter-overdue')}
+                onMouseLeave={() => setHoveredButton(null)}
+                onMouseDown={() => setActiveButton('filter-overdue')}
+                onMouseUp={() => setActiveButton(null)}
+                style={{
+                  ...getFilterButtonStyle(filterStatus === 'overdue', 'filter-overdue'),
+                  color: filterStatus === 'overdue' ? '#f43f5e' : '#a8a8a8',
+                }}
               >
                 Overdue & Due ({overdueCount + dueNowCount})
               </button>
               <button
                 onClick={() => setFilterStatus('due-soon')}
-                className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
-                  filterStatus === 'due-soon'
-                    ? 'bg-cyan-500/30 text-cyan-200 border-2 border-cyan-500/50'
-                    : liquidGlass
-                      ? 'bg-white/5 text-zinc-400 border border-white/10 hover:bg-cyan-500/20'
-                      : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:bg-cyan-900'
-                }`}
+                onMouseEnter={() => setHoveredButton('filter-due-soon')}
+                onMouseLeave={() => setHoveredButton(null)}
+                onMouseDown={() => setActiveButton('filter-due-soon')}
+                onMouseUp={() => setActiveButton(null)}
+                style={{
+                  ...getFilterButtonStyle(filterStatus === 'due-soon', 'filter-due-soon'),
+                  color: filterStatus === 'due-soon' ? '#10b981' : '#a8a8a8',
+                }}
               >
                 Due Soon ({dueSoonCount})
               </button>
               <button
                 onClick={() => setFilterStatus('future')}
-                className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
-                  filterStatus === 'future'
-                    ? 'bg-emerald-500/30 text-emerald-200 border-2 border-emerald-500/50'
-                    : liquidGlass
-                      ? 'bg-white/5 text-zinc-400 border border-white/10 hover:bg-emerald-500/20'
-                      : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:bg-emerald-900'
-                }`}
+                onMouseEnter={() => setHoveredButton('filter-future')}
+                onMouseLeave={() => setHoveredButton(null)}
+                onMouseDown={() => setActiveButton('filter-future')}
+                onMouseUp={() => setActiveButton(null)}
+                style={{
+                  ...getFilterButtonStyle(filterStatus === 'future', 'filter-future'),
+                  color: filterStatus === 'future' ? '#8b5cf6' : '#a8a8a8',
+                }}
               >
                 Future Reviews
               </button>
             </div>
           </div>
 
+          <div style={separatorStyle} />
+
           {/* Topics Table */}
-          <div className="p-8 md:p-10 overflow-x-auto">
-            <table className="w-full">
+          <div style={{ ...sectionStyle, overflowX: 'auto' }}>
+            <table style={tableStyle}>
               <thead>
-                <tr className="border-b border-white/10">
-                  <th className="text-left px-4 py-3 text-sm md:text-base font-bold text-white">Topic</th>
-                  <th className="text-left px-4 py-3 text-sm md:text-base font-bold text-white">Domain</th>
-                  <th className="text-center px-4 py-3 text-sm md:text-base font-bold text-white">Status</th>
-                  <th className="text-center px-4 py-3 text-sm md:text-base font-bold text-white">Next Review</th>
-                  <th className="text-center px-4 py-3 text-sm md:text-base font-bold text-white">Quizzes Until Due</th>
-                  <th className="text-center px-4 py-3 text-sm md:text-base font-bold text-white">Accuracy</th>
-                  <th className="text-center px-4 py-3 text-sm md:text-base font-bold text-white">Tested</th>
+                <tr>
+                  <th style={tableHeaderStyle}>Topic</th>
+                  <th style={tableHeaderStyle}>Domain</th>
+                  <th style={tableHeaderCenterStyle}>Status</th>
+                  <th style={tableHeaderCenterStyle}>Next Review</th>
+                  <th style={tableHeaderCenterStyle}>Quizzes Until Due</th>
+                  <th style={tableHeaderCenterStyle}>Accuracy</th>
+                  <th style={tableHeaderCenterStyle}>Tested</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/10">
+              <tbody>
                 {filteredTopics.slice(0, 50).map((topic, index) => {
                   const domainColor = getDomainColor(topic.domain);
                   return (
-                    <tr key={index} className="hover:bg-white/5 transition-all duration-300">
-                      <td className="px-4 py-3 text-sm md:text-base text-zinc-300">{topic.topicName}</td>
-                      <td className="px-4 py-3">
-                        <span
-                          className="text-xs md:text-sm font-bold"
-                          style={{
-                            color: domainColor,
-                          }}
-                        >
+                    <tr key={index} style={getTableRowStyle(index)}>
+                      <td style={{ ...tableCellStyle, borderTopLeftRadius: '12px', borderBottomLeftRadius: '12px' }}>
+                        {topic.topicName}
+                      </td>
+                      <td style={tableCellStyle}>
+                        <span style={{ fontSize: '12px', fontWeight: 'bold', color: domainColor }}>
                           {topic.domain.replace('.0', '.')}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-center">
-                        <span className={`text-sm ${
-                          topic.status === 'overdue' ? 'text-red-300' :
-                          topic.status === 'due-now' ? 'text-yellow-300' :
-                          topic.status === 'due-soon' ? 'text-cyan-300' :
-                          topic.status === 'future' ? 'text-emerald-300' :
-                          'text-zinc-400'
-                        }`}>
+                      <td style={tableCellCenterStyle}>
+                        <span style={statusBadgeStyle(topic.status)}>
                           {topic.status === 'overdue' ? 'Overdue' :
                            topic.status === 'due-now' ? 'Due Now' :
                            topic.status === 'due-soon' ? 'Due Soon' :
@@ -377,29 +674,31 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
                            'Never Tested'}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-center text-sm md:text-base font-bold text-white">
+                      <td style={{ ...tableCellCenterStyle, fontWeight: 'bold' }}>
                         {topic.questionsAnswered === 0 ? '-' : `Quiz #${topic.nextReviewQuiz}`}
                       </td>
-                      <td className="px-4 py-3 text-center text-sm md:text-base font-bold">
+                      <td style={{ ...tableCellCenterStyle, fontWeight: 'bold' }}>
                         {topic.questionsAnswered === 0 ? (
-                          <span className="text-zinc-500">-</span>
+                          <span style={{ color: '#666666' }}>-</span>
                         ) : topic.quizzesUntilDue < 0 ? (
-                          <span className="text-red-400">{topic.quizzesUntilDue} (overdue)</span>
+                          <span style={{ color: '#f43f5e' }}>{topic.quizzesUntilDue} (overdue)</span>
                         ) : topic.quizzesUntilDue === 0 ? (
-                          <span className="text-yellow-400">Now</span>
+                          <span style={{ color: '#f59e0b' }}>Now</span>
                         ) : (
-                          <span className="text-cyan-400">+{topic.quizzesUntilDue}</span>
+                          <span style={{ color: '#10b981' }}>+{topic.quizzesUntilDue}</span>
                         )}
                       </td>
-                      <td className={`px-4 py-3 text-center text-sm md:text-base font-bold ${
-                        topic.questionsAnswered === 0 ? 'text-zinc-500' :
-                        topic.accuracy >= 80 ? 'text-emerald-400' :
-                        topic.accuracy >= 60 ? 'text-yellow-400' :
-                        'text-red-400'
-                      }`}>
+                      <td style={{
+                        ...tableCellCenterStyle,
+                        fontWeight: 'bold',
+                        color: topic.questionsAnswered === 0 ? '#666666' :
+                               topic.accuracy >= 80 ? '#10b981' :
+                               topic.accuracy >= 60 ? '#f59e0b' :
+                               '#f43f5e'
+                      }}>
                         {topic.questionsAnswered === 0 ? '-' : `${topic.accuracy.toFixed(0)}%`}
                       </td>
-                      <td className="px-4 py-3 text-center text-sm md:text-base font-bold text-white">
+                      <td style={{ ...tableCellCenterStyle, fontWeight: 'bold', borderTopRightRadius: '12px', borderBottomRightRadius: '12px' }}>
                         {topic.questionsAnswered === 0 ? '-' : `${topic.questionsAnswered}×`}
                       </td>
                     </tr>
@@ -408,12 +707,12 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
               </tbody>
             </table>
             {filteredTopics.length > 50 && (
-              <p className={`mt-4 text-center text-sm ${liquidGlass ? 'text-zinc-500' : 'text-zinc-600 font-mono'}`}>
+              <p style={{ marginTop: '16px', textAlign: 'center', fontSize: '14px', color: '#666666' }}>
                 Showing first 50 topics. Use filters to narrow down or export full data.
               </p>
             )}
             {filteredTopics.length === 0 && (
-              <p className={`text-center py-8 text-lg ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
+              <p style={emptyStateStyle}>
                 No topics match this filter.
               </p>
             )}
