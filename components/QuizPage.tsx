@@ -38,6 +38,7 @@ export default function Quiz() {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [showNavigationWarning, setShowNavigationWarning] = useState(false);
   const [pendingNavigation, setPendingNavigation] = useState<(() => void) | null>(null);
+  const [generationPaused, setGenerationPaused] = useState(false);
 
   // Save quiz state to localStorage as backup
   const saveQuizToLocalStorage = () => {
@@ -151,8 +152,8 @@ export default function Quiz() {
 
   // Automatically generate next question in background whenever a new question is added
   useEffect(() => {
-    // Don't generate if quiz has ended or is ending
-    if (!loading && !showCelebration && !quizEnding && questions.length > 0 && questions.length < totalQuestions && !generatingNext) {
+    // Don't generate if quiz has ended, is ending, or generation is paused
+    if (!loading && !showCelebration && !quizEnding && !generationPaused && questions.length > 0 && questions.length < totalQuestions && !generatingNext) {
       // Generate the next question immediately after the current one is added
       console.log(`Auto-generating question ${questions.length + 1} in background...`);
       setGeneratingNext(true);
@@ -160,7 +161,7 @@ export default function Quiz() {
         setGeneratingNext(false);
       });
     }
-  }, [loading, showCelebration, quizEnding, questions.length, generatingNext]); // Watch quizEnding to stop generation immediately
+  }, [loading, showCelebration, quizEnding, generationPaused, questions.length, generatingNext]); // Watch generationPaused to stop/resume generation
 
   // Auto-save quiz state whenever it changes
   useEffect(() => {
@@ -1078,13 +1079,47 @@ export default function Quiz() {
       <div className="content-container">
         {/* Question Header */}
         <div className="question-header">
-          <h1 className="question-title">
-            Question {currentQuestionIndex + 1} of {totalQuestions}
-          </h1>
-          {generatingNext && (
+          <div className="question-title-row">
+            <h1 className="question-title">
+              Question {currentQuestionIndex + 1} of {totalQuestions}
+            </h1>
+            {/* Pause/Resume Button - Only show if not all questions generated */}
+            {questions.length < totalQuestions && (
+              <button
+                onClick={() => setGenerationPaused(!generationPaused)}
+                className="generation-control-button"
+                title={generationPaused ? 'Resume generating questions' : 'Pause question generation'}
+              >
+                {generationPaused ? (
+                  <>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M3 2l10 6-10 6V2z"/>
+                    </svg>
+                    <span>Resume</span>
+                  </>
+                ) : (
+                  <>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M4 2h3v12H4V2zm5 0h3v12H9V2z"/>
+                    </svg>
+                    <span>Pause</span>
+                  </>
+                )}
+              </button>
+            )}
+          </div>
+          {generatingNext && !generationPaused && (
             <div className="generating-indicator">
               <div className="generating-spinner"></div>
               Generating next question...
+            </div>
+          )}
+          {generationPaused && questions.length < totalQuestions && (
+            <div className="generation-paused-indicator">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 1a5 5 0 110 10A5 5 0 018 3zm-1 2h2v4H7V5z"/>
+              </svg>
+              Question generation paused
             </div>
           )}
           <div className="questions-count">
@@ -1592,6 +1627,63 @@ export default function Quiz() {
 
         @media (min-width: 768px) {
           .questions-count {
+            font-size: 20px;
+          }
+        }
+
+        /* Question Title Row */
+        .question-title-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          flex-wrap: wrap;
+        }
+
+        /* Generation Control Button */
+        .generation-control-button {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 20px;
+          background: #0f0f0f;
+          color: #e5e5e5;
+          border: none;
+          border-radius: 12px;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+        }
+
+        .generation-control-button:hover {
+          box-shadow: 4px 4px 8px #050505, -4px -4px 8px #191919;
+          transform: translateY(1px);
+        }
+
+        .generation-control-button:active {
+          box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #191919;
+          transform: translateY(2px);
+        }
+
+        .generation-control-button svg {
+          flex-shrink: 0;
+        }
+
+        /* Generation Paused Indicator */
+        .generation-paused-indicator {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          font-size: 18px;
+          color: #f59e0b;
+          font-weight: 500;
+          margin-top: 16px;
+        }
+
+        @media (min-width: 768px) {
+          .generation-paused-indicator {
             font-size: 20px;
           }
         }
