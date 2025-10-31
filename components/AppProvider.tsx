@@ -94,6 +94,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
               questionsCount: data.questionsCount,
               generationTime: `${data.generationTimeMs}ms`,
             });
+
+            // Log difficulty distribution if available
+            if (data.difficultyDistribution) {
+              const { easy, medium, hard } = data.difficultyDistribution;
+              const isCorrect = easy === 3 && medium === 4 && hard === 3;
+              console.log(
+                `${isCorrect ? '✅' : '⚠️'} [QUIZ DISTRIBUTION] ${easy} easy, ${medium} medium, ${hard} hard (Expected: 3/4/3)`
+              );
+            }
+
             await refreshProgress();
           } else {
             console.error('Background pre-generation failed:', data.error);
@@ -448,6 +458,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
               phase: data.phase,
               totalQuizzesCompleted: data.totalQuizzesCompleted,
             });
+
+            // Log difficulty distribution if available
+            if (data.difficultyDistribution) {
+              const { easy, medium, hard } = data.difficultyDistribution;
+              const isCorrect = easy === 3 && medium === 4 && hard === 3;
+              console.log(
+                `${isCorrect ? '✅' : '⚠️'} [QUIZ DISTRIBUTION] ${easy} easy, ${medium} medium, ${hard} hard (Expected: 3/4/3)`
+              );
+            }
           } else {
             console.error('Pre-generation failed:', data.error);
           }

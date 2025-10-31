@@ -86,6 +86,15 @@ export async function POST(request: NextRequest) {
 
     console.log('Cached quiz saved to Firebase (without correct answers)');
 
+    // Calculate difficulty distribution for client logging
+    const difficultyDistribution = {
+      easy: fullQuestions.filter(q => q.questionCategory === 'single-domain-single-topic').length,
+      medium: fullQuestions.filter(q => q.questionCategory === 'single-domain-multiple-topics').length,
+      hard: fullQuestions.filter(q => q.questionCategory === 'multiple-domains-multiple-topics').length,
+    };
+
+    console.log(`[API] Quiz distribution: ${difficultyDistribution.easy} easy, ${difficultyDistribution.medium} medium, ${difficultyDistribution.hard} hard`);
+
     return NextResponse.json({
       success: true,
       message: 'Quiz pre-generated successfully',
@@ -94,6 +103,7 @@ export async function POST(request: NextRequest) {
       phase: userProgress.quizMetadata.allTopicsCoveredOnce ? 2 : 1,
       totalQuizzesCompleted: userProgress.quizMetadata.totalQuizzesCompleted,
       quizSessionId, // Return session ID to client
+      difficultyDistribution, // Include distribution for client-side logging
     });
   } catch (error: any) {
     console.error('Error pre-generating quiz:', error);
