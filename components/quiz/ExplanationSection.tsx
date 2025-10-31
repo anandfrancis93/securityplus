@@ -43,19 +43,19 @@ export default function ExplanationSection({
     if (isCorrect) {
       return {
         borderColor: '#10b981',
-        boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919, 0 0 30px rgba(16, 185, 129, 0.3)',
+        boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
         accentColor: '#10b981',
       };
     } else if (isPartiallyCorrect) {
       return {
         borderColor: '#f59e0b',
-        boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919, 0 0 30px rgba(245, 158, 11, 0.3)',
+        boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
         accentColor: '#f59e0b',
       };
     } else {
       return {
         borderColor: '#f43f5e',
-        boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919, 0 0 30px rgba(244, 63, 94, 0.3)',
+        boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
         accentColor: '#f43f5e',
       };
     }
@@ -94,7 +94,7 @@ export default function ExplanationSection({
           padding: showDifficultyBadge ? '48px' : '64px',
           background: '#0f0f0f',
           border: `2px solid ${accentStyles.borderColor}`,
-          borderRadius: '40px',
+          borderRadius: '24px',
           boxShadow: accentStyles.boxShadow,
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         }}

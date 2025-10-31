@@ -104,7 +104,7 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
   const containerStyle: React.CSSProperties = {
     position: 'relative',
     background: '#0f0f0f',
-    borderRadius: '32px',
+    borderRadius: '24px',
     boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
     overflow: 'hidden',
   };
@@ -131,13 +131,13 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
   const expandButtonStyle: React.CSSProperties = {
     padding: '16px',
     background: '#0f0f0f',
-    borderRadius: '20px',
+    borderRadius: '16px',
     boxShadow: hoveredButton === 'expand'
       ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
       : '8px 8px 16px #050505, -8px -8px 16px #191919',
     border: 'none',
     cursor: 'pointer',
-    transition: 'all 0.3s ease',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -147,7 +147,7 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
     width: '32px',
     height: '32px',
     color: '#a8a8a8',
-    transition: 'transform 0.7s ease',
+    transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
   };
 
@@ -253,7 +253,7 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
     borderRadius: '16px',
     padding: '24px',
     boxShadow: '8px 8px 16px #050505, -8px -8px 16px #191919',
-    transition: 'all 0.3s ease',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   };
 
   const topicNameStyle: React.CSSProperties = {
@@ -282,7 +282,7 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
       borderRadius: '16px',
       border: 'none',
       cursor: 'pointer',
-      transition: 'all 0.3s ease',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       background: '#0f0f0f',
       color: isActive ? '#e5e5e5' : '#a8a8a8',
     };
@@ -331,7 +331,7 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
       background: '#0f0f0f',
       borderRadius: '12px',
       boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
-      transition: 'all 0.3s ease',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     };
   };
 

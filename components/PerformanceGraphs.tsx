@@ -151,7 +151,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       <div style={{
         position: 'relative',
         backgroundColor: '#0f0f0f',
-        borderRadius: '32px',
+        borderRadius: '24px',
         padding: '64px',
         boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
         textAlign: 'center'
@@ -413,9 +413,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       <div style={{
         position: 'relative',
         backgroundColor: '#0f0f0f',
-        borderRadius: '32px',
+        borderRadius: '24px',
         boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
-        transition: 'all 0.3s ease'
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
       }}>
         <button
           onClick={() => setIsAbilityGraphOpen(!isAbilityGraphOpen)}
@@ -445,7 +445,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               width: '32px',
               height: '32px',
               color: '#a8a8a8',
-              transition: 'transform 0.3s ease',
+              transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
               transform: isAbilityGraphOpen ? 'rotate(180deg)' : 'rotate(0deg)'
             }}
             fill="none"
@@ -524,9 +524,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       <div style={{
         position: 'relative',
         backgroundColor: '#0f0f0f',
-        borderRadius: '32px',
+        borderRadius: '24px',
         boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
-        transition: 'all 0.3s ease'
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
       }}>
         <button
           onClick={() => setIsPredictedScoreGraphOpen(!isPredictedScoreGraphOpen)}
@@ -556,7 +556,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               width: '32px',
               height: '32px',
               color: '#a8a8a8',
-              transition: 'transform 0.3s ease',
+              transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
               transform: isPredictedScoreGraphOpen ? 'rotate(180deg)' : 'rotate(0deg)'
             }}
             fill="none"
@@ -637,9 +637,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       <div style={{
         position: 'relative',
         backgroundColor: '#0f0f0f',
-        borderRadius: '32px',
+        borderRadius: '24px',
         boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
-        transition: 'all 0.3s ease'
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
       }}>
         <button
           onClick={() => setIsAccuracyByDifficultyOpen(!isAccuracyByDifficultyOpen)}
@@ -669,7 +669,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               width: '32px',
               height: '32px',
               color: '#a8a8a8',
-              transition: 'transform 0.3s ease',
+              transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
               transform: isAccuracyByDifficultyOpen ? 'rotate(180deg)' : 'rotate(0deg)'
             }}
             fill="none"
@@ -718,9 +718,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         <div style={{
           position: 'relative',
           backgroundColor: '#0f0f0f',
-          borderRadius: '32px',
+          borderRadius: '24px',
           boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
-          transition: 'all 0.3s ease'
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
         }}>
           <button
             onClick={() => setIsPerformanceByDomainOpen(!isPerformanceByDomainOpen)}
@@ -750,7 +750,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 width: '32px',
                 height: '32px',
                 color: '#a8a8a8',
-                transition: 'transform 0.3s ease',
+                transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 transform: isPerformanceByDomainOpen ? 'rotate(180deg)' : 'rotate(0deg)'
               }}
               fill="none"
@@ -797,9 +797,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       <div style={{
         position: 'relative',
         backgroundColor: '#0f0f0f',
-        borderRadius: '32px',
+        borderRadius: '24px',
         boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
-        transition: 'all 0.3s ease'
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
       }}>
         <button
           onClick={() => setIsTopicCoverageOpen(!isTopicCoverageOpen)}
@@ -829,7 +829,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               width: '32px',
               height: '32px',
               color: '#a8a8a8',
-              transition: 'transform 0.3s ease',
+              transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
               transform: isTopicCoverageOpen ? 'rotate(180deg)' : 'rotate(0deg)'
             }}
             fill="none"
@@ -874,7 +874,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                       background: 'none',
                       border: 'none',
                       cursor: 'pointer',
-                      transition: 'all 0.3s ease'
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.backgroundColor = 'rgba(25, 25, 25, 0.3)';
@@ -897,7 +897,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                         width: '24px',
                         height: '24px',
                         color: '#a8a8a8',
-                        transition: 'transform 0.3s ease',
+                        transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                         transform: openDomainTables[domain] ? 'rotate(180deg)' : 'rotate(0deg)'
                       }}
                       fill="none"
@@ -984,7 +984,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                                   key={index}
                                   style={{
                                     borderBottom: '1px solid #191919',
-                                    transition: 'all 0.3s ease'
+                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
                                   }}
                                   onMouseEnter={(e) => {
                                     e.currentTarget.style.backgroundColor = 'rgba(25, 25, 25, 0.3)';

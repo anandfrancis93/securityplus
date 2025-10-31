@@ -58,7 +58,7 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
       position: 'relative',
       padding: '3rem',
       background: '#0f0f0f',
-      borderRadius: '40px',
+      borderRadius: '24px',
       boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     }}>

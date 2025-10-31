@@ -507,14 +507,14 @@ export default function Login() {
             8px 8px 16px #050505,
             -8px -8px 16px #191919;
           cursor: pointer;
-          transition: all 0.3s ease;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           overflow: hidden;
         }
 
         .neu-btn:hover:not(:disabled) {
           box-shadow:
-            4px 4px 8px #050505,
-            -4px -4px 8px #191919;
+            inset 4px 4px 8px #050505,
+            inset -4px -4px 8px #191919;
         }
 
         .neu-btn:active:not(:disabled) {
@@ -648,7 +648,7 @@ export default function Login() {
             8px 8px 16px #050505,
             -8px -8px 16px #191919;
           text-align: center;
-          transition: all 0.3s ease;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .neu-stat-card:hover {
@@ -697,7 +697,7 @@ export default function Login() {
           box-shadow:
             10px 10px 20px #050505,
             -10px -10px 20px #191919;
-          transition: all 0.3s ease;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .neu-feature-card:hover {
@@ -785,7 +785,7 @@ export default function Login() {
           color: #a8a8a8;
           text-decoration: none;
           margin-bottom: 0.5rem;
-          transition: color 0.2s;
+          transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .neu-footer-links a:hover {

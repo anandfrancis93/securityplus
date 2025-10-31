@@ -293,7 +293,7 @@ export default function QuizHistoryPage() {
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '14px 14px 28px #050505, -14px -14px 28px #191919';
+                      e.currentTarget.style.boxShadow = '13px 13px 26px #050505, -13px -13px 26px #191919';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0)';

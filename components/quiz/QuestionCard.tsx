@@ -41,7 +41,7 @@ export default function QuestionCard({
       position: 'relative',
       padding: '64px',
       backgroundColor: '#0f0f0f',
-      borderRadius: '48px',
+      borderRadius: '24px',
       boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
     }}>
       <h2 style={{
@@ -63,7 +63,7 @@ export default function QuestionCard({
           padding: '24px',
           backgroundColor: '#0f0f0f',
           borderRadius: '24px',
-          boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919, 0 0 20px rgba(139, 92, 246, 0.3)',
+          boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
           border: '1px solid rgba(139, 92, 246, 0.3)',
         }}>
           <strong style={{ fontWeight: 'bold' }}>Select all that apply</strong> <span>- This question has multiple correct answers</span>
@@ -100,13 +100,13 @@ export default function QuestionCard({
               if (showCorrect) {
                 return {
                   ...baseStyle,
-                  boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919, 0 0 30px rgba(16, 185, 129, 0.4)',
+                  boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
                   border: '1px solid rgba(16, 185, 129, 0.5)',
                 };
               } else if (showIncorrect) {
                 return {
                   ...baseStyle,
-                  boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919, 0 0 30px rgba(244, 63, 94, 0.4)',
+                  boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
                   border: '1px solid rgba(244, 63, 94, 0.5)',
                 };
               } else {
@@ -120,7 +120,7 @@ export default function QuestionCard({
               if (isSelected) {
                 return {
                   ...baseStyle,
-                  boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919, 0 0 20px rgba(139, 92, 246, 0.2)',
+                  boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
                   border: '1px solid rgba(139, 92, 246, 0.3)',
                 };
               } else {
@@ -165,7 +165,7 @@ export default function QuestionCard({
                     <div style={{
                       width: showExplanation ? '28px' : '36px',
                       height: showExplanation ? '28px' : '36px',
-                      borderRadius: showExplanation ? '8px' : '12px',
+                      borderRadius: '12px',
                       border: '2px solid #666666',
                       display: 'flex',
                       alignItems: 'center',

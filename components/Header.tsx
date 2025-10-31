@@ -251,7 +251,7 @@ export default function Header({
           box-shadow:
             6px 6px 12px #050505,
             -6px -6px 12px #191919;
-          border-radius: 0.75rem;
+          border-radius: 1rem;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           border: none;
           cursor: pointer;
@@ -321,7 +321,7 @@ export default function Header({
           box-shadow:
             6px 6px 12px #050505,
             -6px -6px 12px #191919;
-          border-radius: 0.75rem;
+          border-radius: 1rem;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           border: none;
           cursor: pointer;
@@ -352,7 +352,7 @@ export default function Header({
           box-shadow:
             12px 12px 24px #050505,
             -12px -12px 24px #191919;
-          border-radius: 1rem;
+          border-radius: 1.5rem;
           overflow: hidden;
           min-width: 220px;
           z-index: 50;
@@ -376,7 +376,7 @@ export default function Header({
         .header-dropdown-user-icon {
           width: 2.5rem;
           height: 2.5rem;
-          border-radius: 0.5rem;
+          border-radius: 0.75rem;
           background: #0f0f0f;
           box-shadow:
             4px 4px 8px #050505,
@@ -404,7 +404,7 @@ export default function Header({
           padding: 0.75rem 1rem;
           font-size: 0.875rem;
           text-align: left;
-          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           display: flex;
           align-items: center;
           gap: 0.75rem;
@@ -426,7 +426,7 @@ export default function Header({
           padding: 0.75rem 1rem;
           font-size: 0.875rem;
           text-align: left;
-          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           display: flex;
           align-items: center;
           gap: 0.75rem;
