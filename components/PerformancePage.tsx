@@ -1462,25 +1462,24 @@ export default function QuizPerformance() {
           </div>
         )}
 
-        {/* Reset Progress - Destructive Action (Always visible, disabled when no data) */}
+        {/* Reset Progress - Destructive Action (Always clickable) */}
         <div style={{ marginTop: '3rem', textAlign: 'center', paddingBottom: '2rem' }}>
           <button
             id="reset-progress"
             onClick={handleResetProgress}
-            disabled={totalAnswered === 0}
             style={{
               position: 'relative',
               padding: 'clamp(1.25rem, 3vw, 1.5rem) clamp(3rem, 6vw, 4rem)',
               fontSize: 'clamp(1.25rem, 3vw, 1.5rem)',
               fontWeight: 'bold',
               transition: 'all 0.2s ease',
-              background: totalAnswered === 0 ? '#1a1a1a' : 'rgba(244, 63, 94, 0.2)',
+              background: 'rgba(244, 63, 94, 0.2)',
               borderRadius: '1.5rem',
-              border: totalAnswered === 0 ? '1px solid #333333' : '1px solid rgba(244, 63, 94, 0.5)',
-              color: totalAnswered === 0 ? '#666666' : '#f43f5e',
-              cursor: totalAnswered === 0 ? 'not-allowed' : 'pointer',
-              opacity: totalAnswered === 0 ? '0.5' : '1',
-              boxShadow: totalAnswered === 0 ? 'none' : '6px 6px 12px #050505, -6px -6px 12px #191919'
+              border: '1px solid rgba(244, 63, 94, 0.5)',
+              color: '#f43f5e',
+              cursor: 'pointer',
+              opacity: '1',
+              boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919'
             }}
           >
             <span style={{ position: 'relative' }}>Reset Progress</span>
