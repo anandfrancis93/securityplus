@@ -1146,12 +1146,10 @@ export default function Quiz() {
               question={currentQuestion}
               isCorrect={isCorrect}
               isPartiallyCorrect={isPartiallyCorrect}
-              liquidGlass={liquidGlass}
             />
 
             <QuestionMetadata
               question={currentQuestion}
-              liquidGlass={liquidGlass}
               pointsEarned={currentQuiz?.questions[currentQuestionIndex]?.pointsEarned}
               maxPoints={currentQuiz?.questions[currentQuestionIndex]?.maxPoints}
             />

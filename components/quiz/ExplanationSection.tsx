@@ -7,7 +7,6 @@ interface ExplanationSectionProps {
   question: Question;
   isCorrect: boolean;
   isPartiallyCorrect?: boolean;
-  liquidGlass?: boolean;
   difficulty?: 'easy' | 'medium' | 'hard';
   showDifficultyBadge?: boolean; // For quiz review page
 }
@@ -16,7 +15,6 @@ export default function ExplanationSection({
   question,
   isCorrect,
   isPartiallyCorrect = false,
-  liquidGlass = true,
   difficulty,
   showDifficultyBadge = false,
 }: ExplanationSectionProps) {
@@ -40,72 +38,136 @@ export default function ExplanationSection({
       .trim();
   };
 
+  // Determine accent color and border glow based on correctness
+  const getAccentStyles = () => {
+    if (isCorrect) {
+      return {
+        borderColor: '#10b981',
+        boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919, 0 0 30px rgba(16, 185, 129, 0.3)',
+        accentColor: '#10b981',
+      };
+    } else if (isPartiallyCorrect) {
+      return {
+        borderColor: '#f59e0b',
+        boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919, 0 0 30px rgba(245, 158, 11, 0.3)',
+        accentColor: '#f59e0b',
+      };
+    } else {
+      return {
+        borderColor: '#f43f5e',
+        boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919, 0 0 30px rgba(244, 63, 94, 0.3)',
+        accentColor: '#f43f5e',
+      };
+    }
+  };
+
+  const accentStyles = getAccentStyles();
+
+  // Difficulty badge styles
+  const getDifficultyStyles = () => {
+    if (!difficulty) return {};
+
+    const baseStyle = {
+      padding: '12px 20px',
+      borderRadius: '12px',
+      fontSize: '18px',
+      fontWeight: 500,
+      boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    };
+
+    if (difficulty === 'easy') {
+      return { ...baseStyle, background: '#0f0f0f', color: '#10b981' };
+    } else if (difficulty === 'medium') {
+      return { ...baseStyle, background: '#0f0f0f', color: '#f59e0b' };
+    } else {
+      return { ...baseStyle, background: '#0f0f0f', color: '#f43f5e' };
+    }
+  };
+
   return (
-    <div className="space-y-8">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
       {/* Unified Explanation Card */}
       <div
-        className={`relative p-12 md:p-16 border-2 ${
-          liquidGlass
-            ? isCorrect
-              ? 'bg-white/5 backdrop-blur-2xl border-green-500/50 rounded-[40px] shadow-2xl shadow-green-500/20'
-              : isPartiallyCorrect
-              ? 'bg-white/5 backdrop-blur-2xl border-yellow-500/50 rounded-[40px] shadow-2xl shadow-yellow-500/20'
-              : 'bg-white/5 backdrop-blur-2xl border-red-500/50 rounded-[40px] shadow-2xl shadow-red-500/20'
-            : isCorrect
-            ? 'border-green-500 bg-zinc-950 rounded-md'
-            : isPartiallyCorrect
-            ? 'border-yellow-500 bg-zinc-950 rounded-md'
-            : 'border-red-500 bg-zinc-950 rounded-md'
-        }`}
+        style={{
+          position: 'relative',
+          padding: showDifficultyBadge ? '48px' : '64px',
+          background: '#0f0f0f',
+          border: `2px solid ${accentStyles.borderColor}`,
+          borderRadius: '40px',
+          boxShadow: accentStyles.boxShadow,
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        }}
       >
-        {liquidGlass && isCorrect && <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-transparent to-transparent rounded-[40px]" />}
-        {liquidGlass && isPartiallyCorrect && <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 via-transparent to-transparent rounded-[40px]" />}
-        {liquidGlass && !isCorrect && !isPartiallyCorrect && <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-[40px]" />}
-        {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
-
         {/* Header with status and optional difficulty badge */}
-        <div className={`flex items-center justify-between ${showDifficultyBadge ? 'mb-8' : 'mb-10'} flex-wrap gap-4 relative`}>
-          <h3 className={`${showDifficultyBadge ? 'text-3xl md:text-4xl' : 'text-4xl md:text-5xl'} font-bold ${
-            isCorrect
-              ? 'text-green-400'
-              : isPartiallyCorrect
-              ? 'text-yellow-400'
-              : 'text-red-400'
-          }`}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: showDifficultyBadge ? '32px' : '40px',
+            flexWrap: 'wrap',
+            gap: '16px',
+          }}
+        >
+          <h3
+            style={{
+              fontSize: showDifficultyBadge ? '36px' : '48px',
+              fontWeight: 700,
+              color: accentStyles.accentColor,
+              margin: 0,
+            }}
+          >
             {isCorrect ? 'Correct!' : isPartiallyCorrect ? 'Partially Correct' : 'Incorrect'}
           </h3>
 
           {showDifficultyBadge && difficulty && (
-            <span className={`px-5 py-3 rounded-md text-lg font-medium ${
-              difficulty === 'easy'
-                ? 'bg-green-950 text-green-300 border-2 border-green-500'
-                : difficulty === 'medium'
-                ? 'bg-yellow-950 text-yellow-300 border-2 border-yellow-500'
-                : 'bg-red-950 text-red-300 border-2 border-red-500'
-            }`}>
+            <span style={getDifficultyStyles()}>
               {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
             </span>
           )}
         </div>
 
         {/* Unified Explanation Section - All options explained */}
-        <div className="relative space-y-8">
-          <p className="font-bold text-white mb-6 text-2xl md:text-3xl">Explanation:</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+          <p
+            style={{
+              fontWeight: 700,
+              color: '#e5e5e5',
+              margin: 0,
+              marginBottom: '24px',
+              fontSize: '28px',
+            }}
+          >
+            Explanation:
+          </p>
 
           {/* Show explanation for ALL options (correct first, then A-D order for incorrect) */}
           {question.incorrectExplanations && question.incorrectExplanations.length === 4 ? (
-            <div className="space-y-6">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               {/* Show correct answer explanations first */}
               {correctAnswers.map((index) => {
                 const explanation = question.incorrectExplanations[index];
                 if (!explanation || explanation.trim() === '') return null;
 
                 return (
-                  <div key={`correct-${index}`} className="text-xl md:text-2xl">
-                    <div className="font-bold text-green-400 mb-2">
+                  <div key={`correct-${index}`} style={{ fontSize: '22px' }}>
+                    <div
+                      style={{
+                        fontWeight: 700,
+                        color: '#10b981',
+                        marginBottom: '8px',
+                      }}
+                    >
                       {String.fromCharCode(65 + index)}. {question.options[index]}
                     </div>
-                    <div className="text-zinc-100 leading-relaxed pl-6">
+                    <div
+                      style={{
+                        color: '#e5e5e5',
+                        lineHeight: '1.6',
+                        paddingLeft: '24px',
+                      }}
+                    >
                       {cleanExplanation(explanation)}
                     </div>
                   </div>
@@ -123,11 +185,23 @@ export default function ExplanationSection({
                 }
 
                 return (
-                  <div key={`incorrect-${index}`} className="text-xl md:text-2xl">
-                    <div className="font-bold text-zinc-400 mb-2">
+                  <div key={`incorrect-${index}`} style={{ fontSize: '22px' }}>
+                    <div
+                      style={{
+                        fontWeight: 700,
+                        color: '#a8a8a8',
+                        marginBottom: '8px',
+                      }}
+                    >
                       {String.fromCharCode(65 + index)}. {question.options[index]}
                     </div>
-                    <div className="text-zinc-200 leading-relaxed pl-6">
+                    <div
+                      style={{
+                        color: '#e5e5e5',
+                        lineHeight: '1.6',
+                        paddingLeft: '24px',
+                      }}
+                    >
                       {cleanExplanation(explanation)}
                     </div>
                   </div>
@@ -136,7 +210,16 @@ export default function ExplanationSection({
             </div>
           ) : (
             // Fallback to old explanation if incorrectExplanations is not properly formatted
-            <p className="text-zinc-100 leading-relaxed text-xl md:text-2xl">{question.explanation}</p>
+            <p
+              style={{
+                color: '#e5e5e5',
+                lineHeight: '1.6',
+                fontSize: '22px',
+                margin: 0,
+              }}
+            >
+              {question.explanation}
+            </p>
           )}
         </div>
       </div>

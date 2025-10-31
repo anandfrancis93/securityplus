@@ -205,13 +205,11 @@ export default function QuizReviewPage() {
                   question={question}
                   isCorrect={attempt.isCorrect}
                   isPartiallyCorrect={isPartiallyCorrect}
-                  liquidGlass={liquidGlass}
                 />
 
                 {/* Question Metadata */}
                 <QuestionMetadata
                   question={question}
-                  liquidGlass={liquidGlass}
                   pointsEarned={attempt.pointsEarned}
                   maxPoints={attempt.maxPoints}
                 />

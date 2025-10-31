@@ -6,7 +6,6 @@ import { ALL_SECURITY_PLUS_TOPICS } from '@/lib/topicData';
 
 interface QuestionMetadataProps {
   question: Question;
-  liquidGlass?: boolean;
   pointsEarned?: number;
   maxPoints?: number;
 }
@@ -35,7 +34,7 @@ function getTopicDomain(topic: string): string {
   return '1.0 General Security Concepts';
 }
 
-export default function QuestionMetadata({ question, liquidGlass = true, pointsEarned, maxPoints }: QuestionMetadataProps) {
+export default function QuestionMetadata({ question, pointsEarned, maxPoints }: QuestionMetadataProps) {
   const domains = getDomainsFromTopics(question.topics);
 
   // Group topics by domain, maintaining the same order as domains array
@@ -55,23 +54,37 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
   }));
 
   return (
-    <div className={`relative p-12 md:p-16 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'}`}>
-      {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
-      <div className="space-y-6 relative">
+    <div style={{
+      position: 'relative',
+      padding: '3rem',
+      background: '#0f0f0f',
+      borderRadius: '40px',
+      boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         {/* Domain(s) */}
-        <div className="flex items-start gap-4">
-          <span className="text-xl font-semibold text-zinc-400 min-w-[120px] flex-shrink-0">
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+          <span style={{
+            fontSize: '1.25rem',
+            fontWeight: 600,
+            color: '#a8a8a8',
+            minWidth: '120px',
+            flexShrink: 0,
+          }}>
             {domains.length > 1 ? 'Domain(s):' : 'Domain:'}
           </span>
-          <div className="flex flex-col gap-2">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {domains.map((domain, index) => {
               const color = getDomainColor(domain);
               return (
                 <span
                   key={index}
-                  className="text-xl font-semibold"
                   style={{
+                    fontSize: '1.25rem',
+                    fontWeight: 600,
                     color: color,
+                    transition: 'color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                   }}
                 >
                   {domain.replace('.0', '.')}
@@ -83,18 +96,28 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
 
         {/* Topics grouped by domain - ordered to match domains display */}
         {question.topics && question.topics.length > 0 && (
-          <div className="flex items-start gap-4">
-            <span className="text-xl font-semibold text-zinc-400 min-w-[120px] flex-shrink-0">
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+            <span style={{
+              fontSize: '1.25rem',
+              fontWeight: 600,
+              color: '#a8a8a8',
+              minWidth: '120px',
+              flexShrink: 0,
+            }}>
               {question.topics.length > 1 ? 'Topic(s):' : 'Topic:'}
             </span>
-            <div className="flex flex-col gap-3">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {orderedTopicsByDomain.map(({ domain, topics }, index) => {
                 const color = getDomainColor(domain);
                 return (
                   <span
                     key={index}
-                    className="text-xl font-semibold"
-                    style={{ color }}
+                    style={{
+                      fontSize: '1.25rem',
+                      fontWeight: 600,
+                      color: color,
+                      transition: 'color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    }}
                   >
                     {topics.join(', ')}
                   </span>
@@ -106,9 +129,20 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
 
         {/* Question Type */}
         {question.questionCategory && (
-          <div className="flex items-center gap-4 flex-wrap">
-            <span className="text-xl font-semibold text-zinc-400 min-w-[120px]">Type:</span>
-            <span className="text-xl font-semibold text-white">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <span style={{
+              fontSize: '1.25rem',
+              fontWeight: 600,
+              color: '#a8a8a8',
+              minWidth: '120px',
+            }}>
+              Type:
+            </span>
+            <span style={{
+              fontSize: '1.25rem',
+              fontWeight: 600,
+              color: '#e5e5e5',
+            }}>
               {question.questionCategory === 'single-domain-single-topic' ? 'Single Domain, Single Topic' :
                question.questionCategory === 'single-domain-multiple-topics' ? 'Single Domain, Multiple Topics' :
                'Multiple Domains, Multiple Topics'}
@@ -117,22 +151,43 @@ export default function QuestionMetadata({ question, liquidGlass = true, pointsE
         )}
 
         {/* Difficulty */}
-        <div className="flex items-center gap-4 flex-wrap">
-          <span className="text-xl font-semibold text-zinc-400 min-w-[120px]">Difficulty:</span>
-          <span className={`text-xl font-semibold ${
-            question.difficulty === 'easy' ? 'text-green-400' :
-            question.difficulty === 'medium' ? 'text-yellow-400' :
-            'text-red-400'
-          }`}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+          <span style={{
+            fontSize: '1.25rem',
+            fontWeight: 600,
+            color: '#a8a8a8',
+            minWidth: '120px',
+          }}>
+            Difficulty:
+          </span>
+          <span style={{
+            fontSize: '1.25rem',
+            fontWeight: 600,
+            color: question.difficulty === 'easy' ? '#4ade80' :
+                   question.difficulty === 'medium' ? '#facc15' :
+                   '#f87171',
+            transition: 'color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          }}>
             {question.difficulty.charAt(0).toUpperCase() + question.difficulty.slice(1)}
           </span>
         </div>
 
         {/* Points */}
         {pointsEarned !== undefined && maxPoints !== undefined && (
-          <div className="flex items-center gap-4 flex-wrap">
-            <span className="text-xl font-semibold text-zinc-400 min-w-[120px]">Points:</span>
-            <span className="text-xl font-semibold text-white">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <span style={{
+              fontSize: '1.25rem',
+              fontWeight: 600,
+              color: '#a8a8a8',
+              minWidth: '120px',
+            }}>
+              Points:
+            </span>
+            <span style={{
+              fontSize: '1.25rem',
+              fontWeight: 600,
+              color: '#e5e5e5',
+            }}>
               {pointsEarned}/{maxPoints}
             </span>
           </div>
