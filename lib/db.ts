@@ -415,9 +415,8 @@ export async function resetUserProgress(userId: string): Promise<void> {
       lastUpdated: Date.now(),
       quizHistory: [],
       topicPerformance: {},    // Clear topic review schedule
-      quizMetadata: undefined, // Clear quiz metadata (FSRS data)
-      cachedQuiz: undefined,   // Clear any cached questions
-      // Complete reset - all fields explicitly cleared
+      // Note: Optional fields (quizMetadata, cachedQuiz) are omitted to avoid Firestore errors
+      // Firestore doesn't accept undefined values, so we simply don't include these fields
     };
 
     console.log('[DEBUG db.ts] Reset data prepared:', resetProgress);
