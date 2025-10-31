@@ -802,26 +802,94 @@ export default function Login() {
           color: #666666;
         }
 
-        /* === Responsive === */
-        @media (max-width: 768px) {
+        /* ============================================
+           MOBILE-FIRST RESPONSIVE DESIGN
+           Fluid scaling from 320px to 3840px (4K)
+           Breakpoints: 768px, 1024px, 1280px, 1440px, 1920px
+           ============================================ */
+
+        /* Base styles: Mobile (320px+) */
+        .neu-content {
+          padding: clamp(1rem, 3vw, 2rem);
+        }
+
+        .neu-card {
+          padding: clamp(1.5rem, 3.5vw, 2.5rem);
+        }
+
+        .neu-stats {
+          grid-template-columns: repeat(2, 1fr);
+          gap: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .neu-features-grid {
+          grid-template-columns: 1fr;
+          gap: clamp(1.5rem, 3vw, 2rem);
+        }
+
+        .neu-footer-content {
+          grid-template-columns: 1fr;
+          gap: clamp(2rem, 3vw, 3rem);
+        }
+
+        /* Tablet (768px+) */
+        @media (min-width: 768px) {
           .neu-content {
-            padding: 1rem;
+            padding: clamp(1.5rem, 3vw, 2.5rem);
           }
 
           .neu-card {
-            padding: 1.5rem;
+            padding: clamp(2rem, 3vw, 3rem);
           }
 
           .neu-stats {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(4, 1fr);
           }
 
           .neu-features-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, 1fr);
           }
 
           .neu-footer-content {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        /* Desktop (1024px+) */
+        @media (min-width: 1024px) {
+          .neu-features-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+
+          .neu-footer-content {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+
+        /* Large Desktop (1280px+) */
+        @media (min-width: 1280px) {
+          .neu-content {
+            padding: 2rem;
+          }
+
+          .neu-card {
+            padding: 2.5rem;
+          }
+        }
+
+        /* XL Desktop (1440px+) */
+        @media (min-width: 1440px) {
+          .neu-card {
+            padding: 3rem;
+          }
+        }
+
+        /* 4K (1920px+) - Cap maximum sizes */
+        @media (min-width: 1920px) {
+          .neu-content {
+            max-width: 1800px;
+            margin-left: auto;
+            margin-right: auto;
           }
         }
 
