@@ -1751,6 +1751,7 @@ export default function Quiz() {
         /* End Quiz Button */
         .end-quiz-container {
           margin-top: 80px;
+          margin-bottom: 80px;
           text-align: center;
         }
 
