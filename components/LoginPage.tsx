@@ -55,7 +55,7 @@ export default function Login() {
           <div className="neu-logo">
             <div className="neu-logo-icon">
               <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="30" cy="30" r="25" fill="#000000" stroke="none"/>
+                <circle cx="30" cy="30" r="25" fill="#1a1a2e" stroke="none"/>
                 <path d="M30 15 L22 23 L22 38 L30 46 L38 38 L38 23 Z"
                       fill="none" stroke="#2563eb" strokeWidth="2.5" strokeLinejoin="round"/>
                 <circle cx="30" cy="30" r="5" fill="#2563eb"/>
@@ -290,7 +290,8 @@ export default function Login() {
 
       <style jsx>{`
         /* =====================================
-           BLUE PRIMARY DESIGN - TRUE BLACK
+           HYBRID: NEUMORPHISM + 3D TRANSFORMS
+           Dark Navy + Blue Primary + Advanced Effects
            ===================================== */
 
         * {
@@ -301,7 +302,7 @@ export default function Login() {
 
         .neu-container {
           min-height: 100vh;
-          background: #000000;
+          background: #1a1a2e;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
@@ -313,25 +314,29 @@ export default function Login() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: #000000;
+          background: #1a1a2e;
         }
 
         .neu-loading-card {
           padding: 3rem;
-          border-radius: 16px;
-          background: #000000;
-          border: 1px solid #1a1a1a;
+          border-radius: 20px;
+          background: #1a1a2e;
           text-align: center;
+          box-shadow:
+            12px 12px 24px #0f0f1a,
+            -12px -12px 24px #252542;
         }
 
         .neu-spinner {
           width: 60px;
           height: 60px;
           border-radius: 50%;
-          background: #000000;
+          background: #1a1a2e;
           margin: 0 auto 1.5rem;
           position: relative;
-          border: 2px solid #1a1a1a;
+          box-shadow:
+            inset 6px 6px 12px #0f0f1a,
+            inset -6px -6px 12px #252542;
         }
 
         .neu-spinner::before {
@@ -376,16 +381,17 @@ export default function Login() {
           width: 60px;
           height: 60px;
           border-radius: 12px;
-          background: linear-gradient(145deg, #0a0a0a, #000000);
+          background: linear-gradient(145deg, #1c1c30, #181828);
           display: flex;
           align-items: center;
           justify-content: center;
           border: 2px solid #2563eb;
           transform-style: preserve-3d;
-          transition: all 0.3s ease;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
           box-shadow:
-            0 4px 12px rgba(37, 99, 235, 0.3),
-            0 2px 4px rgba(0, 0, 0, 0.5),
+            8px 8px 16px #0f0f1a,
+            -8px -8px 16px #252542,
+            0 0 20px rgba(37, 99, 235, 0.3),
             inset 0 1px 0 rgba(255, 255, 255, 0.05);
           position: relative;
         }
@@ -402,14 +408,15 @@ export default function Login() {
         }
 
         .neu-logo-icon:hover::before {
-          opacity: 0.2;
+          opacity: 0.3;
         }
 
         .neu-logo-icon:hover {
-          transform: translateZ(10px) rotateY(5deg);
+          transform: translateZ(15px) rotateY(8deg);
           box-shadow:
-            0 8px 20px rgba(37, 99, 235, 0.5),
-            0 4px 8px rgba(0, 0, 0, 0.6),
+            4px 4px 8px #0f0f1a,
+            -4px -4px 8px #252542,
+            0 0 40px rgba(37, 99, 235, 0.6),
             inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
@@ -507,31 +514,31 @@ export default function Login() {
         /* === Card === */
         .neu-card {
           padding: 2.5rem;
-          border-radius: 16px;
-          background: linear-gradient(145deg, #0d0d0d, #080808);
-          border: 1px solid #1a1a1a;
+          border-radius: 24px;
+          background: linear-gradient(145deg, #1c1c30, #181828);
           margin-bottom: 3rem;
           position: relative;
           box-shadow:
-            0 10px 30px rgba(0, 0, 0, 0.5),
-            0 1px 2px rgba(37, 99, 235, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            14px 14px 28px #0f0f1a,
+            -14px -14px 28px #252542,
+            0 0 30px rgba(37, 99, 235, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
           transform-style: preserve-3d;
-          transition: all 0.3s ease;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .neu-card::before {
           content: '';
           position: absolute;
           inset: -1px;
-          border-radius: 16px;
+          border-radius: 24px;
           padding: 1px;
-          background: linear-gradient(145deg, rgba(37, 99, 235, 0.3), transparent, rgba(37, 99, 235, 0.1));
+          background: linear-gradient(145deg, rgba(37, 99, 235, 0.4), transparent, rgba(37, 99, 235, 0.2));
           -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
           -webkit-mask-composite: xor;
           mask-composite: exclude;
           opacity: 0;
-          transition: opacity 0.3s ease;
+          transition: opacity 0.4s ease;
         }
 
         .neu-card:hover::before {
@@ -539,11 +546,13 @@ export default function Login() {
         }
 
         .neu-card:hover {
-          transform: translateZ(10px) translateY(-4px);
+          transform: translateZ(20px) translateY(-6px);
           box-shadow:
-            0 20px 60px rgba(0, 0, 0, 0.7),
-            0 4px 8px rgba(37, 99, 235, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            8px 8px 16px #0f0f1a,
+            -8px -8px 16px #252542,
+            0 0 50px rgba(37, 99, 235, 0.3),
+            0 20px 60px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.08);
         }
 
         .neu-card-title {
@@ -559,7 +568,7 @@ export default function Login() {
           width: 100%;
           padding: 0;
           border: none;
-          border-radius: 12px;
+          border-radius: 16px;
           background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
           cursor: pointer;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -567,8 +576,9 @@ export default function Login() {
           position: relative;
           transform-style: preserve-3d;
           box-shadow:
-            0 4px 15px rgba(37, 99, 235, 0.4),
-            0 2px 4px rgba(0, 0, 0, 0.3),
+            8px 8px 16px rgba(15, 15, 26, 0.6),
+            -8px -8px 16px rgba(59, 130, 246, 0.15),
+            0 4px 20px rgba(37, 99, 235, 0.4),
             inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
@@ -602,19 +612,20 @@ export default function Login() {
 
         .neu-btn:hover:not(:disabled) {
           background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-          transform: translateY(-3px) translateZ(20px) rotateX(5deg);
+          transform: translateY(-4px) translateZ(25px) rotateX(6deg);
           box-shadow:
-            0 12px 35px rgba(37, 99, 235, 0.6),
-            0 6px 12px rgba(0, 0, 0, 0.4),
+            10px 10px 20px rgba(15, 15, 26, 0.7),
+            -10px -10px 20px rgba(59, 130, 246, 0.2),
+            0 12px 40px rgba(37, 99, 235, 0.6),
             inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
 
         .neu-btn:active:not(:disabled) {
-          transform: translateY(-1px) translateZ(10px) rotateX(2deg);
+          transform: translateY(0) translateZ(5px);
           box-shadow:
-            0 6px 20px rgba(37, 99, 235, 0.5),
-            0 3px 6px rgba(0, 0, 0, 0.3),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            inset 6px 6px 12px rgba(15, 15, 26, 0.8),
+            inset -6px -6px 12px rgba(59, 130, 246, 0.1),
+            0 2px 10px rgba(37, 99, 235, 0.3);
         }
 
         .neu-btn:disabled {
@@ -720,26 +731,26 @@ export default function Login() {
 
         .neu-stat-card {
           padding: 1.5rem;
-          border-radius: 12px;
-          background: linear-gradient(145deg, #0d0d0d, #080808);
-          border: 1px solid #1a1a1a;
+          border-radius: 16px;
+          background: linear-gradient(145deg, #1c1c30, #181828);
           text-align: center;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
           position: relative;
           transform-style: preserve-3d;
           box-shadow:
-            0 4px 12px rgba(0, 0, 0, 0.4),
-            inset 0 1px 0 rgba(255, 255, 255, 0.02);
+            10px 10px 20px #0f0f1a,
+            -10px -10px 20px #252542,
+            inset 0 1px 0 rgba(255, 255, 255, 0.03);
         }
 
         .neu-stat-card::after {
           content: '';
           position: absolute;
           inset: 0;
-          border-radius: 12px;
-          background: linear-gradient(145deg, rgba(37, 99, 235, 0.1), transparent);
+          border-radius: 16px;
+          background: linear-gradient(145deg, rgba(37, 99, 235, 0.15), transparent);
           opacity: 0;
-          transition: opacity 0.3s ease;
+          transition: opacity 0.4s ease;
         }
 
         .neu-stat-card:hover::after {
@@ -747,12 +758,12 @@ export default function Login() {
         }
 
         .neu-stat-card:hover {
-          border-color: #2563eb;
-          transform: translateY(-6px) translateZ(15px) rotateX(5deg);
+          transform: translateY(-8px) translateZ(20px) rotateX(6deg);
           box-shadow:
-            0 12px 30px rgba(37, 99, 235, 0.3),
-            0 6px 12px rgba(0, 0, 0, 0.5),
-            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            6px 6px 12px #0f0f1a,
+            -6px -6px 12px #252542,
+            0 12px 35px rgba(37, 99, 235, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.06);
         }
 
         .neu-stat-value {
@@ -790,17 +801,17 @@ export default function Login() {
 
         .neu-feature-card {
           padding: 2rem;
-          border-radius: 16px;
-          background: linear-gradient(145deg, #0d0d0d, #070707);
-          border: 1px solid #1a1a1a;
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          border-radius: 20px;
+          background: linear-gradient(145deg, #1c1c30, #181828);
+          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
           position: relative;
           overflow: hidden;
           transform-style: preserve-3d;
           box-shadow:
-            0 8px 24px rgba(0, 0, 0, 0.5),
-            0 2px 4px rgba(0, 0, 0, 0.3),
-            inset 0 1px 0 rgba(255, 255, 255, 0.02);
+            12px 12px 24px #0f0f1a,
+            -12px -12px 24px #252542,
+            0 0 20px rgba(37, 99, 235, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.03);
         }
 
         .neu-feature-card::before {
@@ -809,20 +820,20 @@ export default function Login() {
           top: 0;
           left: 0;
           right: 0;
-          height: 3px;
+          height: 4px;
           background: linear-gradient(90deg, transparent, #2563eb 50%, #3b82f6, #2563eb, transparent);
           transform: scaleX(0);
-          transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 0 20px rgba(37, 99, 235, 0.6);
+          transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 0 25px rgba(37, 99, 235, 0.8);
         }
 
         .neu-feature-card::after {
           content: '';
           position: absolute;
           inset: 0;
-          background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.05), transparent 70%);
+          background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.08), transparent 70%);
           opacity: 0;
-          transition: opacity 0.4s ease;
+          transition: opacity 0.5s ease;
         }
 
         .neu-feature-card:hover::before {
@@ -834,13 +845,14 @@ export default function Login() {
         }
 
         .neu-feature-card:hover {
-          border-color: #2563eb;
-          transform: translateY(-12px) translateZ(25px) rotateX(3deg);
+          transform: translateY(-14px) translateZ(30px) rotateX(4deg);
           box-shadow:
-            0 20px 50px rgba(37, 99, 235, 0.4),
-            0 10px 20px rgba(0, 0, 0, 0.6),
-            inset 0 1px 0 rgba(255, 255, 255, 0.05),
-            0 0 60px rgba(37, 99, 235, 0.1);
+            6px 6px 12px #0f0f1a,
+            -6px -6px 12px #252542,
+            0 20px 60px rgba(37, 99, 235, 0.5),
+            0 10px 30px rgba(0, 0, 0, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.06),
+            0 0 80px rgba(37, 99, 235, 0.2);
         }
 
         .neu-feature-card-icon {
