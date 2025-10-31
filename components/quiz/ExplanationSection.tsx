@@ -20,7 +20,6 @@ export default function ExplanationSection({
   difficulty,
   showDifficultyBadge = false,
 }: ExplanationSectionProps) {
-  const [isIncorrectExpanded, setIsIncorrectExpanded] = useState(false);
   // Ensure correctAnswers is always an array of numbers, handle undefined/null
   const correctAnswers: number[] = question.correctAnswer === undefined || question.correctAnswer === null
     ? []
@@ -28,16 +27,9 @@ export default function ExplanationSection({
     ? question.correctAnswer
     : [question.correctAnswer];
 
-  // Filter out correct answers and empty explanations from incorrect explanations
-  const hasIncorrectExplanations = question.incorrectExplanations &&
-    correctAnswers.length > 0 &&
-    question.incorrectExplanations.some((explanation, index) =>
-      !correctAnswers.includes(index) && explanation && explanation.trim() !== ''
-    );
-
   return (
     <div className="space-y-8">
-      {/* Main Explanation Card */}
+      {/* Unified Explanation Card */}
       <div
         className={`relative p-12 md:p-16 border-2 ${
           liquidGlass
@@ -105,64 +97,58 @@ export default function ExplanationSection({
           </div>
         )}
 
-        {/* Explanation */}
-        <div className="relative">
+        {/* Unified Explanation Section - All options explained */}
+        <div className="relative space-y-8">
           <p className="font-bold text-white mb-6 text-2xl md:text-3xl">Explanation:</p>
-          <p className="text-zinc-100 leading-relaxed text-xl md:text-2xl">{question.explanation}</p>
-        </div>
-      </div>
 
-      {/* Why Other Options Are Incorrect - Collapsible */}
-      {hasIncorrectExplanations && (
-        <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-zinc-950 border-2 border-zinc-800 rounded-md'} overflow-hidden`}>
-          {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
+          {/* Show explanation for ALL options (correct first, then A-D order for incorrect) */}
+          {question.incorrectExplanations && question.incorrectExplanations.length === 4 ? (
+            <div className="space-y-6">
+              {/* Show correct answer explanations first */}
+              {correctAnswers.map((index) => {
+                const explanation = question.incorrectExplanations[index];
+                if (!explanation || explanation.trim() === '') return null;
 
-          {/* Collapsible Header */}
-          <button
-            onClick={() => setIsIncorrectExpanded(!isIncorrectExpanded)}
-            className="relative w-full p-12 md:p-16 text-left transition-all duration-300 hover:bg-white/5"
-          >
-            <div className="flex items-center justify-between gap-4">
-              <h4 className="font-bold text-white text-3xl md:text-4xl relative">Why Other Options Are Incorrect</h4>
-              <svg
-                className={`w-8 h-8 md:w-10 md:h-10 text-white transition-transform duration-300 flex-shrink-0 ${
-                  isIncorrectExpanded ? 'rotate-180' : ''
-                }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                strokeWidth={2.5}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-          </button>
+                return (
+                  <div key={`correct-${index}`} className="text-xl md:text-2xl">
+                    <div className="font-bold text-green-400 mb-2">
+                      {String.fromCharCode(65 + index)}. {question.options[index]}
+                    </div>
+                    <div className="text-zinc-100 leading-relaxed pl-6">
+                      {explanation}
+                    </div>
+                  </div>
+                );
+              })}
 
-          {/* Collapsible Content */}
-          {isIncorrectExpanded && (
-            <div className="px-12 md:px-16 pb-12 md:pb-16 space-y-6 relative animate-slideDown">
-              {question.incorrectExplanations?.map((explanation, index) => {
+              {/* Then show incorrect answer explanations in A-D order */}
+              {question.incorrectExplanations.map((explanation, index) => {
                 // Skip if this is a correct answer or if explanation is empty
-                const isCorrect = correctAnswers.includes(index);
+                const isCorrectAnswer = correctAnswers.includes(index);
                 const isEmpty = !explanation || explanation.trim() === '';
 
-                if (isCorrect || isEmpty) {
+                if (isCorrectAnswer || isEmpty) {
                   return null;
                 }
 
                 return (
-                  <div key={index} className="text-xl md:text-2xl">
-                    <span className="font-bold text-zinc-400">
-                      {String.fromCharCode(65 + index)}.
-                    </span>
-                    <span className="text-zinc-200 ml-4 leading-relaxed">{explanation}</span>
+                  <div key={`incorrect-${index}`} className="text-xl md:text-2xl">
+                    <div className="font-bold text-zinc-400 mb-2">
+                      {String.fromCharCode(65 + index)}. {question.options[index]}
+                    </div>
+                    <div className="text-zinc-200 leading-relaxed pl-6">
+                      {explanation}
+                    </div>
                   </div>
                 );
               })}
             </div>
+          ) : (
+            // Fallback to old explanation if incorrectExplanations is not properly formatted
+            <p className="text-zinc-100 leading-relaxed text-xl md:text-2xl">{question.explanation}</p>
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
