@@ -165,31 +165,11 @@ export default function QuizHistoryPage() {
         <Header />
       </div>
 
-      <div style={{
-        position: 'relative',
-        maxWidth: '1280px',
-        margin: '0 auto',
-        padding: '0 48px'
-      }}>
+      <div className="content-wrapper">
         {/* Hero Section */}
-        <section style={{
-          textAlign: 'center',
-          marginBottom: '32px'
-        }}>
-          <div style={{
-            maxWidth: '1024px',
-            margin: '0 auto',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '32px'
-          }}>
-            <h1 style={{
-              fontSize: '144px',
-              fontWeight: 'bold',
-              letterSpacing: '-0.05em',
-              lineHeight: '0.95',
-              color: '#e5e5e5'
-            }}>
+        <section className="hero-section">
+          <div className="hero-content">
+            <h1 className="hero-title">
               <span style={{ display: 'block' }}>
                 Quiz
               </span>
@@ -197,37 +177,17 @@ export default function QuizHistoryPage() {
                 History
               </span>
             </h1>
-            <p style={{
-              fontSize: '32px',
-              fontWeight: '300',
-              maxWidth: '768px',
-              margin: '0 auto',
-              lineHeight: '1.5',
-              color: '#a8a8a8'
-            }}>
+            <p className="hero-subtitle">
               View all your past quizzes
             </p>
           </div>
         </section>
 
         {/* Back Button */}
-        <div style={{
-          marginBottom: '32px'
-        }}>
+        <div style={{ marginBottom: '32px' }}>
           <button
             onClick={() => router.push('/cybersecurity/performance')}
-            style={{
-              padding: '16px 32px',
-              fontSize: '20px',
-              fontWeight: 'bold',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              background: '#0f0f0f',
-              borderRadius: '16px',
-              border: 'none',
-              color: '#e5e5e5',
-              cursor: 'pointer',
-              boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919'
-            }}
+            className="back-button"
             onMouseEnter={(e) => {
               e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919';
             }}
@@ -280,17 +240,7 @@ export default function QuizHistoryPage() {
                 >
                   <div
                     onClick={() => router.push(`/cybersecurity/quiz/review/${quiz.id}`)}
-                    style={{
-                      position: 'relative',
-                      width: '100%',
-                      padding: '40px',
-                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                      cursor: 'pointer',
-                      background: '#0f0f0f',
-                      borderRadius: '24px',
-                      boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
-                      transform: 'translateY(0)'
-                    }}
+                    className="quiz-card"
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-2px)';
                       e.currentTarget.style.boxShadow = '13px 13px 26px #050505, -13px -13px 26px #191919';
@@ -306,19 +256,7 @@ export default function QuizHistoryPage() {
                         e.stopPropagation();
                         setDeleteConfirmId(quiz.id);
                       }}
-                      style={{
-                        position: 'absolute',
-                        top: '16px',
-                        right: '16px',
-                        zIndex: 10,
-                        padding: '12px',
-                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                        background: '#0f0f0f',
-                        borderRadius: '16px',
-                        border: '2px solid #f43f5e',
-                        cursor: 'pointer',
-                        boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919'
-                      }}
+                      className="delete-button"
                       onMouseEnter={(e) => {
                         e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919';
                       }}
@@ -327,69 +265,35 @@ export default function QuizHistoryPage() {
                       }}
                       title="Delete quiz"
                     >
-                      <svg style={{ width: '20px', height: '20px', color: '#f43f5e' }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="delete-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                       </svg>
                     </button>
 
-                    <div style={{
-                      position: 'relative',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      paddingRight: '48px'
-                    }}>
+                    <div className="quiz-card-content">
                       <div>
-                        <div style={{
-                          fontSize: '20px',
-                          color: '#a8a8a8'
-                        }}>
+                        <div className="quiz-date">
                           {formattedDate} • {formattedTime}
                         </div>
-                        <div style={{
-                          fontSize: '20px',
-                          marginTop: '16px',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: '12px'
-                        }}>
+                        <div className="quiz-info">
                           <div>
-                            <span style={{ color: '#e5e5e5', fontWeight: '500' }}>{quiz.questions.length} questions</span>
+                            <span className="quiz-questions-count">{quiz.questions.length} questions</span>
                             {isIncomplete && (
-                              <span style={{
-                                marginLeft: '16px',
-                                fontSize: '16px',
-                                padding: '8px 16px',
-                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                                borderRadius: '12px',
-                                background: '#0f0f0f',
-                                color: '#f59e0b',
-                                border: '2px solid #f59e0b',
-                                boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
-                                display: 'inline-block'
-                              }}>
+                              <span className="incomplete-badge">
                                 Incomplete
                               </span>
                             )}
                           </div>
-                          <div style={{ color: '#a8a8a8' }}>
+                          <div className="quiz-time">
                             Time: {timeDisplay}
                           </div>
                         </div>
                       </div>
-                      <div style={{ textAlign: 'right' }}>
-                        <div style={{
-                          fontSize: '56px',
-                          fontWeight: 'bold',
-                          color: '#06b6d4'
-                        }}>
+                      <div className="quiz-score-section">
+                        <div className="quiz-score">
                           {quiz.score}/{quiz.questions.length}
                         </div>
-                        <div style={{
-                          fontSize: '24px',
-                          color: '#a8a8a8',
-                          marginTop: '8px'
-                        }}>
+                        <div className="quiz-percentage">
                           {((quiz.score / quiz.questions.length) * 100).toFixed(0)}%
                         </div>
                       </div>
@@ -506,26 +410,190 @@ export default function QuizHistoryPage() {
             })}
           </div>
         ) : (
-          <div style={{
-            position: 'relative',
-            padding: '64px',
-            marginBottom: '48px',
-            background: '#0f0f0f',
-            borderRadius: '24px',
-            boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
-            textAlign: 'center'
-          }}>
+          <div className="empty-state">
             <div style={{ position: 'relative' }}>
-              <p style={{
-                fontSize: '32px',
-                color: '#a8a8a8'
-              }}>
+              <p className="empty-state-text">
                 No quizzes taken yet
               </p>
             </div>
           </div>
         )}
       </div>
+
+      <style jsx>{`
+        /* Mobile-first responsive styles */
+        .content-wrapper {
+          position: relative;
+          max-width: 1280px;
+          margin: 0 auto;
+          padding: 0 clamp(20px, 4vw, 48px);
+        }
+
+        .hero-section {
+          text-align: center;
+          margin-bottom: clamp(24px, 4vw, 32px);
+        }
+
+        .hero-content {
+          max-width: 1024px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          gap: clamp(20px, 4vw, 32px);
+        }
+
+        .hero-title {
+          font-size: clamp(48px, 12vw, 144px);
+          font-weight: bold;
+          letter-spacing: -0.05em;
+          line-height: 0.95;
+          color: #e5e5e5;
+        }
+
+        .hero-subtitle {
+          font-size: clamp(18px, 3vw, 32px);
+          font-weight: 300;
+          max-width: 768px;
+          margin: 0 auto;
+          line-height: 1.5;
+          color: #a8a8a8;
+        }
+
+        .back-button {
+          padding: clamp(12px, 2vw, 16px) clamp(20px, 3vw, 32px);
+          font-size: clamp(16px, 2vw, 20px);
+          font-weight: bold;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          background: #0f0f0f;
+          border-radius: 16px;
+          border: none;
+          color: #e5e5e5;
+          cursor: pointer;
+          box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+        }
+
+        .quiz-card {
+          position: relative;
+          width: 100%;
+          padding: clamp(24px, 4vw, 40px);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          cursor: pointer;
+          background: #0f0f0f;
+          border-radius: 24px;
+          box-shadow: 12px 12px 24px #050505, -12px -12px 24px #191919;
+          transform: translateY(0);
+        }
+
+        .delete-button {
+          position: absolute;
+          top: clamp(12px, 2vw, 16px);
+          right: clamp(12px, 2vw, 16px);
+          z-index: 10;
+          padding: clamp(8px, 1.5vw, 12px);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          background: #0f0f0f;
+          border-radius: 16px;
+          border: 2px solid #f43f5e;
+          cursor: pointer;
+          box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+        }
+
+        .delete-icon {
+          width: clamp(16px, 2.5vw, 20px);
+          height: clamp(16px, 2.5vw, 20px);
+          color: #f43f5e;
+        }
+
+        .quiz-card-content {
+          position: relative;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-right: clamp(32px, 5vw, 48px);
+          flex-wrap: wrap;
+          gap: clamp(16px, 3vw, 24px);
+        }
+
+        .quiz-date {
+          font-size: clamp(14px, 2vw, 20px);
+          color: #a8a8a8;
+        }
+
+        .quiz-info {
+          font-size: clamp(14px, 2vw, 20px);
+          margin-top: clamp(12px, 2vw, 16px);
+          display: flex;
+          flex-direction: column;
+          gap: clamp(8px, 1.5vw, 12px);
+        }
+
+        .quiz-questions-count {
+          color: #e5e5e5;
+          font-weight: 500;
+        }
+
+        .incomplete-badge {
+          margin-left: clamp(8px, 2vw, 16px);
+          font-size: clamp(12px, 1.8vw, 16px);
+          padding: clamp(6px, 1.2vw, 8px) clamp(12px, 2vw, 16px);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          border-radius: 12px;
+          background: #0f0f0f;
+          color: #f59e0b;
+          border: 2px solid #f59e0b;
+          box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #191919;
+          display: inline-block;
+        }
+
+        .quiz-time {
+          color: #a8a8a8;
+        }
+
+        .quiz-score-section {
+          text-align: right;
+        }
+
+        .quiz-score {
+          font-size: clamp(32px, 6vw, 56px);
+          font-weight: bold;
+          color: #06b6d4;
+        }
+
+        .quiz-percentage {
+          font-size: clamp(16px, 2.5vw, 24px);
+          color: #a8a8a8;
+          margin-top: clamp(4px, 1vw, 8px);
+        }
+
+        .empty-state {
+          position: relative;
+          padding: clamp(40px, 6vw, 64px);
+          margin-bottom: clamp(32px, 5vw, 48px);
+          background: #0f0f0f;
+          border-radius: 24px;
+          box-shadow: 12px 12px 24px #050505, -12px -12px 24px #191919;
+          text-align: center;
+        }
+
+        .empty-state-text {
+          font-size: clamp(20px, 3.5vw, 32px);
+          color: #a8a8a8;
+        }
+
+        /* Tablet (768px+) */
+        @media (min-width: 768px) {
+          .quiz-card-content {
+            flex-wrap: nowrap;
+          }
+        }
+
+        /* 4K (1920px+) */
+        @media (min-width: 1920px) {
+          .content-wrapper {
+            max-width: 1600px;
+          }
+        }
+      `}</style>
     </div>
   );
 }
