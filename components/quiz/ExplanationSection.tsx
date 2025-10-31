@@ -9,6 +9,8 @@ interface ExplanationSectionProps {
   isPartiallyCorrect?: boolean;
   difficulty?: 'easy' | 'medium' | 'hard';
   showDifficultyBadge?: boolean; // For quiz review page
+  selectedAnswer?: number | null;
+  selectedAnswers?: number[];
 }
 
 export default function ExplanationSection({
@@ -17,6 +19,8 @@ export default function ExplanationSection({
   isPartiallyCorrect = false,
   difficulty,
   showDifficultyBadge = false,
+  selectedAnswer = null,
+  selectedAnswers = [],
 }: ExplanationSectionProps) {
   // Ensure correctAnswers is always an array of numbers, handle undefined/null
   const correctAnswers: number[] = question.correctAnswer === undefined || question.correctAnswer === null
@@ -24,6 +28,11 @@ export default function ExplanationSection({
     : Array.isArray(question.correctAnswer)
     ? question.correctAnswer
     : [question.correctAnswer];
+
+  // Determine user's selected answers as an array
+  const userSelectedAnswers: number[] = question.questionType === 'multiple'
+    ? selectedAnswers
+    : selectedAnswer !== null ? [selectedAnswer] : [];
 
   // Helper function to clean explanation text
   // Removes prefixes like "Correct:", "Incorrect:", "This option is correct", etc.
@@ -179,6 +188,8 @@ export default function ExplanationSection({
                 // Skip if this is a correct answer or if explanation is empty
                 const isCorrectAnswer = correctAnswers.includes(index);
                 const isEmpty = !explanation || explanation.trim() === '';
+                const wasSelectedByUser = userSelectedAnswers.includes(index);
+                const isWrongSelection = wasSelectedByUser && !isCorrectAnswer;
 
                 if (isCorrectAnswer || isEmpty) {
                   return null;
@@ -189,7 +200,7 @@ export default function ExplanationSection({
                     <div
                       style={{
                         fontWeight: 700,
-                        color: '#a8a8a8',
+                        color: isWrongSelection ? '#f43f5e' : '#a8a8a8',
                         marginBottom: '8px',
                       }}
                     >

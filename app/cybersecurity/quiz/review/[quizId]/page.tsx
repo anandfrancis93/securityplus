@@ -205,6 +205,8 @@ export default function QuizReviewPage() {
                   question={question}
                   isCorrect={attempt.isCorrect}
                   isPartiallyCorrect={isPartiallyCorrect}
+                  selectedAnswer={question.questionType === 'single' ? (userAnswers[0] ?? null) : null}
+                  selectedAnswers={question.questionType === 'multiple' ? userAnswers : []}
                 />
 
                 {/* Question Metadata */}

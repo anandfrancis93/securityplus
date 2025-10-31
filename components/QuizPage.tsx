@@ -1146,6 +1146,8 @@ export default function Quiz() {
               question={currentQuestion}
               isCorrect={isCorrect}
               isPartiallyCorrect={isPartiallyCorrect}
+              selectedAnswer={currentQuestion.questionType === 'single' ? selectedAnswer : null}
+              selectedAnswers={currentQuestion.questionType === 'multiple' ? selectedAnswers : []}
             />
 
             <QuestionMetadata
