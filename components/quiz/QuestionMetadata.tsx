@@ -57,6 +57,7 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
     <div style={{
       position: 'relative',
       padding: '3rem',
+      marginTop: '3rem',
       background: '#0f0f0f',
       borderRadius: '24px',
       boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
