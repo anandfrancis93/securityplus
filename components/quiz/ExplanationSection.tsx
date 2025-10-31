@@ -112,7 +112,7 @@ export default function ExplanationSection({
         >
           <h3
             style={{
-              fontSize: showDifficultyBadge ? '36px' : '48px',
+              fontSize: showDifficultyBadge ? '28px' : '32px',
               fontWeight: 700,
               color: accentStyles.accentColor,
               margin: 0,
@@ -136,7 +136,7 @@ export default function ExplanationSection({
               color: '#e5e5e5',
               margin: 0,
               marginBottom: '24px',
-              fontSize: '28px',
+              fontSize: '20px',
             }}
           >
             Explanation:
@@ -151,7 +151,7 @@ export default function ExplanationSection({
                 if (!explanation || explanation.trim() === '') return null;
 
                 return (
-                  <div key={`correct-${index}`} style={{ fontSize: '22px' }}>
+                  <div key={`correct-${index}`} style={{ fontSize: '16px' }}>
                     <div
                       style={{
                         fontWeight: 700,
@@ -185,7 +185,7 @@ export default function ExplanationSection({
                 }
 
                 return (
-                  <div key={`incorrect-${index}`} style={{ fontSize: '22px' }}>
+                  <div key={`incorrect-${index}`} style={{ fontSize: '16px' }}>
                     <div
                       style={{
                         fontWeight: 700,
@@ -214,7 +214,7 @@ export default function ExplanationSection({
               style={{
                 color: '#e5e5e5',
                 lineHeight: '1.6',
-                fontSize: '22px',
+                fontSize: '16px',
                 margin: 0,
               }}
             >
