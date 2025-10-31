@@ -97,6 +97,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
+      <head>
+        <meta name="theme-color" content="#0f0f0f" />
+      </head>
       <body className={`${GeistSans.variable} ${GeistMono.variable} antialiased font-sans`}>
         <ErrorBoundary>
           <AppProvider>{children}</AppProvider>
