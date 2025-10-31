@@ -59,7 +59,28 @@ export async function POST(request: NextRequest) {
     let userProgress = null;
     let metadata = null;
     let selectedTopics: string[] = [];
-    let questionCategory = selectQuestionCategory(); // Declare outside to avoid scope issues
+
+    // Use deterministic difficulty distribution (3 easy, 4 medium, 3 hard)
+    // Create distribution array and shuffle it once for consistency
+    const difficultyDistribution: Array<'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics'> = [
+      'single-domain-single-topic', 'single-domain-single-topic', 'single-domain-single-topic',           // 3 easy
+      'single-domain-multiple-topics', 'single-domain-multiple-topics', 'single-domain-multiple-topics', 'single-domain-multiple-topics', // 4 medium
+      'multiple-domains-multiple-topics', 'multiple-domains-multiple-topics', 'multiple-domains-multiple-topics'  // 3 hard
+    ];
+
+    // Shuffle using Fisher-Yates (seeded by questionNumber for consistency within a quiz)
+    // Use questionNumber as seed so questions 1-10 always get same shuffled distribution
+    const seed = Math.floor(Date.now() / 60000); // Changes every minute, but consistent within a quiz generation
+    let random = seed;
+    for (let i = difficultyDistribution.length - 1; i > 0; i--) {
+      random = (random * 9301 + 49297) % 233280; // Simple LCG
+      const j = Math.floor((random / 233280) * (i + 1));
+      [difficultyDistribution[i], difficultyDistribution[j]] = [difficultyDistribution[j], difficultyDistribution[i]];
+    }
+
+    // Select category based on question number (1-10)
+    const questionCategory = difficultyDistribution[questionNumber - 1] || 'single-domain-multiple-topics';
+    console.log(`[DIFFICULTY] Q${questionNumber}: ${questionCategory}`);
 
     if (userId) {
       try {
