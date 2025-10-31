@@ -55,10 +55,10 @@ export default function Login() {
           <div className="neu-logo">
             <div className="neu-logo-icon">
               <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="30" cy="30" r="25" fill="#1a1a2e" stroke="none"/>
+                <circle cx="30" cy="30" r="25" fill="#000000" stroke="none"/>
                 <path d="M30 15 L22 23 L22 38 L30 46 L38 38 L38 23 Z"
-                      fill="none" stroke="#818cf8" strokeWidth="2.5" strokeLinejoin="round"/>
-                <circle cx="30" cy="30" r="5" fill="#818cf8"/>
+                      fill="none" stroke="#2563eb" strokeWidth="2.5" strokeLinejoin="round"/>
+                <circle cx="30" cy="30" r="5" fill="#2563eb"/>
               </svg>
             </div>
             <div className="neu-logo-text">
@@ -290,7 +290,7 @@ export default function Login() {
 
       <style jsx>{`
         /* =====================================
-           NEOMORPHISM / SOFT UI DESIGN
+           BLUE PRIMARY DESIGN - TRUE BLACK
            ===================================== */
 
         * {
@@ -301,7 +301,7 @@ export default function Login() {
 
         .neu-container {
           min-height: 100vh;
-          background: #1a1a2e;
+          background: #000000;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
@@ -313,16 +313,14 @@ export default function Login() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: #1a1a2e;
+          background: #000000;
         }
 
         .neu-loading-card {
           padding: 3rem;
-          border-radius: 30px;
-          background: #1a1a2e;
-          box-shadow:
-            12px 12px 24px #0f0f1a,
-            -12px -12px 24px #252542;
+          border-radius: 16px;
+          background: #000000;
+          border: 1px solid #1a1a1a;
           text-align: center;
         }
 
@@ -330,12 +328,10 @@ export default function Login() {
           width: 60px;
           height: 60px;
           border-radius: 50%;
-          background: #1a1a2e;
+          background: #000000;
           margin: 0 auto 1.5rem;
           position: relative;
-          box-shadow:
-            inset 4px 4px 8px #0f0f1a,
-            inset -4px -4px 8px #252542;
+          border: 2px solid #1a1a1a;
         }
 
         .neu-spinner::before {
@@ -344,7 +340,7 @@ export default function Login() {
           inset: 10px;
           border-radius: 50%;
           border: 4px solid transparent;
-          border-top-color: #818cf8;
+          border-top-color: #2563eb;
           animation: neu-spin 1s linear infinite;
         }
 
@@ -353,7 +349,7 @@ export default function Login() {
         }
 
         .neu-loading-text {
-          color: #a8b2d1;
+          color: #9ca3af;
           font-size: 1rem;
           font-weight: 500;
         }
@@ -379,14 +375,12 @@ export default function Login() {
         .neu-logo-icon {
           width: 60px;
           height: 60px;
-          border-radius: 50%;
-          background: #1a1a2e;
+          border-radius: 12px;
+          background: #000000;
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow:
-            8px 8px 16px #0f0f1a,
-            -8px -8px 16px #252542;
+          border: 2px solid #2563eb;
         }
 
         .neu-logo-icon svg {
@@ -397,18 +391,18 @@ export default function Login() {
         .neu-logo-text h1 {
           font-size: 1.75rem;
           font-weight: 700;
-          color: #e2e8f0;
+          color: #ffffff;
           line-height: 1;
           margin-bottom: 0.25rem;
         }
 
         .neu-logo-text h1 span {
-          color: #818cf8;
+          color: #2563eb;
         }
 
         .neu-logo-text p {
           font-size: 0.875rem;
-          color: #a8b2d1;
+          color: #9ca3af;
           font-weight: 500;
         }
 
@@ -424,13 +418,11 @@ export default function Login() {
           gap: 0.5rem;
           padding: 0.75rem 1.25rem;
           border-radius: 50px;
-          background: #1a1a2e;
-          box-shadow:
-            6px 6px 12px #0f0f1a,
-            -6px -6px 12px #252542;
+          background: rgba(37, 99, 235, 0.1);
+          border: 1px solid #2563eb;
           margin-bottom: 2rem;
           font-size: 0.875rem;
-          color: #a8b2d1;
+          color: #60a5fa;
           font-weight: 600;
         }
 
@@ -438,14 +430,24 @@ export default function Login() {
           width: 8px;
           height: 8px;
           border-radius: 50%;
-          background: #818cf8;
-          box-shadow: 0 0 10px rgba(129, 140, 248, 0.5);
+          background: #2563eb;
+          box-shadow: 0 0 10px rgba(37, 99, 235, 0.6);
+          animation: pulse-blue 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-blue {
+          0%, 100% {
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.6);
+          }
+          50% {
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.9);
+          }
         }
 
         .neu-title {
           font-size: clamp(2.5rem, 5vw, 3.5rem);
           font-weight: 800;
-          color: #e2e8f0;
+          color: #ffffff;
           line-height: 1.1;
           margin-bottom: 1.5rem;
           text-align: center;
@@ -453,7 +455,7 @@ export default function Login() {
 
         .neu-subtitle {
           text-align: center;
-          color: #a8b2d1;
+          color: #9ca3af;
           font-size: 1.063rem;
           line-height: 1.7;
           margin-bottom: 3rem;
@@ -462,18 +464,16 @@ export default function Login() {
         /* === Card === */
         .neu-card {
           padding: 2.5rem;
-          border-radius: 30px;
-          background: #1a1a2e;
-          box-shadow:
-            12px 12px 24px #0f0f1a,
-            -12px -12px 24px #252542;
+          border-radius: 16px;
+          background: #0a0a0a;
+          border: 1px solid #1a1a1a;
           margin-bottom: 3rem;
         }
 
         .neu-card-title {
           font-size: 1.5rem;
           font-weight: 700;
-          color: #e2e8f0;
+          color: #ffffff;
           margin-bottom: 2rem;
           text-align: center;
         }
@@ -483,31 +483,42 @@ export default function Login() {
           width: 100%;
           padding: 0;
           border: none;
-          border-radius: 20px;
-          background: #1a1a2e;
-          box-shadow:
-            8px 8px 16px #0f0f1a,
-            -8px -8px 16px #252542;
+          border-radius: 12px;
+          background: #2563eb;
           cursor: pointer;
-          transition: all 0.3s ease;
+          transition: all 0.2s ease;
           overflow: hidden;
+          position: relative;
+        }
+
+        .neu-btn::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+          opacity: 0;
+          transition: opacity 0.2s ease;
+        }
+
+        .neu-btn:hover:not(:disabled)::before {
+          opacity: 1;
         }
 
         .neu-btn:hover:not(:disabled) {
-          box-shadow:
-            4px 4px 8px #0f0f1a,
-            -4px -4px 8px #252542;
+          background: #1d4ed8;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
         }
 
         .neu-btn:active:not(:disabled) {
-          box-shadow:
-            inset 4px 4px 8px #0f0f1a,
-            inset -4px -4px 8px #252542;
+          transform: translateY(0);
+          box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
 
         .neu-btn:disabled {
           opacity: 0.6;
           cursor: not-allowed;
+          background: #1e40af;
         }
 
         .neu-btn-inner {
@@ -518,7 +529,7 @@ export default function Login() {
           padding: 1.25rem;
           font-size: 1rem;
           font-weight: 600;
-          color: #a8b2d1;
+          color: #ffffff;
         }
 
         .neu-google-icon {
@@ -538,13 +549,11 @@ export default function Login() {
           align-items: center;
           gap: 1rem;
           padding: 1rem;
-          border-radius: 15px;
-          background: #1a1a2e;
-          box-shadow:
-            inset 4px 4px 8px #0f0f1a,
-            inset -4px -4px 8px #252542;
+          border-radius: 12px;
+          background: rgba(34, 197, 94, 0.05);
+          border: 1px solid #22c55e;
           font-size: 0.938rem;
-          color: #a8b2d1;
+          color: #9ca3af;
           font-weight: 500;
         }
 
@@ -552,16 +561,14 @@ export default function Login() {
           width: 32px;
           height: 32px;
           border-radius: 50%;
-          background: #1a1a2e;
+          background: #22c55e;
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow:
-            4px 4px 8px #0f0f1a,
-            -4px -4px 8px #252542;
-          color: #818cf8;
+          color: #000000;
           font-weight: 700;
           font-size: 0.875rem;
+          flex-shrink: 0;
         }
 
         /* === Error === */
@@ -569,11 +576,9 @@ export default function Login() {
           display: flex;
           gap: 1rem;
           padding: 1.25rem;
-          border-radius: 15px;
-          background: #1a1a2e;
-          box-shadow:
-            inset 4px 4px 8px #0f0f1a,
-            inset -4px -4px 8px #252542;
+          border-radius: 12px;
+          background: rgba(239, 68, 68, 0.1);
+          border: 1px solid #ef4444;
           margin-top: 1.5rem;
         }
 
@@ -582,26 +587,25 @@ export default function Login() {
           height: 32px;
           border-radius: 50%;
           background: #ef4444;
-          color: white;
+          color: #ffffff;
           display: flex;
           align-items: center;
           justify-content: center;
           font-weight: 700;
           flex-shrink: 0;
-          box-shadow:
-            4px 4px 8px rgba(239, 68, 68, 0.3);
+          font-size: 1.25rem;
         }
 
         .neu-error-title {
           font-size: 0.938rem;
           font-weight: 600;
-          color: #e2e8f0;
+          color: #fca5a5;
           margin-bottom: 0.25rem;
         }
 
         .neu-error-message {
           font-size: 0.875rem;
-          color: #a8b2d1;
+          color: #9ca3af;
         }
 
         /* === Stats === */
@@ -614,32 +618,30 @@ export default function Login() {
 
         .neu-stat-card {
           padding: 1.5rem;
-          border-radius: 20px;
-          background: #1a1a2e;
-          box-shadow:
-            8px 8px 16px #0f0f1a,
-            -8px -8px 16px #252542;
+          border-radius: 12px;
+          background: #0a0a0a;
+          border: 1px solid #1a1a1a;
           text-align: center;
-          transition: all 0.3s ease;
+          transition: all 0.2s ease;
         }
 
         .neu-stat-card:hover {
-          box-shadow:
-            4px 4px 8px #0f0f1a,
-            -4px -4px 8px #252542;
+          border-color: #2563eb;
+          transform: translateY(-4px);
+          box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
         }
 
         .neu-stat-value {
           font-size: 2.5rem;
           font-weight: 800;
-          color: #818cf8;
+          color: #2563eb;
           line-height: 1;
           margin-bottom: 0.5rem;
         }
 
         .neu-stat-label {
           font-size: 0.875rem;
-          color: #a8b2d1;
+          color: #9ca3af;
           font-weight: 600;
         }
 
@@ -651,7 +653,7 @@ export default function Login() {
         .neu-section-title {
           font-size: 2.5rem;
           font-weight: 800;
-          color: #e2e8f0;
+          color: #ffffff;
           text-align: center;
           margin-bottom: 3rem;
         }
@@ -664,51 +666,75 @@ export default function Login() {
 
         .neu-feature-card {
           padding: 2rem;
-          border-radius: 25px;
-          background: #1a1a2e;
-          box-shadow:
-            10px 10px 20px #0f0f1a,
-            -10px -10px 20px #252542;
+          border-radius: 16px;
+          background: #0a0a0a;
+          border: 1px solid #1a1a1a;
           transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .neu-feature-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: linear-gradient(90deg, #2563eb, #3b82f6, #2563eb);
+          transform: scaleX(0);
+          transition: transform 0.3s ease;
+        }
+
+        .neu-feature-card:hover::before {
+          transform: scaleX(1);
         }
 
         .neu-feature-card:hover {
-          box-shadow:
-            6px 6px 12px #0f0f1a,
-            -6px -6px 12px #252542;
-          transform: translateY(-5px);
+          border-color: #2563eb;
+          transform: translateY(-8px);
+          box-shadow: 0 12px 32px rgba(37, 99, 235, 0.3);
         }
 
         .neu-feature-card-icon {
           width: 60px;
           height: 60px;
-          border-radius: 50%;
-          background: #1a1a2e;
+          border-radius: 12px;
+          background: rgba(37, 99, 235, 0.1);
+          border: 1px solid #2563eb;
           display: flex;
           align-items: center;
           justify-content: center;
           margin-bottom: 1.5rem;
-          box-shadow:
-            6px 6px 12px #0f0f1a,
-            -6px -6px 12px #252542;
+          transition: all 0.3s ease;
+        }
+
+        .neu-feature-card:hover .neu-feature-card-icon {
+          background: #2563eb;
+          transform: scale(1.1);
         }
 
         .neu-feature-card-icon svg {
           width: 28px;
           height: 28px;
-          color: #818cf8;
+          color: #2563eb;
+          transition: color 0.3s ease;
+        }
+
+        .neu-feature-card:hover .neu-feature-card-icon svg {
+          color: #ffffff;
         }
 
         .neu-feature-card-title {
           font-size: 1.375rem;
           font-weight: 700;
-          color: #e2e8f0;
+          color: #ffffff;
           margin-bottom: 1rem;
         }
 
         .neu-feature-card-desc {
           font-size: 0.938rem;
-          color: #a8b2d1;
+          color: #9ca3af;
           line-height: 1.7;
         }
 
@@ -716,6 +742,7 @@ export default function Login() {
         .neu-footer {
           margin-top: 5rem;
           padding-top: 3rem;
+          border-top: 1px solid #1a1a1a;
         }
 
         .neu-footer-content {
@@ -728,13 +755,13 @@ export default function Login() {
         .neu-footer-brand h4 {
           font-size: 1.25rem;
           font-weight: 700;
-          color: #e2e8f0;
+          color: #ffffff;
           margin-bottom: 0.75rem;
         }
 
         .neu-footer-brand p {
           font-size: 0.938rem;
-          color: #a8b2d1;
+          color: #9ca3af;
           line-height: 1.6;
         }
 
@@ -747,21 +774,21 @@ export default function Login() {
         .neu-footer-links h5 {
           font-size: 0.938rem;
           font-weight: 700;
-          color: #e2e8f0;
+          color: #ffffff;
           margin-bottom: 1rem;
         }
 
         .neu-footer-links a {
           display: block;
           font-size: 0.875rem;
-          color: #a8b2d1;
+          color: #9ca3af;
           text-decoration: none;
           margin-bottom: 0.5rem;
           transition: color 0.2s;
         }
 
         .neu-footer-links a:hover {
-          color: #818cf8;
+          color: #2563eb;
         }
 
         .neu-footer-bottom {
@@ -771,7 +798,7 @@ export default function Login() {
 
         .neu-footer-bottom p {
           font-size: 0.875rem;
-          color: #64748b;
+          color: #6b7280;
         }
 
         /* === Responsive === */
@@ -809,7 +836,7 @@ export default function Login() {
         }
 
         *:focus-visible {
-          outline: 3px solid #6366f1;
+          outline: 3px solid #2563eb;
           outline-offset: 3px;
           border-radius: 8px;
         }
