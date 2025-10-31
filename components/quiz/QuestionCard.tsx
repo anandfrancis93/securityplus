@@ -89,10 +89,11 @@ export default function QuestionCard({
               textAlign: 'left' as const,
               padding: showExplanation ? '32px' : '40px',
               backgroundColor: '#0f0f0f',
-              borderRadius: '40px',
+              borderRadius: '24px',
               transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
               cursor: showExplanation ? 'default' : 'pointer',
               border: 'none',
+              overflow: 'hidden' as const,
             };
 
             if (showExplanation) {
@@ -158,8 +159,8 @@ export default function QuestionCard({
                 }
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'flex-start', width: '100%' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginRight: '20px', flexShrink: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', width: '100%', gap: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
                   {/* Checkbox or Radio indicator */}
                   {question.questionType === 'multiple' ? (
                     <div style={{
