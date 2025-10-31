@@ -126,9 +126,8 @@ export default function ExplanationSection({
     const cleaned = cleanExplanation(text).toLowerCase();
 
     // Check for common placeholder phrases that indicate poor AI generation
+    // Only filter if the ENTIRE explanation is just a placeholder (not if it contains one)
     const invalidPhrases = [
-      'based on the question requirements',
-      'based on the requirements',
       'not applicable',
       'n/a',
       'see above',
@@ -137,8 +136,8 @@ export default function ExplanationSection({
       'placeholder',
     ];
 
-    // Check if explanation is just a placeholder phrase
-    if (invalidPhrases.some(phrase => cleaned === phrase || cleaned.startsWith(phrase))) {
+    // Check if explanation is ONLY a placeholder phrase (exact match or very short)
+    if (invalidPhrases.some(phrase => cleaned === phrase)) {
       return false;
     }
 
