@@ -117,7 +117,7 @@ export default function Login() {
           <div className="cyber-status">
             <span className="cyber-status-dot"></span>
             <span>SYSTEM ONLINE</span>
-            <span className="cyber-status-code">// SY0-701</span>
+            <span className="cyber-status-code">{'// SY0-701'}</span>
           </div>
 
           {/* Title */}
@@ -305,9 +305,9 @@ export default function Login() {
 
           <div className="cyber-footer-bottom">
             <span>© 2024 SECURITYPLUS AI</span>
-            <span className="cyber-footer-sep">//</span>
+            <span className="cyber-footer-sep">{'//'}</span>
             <span>ALL RIGHTS RESERVED</span>
-            <span className="cyber-footer-sep">//</span>
+            <span className="cyber-footer-sep">{'//'}</span>
             <span className="cyber-version">v2.1.0</span>
           </div>
         </footer>
