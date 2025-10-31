@@ -261,6 +261,82 @@ function analyzeQuestionForTopics_LEGACY(
   return extractedTopics;
 }
 
+/**
+ * Validate that explanations are consistent with their options
+ * Detects when AI generates contradictory explanations
+ *
+ * Returns validation result with issues found
+ */
+function validateExplanations(
+  options: string[],
+  correctAnswer: number | number[],
+  incorrectExplanations: string[]
+): { isValid: boolean; issues: string[] } {
+  const issues: string[] = [];
+  const correctIndices = Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer];
+
+  for (let i = 0; i < options.length; i++) {
+    const option = options[i]?.toLowerCase() || '';
+    const explanation = incorrectExplanations[i]?.toLowerCase() || '';
+    const isCorrectOption = correctIndices.includes(i);
+
+    // Skip empty explanations
+    if (!explanation.trim()) continue;
+
+    // Check for explicit contradiction phrases
+    const contradictionPatterns = [
+      // Explanation says it's wrong but it's the correct answer
+      {
+        pattern: /\b(incorrect|wrong|not (correct|right|appropriate|suitable))\b/,
+        shouldMatch: !isCorrectOption,
+        issue: `Option ${i} is ${isCorrectOption ? 'CORRECT' : 'INCORRECT'} but explanation says it's ${isCorrectOption ? 'wrong' : 'correct'}`
+      },
+      // Explanation says it's correct but it's a wrong answer
+      {
+        pattern: /\b(correct|right|appropriate|suitable|best (option|answer|choice))\b/,
+        shouldMatch: isCorrectOption,
+        issue: `Option ${i} is ${isCorrectOption ? 'CORRECT' : 'INCORRECT'} but explanation says it's ${isCorrectOption ? 'correct' : 'wrong'}`
+      }
+    ];
+
+    for (const { pattern, shouldMatch, issue } of contradictionPatterns) {
+      const matches = pattern.test(explanation);
+
+      // If pattern matches when it shouldn't, or doesn't match when it should
+      if (matches && !shouldMatch) {
+        issues.push(`⚠️ ${issue} - explanation mentions "${explanation.match(pattern)?.[0]}"`);
+      }
+    }
+
+    // Check if explanation discusses a completely different option
+    // Look for other option text being discussed in this explanation
+    for (let j = 0; j < options.length; j++) {
+      if (i === j) continue; // Skip self
+
+      const otherOption = options[j]?.toLowerCase() || '';
+
+      // If other option text appears prominently in this explanation
+      if (otherOption.length > 10 && explanation.includes(otherOption)) {
+        issues.push(`⚠️ Explanation for option ${i} extensively discusses option ${j} instead`);
+      }
+    }
+
+    // Check for contradictory logic phrases
+    if (isCorrectOption && explanation.includes('limits scope by excluding')) {
+      issues.push(`⚠️ Correct option ${i} explanation incorrectly criticizes it for limitations`);
+    }
+
+    if (!isCorrectOption && explanation.includes('making this the correct')) {
+      issues.push(`⚠️ Incorrect option ${i} explanation incorrectly claims it's correct`);
+    }
+  }
+
+  return {
+    isValid: issues.length === 0,
+    issues
+  };
+}
+
 // Shuffle question options to randomize correct answer position
 function shuffleQuestionOptions(questionData: any): any {
   // Create array of indices [0, 1, 2, 3]
@@ -587,6 +663,16 @@ CRITICAL REQUIREMENTS:
 4. Explain why the correct answer(s) are right
 5. Explain why each option is correct or wrong (provide 4 explanations)
 
+CRITICAL - EXPLANATION CONSISTENCY (VERY IMPORTANT):
+- Each explanation in "incorrectExplanations" array corresponds to an option at the SAME INDEX
+- If option at index 0 is CORRECT, explanation at index 0 must say WHY IT IS CORRECT
+- If option at index 1 is INCORRECT, explanation at index 1 must say WHY IT IS WRONG
+- NEVER write an explanation that contradicts whether the option is correct/incorrect
+- NEVER discuss a different option's content in another option's explanation
+- Example: If "Option B: Form a committee" is correct, its explanation must explain why forming a committee is correct
+- DO NOT say "this incorrectly limits scope" for the CORRECT answer
+- DO NOT say "this is the correct answer" for an INCORRECT answer
+
 CRITICAL - TOPIC TAGGING (VERY IMPORTANT):
 - In the "topics" array, you MUST include ONLY the EXACT topic strings provided above
 - Use these EXACT strings character-for-character: ${topicStrings.map(t => `"${t}"`).join(', ')}
@@ -737,6 +823,25 @@ ${prompt}`;
         ? exp
         : `This option is ${i === questionData.correctAnswer ? 'correct' : 'incorrect'} based on the question requirements.`;
     });
+
+    // VALIDATION: Check for contradictory explanations BEFORE shuffling
+    const validationResult = validateExplanations(
+      questionData.options,
+      questionData.correctAnswer,
+      questionData.incorrectExplanations
+    );
+
+    if (!validationResult.isValid) {
+      console.error('❌ Generated question has contradictory explanations:');
+      validationResult.issues.forEach(issue => console.error(`   ${issue}`));
+      console.error('   Question:', questionData.question);
+      console.error('   This question will be rejected and regeneration will be attempted.');
+
+      // Throw error to trigger retry logic
+      throw new Error(`Explanation validation failed: ${validationResult.issues.join('; ')}`);
+    }
+
+    console.log('✅ Explanation validation passed');
 
     // Shuffle the answer options to randomize correct answer position
     // Only shuffle for single-choice questions

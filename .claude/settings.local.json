@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "WebSearch",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd explanation validation to detect contradictory AI-generated content\n\nImplemented validation logic to catch when Claude generates explanations\nthat contradict the correctness of options (e.g., saying \"this is wrong\"\nfor the correct answer).\n\nChanges:\n- Added validateExplanations() function with multiple checks:\n  * Detects explanations calling correct answers \"incorrect\"\n  * Detects explanations calling incorrect answers \"correct\"\n  * Detects explanations discussing wrong options\n  * Detects specific contradictory phrases like \"limits scope by excluding\"\n    for correct answers or \"making this the correct\" for wrong answers\n\n- Integrated validation into question generation flow:\n  * Runs BEFORE option shuffling to check original indices\n  * Throws error if validation fails, triggering retry logic\n  * Logs all validation issues for debugging\n\n- Enhanced prompt with EXPLANATION CONSISTENCY section:\n  * Explicitly tells Claude that explanations must match option correctness\n  * Provides clear examples of what NOT to do\n  * Uses your actual problematic question as a reference\n\n- Existing retry logic (3 attempts) now handles validation failures:\n  * Question regenerated up to 3 times if explanations are contradictory\n  * Exponential backoff between retries\n\nThis prevents questions like the one you showed (where Option B was correct\nbut its explanation said \"it incorrectly limits scope\") from reaching users.\n\nCost impact: Minimal - only retries on the ~1-5% of questions with bad\nexplanations, and retry uses same token budget.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []
