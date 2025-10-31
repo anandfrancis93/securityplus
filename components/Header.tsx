@@ -51,8 +51,8 @@ export default function Header({
   }, [menuOpen]);
 
   return (
-    <div className={`w-full ${className}`}>
-      <div className="flex justify-between items-center">
+    <div className={`header-wrapper ${className}`}>
+      <div className="header-content">
         {/* Logo - Left Side */}
         <button
           onClick={() => {
@@ -62,36 +62,36 @@ export default function Header({
               router.push('/');
             }
           }}
-          className="flex items-center gap-3 px-4 py-2 hover:bg-white/5 rounded-lg transition-all duration-200 focus:outline-none"
+          className="header-logo-btn"
           title="Home"
         >
           {/* Logo Icon */}
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-500 to-cyan-500 flex items-center justify-center font-bold text-lg shadow-lg shadow-violet-500/25">
+          <div className="header-logo-icon">
             S+
           </div>
 
           {/* Logo Text */}
-          <div className="hidden sm:block">
-            <div className="text-lg font-bold tracking-tight leading-tight">
+          <div className="header-logo-text">
+            <div className="header-logo-title">
               SecurityPlus AI
             </div>
-            <div className="text-xs leading-tight text-zinc-400">
+            <div className="header-logo-subtitle">
               Master Your Skills
             </div>
           </div>
         </button>
 
         {/* Menu Button - Right Side */}
-        <div className="relative" ref={menuRef}>
+        <div className="header-menu-container" ref={menuRef}>
           <button
             id="menu"
             onClick={() => setMenuOpen(!menuOpen)}
-            className="p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-lg transition-all duration-200 focus:outline-none"
+            className="header-menu-btn"
             title="Menu"
             aria-label="Open menu"
           >
             <svg
-              className="w-5 h-5 text-white"
+              className="header-menu-icon"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -103,13 +103,13 @@ export default function Header({
 
           {/* Dropdown Menu */}
           {menuOpen && user && !user?.isAnonymous && (
-            <div className="absolute right-0 top-full mt-2 bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden min-w-[220px] z-50 shadow-xl">
+            <div className="header-dropdown">
               {/* User Name Section */}
-              <div className="px-4 py-3 border-b border-zinc-800 bg-zinc-900/50">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-500/20 to-purple-500/20 border border-violet-500/30 flex items-center justify-center">
+              <div className="header-dropdown-user">
+                <div className="header-dropdown-user-content">
+                  <div className="header-dropdown-user-icon">
                     <svg
-                      className="w-5 h-5 text-violet-300"
+                      className="header-dropdown-user-icon-svg"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -118,7 +118,7 @@ export default function Header({
                       <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                   </div>
-                  <span className="text-sm text-white font-medium">{user?.displayName || 'User'}</span>
+                  <span className="header-dropdown-user-name">{user?.displayName || 'User'}</span>
                 </div>
               </div>
 
@@ -130,15 +130,11 @@ export default function Header({
                     setMenuOpen(false);
                   }}
                   disabled={!hasData}
-                  className={`w-full px-4 py-3 text-sm text-left transition-all duration-200 flex items-center gap-3 ${
-                    hasData
-                      ? 'text-zinc-200 hover:bg-white/5 cursor-pointer'
-                      : 'text-zinc-600 cursor-not-allowed opacity-50'
-                  }`}
+                  className={`header-dropdown-item ${!hasData ? 'header-dropdown-item-disabled' : ''}`}
                   title={hasData ? 'Download backup of your performance data' : 'No data to export'}
                 >
                   <svg
-                    className={`w-4 h-4 ${hasData ? 'text-blue-400' : 'text-zinc-600'}`}
+                    className="header-dropdown-item-icon header-dropdown-item-icon-blue"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -152,9 +148,9 @@ export default function Header({
 
               {/* Import Data Button */}
               {onImportData && (
-                <label className="w-full px-4 py-3 text-sm text-left text-zinc-200 hover:bg-white/5 transition-all duration-200 flex items-center gap-3 cursor-pointer">
+                <label className="header-dropdown-item header-dropdown-item-label">
                   <svg
-                    className="w-4 h-4 text-green-400"
+                    className="header-dropdown-item-icon header-dropdown-item-icon-green"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -170,7 +166,7 @@ export default function Header({
                       onImportData(e);
                       setMenuOpen(false);
                     }}
-                    className="hidden"
+                    className="header-dropdown-file-input"
                   />
                 </label>
               )}
@@ -183,10 +179,10 @@ export default function Header({
                     setMenuOpen(false);
                   }}
                   disabled={!hasData}
-                  className="w-full px-4 py-3 text-sm text-left text-zinc-200 hover:bg-white/5 transition-all duration-200 flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className={`header-dropdown-item ${!hasData ? 'header-dropdown-item-disabled' : ''}`}
                 >
                   <svg
-                    className="w-4 h-4 text-purple-400"
+                    className="header-dropdown-item-icon header-dropdown-item-icon-purple"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -212,10 +208,10 @@ export default function Header({
                     }
                   }
                 }}
-                className="w-full px-4 py-3 text-sm text-left text-zinc-200 hover:bg-white/5 transition-all duration-200 flex items-center gap-3 border-t border-zinc-800"
+                className="header-dropdown-item header-dropdown-item-signout"
               >
                 <svg
-                  className="w-4 h-4 text-zinc-400"
+                  className="header-dropdown-item-icon header-dropdown-item-icon-gray"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -229,6 +225,262 @@ export default function Header({
           )}
         </div>
       </div>
+
+      <style jsx>{`
+        /* =====================================
+           DARK NEUMORPHISM / SOFT UI DESIGN
+           ===================================== */
+
+        .header-wrapper {
+          width: 100%;
+        }
+
+        .header-content {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        /* === Logo Button === */
+        .header-logo-btn {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          padding: 0.5rem 1rem;
+          background: #0f0f0f;
+          box-shadow:
+            6px 6px 12px #050505,
+            -6px -6px 12px #191919;
+          border-radius: 0.75rem;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          border: none;
+          cursor: pointer;
+          color: inherit;
+        }
+
+        .header-logo-btn:hover {
+          box-shadow:
+            3px 3px 6px #050505,
+            -3px -3px 6px #191919;
+          transform: translateY(-1px);
+        }
+
+        .header-logo-btn:focus {
+          outline: none;
+        }
+
+        .header-logo-icon {
+          width: 2.5rem;
+          height: 2.5rem;
+          border-radius: 0.5rem;
+          background: #0f0f0f;
+          box-shadow:
+            inset 4px 4px 8px #050505,
+            inset -4px -4px 8px #191919;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 700;
+          font-size: 1.125rem;
+          color: #8b5cf6;
+        }
+
+        .header-logo-text {
+          display: none;
+        }
+
+        @media (min-width: 640px) {
+          .header-logo-text {
+            display: block;
+          }
+        }
+
+        .header-logo-title {
+          font-size: 1.125rem;
+          font-weight: 700;
+          letter-spacing: -0.025em;
+          line-height: 1.2;
+          color: #e5e5e5;
+        }
+
+        .header-logo-subtitle {
+          font-size: 0.75rem;
+          line-height: 1.2;
+          color: #a8a8a8;
+        }
+
+        /* === Menu Container === */
+        .header-menu-container {
+          position: relative;
+        }
+
+        /* === Menu Button === */
+        .header-menu-btn {
+          padding: 0.75rem;
+          background: #0f0f0f;
+          box-shadow:
+            6px 6px 12px #050505,
+            -6px -6px 12px #191919;
+          border-radius: 0.75rem;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          border: none;
+          cursor: pointer;
+        }
+
+        .header-menu-btn:hover {
+          box-shadow:
+            3px 3px 6px #050505,
+            -3px -3px 6px #191919;
+        }
+
+        .header-menu-btn:focus {
+          outline: none;
+        }
+
+        .header-menu-icon {
+          width: 1.25rem;
+          height: 1.25rem;
+          color: #e5e5e5;
+        }
+
+        /* === Dropdown Menu === */
+        .header-dropdown {
+          position: absolute;
+          right: 0;
+          top: calc(100% + 0.5rem);
+          background: #0f0f0f;
+          box-shadow:
+            12px 12px 24px #050505,
+            -12px -12px 24px #191919;
+          border-radius: 1rem;
+          overflow: hidden;
+          min-width: 220px;
+          z-index: 50;
+        }
+
+        /* === User Section === */
+        .header-dropdown-user {
+          padding: 0.75rem 1rem;
+          background: #0f0f0f;
+          box-shadow:
+            inset 3px 3px 6px #050505,
+            inset -3px -3px 6px #191919;
+        }
+
+        .header-dropdown-user-content {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+
+        .header-dropdown-user-icon {
+          width: 2.5rem;
+          height: 2.5rem;
+          border-radius: 0.5rem;
+          background: #0f0f0f;
+          box-shadow:
+            4px 4px 8px #050505,
+            -4px -4px 8px #191919;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .header-dropdown-user-icon-svg {
+          width: 1.25rem;
+          height: 1.25rem;
+          color: #8b5cf6;
+        }
+
+        .header-dropdown-user-name {
+          font-size: 0.875rem;
+          color: #e5e5e5;
+          font-weight: 500;
+        }
+
+        /* === Dropdown Items === */
+        .header-dropdown-item {
+          width: 100%;
+          padding: 0.75rem 1rem;
+          font-size: 0.875rem;
+          text-align: left;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          color: #e5e5e5;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+        }
+
+        .header-dropdown-item:hover {
+          background: #0f0f0f;
+          box-shadow:
+            inset 3px 3px 6px #050505,
+            inset -3px -3px 6px #191919;
+        }
+
+        .header-dropdown-item-label {
+          width: 100%;
+          padding: 0.75rem 1rem;
+          font-size: 0.875rem;
+          text-align: left;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          color: #e5e5e5;
+          cursor: pointer;
+        }
+
+        .header-dropdown-item-label:hover {
+          background: #0f0f0f;
+          box-shadow:
+            inset 3px 3px 6px #050505,
+            inset -3px -3px 6px #191919;
+        }
+
+        .header-dropdown-item-disabled {
+          color: #666666;
+          cursor: not-allowed;
+          opacity: 0.5;
+        }
+
+        .header-dropdown-item-disabled:hover {
+          background: transparent;
+          box-shadow: none;
+        }
+
+        .header-dropdown-item-signout {
+          border-top: 1px solid #1a1a1a;
+        }
+
+        .header-dropdown-item-icon {
+          width: 1rem;
+          height: 1rem;
+        }
+
+        .header-dropdown-item-icon-blue {
+          color: #3b82f6;
+        }
+
+        .header-dropdown-item-icon-green {
+          color: #10b981;
+        }
+
+        .header-dropdown-item-icon-purple {
+          color: #8b5cf6;
+        }
+
+        .header-dropdown-item-icon-gray {
+          color: #a8a8a8;
+        }
+
+        .header-dropdown-file-input {
+          display: none;
+        }
+      `}</style>
     </div>
   );
 }
