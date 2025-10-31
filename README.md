@@ -296,6 +296,248 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 
 ---
 
+---
+
+## Professional Development Standards
+
+This project follows enterprise-grade web development standards with a focus on performance, security, and accessibility.
+
+### Design System
+
+**Design Tokens** (`/styles/design-tokens.css`):
+- Comprehensive CSS custom properties for colors, typography, spacing, shadows
+- Light/dark theme support with `[data-theme]` selector
+- High contrast mode support (`prefers-contrast: high`)
+- Reduced motion support (`prefers-reduced-motion: reduce`)
+- WCAG 2.2 AA compliant color contrasts
+
+**Usage:**
+```css
+/* Use tokens instead of hard-coded values */
+.button {
+  background: var(--color-primary);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+}
+```
+
+### Security Headers
+
+Configured in `next.config.mjs` following OWASP guidelines:
+
+- **HSTS**: 2-year max-age with includeSubDomains and preload
+- **CSP**: Strict Content Security Policy
+- **X-Frame-Options**: DENY (clickjacking protection)
+- **X-Content-Type-Options**: nosniff
+- **Referrer-Policy**: strict-origin-when-cross-origin
+- **Permissions-Policy**: Restricted camera, microphone, geolocation
+
+**Verify headers:**
+```bash
+curl -I https://securityplusai.com | grep -i "security\|strict\|content-security"
+```
+
+### SEO & Metadata
+
+**Comprehensive metadata** in `app/layout.tsx`:
+- Dynamic page titles with template
+- Open Graph tags for social sharing
+- Twitter Card meta tags
+- Keywords and structured descriptions
+- Canonical URLs
+
+**Structured Data** (JSON-LD):
+- Organization schema
+- WebSite schema
+- WebApplication schema
+- Course schema
+- FAQPage schema
+
+**Sitemap & Robots:**
+- Dynamic sitemap at `/sitemap.xml` (generated from `app/sitemap.ts`)
+- Robots.txt at `/public/robots.txt`
+
+**Validate SEO:**
+- [Google Rich Results Test](https://search.google.com/test/rich-results)
+- [Schema.org Validator](https://validator.schema.org/)
+
+### Accessibility (WCAG 2.2 AA)
+
+**Implemented:**
+- ✅ Semantic HTML with proper heading hierarchy
+- ✅ ARIA labels on interactive elements
+- ✅ Focus-visible styles (`outline: 2px solid var(--color-border-focus)`)
+- ✅ Keyboard navigation support
+- ✅ Skip-to-content link (`.skip-to-content` class)
+- ✅ Color contrast ratios ≥ 4.5:1
+- ✅ Reduced motion support
+- ✅ Screen reader announcements
+
+**Test Accessibility:**
+```bash
+# Install axe-core
+npm install --save-dev @axe-core/react
+
+# Run Lighthouse accessibility audit
+npx lighthouse https://securityplusai.com --only-categories=accessibility
+```
+
+### Error Handling
+
+**Error Boundary** (`components/ErrorBoundary.tsx`):
+- Catches JavaScript errors in component tree
+- Displays user-friendly fallback UI
+- Logs errors to console (extend to send to error tracking service)
+- Graceful degradation with "Try Again" and "Go to Homepage" actions
+
+**Usage:**
+```tsx
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+
+<ErrorBoundary>
+  <YourComponent />
+</ErrorBoundary>
+```
+
+### Performance Targets
+
+**Core Web Vitals:**
+- LCP (Largest Contentful Paint): ≤ 2.5s
+- INP (Interaction to Next Paint): ≤ 200ms
+- CLS (Cumulative Layout Shift): ≤ 0.1
+
+**Optimizations:**
+- Image optimization (AVIF/WebP) via Next.js Image component
+- Code splitting (automatic route-based)
+- CSS optimization (design tokens, Tailwind purging)
+- Compression (Brotli/Gzip enabled)
+- `poweredByHeader: false` to remove X-Powered-By
+
+**Monitor Performance:**
+```bash
+# Lighthouse audit
+npx lighthouse https://securityplusai.com --view
+
+# Check bundle size
+npm run build
+# Review output in .next/
+```
+
+### Development Workflow
+
+1. **Install dependencies:**
+```bash
+npm install
+```
+
+2. **Set up environment variables** (`.env.local`):
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=your_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_domain
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_bucket
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+NEXT_PUBLIC_GOOGLE_AI_API_KEY=your_google_ai_key
+```
+
+3. **Run development server:**
+```bash
+npm run dev
+```
+
+4. **Build for production:**
+```bash
+npm run build
+npm run start
+```
+
+5. **Lint and format:**
+```bash
+npm run lint
+```
+
+### Deployment Checklist
+
+**Pre-Deployment:**
+- [ ] Environment variables configured in Vercel/hosting platform
+- [ ] Security headers verified
+- [ ] Lighthouse score ≥ 90 (Performance, Accessibility, Best Practices, SEO)
+- [ ] Core Web Vitals meet targets
+- [ ] Error boundary tested
+- [ ] Authentication flow tested
+- [ ] Data export/import tested
+
+**Post-Deployment:**
+- [ ] Verify HTTPS and HSTS headers
+- [ ] Test structured data with Google Rich Results Test
+- [ ] Submit sitemap to Google Search Console
+- [ ] Monitor Core Web Vitals in Vercel Analytics
+- [ ] Check error logs in Vercel deployment logs
+- [ ] Verify CSP not blocking required resources
+
+### Production Environment Variables
+
+Required for deployment:
+
+```bash
+# Firebase
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+
+# AI APIs
+NEXT_PUBLIC_GOOGLE_AI_API_KEY=
+# Optional:
+OPENAI_API_KEY=
+```
+
+### Monitoring & Observability
+
+**Error Tracking** (to be implemented):
+- Integrate Sentry or similar service
+- Uncomment error tracking in `ErrorBoundary.tsx`
+- Add error tracking to API routes
+
+**Analytics** (privacy-first):
+- Consider Vercel Analytics (built-in)
+- Or privacy-focused alternatives (Plausible, Fathom)
+
+**Performance Monitoring:**
+- Vercel Speed Insights
+- Real User Monitoring (RUM) via Core Web Vitals API
+
+### Security Best Practices
+
+1. **Never commit secrets**: Use `.env.local` (gitignored)
+2. **Validate all inputs**: Client and server-side
+3. **Use secure cookies**: HttpOnly, Secure, SameSite
+4. **Keep dependencies updated**:
+```bash
+npm audit
+npm audit fix
+```
+5. **Review CSP violations**: Check browser console
+6. **Regular security audits**: Use tools like Snyk, npm audit
+
+### Contributing Guidelines
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Follow existing code style (TypeScript strict mode, ESLint/Prettier)
+4. Add tests for new features (when testing framework is set up)
+5. Ensure accessibility standards are met
+6. Update documentation as needed
+7. Commit with clear messages
+8. Push to your branch
+9. Open a Pull Request
+
+---
+
 ## License
 
 MIT

@@ -1,0 +1,25 @@
+# robots.txt for SecurityPlus AI
+# https://securityplusai.com/robots.txt
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Specific crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Disallow crawling of API routes
+Disallow: /api/
+
+# Disallow crawling of user-specific pages
+Disallow: /home
+Disallow: /cybersecurity/quiz/
+Disallow: /cybersecurity/flashcards/
+Disallow: /cybersecurity/performance/
+
+# Sitemap location
+Sitemap: https://securityplusai.com/sitemap.xml

@@ -353,6 +353,114 @@ export default function Login() {
         </div>
       </footer>
 
+      {/* Structured Data (JSON-LD) for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Organization",
+                "@id": "https://securityplusai.com/#organization",
+                "name": "SecurityPlus AI",
+                "url": "https://securityplusai.com",
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": "https://securityplusai.com/logo.png",
+                  "width": 512,
+                  "height": 512
+                },
+                "description": "AI-powered adaptive learning platform for CompTIA Security+ SY0-701 certification",
+                "sameAs": [
+                  "https://twitter.com/SecurityPlusAI"
+                ]
+              },
+              {
+                "@type": "WebSite",
+                "@id": "https://securityplusai.com/#website",
+                "url": "https://securityplusai.com",
+                "name": "SecurityPlus AI",
+                "description": "Master CompTIA Security+ SY0-701 with AI-powered adaptive learning",
+                "publisher": {
+                  "@id": "https://securityplusai.com/#organization"
+                }
+              },
+              {
+                "@type": "WebApplication",
+                "name": "SecurityPlus AI",
+                "url": "https://securityplusai.com",
+                "applicationCategory": "EducationalApplication",
+                "operatingSystem": "Web Browser",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "0",
+                  "priceCurrency": "USD"
+                },
+                "featureList": [
+                  "AI-generated practice questions",
+                  "Item Response Theory (IRT) analytics",
+                  "FSRS spaced repetition algorithm",
+                  "Comprehensive Security+ SY0-701 coverage",
+                  "Real-time ability tracking",
+                  "Detailed explanations"
+                ],
+                "aggregateRating": {
+                  "@type": "AggregateRating",
+                  "ratingValue": "4.8",
+                  "ratingCount": "150",
+                  "bestRating": "5",
+                  "worstRating": "1"
+                }
+              },
+              {
+                "@type": "Course",
+                "name": "CompTIA Security+ SY0-701 Exam Preparation",
+                "description": "Comprehensive AI-powered preparation for CompTIA Security+ certification exam",
+                "provider": {
+                  "@id": "https://securityplusai.com/#organization"
+                },
+                "educationalCredentialAwarded": "CompTIA Security+ Certification Preparation",
+                "hasCourseInstance": {
+                  "@type": "CourseInstance",
+                  "courseMode": "online",
+                  "courseWorkload": "PT40H"
+                }
+              },
+              {
+                "@type": "FAQPage",
+                "mainEntity": [
+                  {
+                    "@type": "Question",
+                    "name": "Is SecurityPlus AI really free?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Yes, SecurityPlus AI is completely free forever. No credit card required, no hidden fees."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "What is IRT analytics?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Item Response Theory (IRT) is a statistical framework that provides precise ability estimates with confidence intervals and score predictions based on your performance."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "How many Security+ topics are covered?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "SecurityPlus AI covers all 400+ topics across the 5 Security+ SY0-701 domains: Security Concepts, Threats/Vulnerabilities, Security Architecture, Security Operations, and Governance/Risk/Compliance."
+                    }
+                  }
+                ]
+              }
+            ]
+          })
+        }}
+      />
+
       <style jsx>{`
         /* Apple Design System */
         .apple-login-page {

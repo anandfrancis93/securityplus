@@ -8,7 +8,10 @@
       "Bash(git reset:*)",
       "Bash(npm install:*)",
       "Bash(vercel:*)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(test -f:*)",
+      "Bash(test:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []
