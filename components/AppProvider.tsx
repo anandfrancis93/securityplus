@@ -354,6 +354,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
 
       setCurrentQuiz(null);
+
+      // Clear quiz from localStorage
+      try {
+        localStorage.removeItem('quizInProgress');
+        console.log('Cleared quiz from localStorage (no questions answered)');
+      } catch (e) {
+        console.error('Error clearing localStorage:', e);
+      }
+
       return;
     }
 
@@ -389,6 +398,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
 
       setCurrentQuiz(null);
+
+      // Clear quiz from localStorage
+      try {
+        localStorage.removeItem('quizInProgress');
+        console.log('Cleared quiz from localStorage after ending quiz');
+      } catch (e) {
+        console.error('Error clearing localStorage:', e);
+      }
+
       await refreshProgress();
       console.log('Progress refreshed successfully');
 
