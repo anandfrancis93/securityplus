@@ -75,26 +75,37 @@ export default function ExplanationSection({
       return false;
     }
 
-    // Check if explanation mentions OTHER options' text (indicating misalignment)
+    // Check if explanation mentions the EXACT text of OTHER options (indicating misalignment)
     // This happens when AI generates explanations in wrong order
     const currentOption = question.options[optionIndex]?.toLowerCase() || '';
-    const currentOptionKeywords = currentOption.split(/\s+/).filter(word => word.length > 4);
 
     for (let i = 0; i < question.options.length; i++) {
       if (i === optionIndex) continue; // Skip the current option
 
       const otherOption = question.options[i]?.toLowerCase() || '';
-      const otherOptionKeywords = otherOption.split(/\s+/).filter(word => word.length > 4);
 
-      // If the explanation contains significant keywords from a DIFFERENT option,
-      // it's likely explaining the wrong option
-      const matchCount = otherOptionKeywords.filter(keyword =>
-        cleaned.includes(keyword)
-      ).length;
+      // Extract the core meaningful part of the option (remove common words)
+      const commonWords = ['the', 'and', 'for', 'with', 'this', 'that', 'from', 'have', 'been', 'will'];
+      const otherOptionWords = otherOption.split(/\s+/)
+        .filter(word => word.length > 3 && !commonWords.includes(word));
 
-      // If more than 2 keywords from another option appear, it's likely misaligned
-      if (matchCount >= 2) {
-        console.warn(`[ExplanationSection] Detected misaligned explanation for option ${optionIndex}: contains keywords from option ${i}`);
+      // Check if the explanation contains the FULL option text or most of the unique words
+      // Only flag as misaligned if it's clearly describing a different option
+      const fullOptionInExplanation = cleaned.includes(otherOption.substring(0, Math.min(20, otherOption.length)));
+
+      // Count how many unique words from the other option appear consecutively
+      const consecutiveMatches = otherOptionWords.filter((word, idx) => {
+        if (idx === 0) return cleaned.includes(word);
+        // Check if this word appears near the previous word
+        const prevWord = otherOptionWords[idx - 1];
+        const pattern = new RegExp(`${prevWord}.*${word}`, 'i');
+        return pattern.test(cleaned);
+      }).length;
+
+      // If the explanation contains the full option text or 3+ consecutive words from another option,
+      // it's clearly describing the wrong option
+      if (fullOptionInExplanation || consecutiveMatches >= 3) {
+        console.warn(`[ExplanationSection] Detected misaligned explanation for option ${optionIndex}: clearly describes option ${i}`);
         return false;
       }
     }
