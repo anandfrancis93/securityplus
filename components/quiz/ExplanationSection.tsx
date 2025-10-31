@@ -171,7 +171,7 @@ export default function ExplanationSection({
                     </div>
                     <div
                       style={{
-                        color: '#10b981',
+                        color: '#a8a8a8',
                         lineHeight: '1.6',
                         paddingLeft: '24px',
                       }}
@@ -207,7 +207,7 @@ export default function ExplanationSection({
                     </div>
                     <div
                       style={{
-                        color: isWrongSelection ? '#f43f5e' : '#a8a8a8',
+                        color: '#a8a8a8',
                         lineHeight: '1.6',
                         paddingLeft: '24px',
                       }}
