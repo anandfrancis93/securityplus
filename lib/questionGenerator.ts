@@ -656,10 +656,17 @@ CRITICAL - FOLLOW THESE EXACT PATTERNS FROM SECURITY+ EXAM QUESTIONS:
 Security+ Topics Reference (for context only):
 ${SECURITY_PLUS_TOPICS}
 
+CRITICAL - DO NOT INCLUDE LETTER PREFIXES IN OPTIONS:
+- DO NOT put "A)", "B)", "C)", "D)" in the option text
+- DO NOT put "A.", "B.", "C.", "D." in the option text
+- The UI will add the letters automatically
+- WRONG: "A) CISO" or "B) Deploy Layer 7 firewalls"
+- CORRECT: "CISO" or "Deploy Layer 7 firewalls"
+
 Return ONLY a valid JSON object in this exact format (no markdown, no extra text):
 {
   "question": "the question text",
-  "options": ["option A", "option B", "option C", "option D"],
+  "options": ["first option text WITHOUT letter prefix", "second option text WITHOUT letter prefix", "third option text WITHOUT letter prefix", "fourth option text WITHOUT letter prefix"],
   "correctAnswer": ${questionType === 'single' ? '0' : '[0, 2]'},
   "explanation": "why the correct answer(s) are right",
   "incorrectExplanations": ["why option 0 is wrong/right", "why option 1 is wrong/right", "why option 2 is wrong/right", "why option 3 is wrong/right"],
@@ -704,6 +711,18 @@ ${prompt}`;
     const jsonContent = textContent.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
 
     const questionData = JSON.parse(jsonContent);
+
+    // CRITICAL FIX: Strip any letter prefixes that AI may have accidentally included
+    // This prevents "A. B) Deploy..." bug where option shows both UI letter and AI letter
+    if (Array.isArray(questionData.options)) {
+      questionData.options = questionData.options.map((opt: string) => {
+        if (typeof opt === 'string') {
+          // Remove patterns like "A) ", "B. ", "C.) ", "D: " from the start
+          return opt.replace(/^[A-D][\.\)\:\]]\s*/i, '').trim();
+        }
+        return opt;
+      });
+    }
 
     // Validate and fix incorrectExplanations array
     if (!Array.isArray(questionData.incorrectExplanations)) {

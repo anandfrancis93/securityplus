@@ -288,8 +288,9 @@ export function getRelevantExamples(
       ? `[${ex.correctAnswer.map(i => String.fromCharCode(65 + i)).join(', ')}]`
       : String.fromCharCode(65 + ex.correctAnswer);
 
+    // Show options WITHOUT letter prefixes (we add those in the UI)
     const optionsText = ex.options.map((opt, i) =>
-      `${String.fromCharCode(65 + i)}) ${opt}`
+      `${opt}`
     ).join('\n');
 
     return `EXAMPLE ${idx + 1} (${ex.difficulty.toUpperCase()} - ${ex.category}):
