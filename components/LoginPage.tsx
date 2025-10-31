@@ -55,10 +55,10 @@ export default function Login() {
           <div className="neu-logo">
             <div className="neu-logo-icon">
               <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="30" cy="30" r="25" fill="#1a1a2e" stroke="none"/>
+                <circle cx="30" cy="30" r="25" fill="#e0e5ec" stroke="none"/>
                 <path d="M30 15 L22 23 L22 38 L30 46 L38 38 L38 23 Z"
-                      fill="none" stroke="#2563eb" strokeWidth="2.5" strokeLinejoin="round"/>
-                <circle cx="30" cy="30" r="5" fill="#2563eb"/>
+                      fill="none" stroke="#6366f1" strokeWidth="2.5" strokeLinejoin="round"/>
+                <circle cx="30" cy="30" r="5" fill="#6366f1"/>
               </svg>
             </div>
             <div className="neu-logo-text">
@@ -171,75 +171,20 @@ export default function Login() {
           <h2 className="neu-section-title">Key Features</h2>
 
           <div className="neu-features-grid">
-            <div className="neu-feature-card">
-              <div className="neu-feature-card-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                  <path d="M2 17l10 5 10-5"/>
-                  <path d="M2 12l10 5 10-5"/>
-                </svg>
+            {[
+              { icon: '🤖', title: 'AI Question Engine', desc: 'Unlimited adaptive questions generated across all Security+ topics with intelligent difficulty calibration' },
+              { icon: '📊', title: 'IRT Analytics', desc: 'Item Response Theory providing precision ability tracking with real-time confidence intervals' },
+              { icon: '🧠', title: 'FSRS Scheduler', desc: 'Advanced spaced repetition system optimizing review intervals for maximum retention' },
+              { icon: '✅', title: 'Exam Aligned', desc: 'Questions mirror actual CompTIA exam structure with validated difficulty distribution' },
+              { icon: '🎯', title: 'Full Coverage', desc: 'Complete mastery across all 5 Security+ domains with comprehensive topic mapping' },
+              { icon: '📖', title: 'Deep Analysis', desc: 'Comprehensive explanations ensuring thorough understanding of all concepts' }
+            ].map((feature, i) => (
+              <div key={i} className="neu-feature-card">
+                <div className="neu-feature-card-icon">{feature.icon}</div>
+                <h3 className="neu-feature-card-title">{feature.title}</h3>
+                <p className="neu-feature-card-desc">{feature.desc}</p>
               </div>
-              <h3 className="neu-feature-card-title">AI Question Engine</h3>
-              <p className="neu-feature-card-desc">Unlimited adaptive questions generated across all Security+ topics with intelligent difficulty calibration</p>
-            </div>
-
-            <div className="neu-feature-card">
-              <div className="neu-feature-card-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 3v18h18"/>
-                  <path d="M18 17V9"/>
-                  <path d="M13 17V5"/>
-                  <path d="M8 17v-3"/>
-                </svg>
-              </div>
-              <h3 className="neu-feature-card-title">IRT Analytics</h3>
-              <p className="neu-feature-card-desc">Item Response Theory providing precision ability tracking with real-time confidence intervals</p>
-            </div>
-
-            <div className="neu-feature-card">
-              <div className="neu-feature-card-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10"/>
-                  <polyline points="12 6 12 12 16 14"/>
-                </svg>
-              </div>
-              <h3 className="neu-feature-card-title">FSRS Scheduler</h3>
-              <p className="neu-feature-card-desc">Advanced spaced repetition system optimizing review intervals for maximum retention</p>
-            </div>
-
-            <div className="neu-feature-card">
-              <div className="neu-feature-card-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
-                  <polyline points="22 4 12 14.01 9 11.01"/>
-                </svg>
-              </div>
-              <h3 className="neu-feature-card-title">Exam Aligned</h3>
-              <p className="neu-feature-card-desc">Questions mirror actual CompTIA exam structure with validated difficulty distribution</p>
-            </div>
-
-            <div className="neu-feature-card">
-              <div className="neu-feature-card-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 2L2 7l10 5 10-5L12 2z"/>
-                  <path d="M12 22V12"/>
-                  <path d="M7 17l5 3 5-3"/>
-                </svg>
-              </div>
-              <h3 className="neu-feature-card-title">Full Coverage</h3>
-              <p className="neu-feature-card-desc">Complete mastery across all 5 Security+ domains with comprehensive topic mapping</p>
-            </div>
-
-            <div className="neu-feature-card">
-              <div className="neu-feature-card-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
-                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
-                </svg>
-              </div>
-              <h3 className="neu-feature-card-title">Deep Analysis</h3>
-              <p className="neu-feature-card-desc">Comprehensive explanations ensuring thorough understanding of all concepts</p>
-            </div>
+            ))}
           </div>
         </section>
 
@@ -290,8 +235,7 @@ export default function Login() {
 
       <style jsx>{`
         /* =====================================
-           HYBRID: NEUMORPHISM + 3D TRANSFORMS
-           Dark Navy + Blue Primary + Advanced Effects
+           NEOMORPHISM / SOFT UI DESIGN
            ===================================== */
 
         * {
@@ -302,7 +246,7 @@ export default function Login() {
 
         .neu-container {
           min-height: 100vh;
-          background: #1a1a2e;
+          background: #e0e5ec;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
@@ -314,29 +258,29 @@ export default function Login() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: #1a1a2e;
+          background: #e0e5ec;
         }
 
         .neu-loading-card {
           padding: 3rem;
-          border-radius: 20px;
-          background: #1a1a2e;
-          text-align: center;
+          border-radius: 30px;
+          background: #e0e5ec;
           box-shadow:
-            12px 12px 24px #0f0f1a,
-            -12px -12px 24px #252542;
+            12px 12px 24px #a3b1c6,
+            -12px -12px 24px #ffffff;
+          text-align: center;
         }
 
         .neu-spinner {
           width: 60px;
           height: 60px;
           border-radius: 50%;
-          background: #1a1a2e;
+          background: #e0e5ec;
           margin: 0 auto 1.5rem;
           position: relative;
           box-shadow:
-            inset 6px 6px 12px #0f0f1a,
-            inset -6px -6px 12px #252542;
+            inset 4px 4px 8px #a3b1c6,
+            inset -4px -4px 8px #ffffff;
         }
 
         .neu-spinner::before {
@@ -345,7 +289,7 @@ export default function Login() {
           inset: 10px;
           border-radius: 50%;
           border: 4px solid transparent;
-          border-top-color: #2563eb;
+          border-top-color: #6366f1;
           animation: neu-spin 1s linear infinite;
         }
 
@@ -354,7 +298,7 @@ export default function Login() {
         }
 
         .neu-loading-text {
-          color: #9ca3af;
+          color: #4a5568;
           font-size: 1rem;
           font-weight: 500;
         }
@@ -380,44 +324,14 @@ export default function Login() {
         .neu-logo-icon {
           width: 60px;
           height: 60px;
-          border-radius: 12px;
-          background: linear-gradient(145deg, #1c1c30, #181828);
+          border-radius: 50%;
+          background: #e0e5ec;
           display: flex;
           align-items: center;
           justify-content: center;
-          border: 2px solid #2563eb;
-          transform-style: preserve-3d;
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
           box-shadow:
-            8px 8px 16px #0f0f1a,
-            -8px -8px 16px #252542,
-            0 0 20px rgba(37, 99, 235, 0.3),
-            inset 0 1px 0 rgba(255, 255, 255, 0.05);
-          position: relative;
-        }
-
-        .neu-logo-icon::before {
-          content: '';
-          position: absolute;
-          inset: -2px;
-          border-radius: 12px;
-          background: linear-gradient(145deg, #2563eb, #3b82f6);
-          z-index: -1;
-          opacity: 0;
-          transition: opacity 0.3s ease;
-        }
-
-        .neu-logo-icon:hover::before {
-          opacity: 0.3;
-        }
-
-        .neu-logo-icon:hover {
-          transform: translateZ(15px) rotateY(8deg);
-          box-shadow:
-            4px 4px 8px #0f0f1a,
-            -4px -4px 8px #252542,
-            0 0 40px rgba(37, 99, 235, 0.6),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            8px 8px 16px #a3b1c6,
+            -8px -8px 16px #ffffff;
         }
 
         .neu-logo-icon svg {
@@ -428,18 +342,18 @@ export default function Login() {
         .neu-logo-text h1 {
           font-size: 1.75rem;
           font-weight: 700;
-          color: #ffffff;
+          color: #2d3748;
           line-height: 1;
           margin-bottom: 0.25rem;
         }
 
         .neu-logo-text h1 span {
-          color: #2563eb;
+          color: #6366f1;
         }
 
         .neu-logo-text p {
           font-size: 0.875rem;
-          color: #9ca3af;
+          color: #718096;
           font-weight: 500;
         }
 
@@ -455,49 +369,28 @@ export default function Login() {
           gap: 0.5rem;
           padding: 0.75rem 1.25rem;
           border-radius: 50px;
-          background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(37, 99, 235, 0.05));
-          border: 1px solid #2563eb;
+          background: #e0e5ec;
+          box-shadow:
+            6px 6px 12px #a3b1c6,
+            -6px -6px 12px #ffffff;
           margin-bottom: 2rem;
           font-size: 0.875rem;
-          color: #60a5fa;
+          color: #4a5568;
           font-weight: 600;
-          transform-style: preserve-3d;
-          transition: all 0.3s ease;
-          box-shadow:
-            0 2px 8px rgba(37, 99, 235, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.05);
-          position: relative;
-        }
-
-        .neu-badge:hover {
-          transform: translateY(-2px) translateZ(5px);
-          box-shadow:
-            0 4px 15px rgba(37, 99, 235, 0.4),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
         .neu-badge-dot {
           width: 8px;
           height: 8px;
           border-radius: 50%;
-          background: #2563eb;
-          box-shadow: 0 0 10px rgba(37, 99, 235, 0.6);
-          animation: pulse-blue 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-blue {
-          0%, 100% {
-            box-shadow: 0 0 10px rgba(37, 99, 235, 0.6);
-          }
-          50% {
-            box-shadow: 0 0 20px rgba(37, 99, 235, 0.9);
-          }
+          background: #6366f1;
+          box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
         }
 
         .neu-title {
           font-size: clamp(2.5rem, 5vw, 3.5rem);
           font-weight: 800;
-          color: #ffffff;
+          color: #2d3748;
           line-height: 1.1;
           margin-bottom: 1.5rem;
           text-align: center;
@@ -505,7 +398,7 @@ export default function Login() {
 
         .neu-subtitle {
           text-align: center;
-          color: #9ca3af;
+          color: #718096;
           font-size: 1.063rem;
           line-height: 1.7;
           margin-bottom: 3rem;
@@ -514,51 +407,18 @@ export default function Login() {
         /* === Card === */
         .neu-card {
           padding: 2.5rem;
-          border-radius: 24px;
-          background: linear-gradient(145deg, #1c1c30, #181828);
+          border-radius: 30px;
+          background: #e0e5ec;
+          box-shadow:
+            12px 12px 24px #a3b1c6,
+            -12px -12px 24px #ffffff;
           margin-bottom: 3rem;
-          position: relative;
-          box-shadow:
-            14px 14px 28px #0f0f1a,
-            -14px -14px 28px #252542,
-            0 0 30px rgba(37, 99, 235, 0.15),
-            inset 0 1px 0 rgba(255, 255, 255, 0.05);
-          transform-style: preserve-3d;
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .neu-card::before {
-          content: '';
-          position: absolute;
-          inset: -1px;
-          border-radius: 24px;
-          padding: 1px;
-          background: linear-gradient(145deg, rgba(37, 99, 235, 0.4), transparent, rgba(37, 99, 235, 0.2));
-          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          -webkit-mask-composite: xor;
-          mask-composite: exclude;
-          opacity: 0;
-          transition: opacity 0.4s ease;
-        }
-
-        .neu-card:hover::before {
-          opacity: 1;
-        }
-
-        .neu-card:hover {
-          transform: translateZ(20px) translateY(-6px);
-          box-shadow:
-            8px 8px 16px #0f0f1a,
-            -8px -8px 16px #252542,
-            0 0 50px rgba(37, 99, 235, 0.3),
-            0 20px 60px rgba(0, 0, 0, 0.4),
-            inset 0 1px 0 rgba(255, 255, 255, 0.08);
         }
 
         .neu-card-title {
           font-size: 1.5rem;
           font-weight: 700;
-          color: #ffffff;
+          color: #2d3748;
           margin-bottom: 2rem;
           text-align: center;
         }
@@ -568,70 +428,31 @@ export default function Login() {
           width: 100%;
           padding: 0;
           border: none;
-          border-radius: 16px;
-          background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-          cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          overflow: hidden;
-          position: relative;
-          transform-style: preserve-3d;
+          border-radius: 20px;
+          background: #e0e5ec;
           box-shadow:
-            8px 8px 16px rgba(15, 15, 26, 0.6),
-            -8px -8px 16px rgba(59, 130, 246, 0.15),
-            0 4px 20px rgba(37, 99, 235, 0.4),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        .neu-btn::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%, rgba(0,0,0,0.1) 100%);
-          opacity: 0;
-          transition: opacity 0.3s ease;
-        }
-
-        .neu-btn::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(circle at center, rgba(255,255,255,0.3), transparent 70%);
-          opacity: 0;
-          transform: scale(0);
-          transition: all 0.5s ease;
-        }
-
-        .neu-btn:hover:not(:disabled)::before {
-          opacity: 1;
-        }
-
-        .neu-btn:hover:not(:disabled)::after {
-          opacity: 1;
-          transform: scale(1);
+            8px 8px 16px #a3b1c6,
+            -8px -8px 16px #ffffff;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          overflow: hidden;
         }
 
         .neu-btn:hover:not(:disabled) {
-          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-          transform: translateY(-4px) translateZ(25px) rotateX(6deg);
           box-shadow:
-            10px 10px 20px rgba(15, 15, 26, 0.7),
-            -10px -10px 20px rgba(59, 130, 246, 0.2),
-            0 12px 40px rgba(37, 99, 235, 0.6),
-            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            4px 4px 8px #a3b1c6,
+            -4px -4px 8px #ffffff;
         }
 
         .neu-btn:active:not(:disabled) {
-          transform: translateY(0) translateZ(5px);
           box-shadow:
-            inset 6px 6px 12px rgba(15, 15, 26, 0.8),
-            inset -6px -6px 12px rgba(59, 130, 246, 0.1),
-            0 2px 10px rgba(37, 99, 235, 0.3);
+            inset 4px 4px 8px #a3b1c6,
+            inset -4px -4px 8px #ffffff;
         }
 
         .neu-btn:disabled {
           opacity: 0.6;
           cursor: not-allowed;
-          background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
         }
 
         .neu-btn-inner {
@@ -642,7 +463,7 @@ export default function Login() {
           padding: 1.25rem;
           font-size: 1rem;
           font-weight: 600;
-          color: #ffffff;
+          color: #4a5568;
         }
 
         .neu-google-icon {
@@ -662,11 +483,13 @@ export default function Login() {
           align-items: center;
           gap: 1rem;
           padding: 1rem;
-          border-radius: 12px;
-          background: rgba(34, 197, 94, 0.05);
-          border: 1px solid #22c55e;
+          border-radius: 15px;
+          background: #e0e5ec;
+          box-shadow:
+            inset 4px 4px 8px #a3b1c6,
+            inset -4px -4px 8px #ffffff;
           font-size: 0.938rem;
-          color: #9ca3af;
+          color: #4a5568;
           font-weight: 500;
         }
 
@@ -674,14 +497,16 @@ export default function Login() {
           width: 32px;
           height: 32px;
           border-radius: 50%;
-          background: #22c55e;
+          background: #e0e5ec;
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #000000;
+          box-shadow:
+            4px 4px 8px #a3b1c6,
+            -4px -4px 8px #ffffff;
+          color: #6366f1;
           font-weight: 700;
           font-size: 0.875rem;
-          flex-shrink: 0;
         }
 
         /* === Error === */
@@ -689,9 +514,11 @@ export default function Login() {
           display: flex;
           gap: 1rem;
           padding: 1.25rem;
-          border-radius: 12px;
-          background: rgba(239, 68, 68, 0.1);
-          border: 1px solid #ef4444;
+          border-radius: 15px;
+          background: #e0e5ec;
+          box-shadow:
+            inset 4px 4px 8px #a3b1c6,
+            inset -4px -4px 8px #ffffff;
           margin-top: 1.5rem;
         }
 
@@ -700,25 +527,26 @@ export default function Login() {
           height: 32px;
           border-radius: 50%;
           background: #ef4444;
-          color: #ffffff;
+          color: white;
           display: flex;
           align-items: center;
           justify-content: center;
           font-weight: 700;
           flex-shrink: 0;
-          font-size: 1.25rem;
+          box-shadow:
+            4px 4px 8px rgba(239, 68, 68, 0.3);
         }
 
         .neu-error-title {
           font-size: 0.938rem;
           font-weight: 600;
-          color: #fca5a5;
+          color: #2d3748;
           margin-bottom: 0.25rem;
         }
 
         .neu-error-message {
           font-size: 0.875rem;
-          color: #9ca3af;
+          color: #718096;
         }
 
         /* === Stats === */
@@ -731,52 +559,32 @@ export default function Login() {
 
         .neu-stat-card {
           padding: 1.5rem;
-          border-radius: 16px;
-          background: linear-gradient(145deg, #1c1c30, #181828);
-          text-align: center;
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-          position: relative;
-          transform-style: preserve-3d;
+          border-radius: 20px;
+          background: #e0e5ec;
           box-shadow:
-            10px 10px 20px #0f0f1a,
-            -10px -10px 20px #252542,
-            inset 0 1px 0 rgba(255, 255, 255, 0.03);
-        }
-
-        .neu-stat-card::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          border-radius: 16px;
-          background: linear-gradient(145deg, rgba(37, 99, 235, 0.15), transparent);
-          opacity: 0;
-          transition: opacity 0.4s ease;
-        }
-
-        .neu-stat-card:hover::after {
-          opacity: 1;
+            8px 8px 16px #a3b1c6,
+            -8px -8px 16px #ffffff;
+          text-align: center;
+          transition: all 0.3s ease;
         }
 
         .neu-stat-card:hover {
-          transform: translateY(-8px) translateZ(20px) rotateX(6deg);
           box-shadow:
-            6px 6px 12px #0f0f1a,
-            -6px -6px 12px #252542,
-            0 12px 35px rgba(37, 99, 235, 0.4),
-            inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            4px 4px 8px #a3b1c6,
+            -4px -4px 8px #ffffff;
         }
 
         .neu-stat-value {
           font-size: 2.5rem;
           font-weight: 800;
-          color: #2563eb;
+          color: #6366f1;
           line-height: 1;
           margin-bottom: 0.5rem;
         }
 
         .neu-stat-label {
           font-size: 0.875rem;
-          color: #9ca3af;
+          color: #718096;
           font-weight: 600;
         }
 
@@ -788,7 +596,7 @@ export default function Login() {
         .neu-section-title {
           font-size: 2.5rem;
           font-weight: 800;
-          color: #ffffff;
+          color: #2d3748;
           text-align: center;
           margin-bottom: 3rem;
         }
@@ -801,99 +609,46 @@ export default function Login() {
 
         .neu-feature-card {
           padding: 2rem;
-          border-radius: 20px;
-          background: linear-gradient(145deg, #1c1c30, #181828);
-          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-          position: relative;
-          overflow: hidden;
-          transform-style: preserve-3d;
+          border-radius: 25px;
+          background: #e0e5ec;
           box-shadow:
-            12px 12px 24px #0f0f1a,
-            -12px -12px 24px #252542,
-            0 0 20px rgba(37, 99, 235, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.03);
-        }
-
-        .neu-feature-card::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 4px;
-          background: linear-gradient(90deg, transparent, #2563eb 50%, #3b82f6, #2563eb, transparent);
-          transform: scaleX(0);
-          transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 0 25px rgba(37, 99, 235, 0.8);
-        }
-
-        .neu-feature-card::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.08), transparent 70%);
-          opacity: 0;
-          transition: opacity 0.5s ease;
-        }
-
-        .neu-feature-card:hover::before {
-          transform: scaleX(1);
-        }
-
-        .neu-feature-card:hover::after {
-          opacity: 1;
+            10px 10px 20px #a3b1c6,
+            -10px -10px 20px #ffffff;
+          transition: all 0.3s ease;
         }
 
         .neu-feature-card:hover {
-          transform: translateY(-14px) translateZ(30px) rotateX(4deg);
           box-shadow:
-            6px 6px 12px #0f0f1a,
-            -6px -6px 12px #252542,
-            0 20px 60px rgba(37, 99, 235, 0.5),
-            0 10px 30px rgba(0, 0, 0, 0.5),
-            inset 0 1px 0 rgba(255, 255, 255, 0.06),
-            0 0 80px rgba(37, 99, 235, 0.2);
+            6px 6px 12px #a3b1c6,
+            -6px -6px 12px #ffffff;
+          transform: translateY(-5px);
         }
 
         .neu-feature-card-icon {
           width: 60px;
           height: 60px;
-          border-radius: 12px;
-          background: rgba(37, 99, 235, 0.1);
-          border: 1px solid #2563eb;
+          border-radius: 50%;
+          background: #e0e5ec;
           display: flex;
           align-items: center;
           justify-content: center;
+          font-size: 2rem;
           margin-bottom: 1.5rem;
-          transition: all 0.3s ease;
-        }
-
-        .neu-feature-card:hover .neu-feature-card-icon {
-          background: #2563eb;
-          transform: scale(1.1);
-        }
-
-        .neu-feature-card-icon svg {
-          width: 28px;
-          height: 28px;
-          color: #2563eb;
-          transition: color 0.3s ease;
-        }
-
-        .neu-feature-card:hover .neu-feature-card-icon svg {
-          color: #ffffff;
+          box-shadow:
+            6px 6px 12px #a3b1c6,
+            -6px -6px 12px #ffffff;
         }
 
         .neu-feature-card-title {
           font-size: 1.375rem;
           font-weight: 700;
-          color: #ffffff;
+          color: #2d3748;
           margin-bottom: 1rem;
         }
 
         .neu-feature-card-desc {
           font-size: 0.938rem;
-          color: #9ca3af;
+          color: #718096;
           line-height: 1.7;
         }
 
@@ -901,7 +656,6 @@ export default function Login() {
         .neu-footer {
           margin-top: 5rem;
           padding-top: 3rem;
-          border-top: 1px solid #1a1a1a;
         }
 
         .neu-footer-content {
@@ -914,13 +668,13 @@ export default function Login() {
         .neu-footer-brand h4 {
           font-size: 1.25rem;
           font-weight: 700;
-          color: #ffffff;
+          color: #2d3748;
           margin-bottom: 0.75rem;
         }
 
         .neu-footer-brand p {
           font-size: 0.938rem;
-          color: #9ca3af;
+          color: #718096;
           line-height: 1.6;
         }
 
@@ -933,21 +687,21 @@ export default function Login() {
         .neu-footer-links h5 {
           font-size: 0.938rem;
           font-weight: 700;
-          color: #ffffff;
+          color: #2d3748;
           margin-bottom: 1rem;
         }
 
         .neu-footer-links a {
           display: block;
           font-size: 0.875rem;
-          color: #9ca3af;
+          color: #718096;
           text-decoration: none;
           margin-bottom: 0.5rem;
           transition: color 0.2s;
         }
 
         .neu-footer-links a:hover {
-          color: #2563eb;
+          color: #6366f1;
         }
 
         .neu-footer-bottom {
@@ -957,7 +711,7 @@ export default function Login() {
 
         .neu-footer-bottom p {
           font-size: 0.875rem;
-          color: #6b7280;
+          color: #a0aec0;
         }
 
         /* === Responsive === */
@@ -995,7 +749,7 @@ export default function Login() {
         }
 
         *:focus-visible {
-          outline: 3px solid #2563eb;
+          outline: 3px solid #6366f1;
           outline-offset: 3px;
           border-radius: 8px;
         }
