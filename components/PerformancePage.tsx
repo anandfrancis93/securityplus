@@ -184,7 +184,7 @@ function generatePerformanceInsights(userProgress: UserProgress | null, estimate
 }
 
 export default function QuizPerformance() {
-  const { user, userProgress, predictedScore, loading, resetProgress, liquidGlass, refreshProgress } = useApp();
+  const { user, userProgress, predictedScore, loading, resetProgress, refreshProgress } = useApp();
   const router = useRouter();
   const [irtExpanded, setIrtExpanded] = useState(false);
   const [recentQuizzesExpanded, setRecentQuizzesExpanded] = useState(false);
@@ -369,7 +369,7 @@ export default function QuizPerformance() {
           // User clicked Cancel, ask if they want to replace instead
           replaceChoice = confirm(
             `Do you want to REPLACE your current data with the backup?\n\n` +
-            `⚠️ WARNING: This will delete your current ${currentQuizCount} quiz${currentQuizCount !== 1 ? 'zes' : ''} ` +
+            `WARNING: This will delete your current ${currentQuizCount} quiz${currentQuizCount !== 1 ? 'zes' : ''} ` +
             `and replace with ${quizCount} quiz${quizCount !== 1 ? 'zes' : ''} from the backup.\n\n` +
             `This action cannot be undone.\n\n` +
             `Click OK to REPLACE\n` +
@@ -438,32 +438,28 @@ export default function QuizPerformance() {
 
   if (loading) {
     return (
-      <div className={`flex items-center justify-center min-h-screen ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black font-mono'}`}>
-        {liquidGlass && (
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-            <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-          </div>
-        )}
+      <div className="flex items-center justify-center min-h-screen bg-zinc-950 relative overflow-hidden">
+        {/* Gradient mesh background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        </div>
+
         <div className="relative">
-          {/* Liquid glass card */}
-          <div className={`${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-slate-800/95 backdrop-blur-xl border border-slate-700/50 rounded-3xl'} p-16 md:p-20 shadow-2xl`}>
-            {liquidGlass && (
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50 pointer-events-none" />
-            )}
-            <div className="relative text-center">
+          <div className="bg-zinc-900/50 backdrop-blur-sm border border-zinc-800/50 rounded-2xl p-16 md:p-20 shadow-2xl">
+            <div className="text-center">
               {/* Animated icon */}
               <div className="relative mx-auto w-32 h-32 md:w-40 md:h-40 mb-8">
                 {/* Outer ring */}
-                <div className={`absolute inset-0 ${liquidGlass ? 'border-4 border-white/20 rounded-full' : 'border-4 border-slate-700 rounded-full'}`}></div>
+                <div className="absolute inset-0 border-4 border-zinc-800 rounded-full"></div>
                 {/* Spinning gradient ring */}
                 <div className="absolute inset-0 animate-spin">
-                  <div className={`w-full h-full rounded-full ${liquidGlass ? 'border-4 border-transparent border-t-cyan-400 border-r-cyan-400/50' : 'border-4 border-transparent border-t-cyan-500 border-r-cyan-500/50'}`}></div>
+                  <div className="w-full h-full rounded-full border-4 border-transparent border-t-cyan-400 border-r-cyan-400/50"></div>
                 </div>
                 {/* Center icon - graduation cap */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <svg className={`w-16 h-16 md:w-20 md:h-20 ${liquidGlass ? 'text-cyan-400' : 'text-cyan-500'}`} fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-16 h-16 md:w-20 md:h-20 text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M11.7 2.805a.75.75 0 01.6 0A60.65 60.65 0 0122.83 8.72a.75.75 0 01-.231 1.337 49.949 49.949 0 00-9.902 3.912l-.003.002-.34.18a.75.75 0 01-.707 0A50.009 50.009 0 007.5 12.174v-.224c0-.131.067-.248.172-.311a54.614 54.614 0 014.653-2.52.75.75 0 00-.65-1.352 56.129 56.129 0 00-4.78 2.589 1.858 1.858 0 00-.859 1.228 49.803 49.803 0 00-4.634-1.527.75.75 0 01-.231-1.337A60.653 60.653 0 0111.7 2.805z" />
                     <path d="M13.06 15.473a48.45 48.45 0 017.666-3.282c.134 1.414.22 2.843.255 4.285a.75.75 0 01-.46.71 47.878 47.878 0 00-8.105 4.342.75.75 0 01-.832 0 47.877 47.877 0 00-8.104-4.342.75.75 0 01-.461-.71c.035-1.442.121-2.87.255-4.286A48.4 48.4 0 016 13.18v1.27a1.5 1.5 0 00-.14 2.508c-.09.38-.222.753-.397 1.11.452.213.901.434 1.346.661a6.729 6.729 0 00.551-1.608 1.5 1.5 0 00.14-2.67v-.645a48.549 48.549 0 013.44 1.668 2.25 2.25 0 002.12 0z" />
                     <path d="M4.462 19.462c.42-.419.753-.89 1-1.394.453.213.902.434 1.347.661a6.743 6.743 0 01-1.286 1.794.75.75 0 11-1.06-1.06z" />
@@ -471,10 +467,10 @@ export default function QuizPerformance() {
                 </div>
               </div>
               {/* Loading text */}
-              <p className={`text-2xl md:text-3xl font-bold tracking-tight ${liquidGlass ? 'text-white' : 'text-slate-200'}`}>
+              <p className="text-2xl md:text-3xl font-bold tracking-tight text-white">
                 Loading performance data...
               </p>
-              <p className={`text-base md:text-lg mt-4 ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>
+              <p className="text-base md:text-lg mt-4 text-zinc-400">
                 Please wait
               </p>
             </div>
@@ -568,15 +564,13 @@ export default function QuizPerformance() {
   const upperAbilityColor = getAbilityColor(abilityCI.upper);
 
   return (
-    <div className={`min-h-screen text-white relative overflow-hidden ${liquidGlass ? 'bg-gradient-to-br from-black via-zinc-950 to-black' : 'bg-black font-mono'}`}>
+    <div className="min-h-screen text-white relative overflow-hidden bg-zinc-950">
       {/* Animated Background Gradients */}
-      {liquidGlass && (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-          <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-        </div>
-      )}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+      </div>
 
       {/* Header - Full width */}
       <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
@@ -589,7 +583,7 @@ export default function QuizPerformance() {
       </div>
 
       <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
-        {/* Hero Section - Apple Style */}
+        {/* Hero Section */}
         <section className="text-center mb-8">
             <div className="max-w-5xl mx-auto space-y-8">
               <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight leading-[0.95]">
@@ -600,23 +594,18 @@ export default function QuizPerformance() {
                   Performance
                 </span>
               </h1>
-              <p className={`text-xl sm:text-2xl md:text-3xl font-light max-w-3xl mx-auto leading-relaxed ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'}`}>
+              <p className="text-xl sm:text-2xl md:text-3xl font-light max-w-3xl mx-auto leading-relaxed text-zinc-400">
                 Track your progress and master Security+
               </p>
             </div>
         </section>
 
         {/* Predicted Score Card */}
-        <div className={`relative p-12 md:p-16 mb-12 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl' : 'bg-black border border-zinc-800 rounded-md'} transition-all duration-700`}>
-          {/* Light reflection */}
-          {liquidGlass && (
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
-          )}
-
+        <div className="relative p-12 md:p-16 mb-12 bg-zinc-900/50 border border-zinc-800/50 rounded-2xl shadow-2xl transition-all duration-300 hover:bg-zinc-900/60 hover:border-zinc-700/50">
           <div className="relative text-center mb-10">
-            <h2 className={`text-3xl md:text-4xl text-white mb-2 tracking-tight font-bold ${liquidGlass ? '' : 'font-mono'}`}>Predicted Exam Score</h2>
+            <h2 className="text-3xl md:text-4xl text-white mb-2 tracking-tight font-bold">Predicted Exam Score</h2>
             {totalAnswered >= MIN_QUESTIONS_FOR_PREDICTION && (
-              <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'} mb-8`}>
+              <p className="text-sm md:text-base text-zinc-500 mb-8">
                 Based on {totalAnswered} question{totalAnswered !== 1 ? 's' : ''}
               </p>
             )}
@@ -627,7 +616,7 @@ export default function QuizPerformance() {
                   {/* Score Range Display */}
                   {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
                     <>
-                      <div className={`text-7xl md:text-8xl font-bold transition-all duration-700 flex items-center justify-center gap-2 sm:gap-4`}>
+                      <div className="text-7xl md:text-8xl font-bold transition-all duration-300 flex items-center justify-center gap-2 sm:gap-4">
                         <span className={
                           lowerColor === 'emerald' ? 'text-emerald-400' :
                           lowerColor === 'yellow' ? 'text-yellow-400' :
@@ -647,7 +636,7 @@ export default function QuizPerformance() {
                     </>
                   ) : (
                     <>
-                      <div className={`text-8xl md:text-9xl font-bold mb-2 transition-all duration-700 ${
+                      <div className={`text-8xl md:text-9xl font-bold mb-2 transition-all duration-300 ${
                         totalAnswered === 0 ? 'text-zinc-400' :
                         isGoodPerformance ? 'text-emerald-400' :
                         isNeedsWork ? 'text-red-400' :
@@ -655,48 +644,40 @@ export default function QuizPerformance() {
                       }`}>
                         {predictedScore}
                       </div>
-                      <div className={`text-xl md:text-2xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'} mb-6`}>
+                      <div className="text-xl md:text-2xl text-zinc-500 mb-6">
                         Point Estimate (need more data for CI)
                       </div>
                     </>
                   )}
                   {/* Hover tooltip */}
-                  <div className={`absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 w-80 max-w-[90vw] ${liquidGlass ? 'bg-zinc-950/95 backdrop-blur-2xl rounded-[32px] border-white/20 shadow-2xl' : 'bg-zinc-900 rounded-2xl border-zinc-800'} border p-5 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-700`}>
-                    {/* Light reflection overlay */}
-                    {liquidGlass && (
-                      <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] pointer-events-none" />
-                    )}
-
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 w-80 max-w-[90vw] bg-zinc-900/95 backdrop-blur-sm rounded-2xl border border-zinc-800/50 shadow-2xl p-5 z-50 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-300">
                     <div className="relative">
-                      <p className={`text-sm leading-relaxed ${liquidGlass ? 'text-zinc-300' : 'text-zinc-400'}`}>
+                      <p className="text-sm leading-relaxed text-zinc-300">
                         We are 95% confident your exam score will fall between <strong className="text-white">{scoreCI.lower}</strong> and <strong className="text-white">{scoreCI.upper}</strong>.
                       </p>
                     </div>
                   </div>
                 </div>
-                <div className={`text-xl md:text-2xl text-zinc-500 ${liquidGlass ? '' : 'font-mono'}`}>out of 900</div>
+                <div className="text-xl md:text-2xl text-zinc-500">out of 900</div>
               </>
             ) : (
               <div className="space-y-6 mt-8">
-                <div className={`relative p-8 ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10' : 'bg-zinc-900 rounded-2xl border border-zinc-800'}`}>
-                  {liquidGlass && (
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-3xl" />
-                  )}
+                <div className="relative p-8 bg-zinc-900/50 rounded-2xl border border-zinc-800/50">
                   <div className="relative">
                     <svg className="w-16 h-16 mx-auto mb-4 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
                     </svg>
-                    <h3 className={`text-2xl md:text-3xl font-bold text-white mb-3 ${liquidGlass ? '' : 'font-mono'}`}>
+                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
                       Insufficient Data
                     </h3>
-                    <p className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'} mb-4`}>
+                    <p className="text-lg md:text-xl text-zinc-400 mb-4">
                       {totalAnswered === 0 ? (
                         <>Start answering questions to generate your predicted score</>
                       ) : (
                         <>Answer <span className="text-white font-bold">{questionsNeeded} more</span> {questionsNeeded === 1 ? 'question' : 'questions'} for a reliable IRT prediction</>
                       )}
                     </p>
-                    <p className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-600' : 'text-zinc-700 font-mono'}`}>
+                    <p className="text-sm md:text-base text-zinc-600">
                       Minimum {MIN_QUESTIONS_FOR_PREDICTION} questions required for analysis
                     </p>
                   </div>
@@ -706,8 +687,7 @@ export default function QuizPerformance() {
           </div>
 
           <div className="relative mt-12">
-            <div className={`w-full h-6 relative overflow-hidden ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl' : 'bg-zinc-900 border border-zinc-800 rounded-md'}`}>
-              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-2xl" />}
+            <div className="w-full h-6 relative overflow-hidden bg-zinc-900/50 border border-zinc-800/50 rounded-2xl">
               {/* Progress bar fill - show range if CI available, otherwise point estimate */}
               {hasEnoughQuestions && (
                 isFinite(abilityStandardError) && totalAnswered >= 1 ? (
@@ -716,86 +696,60 @@ export default function QuizPerformance() {
                     {/* Red segment: 100-599 */}
                     {scoreCI.lower < 600 && (
                       <div
-                        className={`h-6 absolute transition-all duration-700 ${
-                          liquidGlass
-                            ? 'bg-gradient-to-r from-red-500 via-red-400 to-red-600'
-                            : 'bg-red-500'
-                        }`}
+                        className="h-6 absolute transition-all duration-300 bg-gradient-to-r from-red-500 to-red-600 shadow-[0_0_20px_rgba(239,68,68,0.3)]"
                         style={{
                           left: `${Math.max(0, ((scoreCI.lower - 100) / 800) * 100)}%`,
                           width: `${((Math.min(scoreCI.upper, 599) - scoreCI.lower) / 800) * 100}%`,
-                          borderTopLeftRadius: liquidGlass ? '1rem' : '0.375rem',
-                          borderBottomLeftRadius: liquidGlass ? '1rem' : '0.375rem',
-                          borderTopRightRadius: scoreCI.upper < 600 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
-                          borderBottomRightRadius: scoreCI.upper < 600 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                          borderTopLeftRadius: '1rem',
+                          borderBottomLeftRadius: '1rem',
+                          borderTopRightRadius: scoreCI.upper < 600 ? '1rem' : '0',
+                          borderBottomRightRadius: scoreCI.upper < 600 ? '1rem' : '0',
                         }}
-                      >
-                        {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" style={{ borderTopLeftRadius: '1rem', borderBottomLeftRadius: '1rem', borderTopRightRadius: scoreCI.upper < 600 ? '1rem' : '0', borderBottomRightRadius: scoreCI.upper < 600 ? '1rem' : '0' }} />}
-                      </div>
+                      />
                     )}
 
                     {/* Yellow segment: 600-749 */}
                     {scoreCI.lower < 750 && scoreCI.upper >= 600 && (
                       <div
-                        className={`h-6 absolute transition-all duration-700 ${
-                          liquidGlass
-                            ? 'bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600'
-                            : 'bg-yellow-500'
-                        }`}
+                        className="h-6 absolute transition-all duration-300 bg-gradient-to-r from-yellow-500 to-yellow-600 shadow-[0_0_20px_rgba(234,179,8,0.3)]"
                         style={{
                           left: `${((Math.max(scoreCI.lower, 600) - 100) / 800) * 100}%`,
                           width: `${((Math.min(scoreCI.upper, 749) - Math.max(scoreCI.lower, 600)) / 800) * 100}%`,
-                          borderTopLeftRadius: scoreCI.lower >= 600 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
-                          borderBottomLeftRadius: scoreCI.lower >= 600 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
-                          borderTopRightRadius: scoreCI.upper < 750 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
-                          borderBottomRightRadius: scoreCI.upper < 750 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                          borderTopLeftRadius: scoreCI.lower >= 600 ? '1rem' : '0',
+                          borderBottomLeftRadius: scoreCI.lower >= 600 ? '1rem' : '0',
+                          borderTopRightRadius: scoreCI.upper < 750 ? '1rem' : '0',
+                          borderBottomRightRadius: scoreCI.upper < 750 ? '1rem' : '0',
                         }}
-                      >
-                        {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" style={{ borderTopLeftRadius: scoreCI.lower >= 600 ? '1rem' : '0', borderBottomLeftRadius: scoreCI.lower >= 600 ? '1rem' : '0', borderTopRightRadius: scoreCI.upper < 750 ? '1rem' : '0', borderBottomRightRadius: scoreCI.upper < 750 ? '1rem' : '0' }} />}
-                      </div>
+                      />
                     )}
 
                     {/* Green segment: 750-900 */}
                     {scoreCI.upper >= 750 && (
                       <div
-                        className={`h-6 absolute transition-all duration-700 ${
-                          liquidGlass
-                            ? 'bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-600'
-                            : 'bg-emerald-500'
-                        }`}
+                        className="h-6 absolute transition-all duration-300 bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
                         style={{
                           left: `${((Math.max(scoreCI.lower, 750) - 100) / 800) * 100}%`,
                           width: `${((scoreCI.upper - Math.max(scoreCI.lower, 750)) / 800) * 100}%`,
-                          borderTopLeftRadius: scoreCI.lower >= 750 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
-                          borderBottomLeftRadius: scoreCI.lower >= 750 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
-                          borderTopRightRadius: liquidGlass ? '1rem' : '0.375rem',
-                          borderBottomRightRadius: liquidGlass ? '1rem' : '0.375rem',
+                          borderTopLeftRadius: scoreCI.lower >= 750 ? '1rem' : '0',
+                          borderBottomLeftRadius: scoreCI.lower >= 750 ? '1rem' : '0',
+                          borderTopRightRadius: '1rem',
+                          borderBottomRightRadius: '1rem',
                         }}
-                      >
-                        {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" style={{ borderTopLeftRadius: scoreCI.lower >= 750 ? '1rem' : '0', borderBottomLeftRadius: scoreCI.lower >= 750 ? '1rem' : '0', borderTopRightRadius: '1rem', borderBottomRightRadius: '1rem' }} />}
-                      </div>
+                      />
                     )}
                   </>
                 ) : (
                   // Show point estimate
                   <div
-                    className={`h-6 relative transition-all duration-700 ${
+                    className={`h-6 relative transition-all duration-300 ${
                       isGoodPerformance
-                        ? liquidGlass
-                          ? 'bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-600 rounded-2xl'
-                          : 'bg-emerald-500 rounded-md'
+                        ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-[0_0_20px_rgba(16,185,129,0.3)] rounded-2xl'
                       : isNeedsWork
-                        ? liquidGlass
-                          ? 'bg-gradient-to-r from-red-500 via-red-400 to-red-600 rounded-2xl'
-                          : 'bg-red-500 rounded-md'
-                      : liquidGlass
-                        ? 'bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 rounded-2xl'
-                        : 'bg-yellow-500 rounded-md'
+                        ? 'bg-gradient-to-r from-red-500 to-red-600 shadow-[0_0_20px_rgba(239,68,68,0.3)] rounded-2xl'
+                      : 'bg-gradient-to-r from-yellow-500 to-yellow-600 shadow-[0_0_20px_rgba(234,179,8,0.3)] rounded-2xl'
                     }`}
                     style={{ width: `${Math.min(((predictedScore - 100) / 800) * 100, 100)}%` }}
-                  >
-                    {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-2xl" />}
-                  </div>
+                  />
                 )
               )}
 
@@ -807,7 +761,7 @@ export default function QuizPerformance() {
             </div>
 
             {/* Scale labels */}
-            <div className={`flex justify-between text-sm text-zinc-400 mt-2 relative ${liquidGlass ? '' : 'font-mono'}`}>
+            <div className="flex justify-between text-sm text-zinc-400 mt-2 relative">
               <span>100</span>
               <span
                 className="absolute text-white font-medium"
@@ -821,27 +775,24 @@ export default function QuizPerformance() {
         </div>
 
         {/* Combined Stats Box */}
-        <div className={`relative p-10 md:p-12 transition-all duration-700 mb-12 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 hover:border-white/30 rounded-[40px] hover:shadow-2xl hover:shadow-white/10' : 'bg-black border border-zinc-800 hover:border-zinc-700 rounded-md'}`}>
-          {liquidGlass && (
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
-          )}
+        <div className="relative p-10 md:p-12 transition-all duration-300 mb-12 bg-zinc-900/50 border border-zinc-800/50 rounded-2xl hover:bg-zinc-900/60 hover:border-zinc-700/50">
           <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
             <div className="text-center">
-              <div className={`text-zinc-400 text-xl md:text-2xl mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Questions Attempted</div>
-              <div className={`text-5xl md:text-6xl font-bold transition-all duration-700 ${totalAnswered === 0 ? 'text-zinc-400' : 'text-white'}`}>{totalAnswered}</div>
+              <div className="text-zinc-400 text-xl md:text-2xl mb-4 tracking-tight">Questions Attempted</div>
+              <div className={`text-5xl md:text-6xl font-bold transition-all duration-300 ${totalAnswered === 0 ? 'text-zinc-400' : 'text-white'}`}>{totalAnswered}</div>
             </div>
             <div className="text-center">
-              <div className={`text-zinc-400 text-xl md:text-2xl mb-4 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Accuracy</div>
+              <div className="text-zinc-400 text-xl md:text-2xl mb-4 tracking-tight">Accuracy</div>
               <div className="relative group inline-block cursor-help">
-                <div className={`text-5xl md:text-6xl font-bold transition-all duration-700 ${
+                <div className={`text-5xl md:text-6xl font-bold transition-all duration-300 ${
                   totalAnswered === 0 ? 'text-zinc-400' :
                   parseFloat(accuracy.toString()) >= 81.25 ? 'text-emerald-400' :
                   parseFloat(accuracy.toString()) >= 62.5 ? 'text-yellow-400' :
                   'text-red-400'
                 }`}>{accuracy}%</div>
                 {/* Tooltip */}
-                <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-80 transition-opacity duration-700 ${liquidGlass ? 'bg-black/95 backdrop-blur-xl border-white/20 rounded-3xl' : 'bg-black border-zinc-800 rounded-md'} border p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100`}>
-                  <div className={`text-sm ${liquidGlass ? '' : 'font-mono'}`}>
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-80 transition-opacity duration-300 bg-zinc-900/95 backdrop-blur-sm rounded-2xl border border-zinc-800/50 p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100">
+                  <div className="text-sm">
                     <div className="mb-3 pb-3 border-b border-zinc-700">
                       <div className="text-zinc-400 font-semibold mb-1">Accuracy Levels</div>
                       <div className="text-xs text-zinc-500">Maps to exam scores (100-900 scale)</div>
@@ -869,20 +820,17 @@ export default function QuizPerformance() {
 
         {/* IRT Score Analysis - Collapsible */}
         {totalAnswered > 0 && (
-          <div className={`relative p-10 md:p-12 mb-12 transition-all duration-700 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl' : 'bg-black border border-zinc-800 rounded-md'}`}>
-            {liquidGlass && (
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
-            )}
+          <div className="relative p-10 md:p-12 mb-12 transition-all duration-300 bg-zinc-900/50 border border-zinc-800/50 rounded-2xl shadow-2xl">
             <div className="relative flex items-center justify-between">
-              <h3 className={`text-3xl md:text-4xl font-bold text-white tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Performance Analysis</h3>
+              <h3 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Performance Analysis</h3>
               <button
                 id="toggle-irt"
                 onClick={() => setIrtExpanded(!irtExpanded)}
-                className={`p-4 hover:bg-white/5 active:bg-white/10 transition-all duration-700 ${liquidGlass ? 'rounded-3xl' : 'rounded-md'}`}
+                className="p-4 hover:bg-white/5 active:bg-white/10 transition-all duration-200 rounded-2xl"
                 aria-label="Toggle Performance Analysis"
               >
                 <svg
-                  className={`w-8 h-8 text-zinc-400 transition-transform duration-700 ${irtExpanded ? 'rotate-180' : ''}`}
+                  className={`w-8 h-8 text-zinc-400 transition-transform duration-300 ${irtExpanded ? 'rotate-180' : ''}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -897,15 +845,12 @@ export default function QuizPerformance() {
               <>
                 {hasEnoughQuestions ? (
                   <>
-                    <div className={`relative p-8 md:p-10 mb-8 mt-8 transition-all duration-700 ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl' : 'bg-black border border-zinc-800 rounded-md'}`}>
-                    {liquidGlass && (
-                      <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />
-                    )}
+                    <div className="relative p-8 md:p-10 mb-8 mt-8 transition-all duration-300 bg-zinc-900/50 border border-zinc-800/50 rounded-2xl">
                     <div className="relative flex items-center justify-between mb-6">
-                      <h4 className={`text-2xl md:text-3xl font-bold text-white tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Ability Level</h4>
+                      <h4 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Ability Level</h4>
                       <div className="relative group cursor-help">
                         {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
-                          <div className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold transition-all duration-700 flex items-center justify-center gap-2`}>
+                          <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold transition-all duration-300 flex items-center justify-center gap-2">
                             <span className={
                               lowerAbilityColor === 'emerald' ? 'text-emerald-400' :
                               lowerAbilityColor === 'yellow' ? 'text-yellow-400' :
@@ -923,7 +868,7 @@ export default function QuizPerformance() {
                             </span>
                           </div>
                         ) : (
-                          <div className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold transition-all duration-700 ${
+                          <div className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold transition-all duration-300 ${
                             estimatedAbility >= 1.54 ? 'text-emerald-400' :
                             estimatedAbility >= 0.38 ? 'text-yellow-400' :
                             'text-red-400'
@@ -932,8 +877,8 @@ export default function QuizPerformance() {
                           </div>
                         )}
                       {/* Tooltip */}
-                      <div className={`absolute bottom-full right-0 mb-2 w-80 transition-opacity duration-700 ${liquidGlass ? 'bg-black/95 backdrop-blur-xl border-white/20 rounded-3xl' : 'bg-black border-zinc-800 rounded-md'} border p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100`}>
-                        <div className={`text-sm ${liquidGlass ? '' : 'font-mono'}`}>
+                      <div className="absolute bottom-full right-0 mb-2 w-80 transition-opacity duration-300 bg-zinc-900/95 backdrop-blur-sm rounded-2xl border border-zinc-800/50 p-6 z-50 pointer-events-none opacity-0 group-hover:opacity-100">
+                        <div className="text-sm">
                           <div className="mb-3 pb-3 border-b border-zinc-700">
                             <div className="text-zinc-400 font-semibold mb-1">Ability Level (θ)</div>
                             <div className="text-xs text-zinc-500">IRT measure adjusted for question difficulty</div>
@@ -957,8 +902,7 @@ export default function QuizPerformance() {
                     </div>
                   </div>
                   <div className="relative mt-6">
-                    <div className={`h-6 relative overflow-hidden ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl' : 'bg-zinc-900 border border-zinc-800 rounded-md'}`}>
-                      {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-2xl" />}
+                    <div className="h-6 relative overflow-hidden bg-zinc-900/50 border border-zinc-800/50 rounded-2xl">
                       {/* Show range if CI available, otherwise point estimate */}
                       {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
                         // Show range (confidence interval) with multiple color segments
@@ -966,89 +910,63 @@ export default function QuizPerformance() {
                           {/* Red segment: -3 to 0.38 (Needs Work <600) */}
                           {abilityCI.lower < 0.38 && (
                             <div
-                              className={`h-6 absolute transition-all duration-700 ${
-                                liquidGlass
-                                  ? 'bg-gradient-to-r from-red-500 via-red-400 to-red-600'
-                                  : 'bg-red-500'
-                              }`}
+                              className="h-6 absolute transition-all duration-300 bg-gradient-to-r from-red-500 to-red-600 shadow-[0_0_20px_rgba(239,68,68,0.3)]"
                               style={{
                                 left: `${Math.max(0, ((abilityCI.lower + 3) / 6) * 100)}%`,
                                 width: `${((Math.min(abilityCI.upper, 0.38) - abilityCI.lower) / 6) * 100}%`,
-                                borderTopLeftRadius: liquidGlass ? '1rem' : '0.375rem',
-                                borderBottomLeftRadius: liquidGlass ? '1rem' : '0.375rem',
-                                borderTopRightRadius: abilityCI.upper < 0.38 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
-                                borderBottomRightRadius: abilityCI.upper < 0.38 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                                borderTopLeftRadius: '1rem',
+                                borderBottomLeftRadius: '1rem',
+                                borderTopRightRadius: abilityCI.upper < 0.38 ? '1rem' : '0',
+                                borderBottomRightRadius: abilityCI.upper < 0.38 ? '1rem' : '0',
                               }}
-                            >
-                              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" style={{ borderTopLeftRadius: '1rem', borderBottomLeftRadius: '1rem', borderTopRightRadius: abilityCI.upper < 0.38 ? '1rem' : '0', borderBottomRightRadius: abilityCI.upper < 0.38 ? '1rem' : '0' }} />}
-                            </div>
+                            />
                           )}
 
                           {/* Yellow segment: 0.38 to 1.54 (Close 600-749) */}
                           {abilityCI.lower < 1.54 && abilityCI.upper >= 0.38 && (
                             <div
-                              className={`h-6 absolute transition-all duration-700 ${
-                                liquidGlass
-                                  ? 'bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600'
-                                  : 'bg-yellow-500'
-                              }`}
+                              className="h-6 absolute transition-all duration-300 bg-gradient-to-r from-yellow-500 to-yellow-600 shadow-[0_0_20px_rgba(234,179,8,0.3)]"
                               style={{
                                 left: `${((Math.max(abilityCI.lower, 0.38) + 3) / 6) * 100}%`,
                                 width: `${((Math.min(abilityCI.upper, 1.54) - Math.max(abilityCI.lower, 0.38)) / 6) * 100}%`,
-                                borderTopLeftRadius: abilityCI.lower >= 0.38 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
-                                borderBottomLeftRadius: abilityCI.lower >= 0.38 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
-                                borderTopRightRadius: abilityCI.upper < 1.54 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
-                                borderBottomRightRadius: abilityCI.upper < 1.54 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
+                                borderTopLeftRadius: abilityCI.lower >= 0.38 ? '1rem' : '0',
+                                borderBottomLeftRadius: abilityCI.lower >= 0.38 ? '1rem' : '0',
+                                borderTopRightRadius: abilityCI.upper < 1.54 ? '1rem' : '0',
+                                borderBottomRightRadius: abilityCI.upper < 1.54 ? '1rem' : '0',
                               }}
-                            >
-                              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" style={{ borderTopLeftRadius: abilityCI.lower >= 0.38 ? '1rem' : '0', borderBottomLeftRadius: abilityCI.lower >= 0.38 ? '1rem' : '0', borderTopRightRadius: abilityCI.upper < 1.54 ? '1rem' : '0', borderBottomRightRadius: abilityCI.upper < 1.54 ? '1rem' : '0' }} />}
-                            </div>
+                            />
                           )}
 
                           {/* Green segment: 1.54 to 3 (Passing ≥750) */}
                           {abilityCI.upper >= 1.54 && (
                             <div
-                              className={`h-6 absolute transition-all duration-700 ${
-                                liquidGlass
-                                  ? 'bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-600'
-                                  : 'bg-emerald-500'
-                              }`}
+                              className="h-6 absolute transition-all duration-300 bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
                               style={{
                                 left: `${((Math.max(abilityCI.lower, 1.54) + 3) / 6) * 100}%`,
                                 width: `${((abilityCI.upper - Math.max(abilityCI.lower, 1.54)) / 6) * 100}%`,
-                                borderTopLeftRadius: abilityCI.lower >= 1.54 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
-                                borderBottomLeftRadius: abilityCI.lower >= 1.54 ? (liquidGlass ? '1rem' : '0.375rem') : '0',
-                                borderTopRightRadius: liquidGlass ? '1rem' : '0.375rem',
-                                borderBottomRightRadius: liquidGlass ? '1rem' : '0.375rem',
+                                borderTopLeftRadius: abilityCI.lower >= 1.54 ? '1rem' : '0',
+                                borderBottomLeftRadius: abilityCI.lower >= 1.54 ? '1rem' : '0',
+                                borderTopRightRadius: '1rem',
+                                borderBottomRightRadius: '1rem',
                               }}
-                            >
-                              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent" style={{ borderTopLeftRadius: abilityCI.lower >= 1.54 ? '1rem' : '0', borderBottomLeftRadius: abilityCI.lower >= 1.54 ? '1rem' : '0', borderTopRightRadius: '1rem', borderBottomRightRadius: '1rem' }} />}
-                            </div>
+                            />
                           )}
                         </>
                       ) : (
                         // Show point estimate
                         <div
-                          className={`h-6 relative transition-all duration-700 ${
+                          className={`h-6 relative transition-all duration-300 ${
                             estimatedAbility >= 1.0
-                              ? liquidGlass
-                                ? 'bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-600 rounded-2xl'
-                                : 'bg-emerald-500 rounded-md'
+                              ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-[0_0_20px_rgba(16,185,129,0.3)] rounded-2xl'
                               : estimatedAbility >= -1.0
-                                ? liquidGlass
-                                  ? 'bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 rounded-2xl'
-                                  : 'bg-yellow-500 rounded-md'
-                                : liquidGlass
-                                  ? 'bg-gradient-to-r from-red-500 via-red-400 to-red-600 rounded-2xl'
-                                  : 'bg-red-500 rounded-md'
+                                ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 shadow-[0_0_20px_rgba(234,179,8,0.3)] rounded-2xl'
+                                : 'bg-gradient-to-r from-red-500 to-red-600 shadow-[0_0_20px_rgba(239,68,68,0.3)] rounded-2xl'
                           }`}
                           style={{ width: `${((estimatedAbility + 3) / 6) * 100}%` }}
-                        >
-                          {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-2xl" />}
-                        </div>
+                        />
                       )}
                     </div>
-                    <div className={`flex justify-between text-lg text-zinc-500 mt-3 ${liquidGlass ? '' : 'font-mono'}`}>
+                    <div className="flex justify-between text-lg text-zinc-500 mt-3">
                       <span>Beginner</span>
                       <span>Average</span>
                       <span>Expert</span>
@@ -1056,12 +974,9 @@ export default function QuizPerformance() {
                   </div>
                 </div>
 
-                <div className={`relative p-8 md:p-10 transition-all duration-700 ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl' : 'bg-black border border-zinc-800 rounded-md'}`}>
-                  {liquidGlass && (
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />
-                  )}
-                  <div className={`relative text-xl text-zinc-300 leading-relaxed ${liquidGlass ? '' : 'font-mono'}`}>
-                    <p className={`font-bold mb-6 flex items-center gap-2 text-2xl md:text-3xl ${liquidGlass ? '' : 'font-mono'} ${
+                <div className="relative p-8 md:p-10 transition-all duration-300 bg-zinc-900/50 border border-zinc-800/50 rounded-2xl">
+                  <div className="relative text-xl text-zinc-300 leading-relaxed">
+                    <p className={`font-bold mb-6 flex items-center gap-2 text-2xl md:text-3xl ${
                       estimatedAbility >= 1.5 ? 'text-emerald-400' :
                       estimatedAbility >= 1.0 ? 'text-emerald-400' :
                       estimatedAbility >= 0 ? 'text-yellow-400' :
@@ -1093,18 +1008,15 @@ export default function QuizPerformance() {
                   </>
                 ) : (
                   <div className="mt-8">
-                    <div className={`relative p-8 ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10' : 'bg-zinc-900 rounded-2xl border border-zinc-800'}`}>
-                      {liquidGlass && (
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-3xl" />
-                      )}
+                    <div className="relative p-8 bg-zinc-900/50 rounded-2xl border border-zinc-800/50">
                       <div className="relative text-center">
                         <svg className="w-16 h-16 mx-auto mb-4 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
                         </svg>
-                        <h4 className={`text-2xl md:text-3xl font-bold text-white mb-3 ${liquidGlass ? '' : 'font-mono'}`}>
+                        <h4 className="text-2xl md:text-3xl font-bold text-white mb-3">
                           Insufficient Data
                         </h4>
-                        <p className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
+                        <p className="text-lg md:text-xl text-zinc-400">
                           Answer <span className="text-white font-bold">{questionsNeeded} more</span> {questionsNeeded === 1 ? 'question' : 'questions'} for ability level analysis
                         </p>
                       </div>
@@ -1113,7 +1025,7 @@ export default function QuizPerformance() {
                 )}
               </>
             ) : (
-              <div className={`relative mt-8 text-xl text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>
+              <div className="relative mt-8 text-xl text-zinc-400">
                 Click to view detailed performance analysis
               </div>
             )}
@@ -1123,35 +1035,32 @@ export default function QuizPerformance() {
         {/* Topic Review Schedule - Verification Tool */}
         {userProgress && (
           <div className="mt-16">
-            <TopicReviewSchedule userProgress={userProgress} liquidGlass={liquidGlass} />
+            <TopicReviewSchedule userProgress={userProgress} />
           </div>
         )}
 
         {/* Performance Graphs Section */}
         {userProgress && (
           <div className="mt-16">
-            <h2 className={`text-4xl md:text-5xl font-bold text-white mb-12 tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Progress Charts</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-12 tracking-tight">Progress Charts</h2>
             <PerformanceGraphs userProgress={userProgress} />
           </div>
         )}
 
         {/* Past Activity - Collapsible */}
         {userProgress && (
-          <div className={`relative mt-16 mb-16 p-10 md:p-12 transition-all duration-700 ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl' : 'bg-black border border-zinc-800 rounded-md'}`}>
-            {liquidGlass && (
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
-            )}
+          <div className="relative mt-16 mb-16 p-10 md:p-12 transition-all duration-300 bg-zinc-900/50 border border-zinc-800/50 rounded-2xl shadow-2xl">
             <div className="relative flex items-center justify-between">
-              <h3 className={`text-3xl md:text-4xl font-bold tracking-tight ${liquidGlass ? '' : 'font-mono'}`}>Past Quizzes ({userProgress.quizHistory.length})</h3>
+              <h3 className="text-3xl md:text-4xl font-bold tracking-tight">Past Quizzes ({userProgress.quizHistory.length})</h3>
               {userProgress.quizHistory.length > 0 && (
                 <button
                   id="toggle-past-quizzes"
                   onClick={() => setRecentQuizzesExpanded(!recentQuizzesExpanded)}
-                  className={`p-4 hover:bg-white/5 active:bg-white/10 transition-all duration-700 ${liquidGlass ? 'rounded-3xl' : 'rounded-md'}`}
+                  className="p-4 hover:bg-white/5 active:bg-white/10 transition-all duration-200 rounded-2xl"
                   aria-label="Toggle Past Quizzes"
                 >
                   <svg
-                    className={`w-8 h-8 text-zinc-400 transition-transform duration-700 ${recentQuizzesExpanded ? 'rotate-180' : ''}`}
+                    className={`w-8 h-8 text-zinc-400 transition-transform duration-300 ${recentQuizzesExpanded ? 'rotate-180' : ''}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -1164,7 +1073,7 @@ export default function QuizPerformance() {
             </div>
 
             {userProgress.quizHistory.length === 0 ? (
-              <div className={`relative text-center py-12 mt-6 text-xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500 font-mono'}`}>
+              <div className="relative text-center py-12 mt-6 text-xl text-zinc-400">
                 No quizzes taken yet. Take a quiz to see your history here.
               </div>
             ) : recentQuizzesExpanded ? (
@@ -1182,22 +1091,18 @@ export default function QuizPerformance() {
                       <div
                         id={`quiz-review-${quiz.id}`}
                         onClick={() => router.push(`/cybersecurity/quiz/review/${quiz.id}`)}
-                        className={`relative w-full p-8 md:p-10 transition-all duration-700 hover:scale-[1.01] cursor-pointer ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/30 hover:bg-white/10 rounded-3xl hover:shadow-xl hover:shadow-white/10' : 'bg-black border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 rounded-md'}`}
+                        className="relative w-full p-8 md:p-10 transition-all duration-200 hover:scale-[1.01] cursor-pointer bg-zinc-900/50 border border-zinc-800/50 rounded-2xl hover:bg-zinc-900/60 hover:border-zinc-700/50"
                       >
-                        {liquidGlass && (
-                          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />
-                        )}
-
                         {/* Delete Button */}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             setDeleteConfirmId(quiz.id);
                           }}
-                          className={`absolute top-4 right-4 z-10 p-3 transition-all duration-700 group ${liquidGlass ? 'bg-red-500/10 hover:bg-red-500/20 backdrop-blur-xl rounded-2xl border border-red-500/30 hover:border-red-500/50' : 'bg-red-900/20 hover:bg-red-900/30 rounded-md border border-red-500/30 hover:border-red-500/50'}`}
+                          className="absolute top-4 right-4 z-10 p-3 transition-all duration-200 group bg-red-500/10 hover:bg-red-500/20 rounded-xl border border-red-500/30 hover:border-red-500/50"
                           title="Delete quiz"
                         >
-                          <svg className="w-5 h-5 text-red-400 group-hover:text-red-300 transition-colors duration-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg className="w-5 h-5 text-red-400 group-hover:text-red-300 transition-colors duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
                         </button>
@@ -1250,10 +1155,7 @@ export default function QuizPerformance() {
                       {/* Delete Confirmation Dialog */}
                       {deleteConfirmId === quiz.id && (
                         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                          <div className={`relative w-full max-w-md p-8 md:p-10 transition-all duration-700 ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl rounded-[40px] border border-white/20' : 'bg-zinc-900 rounded-md border border-zinc-700'}`}>
-                            {liquidGlass && (
-                              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />
-                            )}
+                          <div className="relative w-full max-w-md p-8 md:p-10 transition-all duration-300 bg-zinc-900/95 backdrop-blur-sm rounded-2xl border border-zinc-800/50">
                             <div className="relative">
                               <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">Delete Quiz?</h3>
                               <p className="text-lg text-zinc-300 mb-8">
@@ -1263,14 +1165,14 @@ export default function QuizPerformance() {
                                 <button
                                   onClick={() => handleDeleteQuiz(quiz.id)}
                                   disabled={isDeleting}
-                                  className={`flex-1 py-4 px-6 font-bold text-lg transition-all duration-700 ${liquidGlass ? 'bg-red-500/20 hover:bg-red-500/30 backdrop-blur-xl rounded-2xl border border-red-500/50 hover:border-red-500/70' : 'bg-red-900/30 hover:bg-red-900/40 rounded-md border border-red-500/50'} text-red-300 hover:text-red-200 disabled:opacity-50 disabled:cursor-not-allowed`}
+                                  className="flex-1 py-4 px-6 font-bold text-lg transition-all duration-200 bg-red-500/20 hover:bg-red-500/30 rounded-xl border border-red-500/50 hover:border-red-500/70 text-red-300 hover:text-red-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                   {isDeleting ? 'Deleting...' : 'Delete'}
                                 </button>
                                 <button
                                   onClick={() => setDeleteConfirmId(null)}
                                   disabled={isDeleting}
-                                  className={`flex-1 py-4 px-6 font-bold text-lg transition-all duration-700 ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl rounded-2xl border border-white/20 hover:border-white/30' : 'bg-zinc-800 hover:bg-zinc-700 rounded-md border border-zinc-700'} text-white disabled:opacity-50 disabled:cursor-not-allowed`}
+                                  className="flex-1 py-4 px-6 font-bold text-lg transition-all duration-200 bg-white/10 hover:bg-white/15 rounded-xl border border-zinc-700/50 hover:border-zinc-600/50 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                   Cancel
                                 </button>
@@ -1288,7 +1190,7 @@ export default function QuizPerformance() {
                   <div className="mt-6">
                     <button
                       onClick={() => router.push('/cybersecurity/quiz/history')}
-                      className={`w-full py-5 md:py-6 text-xl md:text-2xl font-bold transition-all duration-700 ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl rounded-3xl border border-white/20 hover:border-white/30 hover:scale-[1.01]' : 'bg-zinc-800 hover:bg-zinc-700 rounded-md border border-zinc-700'} text-white`}
+                      className="w-full py-5 md:py-6 text-xl md:text-2xl font-bold transition-all duration-200 bg-zinc-800/50 hover:bg-zinc-800/70 rounded-2xl border border-zinc-700/50 hover:border-zinc-600/50 hover:scale-[1.01] text-white"
                     >
                       Show More ({userProgress.quizHistory.length - 5} older quizzes)
                     </button>
@@ -1296,7 +1198,7 @@ export default function QuizPerformance() {
                 )}
               </div>
             ) : (
-              <div className={`relative mt-8 text-xl text-zinc-400 ${liquidGlass ? '' : 'font-mono'}`}>
+              <div className="relative mt-8 text-xl text-zinc-400">
                 {userProgress.quizHistory.length === 0
                   ? 'No quizzes taken yet'
                   : `Click to view your last ${Math.min(5, userProgress.quizHistory.length)} quiz${userProgress.quizHistory.length === 1 ? '' : 'es'}`
@@ -1312,18 +1214,12 @@ export default function QuizPerformance() {
             id="reset-progress"
             onClick={handleResetProgress}
             disabled={totalAnswered === 0}
-            className={`relative px-12 md:px-16 py-5 md:py-6 text-xl md:text-2xl font-bold transition-all duration-700 ${
+            className={`relative px-12 md:px-16 py-5 md:py-6 text-xl md:text-2xl font-bold transition-all duration-200 ${
               totalAnswered === 0
-                ? liquidGlass
-                  ? 'bg-zinc-800/30 backdrop-blur-xl border border-zinc-700/30 text-zinc-600 rounded-3xl cursor-not-allowed opacity-50'
-                  : 'bg-zinc-900 text-zinc-700 border border-zinc-800 rounded-md font-mono cursor-not-allowed opacity-50'
-                : liquidGlass
-                ? 'bg-red-500/20 hover:bg-red-500/30 backdrop-blur-xl border border-red-500/50 hover:border-red-500/80 text-red-300 hover:text-red-200 rounded-3xl hover:scale-105 shadow-xl hover:shadow-2xl hover:shadow-red-500/30'
-                : 'bg-black hover:bg-zinc-900 text-red-400 border border-red-500/30 hover:border-red-500 rounded-md font-mono'
+                ? 'bg-zinc-800/30 border border-zinc-700/30 text-zinc-600 rounded-2xl cursor-not-allowed opacity-50'
+                : 'bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 hover:border-red-500/80 text-red-300 hover:text-red-200 rounded-2xl hover:scale-105 shadow-[0_0_30px_rgba(239,68,68,0.3)]'
             }`}
           >
-            {liquidGlass && totalAnswered > 0 && <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-3xl opacity-0 hover:opacity-100 transition-opacity duration-700" />}
-            {liquidGlass && totalAnswered > 0 && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />}
             <span className="relative">Reset Progress</span>
           </button>
         </div>

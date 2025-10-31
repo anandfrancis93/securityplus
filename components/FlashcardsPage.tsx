@@ -8,10 +8,9 @@ import { getDueFlashcards } from '@/lib/spacedRepetition';
 import Header from './Header';
 import { useRequireAuth } from '@/lib/hooks/useRequireAuth';
 import { LoadingScreen } from '@/components/ui/LoadingScreen';
-import { AdaptiveBackground } from '@/components/ui/LiquidGlassBackground';
 
 export default function FlashcardsPage() {
-  const { user, loading, userId, liquidGlass } = useApp();
+  const { user, loading, userId } = useApp();
   const router = useRouter();
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const [flashcardsCount, setFlashcardsCount] = useState(0);
@@ -49,11 +48,13 @@ export default function FlashcardsPage() {
   }, [userId]);
 
   if (isLoading) {
-    return <LoadingScreen liquidGlass={liquidGlass} message="Loading flashcards..." />;
+    return <LoadingScreen message="Loading flashcards..." />;
   }
 
   return (
-    <AdaptiveBackground liquidGlass={liquidGlass}>
+    <div className="min-h-screen bg-zinc-950">
+      {/* Gradient mesh background */}
+      <div className="fixed inset-0 bg-gradient-to-br from-violet-500/10 via-transparent to-cyan-500/10 pointer-events-none" />
 
       {/* Header - Full width */}
       <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
@@ -75,7 +76,7 @@ export default function FlashcardsPage() {
             </h1>
 
             {/* Tagline */}
-            <p className={`text-xl sm:text-2xl md:text-3xl font-light max-w-3xl mx-auto leading-relaxed ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'}`}>
+            <p className="text-xl sm:text-2xl md:text-3xl font-light max-w-3xl mx-auto leading-relaxed text-zinc-500">
               Learn with spaced repetition and active recall.
             </p>
           </div>
@@ -90,34 +91,16 @@ export default function FlashcardsPage() {
               onClick={() => router.push('/cybersecurity/flashcards/study')}
               onMouseEnter={() => setHoveredCard('study')}
               onMouseLeave={() => setHoveredCard(null)}
-              className={`group relative ${
-                liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px]' : 'bg-zinc-900 rounded-3xl'
-              } p-12 md:p-16 border ${
+              className={`group relative bg-zinc-900/50 rounded-2xl p-12 md:p-16 border transition-all duration-300 hover:scale-[1.02] overflow-hidden text-left ${
                 hoveredCard === 'study'
-                  ? liquidGlass
-                    ? 'border-white/30 bg-white/10 shadow-2xl shadow-violet-500/30'
-                    : 'border-violet-500/50 bg-zinc-800'
-                  : liquidGlass
-                    ? 'border-white/10'
-                    : 'border-zinc-800'
-              } transition-all duration-700 hover:scale-[1.02] overflow-hidden text-left`}
+                  ? 'border-violet-500/50 bg-white/5 shadow-xl shadow-violet-500/20'
+                  : 'border-zinc-800/50 hover:bg-white/5 hover:border-violet-500/30'
+              }`}
             >
-              {/* Gradient Overlay on Hover */}
-              {liquidGlass && hoveredCard === 'study' && (
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 via-purple-500/10 to-transparent rounded-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              )}
-
-              {/* Light Reflection */}
-              {liquidGlass && (
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
-              )}
-
               {/* Badge for due cards */}
               {dueCardsCount > 0 && (
                 <div className="absolute top-6 right-6">
-                  <div className={`flex items-center gap-2 px-4 py-2 text-sm md:text-base font-semibold ${
-                    liquidGlass ? 'bg-white/10 backdrop-blur-xl border border-white/20 rounded-full text-violet-300' : 'bg-violet-900 border border-violet-800 rounded-full text-violet-300'
-                  }`}>
+                  <div className="flex items-center gap-2 px-4 py-2 text-sm md:text-base font-semibold bg-violet-900/50 border border-violet-500/30 rounded-full text-violet-300">
                     <span className="w-2 h-2 bg-violet-400 rounded-full animate-pulse" />
                     {dueCardsCount} due
                   </div>
@@ -126,10 +109,10 @@ export default function FlashcardsPage() {
 
               <div className="relative space-y-6">
                 {/* Icon */}
-                <div className={`w-20 h-20 md:w-24 md:h-24 flex items-center justify-center ${
-                  liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10' : 'bg-zinc-800 rounded-2xl'
-                } ${hoveredCard === 'study' && liquidGlass ? 'shadow-2xl shadow-violet-500/50' : ''} transition-all duration-700`}>
-                  <svg className={`w-12 h-12 md:w-14 md:h-14 text-violet-400 ${hoveredCard === 'study' && liquidGlass ? 'drop-shadow-[0_0_20px_currentColor]' : ''} transition-all duration-700`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <div className={`w-20 h-20 md:w-24 md:h-24 flex items-center justify-center bg-gradient-to-br from-violet-500/20 to-purple-500/20 rounded-2xl border border-violet-500/30 transition-all duration-300 ${
+                  hoveredCard === 'study' ? 'shadow-lg shadow-violet-500/50' : ''
+                }`}>
+                  <svg className="w-12 h-12 md:w-14 md:h-14 text-violet-400 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                   </svg>
                 </div>
@@ -139,7 +122,7 @@ export default function FlashcardsPage() {
                   <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
                     Study
                   </h2>
-                  <p className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed`}>
+                  <p className="text-lg md:text-xl text-zinc-500 leading-relaxed">
                     Review with spaced repetition for long-term retention.
                   </p>
                   <div className="flex items-center gap-3 text-violet-400 font-medium pt-2">
@@ -158,34 +141,18 @@ export default function FlashcardsPage() {
               onClick={() => router.push('/cybersecurity/flashcards/create')}
               onMouseEnter={() => setHoveredCard('create')}
               onMouseLeave={() => setHoveredCard(null)}
-              className={`group relative ${
-                liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px]' : 'bg-zinc-900 rounded-3xl'
-              } p-12 md:p-16 border ${
+              className={`group relative bg-zinc-900/50 rounded-2xl p-12 md:p-16 border transition-all duration-300 hover:scale-[1.02] overflow-hidden text-left ${
                 hoveredCard === 'create'
-                  ? liquidGlass
-                    ? 'border-white/30 bg-white/10 shadow-2xl shadow-cyan-500/30'
-                    : 'border-cyan-500/50 bg-zinc-800'
-                  : liquidGlass
-                    ? 'border-white/10'
-                    : 'border-zinc-800'
-              } transition-all duration-700 hover:scale-[1.02] overflow-hidden text-left`}
+                  ? 'border-cyan-500/50 bg-white/5 shadow-xl shadow-cyan-500/20'
+                  : 'border-zinc-800/50 hover:bg-white/5 hover:border-cyan-500/30'
+              }`}
             >
-              {/* Gradient Overlay on Hover */}
-              {liquidGlass && hoveredCard === 'create' && (
-                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-blue-500/10 to-transparent rounded-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              )}
-
-              {/* Light Reflection */}
-              {liquidGlass && (
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
-              )}
-
               <div className="relative space-y-6">
                 {/* Icon */}
-                <div className={`w-20 h-20 md:w-24 md:h-24 flex items-center justify-center ${
-                  liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10' : 'bg-zinc-800 rounded-2xl'
-                } ${hoveredCard === 'create' && liquidGlass ? 'shadow-2xl shadow-cyan-500/50' : ''} transition-all duration-700`}>
-                  <svg className={`w-12 h-12 md:w-14 md:h-14 text-cyan-400 ${hoveredCard === 'create' && liquidGlass ? 'drop-shadow-[0_0_20px_currentColor]' : ''} transition-all duration-700`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <div className={`w-20 h-20 md:w-24 md:h-24 flex items-center justify-center bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-2xl border border-cyan-500/30 transition-all duration-300 ${
+                  hoveredCard === 'create' ? 'shadow-lg shadow-cyan-500/50' : ''
+                }`}>
+                  <svg className="w-12 h-12 md:w-14 md:h-14 text-cyan-400 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                   </svg>
                 </div>
@@ -195,7 +162,7 @@ export default function FlashcardsPage() {
                   <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
                     Create
                   </h2>
-                  <p className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed`}>
+                  <p className="text-lg md:text-xl text-zinc-500 leading-relaxed">
                     Make new flashcards with AI assistance or manually.
                   </p>
                   <div className="flex items-center gap-3 text-cyan-400 font-medium pt-2">
@@ -219,34 +186,16 @@ export default function FlashcardsPage() {
               onClick={() => router.push('/cybersecurity/flashcards/search')}
               onMouseEnter={() => setHoveredCard('search')}
               onMouseLeave={() => setHoveredCard(null)}
-              className={`group relative ${
-                liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px]' : 'bg-zinc-900 rounded-3xl'
-              } p-12 md:p-16 border ${
+              className={`group relative bg-zinc-900/50 rounded-2xl p-12 md:p-16 border transition-all duration-300 hover:scale-[1.02] overflow-hidden text-left ${
                 hoveredCard === 'search'
-                  ? liquidGlass
-                    ? 'border-white/30 bg-white/10 shadow-2xl shadow-emerald-500/30'
-                    : 'border-emerald-500/50 bg-zinc-800'
-                  : liquidGlass
-                    ? 'border-white/10'
-                    : 'border-zinc-800'
-              } transition-all duration-700 hover:scale-[1.02] overflow-hidden text-left`}
+                  ? 'border-emerald-500/50 bg-white/5 shadow-xl shadow-emerald-500/20'
+                  : 'border-zinc-800/50 hover:bg-white/5 hover:border-emerald-500/30'
+              }`}
             >
-              {/* Gradient Overlay on Hover */}
-              {liquidGlass && hoveredCard === 'search' && (
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 via-green-500/10 to-transparent rounded-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              )}
-
-              {/* Light Reflection */}
-              {liquidGlass && (
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
-              )}
-
               {/* Badge for card count */}
               {flashcardsCount > 0 && (
                 <div className="absolute top-6 right-6">
-                  <div className={`flex items-center gap-2 px-4 py-2 text-sm md:text-base font-semibold ${
-                    liquidGlass ? 'bg-white/10 backdrop-blur-xl border border-white/20 rounded-full text-emerald-300' : 'bg-emerald-900 border border-emerald-800 rounded-full text-emerald-300'
-                  }`}>
+                  <div className="flex items-center gap-2 px-4 py-2 text-sm md:text-base font-semibold bg-emerald-900/50 border border-emerald-500/30 rounded-full text-emerald-300">
                     {flashcardsCount} cards
                   </div>
                 </div>
@@ -254,10 +203,10 @@ export default function FlashcardsPage() {
 
               <div className="relative space-y-6">
                 {/* Icon */}
-                <div className={`w-20 h-20 md:w-24 md:h-24 flex items-center justify-center ${
-                  liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10' : 'bg-zinc-800 rounded-2xl'
-                } ${hoveredCard === 'search' && liquidGlass ? 'shadow-2xl shadow-emerald-500/50' : ''} transition-all duration-700`}>
-                  <svg className={`w-12 h-12 md:w-14 md:h-14 text-emerald-400 ${hoveredCard === 'search' && liquidGlass ? 'drop-shadow-[0_0_20px_currentColor]' : ''} transition-all duration-700`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <div className={`w-20 h-20 md:w-24 md:h-24 flex items-center justify-center bg-gradient-to-br from-emerald-500/20 to-green-500/20 rounded-2xl border border-emerald-500/30 transition-all duration-300 ${
+                  hoveredCard === 'search' ? 'shadow-lg shadow-emerald-500/50' : ''
+                }`}>
+                  <svg className="w-12 h-12 md:w-14 md:h-14 text-emerald-400 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                   </svg>
                 </div>
@@ -267,7 +216,7 @@ export default function FlashcardsPage() {
                   <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
                     Search & Manage
                   </h2>
-                  <p className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed`}>
+                  <p className="text-lg md:text-xl text-zinc-500 leading-relaxed">
                     Find and organize your flashcard collection.
                   </p>
                   <div className="flex items-center gap-3 text-emerald-400 font-medium pt-2">
@@ -286,34 +235,18 @@ export default function FlashcardsPage() {
               onClick={() => router.push('/cybersecurity/flashcards/performance')}
               onMouseEnter={() => setHoveredCard('performance')}
               onMouseLeave={() => setHoveredCard(null)}
-              className={`group relative ${
-                liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px]' : 'bg-zinc-900 rounded-3xl'
-              } p-12 md:p-16 border ${
+              className={`group relative bg-zinc-900/50 rounded-2xl p-12 md:p-16 border transition-all duration-300 hover:scale-[1.02] overflow-hidden text-left ${
                 hoveredCard === 'performance'
-                  ? liquidGlass
-                    ? 'border-white/30 bg-white/10 shadow-2xl shadow-amber-500/30'
-                    : 'border-amber-500/50 bg-zinc-800'
-                  : liquidGlass
-                    ? 'border-white/10'
-                    : 'border-zinc-800'
-              } transition-all duration-700 hover:scale-[1.02] overflow-hidden text-left`}
+                  ? 'border-amber-500/50 bg-white/5 shadow-xl shadow-amber-500/20'
+                  : 'border-zinc-800/50 hover:bg-white/5 hover:border-amber-500/30'
+              }`}
             >
-              {/* Gradient Overlay on Hover */}
-              {liquidGlass && hoveredCard === 'performance' && (
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 via-yellow-500/10 to-transparent rounded-[40px] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              )}
-
-              {/* Light Reflection */}
-              {liquidGlass && (
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
-              )}
-
               <div className="relative space-y-6">
                 {/* Icon */}
-                <div className={`w-20 h-20 md:w-24 md:h-24 flex items-center justify-center ${
-                  liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10' : 'bg-zinc-800 rounded-2xl'
-                } ${hoveredCard === 'performance' && liquidGlass ? 'shadow-2xl shadow-amber-500/50' : ''} transition-all duration-700`}>
-                  <svg className={`w-12 h-12 md:w-14 md:h-14 text-amber-400 ${hoveredCard === 'performance' && liquidGlass ? 'drop-shadow-[0_0_20px_currentColor]' : ''} transition-all duration-700`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <div className={`w-20 h-20 md:w-24 md:h-24 flex items-center justify-center bg-gradient-to-br from-amber-500/20 to-yellow-500/20 rounded-2xl border border-amber-500/30 transition-all duration-300 ${
+                  hoveredCard === 'performance' ? 'shadow-lg shadow-amber-500/50' : ''
+                }`}>
+                  <svg className="w-12 h-12 md:w-14 md:h-14 text-amber-400 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
                   </svg>
                 </div>
@@ -323,7 +256,7 @@ export default function FlashcardsPage() {
                   <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
                     Performance
                   </h2>
-                  <p className={`text-lg md:text-xl ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed`}>
+                  <p className="text-lg md:text-xl text-zinc-500 leading-relaxed">
                     View your learning statistics and progress.
                   </p>
                   <div className="flex items-center gap-3 text-amber-400 font-medium pt-2">
@@ -338,6 +271,6 @@ export default function FlashcardsPage() {
           </div>
         </section>
       </div>
-    </AdaptiveBackground>
+    </div>
   );
 }
