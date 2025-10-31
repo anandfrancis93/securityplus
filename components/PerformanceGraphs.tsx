@@ -919,8 +919,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                     </h4>
                     <svg
                       style={{
-                        width: '24px',
-                        height: '24px',
+                        width: '32px',
+                        height: '32px',
                         color: '#a8a8a8',
                         transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                         transform: openDomainTables[domain] ? 'rotate(180deg)' : 'rotate(0deg)'
