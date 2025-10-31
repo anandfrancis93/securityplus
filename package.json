@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.68.0",
     "@carbon/react": "^1.94.2",
     "@carbon/styles": "^1.93.1",
     "@ducanh2912/next-pwa": "^10.2.9",

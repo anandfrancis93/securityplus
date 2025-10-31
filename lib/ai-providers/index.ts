@@ -7,8 +7,9 @@
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { GrokProvider } from './grok';
+import { ClaudeProvider } from './claude';
 
-export type AIProvider = 'gemini' | 'grok';
+export type AIProvider = 'gemini' | 'grok' | 'claude';
 
 export interface AIProviderConfig {
   provider: AIProvider;
@@ -27,6 +28,7 @@ export class UnifiedAIProvider {
   private provider: AIProvider;
   private geminiClient?: any;
   private grokClient?: GrokProvider;
+  private claudeClient?: ClaudeProvider;
 
   constructor(config: AIProviderConfig) {
     this.provider = config.provider;
@@ -49,6 +51,13 @@ export class UnifiedAIProvider {
         this.grokClient = new GrokProvider(config.apiKey);
         break;
 
+      case 'claude':
+        if (!config.apiKey) {
+          throw new Error('Claude API key is required');
+        }
+        this.claudeClient = new ClaudeProvider(config.apiKey);
+        break;
+
       default:
         throw new Error(`Unsupported AI provider: ${config.provider}`);
     }
@@ -60,6 +69,8 @@ export class UnifiedAIProvider {
         return this.generateWithGemini(prompt, options);
       case 'grok':
         return this.generateWithGrok(prompt, options);
+      case 'claude':
+        return this.generateWithClaude(prompt, options);
       default:
         throw new Error(`Unsupported provider: ${this.provider}`);
     }
@@ -111,16 +122,32 @@ export class UnifiedAIProvider {
     }
   }
 
+  private async generateWithClaude(prompt: string, options?: AIGenerationOptions): Promise<string> {
+    if (!this.claudeClient) {
+      throw new Error('Claude client not initialized');
+    }
+
+    if (options?.systemPrompt) {
+      return this.claudeClient.generateStructuredContent(
+        prompt,
+        options.systemPrompt,
+        options
+      );
+    } else {
+      return this.claudeClient.generateContent(prompt, options);
+    }
+  }
+
   /**
    * Get pricing information for the current provider
    */
   getPricingInfo(): { input: number; output: number; unit: string } {
     switch (this.provider) {
       case 'gemini':
-        // Gemini 2.5 Flash Lite pricing (approximate)
+        // Gemini 2.5 Flash Lite pricing
         return {
-          input: 0.0375,  // per 1M tokens
-          output: 0.15,    // per 1M tokens
+          input: 0.10,   // per 1M tokens
+          output: 0.40,  // per 1M tokens
           unit: '1M tokens'
         };
       case 'grok':
@@ -128,6 +155,13 @@ export class UnifiedAIProvider {
         return {
           input: 0.20,   // per 1M tokens
           output: 0.50,  // per 1M tokens
+          unit: '1M tokens'
+        };
+      case 'claude':
+        // Claude Sonnet 4.5 pricing
+        return {
+          input: 3.00,   // per 1M tokens
+          output: 15.00, // per 1M tokens
           unit: '1M tokens'
         };
       default:
@@ -149,6 +183,11 @@ export class UnifiedAIProvider {
         return {
           name: 'xAI Grok',
           model: 'grok-4-fast'
+        };
+      case 'claude':
+        return {
+          name: 'Anthropic Claude',
+          model: 'claude-sonnet-4-20250514'
         };
       default:
         return {
@@ -178,6 +217,12 @@ export function createAIProvider(): UnifiedAIProvider {
       apiKey = process.env.GROK_API_KEY || process.env.XAI_API_KEY;
       if (!apiKey) {
         throw new Error('GROK_API_KEY or XAI_API_KEY environment variable is required');
+      }
+      break;
+    case 'claude':
+      apiKey = process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY;
+      if (!apiKey) {
+        throw new Error('CLAUDE_API_KEY or ANTHROPIC_API_KEY environment variable is required');
       }
       break;
   }
