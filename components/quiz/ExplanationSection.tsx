@@ -50,8 +50,8 @@ export default function ExplanationSection({
 
       console.log(`[ExplanationSection] Matching option ${optionIdx}: "${question.options[optionIdx]}" (keywords: ${optionKeywords.join(', ')})`);
 
-      let bestMatchIdx = optionIdx; // Default to same index
-      let bestMatchScore = 0;
+      let bestMatchIdx = -1; // Will be set to first unused if no good matches found
+      let bestMatchScore = -1; // Start at -1 so any match (even 0) wins
 
       // Check all unused explanations
       for (let expIdx = 0; expIdx < 4; expIdx++) {
@@ -76,6 +76,16 @@ export default function ExplanationSection({
         if (score > bestMatchScore) {
           bestMatchScore = score;
           bestMatchIdx = expIdx;
+        }
+      }
+
+      // If no match was found (shouldn't happen, but safety check), use first unused
+      if (bestMatchIdx === -1) {
+        for (let expIdx = 0; expIdx < 4; expIdx++) {
+          if (!used[expIdx]) {
+            bestMatchIdx = expIdx;
+            break;
+          }
         }
       }
 
