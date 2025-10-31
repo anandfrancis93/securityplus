@@ -11,7 +11,12 @@
   "dependencies": {
     "@carbon/react": "^1.94.2",
     "@carbon/styles": "^1.93.1",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@google/generative-ai": "^0.24.1",
+    "@material/web": "^2.4.1",
+    "@mui/icons-material": "^7.3.4",
+    "@mui/material": "^7.3.4",
     "carbon-components": "^10.59.2",
     "firebase": "^11.0.1",
     "firebase-admin": "^13.5.0",
