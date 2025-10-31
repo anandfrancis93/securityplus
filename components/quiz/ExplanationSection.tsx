@@ -47,6 +47,37 @@ export default function ExplanationSection({
       .trim();
   };
 
+  // Helper function to check if explanation is valid (not a placeholder or too short)
+  const isValidExplanation = (text: string): boolean => {
+    if (!text || text.trim() === '') return false;
+
+    const cleaned = cleanExplanation(text).toLowerCase();
+
+    // Check for common placeholder phrases that indicate poor AI generation
+    const invalidPhrases = [
+      'based on the question requirements',
+      'based on the requirements',
+      'not applicable',
+      'n/a',
+      'see above',
+      'as mentioned',
+      'refer to',
+      'placeholder',
+    ];
+
+    // Check if explanation is just a placeholder phrase
+    if (invalidPhrases.some(phrase => cleaned === phrase || cleaned.startsWith(phrase))) {
+      return false;
+    }
+
+    // Check if explanation is too short (less than 10 characters after cleaning)
+    if (cleaned.length < 10) {
+      return false;
+    }
+
+    return true;
+  };
+
   // Determine accent color and border glow based on correctness
   const getAccentStyles = () => {
     if (isCorrect) {
@@ -156,7 +187,7 @@ export default function ExplanationSection({
               {/* Show correct answer explanations first */}
               {correctAnswers.map((index) => {
                 const explanation = question.incorrectExplanations[index];
-                if (!explanation || explanation.trim() === '') return null;
+                if (!isValidExplanation(explanation)) return null;
 
                 return (
                   <div key={`correct-${index}`} style={{ fontSize: '16px' }}>
@@ -184,13 +215,12 @@ export default function ExplanationSection({
 
               {/* Then show incorrect answer explanations in A-D order */}
               {question.incorrectExplanations.map((explanation, index) => {
-                // Skip if this is a correct answer or if explanation is empty
+                // Skip if this is a correct answer or if explanation is invalid
                 const isCorrectAnswer = correctAnswers.includes(index);
-                const isEmpty = !explanation || explanation.trim() === '';
                 const wasSelectedByUser = userSelectedAnswers.includes(index);
                 const isWrongSelection = wasSelectedByUser && !isCorrectAnswer;
 
-                if (isCorrectAnswer || isEmpty) {
+                if (isCorrectAnswer || !isValidExplanation(explanation)) {
                   return null;
                 }
 
