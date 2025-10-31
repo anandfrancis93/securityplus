@@ -596,43 +596,62 @@ CRITICAL - TOPIC TAGGING (VERY IMPORTANT):
 - The question should ONLY test knowledge of the provided topics - nothing more
 - In metadata.primaryTopic, use the first topic from the list: "${topicStrings[0]}"
 
-CRITICAL - ANSWER QUALITY AND ANTI-TELLTALE MEASURES:
+CRITICAL - FOLLOW THESE EXACT PATTERNS FROM SECURITY+ EXAM QUESTIONS:
 
-1. LENGTH VARIATION (prevent length-based guessing):
-   - VARY the length of ALL answer options (15-60 words each)
-   - Make some INCORRECT answers LONGER than correct answers
-   - Make some INCORRECT answers MORE DETAILED than correct answers
-   - The correct answer should NOT always be the longest option
-   - Some correct answers should be SHORT and concise (15-25 words)
-   - Some incorrect answers should be LONG and detailed but subtly wrong (40-60 words)
+1. OPTION LENGTH (based on difficulty level):
 
-2. PLAUSIBLE DISTRACTORS (prevent obvious elimination):
-   - ALL incorrect options must be related to the same topic/domain as the question
-   - Wrong answers should be "close but not quite right" - not completely unrelated
-   - Use common misconceptions, partial solutions, or alternatives that seem reasonable
-   - Example: If testing IaC security, ALL options should involve IaC/cloud/security concepts
-   - DO NOT include options from completely different domains (e.g., physical security for a cloud question)
+   EASY Questions (single-domain-single-topic):
+   - Usually 1-2 words per option (e.g., "CIO", "CTO", "CISO")
+   - OR 8-12 words for purpose/function questions (e.g., "To isolate and contain malicious files or processes")
+   - Keep ALL options the SAME length within the question
+   - Examples: All single words, OR all brief phrases, OR all complete sentences
 
-3. AVOID KEYWORD MATCHING (prevent telegraphing):
-   - DO NOT repeat exact keywords from the question stem in the correct answer
-   - If question mentions "encryption", correct answer should rephrase as "cryptographic protection" or "secure data at rest"
-   - Use synonyms and paraphrasing to avoid obvious pattern matching
-   - Incorrect answers can use question keywords to make them seem more plausible
+   MEDIUM Questions (single-domain-multiple-topics):
+   - Typically 1-5 words per option (e.g., "SAML", "VPN", "LDAP")
+   - Up to 10 words for more detailed scenarios (e.g., "Intrusion Prevention System (IPS)")
+   - Keep options similar length (don't vary wildly)
 
-4. BALANCED TECHNICAL DEPTH:
-   - All 4 options should have similar levels of technical specificity
-   - If one option mentions specific tools/protocols, others should too
-   - Mix implementation details and conceptual approaches evenly across options
-   - Don't make correct answer obviously more detailed/professional than others
+   HARD Questions (multiple-domains-multiple-topics):
+   - 7-20 words per option (complete strategies or solutions)
+   - Example: "Deploy Layer 7 firewalls on all network edges"
+   - Example: "Evaluating the potential vendors' security measures, regulatory compliance, and history of handling sensitive data"
+   - All options should be substantive and detailed
 
-5. SUBTLE INCORRECTNESS:
-   - Wrong answers should be subtly wrong (wrong timing, wrong context, incomplete solution)
-   - Not obviously absurd or unrelated
-   - Examples of good subtle incorrectness:
-     * Right tool, wrong use case
-     * Right concept, wrong implementation order
-     * Partially correct but missing critical component
-     * Correct for different scenario but not this one
+2. ALL OPTIONS MUST BE "SIBLING CONCEPTS" (CRITICAL):
+   - 100% of options must be from the SAME category/domain
+   - Wrong answers are "close but not quite right" - NOT unrelated concepts
+   - Examples of CORRECT option grouping:
+     * If testing CISO role → ALL options are executive roles (CIO, CTO, CEO, CISO)
+     * If testing protocols → ALL options are protocols (HTTP, FTP, SMTP, SFTP)
+     * If testing firewall deployment → ALL options mention Layer 4 or Layer 7
+     * If testing security concepts → ALL options are security concepts (Vulnerability, Threat, Risk, Insider threat)
+   - DO NOT mix domains (e.g., don't put "Physical security guard" as option for cloud security question)
+
+3. KEYWORD USAGE (moderate repetition is NORMAL):
+   - EASY questions: Direct keyword matching is ACCEPTABLE and expected
+     * "What is sandbox?" can have answer mentioning "isolate and contain"
+   - MEDIUM questions: Technical terms naturally repeat in context
+     * Question about "SSO using XML" → Answer "SAML" is fine
+   - HARD questions: Less direct repetition, answer requires synthesis
+   - DO NOT over-avoid keywords - Security+ exams use standard terminology consistently
+
+4. CONSISTENT FORMAT WITHIN EACH QUESTION:
+   - If one option is an acronym, ALL options should be acronyms
+   - If one option is a full strategy sentence, ALL should be full strategy sentences
+   - If one option includes parenthetical explanation, ALL should match that style
+   - Examples:
+     * All acronyms: "IDS", "IPS", "NIDS", "HIDS"
+     * All phrases: "After the workday", "Off-peak times", "Peak times", "Maintenance windows"
+     * All detailed: "Deploy X on Y", "Rely solely on X for Y", "Deploy Z on W", "Use X for Y"
+
+5. WRONG ANSWERS ARE "SIBLINGS, NOT STRANGERS":
+   - Incorrect options should be plausible alternatives from the same family
+   - Examples from actual Security+ questions:
+     * CISO question: CIO and CTO are wrong but they're related executive roles
+     * Layer 7 question: Three options mention Layer 4 (wrong layer for app attacks, but right technology type)
+     * Salt question: TPM and IPSec are security tools but don't add random values to hashes
+     * Asset management: Network segmentation is a security practice but not asset management
+   - Wrong answers test whether student understands the DISTINCTION, not just the concept
 
 Security+ Topics Reference (for context only):
 ${SECURITY_PLUS_TOPICS}
