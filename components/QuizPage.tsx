@@ -428,7 +428,12 @@ export default function Quiz() {
     }
   };
 
-  const handleEndQuiz = async () => {
+  /**
+   * Shared function to end quiz - handles all cleanup consistently
+   * @param showCelebrationScreen - Whether to show celebration (false when navigating away)
+   * @param onComplete - Optional callback to run after quiz ends (e.g., navigation)
+   */
+  const performEndQuiz = async (showCelebrationScreen: boolean = true, onComplete?: () => void) => {
     // Immediately set flag to stop any background generation
     setQuizEnding(true);
 
@@ -461,17 +466,29 @@ export default function Quiz() {
       });
 
       await endQuiz(unusedQuestions.length > 0 ? unusedQuestions : undefined);
-      console.log('Quiz ended successfully, showing celebration...');
+      console.log('Quiz ended successfully');
 
       // Clear both localStorage and Firebase since quiz is completed
       clearQuizFromLocalStorage();
       await deleteSavedQuiz();
 
-      setShowCelebration(true);
+      if (showCelebrationScreen) {
+        setShowCelebration(true);
+      }
+
+      // Execute callback if provided (e.g., navigation)
+      if (onComplete) {
+        onComplete();
+      }
     } catch (error) {
       console.error('Error ending quiz:', error);
       alert('Failed to save quiz results. Please try again.');
     }
+  };
+
+  // Wrapper for normal "End Quiz" button - shows celebration
+  const handleEndQuiz = async () => {
+    await performEndQuiz(true);
   };
 
   const handleCelebrationClose = () => {
@@ -725,25 +742,15 @@ export default function Quiz() {
                 </button>
                 <button
                   onClick={async () => {
-                    // End the quiz and record progress
                     setShowNavigationWarning(false);
 
-                    // Get unused questions to record in performance
-                    const unusedQuestions = questions.slice(currentQuestionIndex + 1);
-
-                    // End quiz (this will record progress)
-                    await endQuiz(unusedQuestions.length > 0 ? unusedQuestions : undefined);
-                    console.log('Quiz ended, progress recorded');
-
-                    // Clear both storages since quiz is ended
-                    clearQuizFromLocalStorage();
-                    await deleteSavedQuiz();
-
-                    // Execute the pending navigation
-                    if (pendingNavigation) {
-                      pendingNavigation();
-                      setPendingNavigation(null);
-                    }
+                    // End quiz and execute pending navigation
+                    await performEndQuiz(false, () => {
+                      if (pendingNavigation) {
+                        pendingNavigation();
+                        setPendingNavigation(null);
+                      }
+                    });
                   }}
                   className={`px-6 sm:px-8 py-4 sm:py-5 font-bold text-lg sm:text-xl ${liquidGlass ? 'bg-red-500/20 hover:bg-red-500/30 backdrop-blur-xl border border-red-500/50 rounded-3xl text-red-300 transition-all duration-700 hover:scale-105 shadow-xl hover:shadow-2xl hover:shadow-red-500/30' : 'bg-red-900 hover:bg-red-800 text-red-200 rounded-md transition-all duration-150'}`}
                 >
