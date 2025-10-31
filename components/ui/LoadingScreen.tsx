@@ -1,8 +1,6 @@
 import React from 'react';
-import { AdaptiveBackground } from './LiquidGlassBackground';
 
 interface LoadingScreenProps {
-  liquidGlass: boolean;
   message?: string;
   submessage?: string;
 }
@@ -13,52 +11,35 @@ interface LoadingScreenProps {
  * Used across all pages for consistent loading states
  */
 export function LoadingScreen({
-  liquidGlass,
   message = 'Loading...',
   submessage = 'Please wait',
 }: LoadingScreenProps) {
   return (
-    <AdaptiveBackground liquidGlass={liquidGlass}>
+    <div className="min-h-screen bg-zinc-950 text-white">
+      {/* Gradient mesh background */}
+      <div className="fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-violet-600/20 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-cyan-600/20 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:64px_64px]" />
+      </div>
+
       <div className="flex items-center justify-center min-h-screen">
         <div className="relative">
-          {/* Liquid glass card */}
-          <div
-            className={`${
-              liquidGlass
-                ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]'
-                : 'bg-slate-800/95 backdrop-blur-xl border border-slate-700/50 rounded-3xl'
-            } p-16 md:p-20 shadow-2xl`}
-          >
-            {liquidGlass && (
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50 pointer-events-none" />
-            )}
+          {/* Modern card */}
+          <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-2xl p-16 md:p-20 shadow-xl">
             <div className="relative text-center">
               {/* Animated icon */}
               <div className="relative mx-auto w-32 h-32 md:w-40 md:h-40 mb-8">
                 {/* Outer ring */}
-                <div
-                  className={`absolute inset-0 ${
-                    liquidGlass
-                      ? 'border-4 border-white/20 rounded-full'
-                      : 'border-4 border-slate-700 rounded-full'
-                  }`}
-                ></div>
+                <div className="absolute inset-0 border-4 border-zinc-800 rounded-full"></div>
                 {/* Spinning gradient ring */}
                 <div className="absolute inset-0 animate-spin">
-                  <div
-                    className={`w-full h-full rounded-full ${
-                      liquidGlass
-                        ? 'border-4 border-transparent border-t-cyan-400 border-r-cyan-400/50'
-                        : 'border-4 border-transparent border-t-cyan-500 border-r-cyan-500/50'
-                    }`}
-                  ></div>
+                  <div className="w-full h-full rounded-full border-4 border-transparent border-t-cyan-400 border-r-cyan-400/50"></div>
                 </div>
                 {/* Center icon - graduation cap */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <svg
-                    className={`w-16 h-16 md:w-20 md:h-20 ${
-                      liquidGlass ? 'text-cyan-400' : 'text-cyan-500'
-                    }`}
+                    className="w-16 h-16 md:w-20 md:h-20 text-cyan-400"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -69,24 +50,16 @@ export function LoadingScreen({
                 </div>
               </div>
               {/* Loading text */}
-              <p
-                className={`text-2xl md:text-3xl font-bold tracking-tight ${
-                  liquidGlass ? 'text-white' : 'text-slate-200'
-                }`}
-              >
+              <p className="text-2xl md:text-3xl font-bold tracking-tight text-white">
                 {message}
               </p>
-              <p
-                className={`text-base md:text-lg mt-4 ${
-                  liquidGlass ? 'text-zinc-400' : 'text-slate-400'
-                }`}
-              >
+              <p className="text-base md:text-lg mt-4 text-zinc-400">
                 {submessage}
               </p>
             </div>
           </div>
         </div>
       </div>
-    </AdaptiveBackground>
+    </div>
   );
 }
