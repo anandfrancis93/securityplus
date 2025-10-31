@@ -3,6 +3,7 @@ import { calculateIRTParameters, categoryToDifficulty } from './irt';
 import { ALL_SECURITY_PLUS_TOPICS } from './topicData';
 import { getDomainsFromTopics } from './domainDetection';
 import { UnifiedAIProvider, createAIProvider } from './ai-providers';
+import { getRelevantExamples } from './questionExamples';
 
 // Initialize AI provider from environment variables
 // Set NEXT_PUBLIC_AI_PROVIDER to 'grok' to use Grok instead of Gemini
@@ -534,57 +535,33 @@ export async function generateQuestionWithTopics(
   // Derive difficulty from category (deterministic, no AI interpretation)
   const difficulty = categoryToDifficulty(questionCategory);
 
+  // Get relevant examples from the multishot library
+  const relevantExamples = getRelevantExamples(questionCategory, questionType);
+
   const categoryGuidance = {
     'single-domain-single-topic': `This is a SINGLE DOMAIN, SINGLE TOPIC question testing: "${topicStrings[0]}". Focus the question specifically on this one concept.
 
-EXAMPLE OF EASY (SINGLE TOPIC) QUESTION:
+REFERENCE EXAMPLES FROM ACTUAL SECURITY+ QUESTIONS:
 
-Question: "What is the primary purpose of a firewall in network security?"
+${relevantExamples}
 
-Options:
-A) To monitor and control incoming and outgoing network traffic based on predetermined security rules
-B) To encrypt all data transmitted over the network
-C) To provide backup and disaster recovery capabilities
-D) To manage user authentication and access control
-
-Correct Answer: A
-Explanation: A firewall's primary purpose is to act as a barrier between trusted and untrusted networks by monitoring and controlling traffic based on security rules. While it may have other features, traffic filtering is its core function.
-
-Note: Simple definition question, tests one concept, straightforward correct answer.`,
+Your question should follow these patterns: simple definition/identification, straightforward correct answer, tests one core concept.`,
 
     'single-domain-multiple-topics': `This is a SINGLE DOMAIN, MULTIPLE TOPICS question combining related topics from the same domain: ${topicStrings.map(t => `"${t}"`).join(', ')}. Create a realistic scenario that integrates these concepts.
 
-EXAMPLE OF MEDIUM (MULTIPLE TOPICS, SINGLE DOMAIN) QUESTION:
+REFERENCE EXAMPLES FROM ACTUAL SECURITY+ QUESTIONS:
 
-Question: "A web application is experiencing attacks where malicious SQL commands are being injected through user input fields. The security team needs to implement a solution that can inspect HTTP traffic and block these attacks at the application layer. Which firewall type would be most appropriate?"
+${relevantExamples}
 
-Options:
-A) Web Application Firewall (WAF) configured with SQL injection detection rules
-B) Next-generation firewall (NGFW) with intrusion prevention capabilities
-C) Layer 4 stateful firewall with strict port filtering
-D) Network-based firewall with deep packet inspection enabled
-
-Correct Answer: A
-Explanation: A WAF operates at Layer 7 (application layer) and is specifically designed to protect web applications from attacks like SQL injection by inspecting HTTP/HTTPS traffic. While NGFWs can help, WAFs are purpose-built for this scenario.
-
-Note: Scenario-based, requires understanding of WAF vs other firewall types, tests application of multiple related concepts.`,
+Your question should follow these patterns: scenario-based, requires understanding relationships between concepts, tests application of knowledge.`,
 
     'multiple-domains-multiple-topics': `This is a MULTIPLE DOMAINS, MULTIPLE TOPICS question combining topics across different Security+ domains: ${topicStrings.map(t => `"${t}"`).join(', ')}. Create a complex scenario that requires understanding how these concepts work together across domains.
 
-EXAMPLE OF HARD (MULTIPLE DOMAINS) QUESTION:
+REFERENCE EXAMPLES FROM ACTUAL SECURITY+ QUESTIONS:
 
-Question: "Your organization is implementing a zero-trust architecture for a new cloud-based application. The solution must verify user identity, enforce least privilege access, segment network traffic between application tiers, and continuously monitor for threats. Which combination of security controls would best support this zero-trust implementation?"
+${relevantExamples}
 
-Options:
-A) Multi-factor authentication (MFA), role-based access control (RBAC), micro-segmentation with next-generation firewalls, and security information and event management (SIEM)
-B) Single sign-on (SSO), mandatory access control (MAC), virtual LANs (VLANs), and antivirus software
-C) Biometric authentication, discretionary access control (DAC), air-gapped networks, and intrusion detection systems (IDS)
-D) Certificate-based authentication, attribute-based access control (ABAC), screened subnets (DMZ), and endpoint detection and response (EDR)
-
-Correct Answer: A
-Explanation: This combination fully implements zero-trust principles: MFA provides strong identity verification (adaptive identity), RBAC enforces least privilege (policy-driven access), micro-segmentation with NGFWs creates trust boundaries (threat scope reduction), and SIEM enables continuous monitoring. Together, these controls address all zero-trust control plane and data plane requirements.
-
-Note: Complex scenario, integrates concepts from identity management, access control, network architecture, and security monitoring across multiple domains.`
+Your question should follow these patterns: complex scenario, integrates concepts from multiple domains, requires synthesis and analysis across security areas.`
   };
 
   const typeGuidance = questionType === 'single'
@@ -677,16 +654,19 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
 }`;
 
   try {
-    const systemPrompt = `You are a CompTIA Security+ SY0-701 exam expert. Generate high-quality exam questions that cannot be guessed through test-taking strategies.
+    const systemPrompt = `You are a CompTIA Security+ SY0-701 exam expert. Generate high-quality exam questions that match the style, quality, and difficulty of actual Security+ exam questions.
 
 CRITICAL QUALITY RULES:
-1. ONLY test the exact topics provided - do not introduce unrelated domains
-2. Use ONLY the exact topic strings provided in the "topics" array
-3. ALL answer options must be plausible and related to the question topic
-4. VARY answer lengths - don't make correct answer always longest or shortest
-5. AVOID repeating keywords from question in correct answer - use synonyms
-6. Make incorrect answers subtly wrong, not obviously unrelated
-7. All options should have similar technical depth and specificity
+1. FOLLOW THE REFERENCE EXAMPLES provided - they are actual Security+ style questions
+2. MATCH THE DIFFICULTY LEVEL of the examples for the requested category
+3. ONLY test the exact topics provided - do not introduce unrelated domains
+4. Use ONLY the exact topic strings provided in the "topics" array
+5. ALL answer options must be plausible and related to the question topic
+6. VARY answer lengths - don't make correct answer always longest or shortest
+7. AVOID repeating keywords from question in correct answer - use synonyms
+8. Make incorrect answers subtly wrong, not obviously unrelated
+9. All options should have similar technical depth and specificity
+10. Use realistic business/technical scenarios like the examples show
 
 Return only valid JSON, no markdown formatting.`;
 
