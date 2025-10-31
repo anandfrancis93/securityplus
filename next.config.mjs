@@ -84,9 +84,9 @@ const nextConfig = {
   },
 
   // Experimental features for better performance
-  experimental: {
-    optimizeCss: true, // Enable CSS optimization
-  },
+  // experimental: {
+  //   optimizeCss: true, // Disabled due to critters dependency issue in Vercel
+  // },
 };
 
 export default nextConfig;
