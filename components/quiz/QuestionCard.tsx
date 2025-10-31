@@ -37,14 +37,14 @@ export default function QuestionCard({
   };
 
   return (
-    <div style={{
+    <div className="question-card-container" style={{
       position: 'relative',
       padding: '64px',
       backgroundColor: '#0f0f0f',
       borderRadius: '24px',
       boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
     }}>
-      <h2 style={{
+      <h2 className="question-card-title" style={{
         fontSize: '28px',
         fontWeight: 'bold',
         marginBottom: '64px',
@@ -93,7 +93,6 @@ export default function QuestionCard({
               transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
               cursor: showExplanation ? 'default' : 'pointer',
               border: 'none',
-              overflow: 'hidden' as const,
             };
 
             if (showExplanation) {
@@ -146,6 +145,7 @@ export default function QuestionCard({
           return (
             <ButtonElement
               key={index}
+              className="answer-option-button"
               onClick={() => handleClick(index)}
               style={getButtonStyle()}
               onMouseEnter={(e) => {
@@ -237,14 +237,17 @@ export default function QuestionCard({
 
       <style jsx>{`
         @media (max-width: 768px) {
-          div > div {
-            padding: 48px !important;
+          .question-card-container {
+            padding: 24px !important;
           }
-          h2 {
-            font-size: 20px !important;
+
+          .question-card-title {
+            font-size: 18px !important;
+            margin-bottom: 32px !important;
           }
-          button, div[role="button"] {
-            padding: 32px !important;
+
+          .answer-option-button {
+            padding: 24px !important;
           }
         }
       `}</style>
