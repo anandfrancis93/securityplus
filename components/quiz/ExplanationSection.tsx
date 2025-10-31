@@ -27,6 +27,19 @@ export default function ExplanationSection({
     ? question.correctAnswer
     : [question.correctAnswer];
 
+  // Helper function to clean explanation text
+  // Removes prefixes like "Correct:", "Incorrect:", "This option is correct", etc.
+  const cleanExplanation = (text: string): string => {
+    if (!text) return text;
+
+    return text
+      // Remove "Correct:" or "Incorrect:" at the start
+      .replace(/^(Correct|Incorrect):\s*/i, '')
+      // Remove "This option is correct/incorrect" patterns
+      .replace(/^This option is (correct|incorrect)\.?\s*/i, '')
+      .trim();
+  };
+
   return (
     <div className="space-y-8">
       {/* Unified Explanation Card */}
@@ -93,7 +106,7 @@ export default function ExplanationSection({
                       {String.fromCharCode(65 + index)}. {question.options[index]}
                     </div>
                     <div className="text-zinc-100 leading-relaxed pl-6">
-                      {explanation}
+                      {cleanExplanation(explanation)}
                     </div>
                   </div>
                 );
@@ -115,7 +128,7 @@ export default function ExplanationSection({
                       {String.fromCharCode(65 + index)}. {question.options[index]}
                     </div>
                     <div className="text-zinc-200 leading-relaxed pl-6">
-                      {explanation}
+                      {cleanExplanation(explanation)}
                     </div>
                   </div>
                 );
