@@ -3,6 +3,7 @@ import { AppProvider } from "@/components/AppProvider";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "./globals.css";
+import "@carbon/styles/css/styles.css";
 
 export const metadata: Metadata = {
   title: "Security+ SY0-701 MCQ Generator",

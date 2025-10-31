@@ -9,7 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@carbon/react": "^1.94.2",
+    "@carbon/styles": "^1.93.1",
     "@google/generative-ai": "^0.24.1",
+    "carbon-components": "^10.59.2",
     "firebase": "^11.0.1",
     "firebase-admin": "^13.5.0",
     "geist": "^1.5.1",
