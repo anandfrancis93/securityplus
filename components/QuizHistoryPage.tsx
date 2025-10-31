@@ -183,22 +183,6 @@ export default function QuizHistoryPage() {
           </div>
         </section>
 
-        {/* Back Button */}
-        <div style={{ marginBottom: '32px' }}>
-          <button
-            onClick={() => router.push('/cybersecurity/performance')}
-            className="back-button"
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = '6px 6px 12px #050505, -6px -6px 12px #191919';
-            }}
-          >
-            ← Back to Performance
-          </button>
-        </div>
-
         {/* Quiz History List */}
         {userProgress && userProgress.quizHistory.length > 0 ? (
           <div style={{
