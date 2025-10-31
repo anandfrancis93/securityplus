@@ -54,16 +54,14 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
   }));
 
   return (
-    <div style={{
+    <div className="metadata-card" style={{
       position: 'relative',
-      padding: '3rem',
-      marginTop: '3rem',
       background: '#0f0f0f',
-      borderRadius: '24px',
+      borderRadius: 'clamp(16px, 2vw, 24px)',
       boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(16px, 2vw, 24px)' }}>
         {/* Domain(s) */}
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
           <span style={{
@@ -194,6 +192,52 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
           </div>
         )}
       </div>
+
+      <style jsx>{`
+        /* ============================================
+           MOBILE-FIRST RESPONSIVE DESIGN
+           Fluid scaling from 320px to 3840px (4K)
+           Breakpoints: 768px, 1024px, 1280px, 1440px, 1920px
+           ============================================ */
+
+        /* Base styles: Mobile (320px+) */
+        .metadata-card {
+          padding: clamp(20px, 4vw, 32px);
+          margin-top: clamp(24px, 4vw, 48px);
+        }
+
+        /* Tablet (768px+) */
+        @media (min-width: 768px) {
+          .metadata-card {
+            padding: clamp(32px, 4vw, 40px);
+            margin-top: clamp(32px, 4vw, 48px);
+          }
+        }
+
+        /* Desktop (1024px+) */
+        @media (min-width: 1024px) {
+          .metadata-card {
+            padding: clamp(36px, 3vw, 48px);
+          }
+        }
+
+        /* XL Desktop (1440px+) */
+        @media (min-width: 1440px) {
+          .metadata-card {
+            padding: 48px;
+            margin-top: 48px;
+          }
+        }
+
+        /* 4K (1920px+) - Cap maximum sizes */
+        @media (min-width: 1920px) {
+          .metadata-card {
+            max-width: 1600px;
+            margin-left: auto;
+            margin-right: auto;
+          }
+        }
+      `}</style>
     </div>
   );
 }

@@ -95,33 +95,33 @@ export default function ExplanationSection({
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(20px, 3vw, 32px)' }}>
       {/* Unified Explanation Card */}
       <div
+        className="explanation-card"
         style={{
           position: 'relative',
-          padding: showDifficultyBadge ? '48px' : '64px',
           background: '#0f0f0f',
           border: `2px solid ${accentStyles.borderColor}`,
-          borderRadius: '24px',
+          borderRadius: 'clamp(16px, 2vw, 24px)',
           boxShadow: accentStyles.boxShadow,
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
         {/* Header with status and optional difficulty badge */}
         <div
+          className="explanation-header"
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginBottom: showDifficultyBadge ? '32px' : '40px',
             flexWrap: 'wrap',
-            gap: '16px',
+            gap: 'clamp(12px, 2vw, 16px)',
           }}
         >
           <h3
+            className="explanation-title"
             style={{
-              fontSize: showDifficultyBadge ? '28px' : '32px',
               fontWeight: 700,
               color: accentStyles.accentColor,
               margin: 0,
@@ -131,21 +131,20 @@ export default function ExplanationSection({
           </h3>
 
           {showDifficultyBadge && difficulty && (
-            <span style={getDifficultyStyles()}>
+            <span className="difficulty-badge" style={getDifficultyStyles()}>
               {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
             </span>
           )}
         </div>
 
         {/* Unified Explanation Section - All options explained */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(20px, 3vw, 32px)' }}>
           <p
+            className="explanation-label"
             style={{
               fontWeight: 700,
               color: '#e5e5e5',
               margin: 0,
-              marginBottom: '24px',
-              fontSize: '20px',
             }}
           >
             Explanation:
@@ -234,6 +233,114 @@ export default function ExplanationSection({
           )}
         </div>
       </div>
+
+      <style jsx>{`
+        /* ============================================
+           MOBILE-FIRST RESPONSIVE DESIGN
+           Fluid scaling from 320px to 3840px (4K)
+           Breakpoints: 768px, 1024px, 1280px, 1440px, 1920px
+           ============================================ */
+
+        /* Base styles: Mobile (320px+) */
+        .explanation-card {
+          padding: clamp(20px, 4vw, 32px);
+        }
+
+        .explanation-header {
+          margin-bottom: clamp(20px, 3vw, 32px);
+        }
+
+        .explanation-title {
+          font-size: clamp(22px, 4vw, 32px);
+        }
+
+        .difficulty-badge {
+          padding: clamp(8px, 1.5vw, 12px) clamp(12px, 2.5vw, 20px);
+          border-radius: clamp(8px, 1.5vw, 12px);
+          font-size: clamp(14px, 2.5vw, 18px);
+        }
+
+        .explanation-label {
+          font-size: clamp(16px, 3vw, 20px);
+          margin-bottom: clamp(16px, 2.5vw, 24px);
+        }
+
+        /* Tablet (768px+) */
+        @media (min-width: 768px) {
+          .explanation-card {
+            padding: clamp(32px, 4vw, 48px);
+          }
+
+          .explanation-header {
+            margin-bottom: clamp(24px, 3vw, 36px);
+          }
+
+          .explanation-title {
+            font-size: clamp(24px, 3vw, 32px);
+          }
+
+          .difficulty-badge {
+            font-size: clamp(15px, 2vw, 18px);
+          }
+
+          .explanation-label {
+            font-size: clamp(17px, 2.5vw, 20px);
+          }
+        }
+
+        /* Desktop (1024px+) */
+        @media (min-width: 1024px) {
+          .explanation-card {
+            padding: clamp(40px, 3.5vw, 56px);
+          }
+
+          .explanation-title {
+            font-size: clamp(26px, 2.5vw, 32px);
+          }
+        }
+
+        /* Large Desktop (1280px+) */
+        @media (min-width: 1280px) {
+          .explanation-card {
+            padding: clamp(48px, 3vw, 64px);
+          }
+        }
+
+        /* XL Desktop (1440px+) */
+        @media (min-width: 1440px) {
+          .explanation-card {
+            padding: 64px;
+          }
+
+          .explanation-header {
+            margin-bottom: 40px;
+          }
+
+          .explanation-title {
+            font-size: 32px;
+          }
+
+          .difficulty-badge {
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 18px;
+          }
+
+          .explanation-label {
+            font-size: 20px;
+            margin-bottom: 24px;
+          }
+        }
+
+        /* 4K (1920px+) - Cap maximum sizes */
+        @media (min-width: 1920px) {
+          .explanation-card {
+            max-width: 1600px;
+            margin-left: auto;
+            margin-right: auto;
+          }
+        }
+      `}</style>
     </div>
   );
 }

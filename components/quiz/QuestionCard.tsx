@@ -39,15 +39,12 @@ export default function QuestionCard({
   return (
     <div className="question-card-container" style={{
       position: 'relative',
-      padding: '64px',
       backgroundColor: '#0f0f0f',
-      borderRadius: '24px',
+      borderRadius: 'clamp(16px, 2vw, 24px)',
       boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
     }}>
       <h2 className="question-card-title" style={{
-        fontSize: '28px',
         fontWeight: 'bold',
-        marginBottom: '64px',
         lineHeight: '1.3',
         color: '#e5e5e5',
       }}>
@@ -56,13 +53,10 @@ export default function QuestionCard({
 
       {/* Multiple-response instruction */}
       {question.questionType === 'multiple' && !showExplanation && (
-        <div style={{
-          marginBottom: '48px',
-          fontSize: '18px',
+        <div className="multiple-instruction" style={{
           color: '#e5e5e5',
-          padding: '24px',
           backgroundColor: '#0f0f0f',
-          borderRadius: '24px',
+          borderRadius: 'clamp(16px, 2vw, 24px)',
           boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
           border: '1px solid rgba(139, 92, 246, 0.3)',
         }}>
@@ -236,18 +230,103 @@ export default function QuestionCard({
       </div>
 
       <style jsx>{`
-        @media (max-width: 768px) {
+        /* ============================================
+           MOBILE-FIRST RESPONSIVE DESIGN
+           Fluid scaling from 320px to 3840px (4K)
+           Breakpoints: 768px, 1024px, 1280px, 1440px, 1920px
+           ============================================ */
+
+        /* Base styles: Mobile (320px+) */
+        .question-card-container {
+          padding: clamp(20px, 4vw, 32px);
+        }
+
+        .question-card-title {
+          font-size: clamp(18px, 3.5vw, 28px);
+          margin-bottom: clamp(24px, 4vw, 48px);
+        }
+
+        .multiple-instruction {
+          margin-bottom: clamp(24px, 3.5vw, 48px);
+          padding: clamp(16px, 3vw, 24px);
+          fontSize: clamp(14px, 2.5vw, 18px);
+        }
+
+        .answer-option-button {
+          padding: clamp(20px, 3.5vw, 32px) !important;
+        }
+
+        /* Tablet (768px+) */
+        @media (min-width: 768px) {
           .question-card-container {
-            padding: 24px !important;
+            padding: clamp(32px, 4vw, 48px);
           }
 
           .question-card-title {
-            font-size: 18px !important;
-            margin-bottom: 32px !important;
+            font-size: clamp(22px, 2.5vw, 28px);
+            margin-bottom: clamp(32px, 4vw, 56px);
+          }
+
+          .multiple-instruction {
+            fontSize: clamp(16px, 2vw, 18px);
           }
 
           .answer-option-button {
-            padding: 24px !important;
+            padding: clamp(24px, 3vw, 36px) !important;
+          }
+        }
+
+        /* Desktop (1024px+) */
+        @media (min-width: 1024px) {
+          .question-card-container {
+            padding: clamp(40px, 3.5vw, 64px);
+          }
+
+          .question-card-title {
+            font-size: clamp(24px, 2vw, 28px);
+            margin-bottom: clamp(40px, 3.5vw, 64px);
+          }
+
+          .answer-option-button {
+            padding: clamp(28px, 2.5vw, 40px) !important;
+          }
+        }
+
+        /* Large Desktop (1280px+) */
+        @media (min-width: 1280px) {
+          .question-card-container {
+            padding: clamp(48px, 3vw, 64px);
+          }
+        }
+
+        /* XL Desktop (1440px+) */
+        @media (min-width: 1440px) {
+          .question-card-container {
+            padding: 64px;
+          }
+
+          .question-card-title {
+            font-size: 28px;
+            margin-bottom: 64px;
+          }
+
+          .multiple-instruction {
+            margin-bottom: 48px;
+            padding: 24px;
+            fontSize: 18px;
+          }
+
+          .answer-option-button {
+            padding: 40px !important;
+          }
+        }
+
+        /* 4K (1920px+) - Cap maximum sizes */
+        @media (min-width: 1920px) {
+          .question-card-container {
+            max-width: 1600px;
+            margin-left: auto;
+            margin-right: auto;
           }
         }
       `}</style>
