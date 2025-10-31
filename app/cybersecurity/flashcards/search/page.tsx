@@ -160,7 +160,7 @@ export default function SearchFlashcards() {
   };
 
   if (loading) {
-    return <LoadingScreen liquidGlass={liquidGlass} message="Loading flashcards..." />;
+    return <LoadingScreen message="Loading flashcards..." />;
   }
 
   // Filter and sort flashcards based on search query with relevance scoring

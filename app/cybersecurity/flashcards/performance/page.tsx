@@ -67,7 +67,7 @@ export default function FlashcardPerformance() {
   };
 
   if (loading) {
-    return <LoadingScreen liquidGlass={liquidGlass} message="Loading performance..." />;
+    return <LoadingScreen message="Loading performance..." />;
   }
 
   const stats = getDeckStats(reviews, flashcards.map(f => f.id));

@@ -133,7 +133,7 @@ export default function StudyFlashcards() {
   };
 
   if (loading) {
-    return <LoadingScreen liquidGlass={liquidGlass} message="Loading flashcards..." />;
+    return <LoadingScreen message="Loading flashcards..." />;
   }
 
   if (dueCardIds.length === 0 || !currentCard) {
