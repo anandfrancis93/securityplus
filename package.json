@@ -11,6 +11,7 @@
   "dependencies": {
     "@carbon/react": "^1.94.2",
     "@carbon/styles": "^1.93.1",
+    "@ducanh2912/next-pwa": "^10.2.9",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@google/generative-ai": "^0.24.1",

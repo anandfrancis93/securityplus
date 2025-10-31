@@ -13,6 +13,14 @@ export const metadata: Metadata = {
     template: "%s | SecurityPlus AI"
   },
   description: "AI-powered adaptive learning platform for CompTIA Security+ SY0-701 certification. Unlimited AI-generated questions, IRT analytics, FSRS spaced repetition, and comprehensive coverage of all 5 domains. Free forever.",
+  manifest: '/manifest.json',
+  themeColor: '#8b5cf6',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'SecurityPlus AI',
+  },
+  applicationName: 'SecurityPlus AI',
   keywords: [
     "CompTIA Security+",
     "SY0-701",

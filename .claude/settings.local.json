@@ -11,7 +11,18 @@
       "Bash(npx tsx:*)",
       "Bash(test -f:*)",
       "Bash(test:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(git checkout:*)",
+      "Bash(npx next build:*)",
+      "Bash(npx tsc:*)",
+      "Bash(awk:*)",
+      "Bash(for file in components/HomePage.tsx components/CybersecurityPage.tsx components/QuizOptionsPage.tsx components/QuizPage.tsx components/PerformancePage.tsx components/FlashcardsPage.tsx components/QuizHistoryPage.tsx)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(done)",
+      "Bash(for file in components/HomePage.tsx components/CybersecurityPage.tsx components/QuizOptionsPage.tsx components/QuizPage.tsx components/PerformancePage.tsx components/FlashcardsPage.tsx)",
+      "Bash(find:*)",
+      "Bash(while read file)",
+      "Bash(for file in HomePage.tsx CybersecurityPage.tsx QuizOptionsPage.tsx QuizPage.tsx)"
     ],
     "deny": [],
     "ask": []
