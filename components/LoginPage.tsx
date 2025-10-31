@@ -32,8 +32,8 @@ export default function Login() {
   // Show loading state while checking auth
   if (authLoading) {
     return (
-      <div className="md3-loading-screen">
-        <div className="md3-loading-spinner"></div>
+      <div className="apple-loading-screen">
+        <div className="apple-spinner"></div>
       </div>
     );
   }
@@ -44,107 +44,94 @@ export default function Login() {
   }
 
   return (
-    <div className="md3-login-page">
-      {/* Top App Bar */}
-      <header className="md3-top-app-bar">
-        <div className="md3-top-app-bar-container">
-          <div className="md3-top-app-bar-section">
-            <div className="md3-logo">
-              <div className="md3-logo-icon">S+</div>
-              <div className="md3-logo-text">
-                <span className="md3-logo-title">SecurityPlus AI</span>
-                <span className="md3-logo-subtitle">SY0-701 Prep</span>
-              </div>
-            </div>
+    <div className="apple-login-page">
+      {/* Navigation Bar */}
+      <nav className="apple-navbar">
+        <div className="apple-navbar-content">
+          <div className="apple-logo-section">
+            <div className="apple-logo-icon">S+</div>
+            <span className="apple-logo-text">SecurityPlus AI</span>
           </div>
-          <div className="md3-top-app-bar-section">
-            <button
-              onClick={handleGoogleSignIn}
-              disabled={loading}
-              className="md3-button-text"
-            >
-              {loading ? 'Signing in...' : 'Sign in'}
-            </button>
-          </div>
+          <button onClick={handleGoogleSignIn} disabled={loading} className="apple-nav-button">
+            {loading ? 'Signing in...' : 'Sign In'}
+          </button>
         </div>
-      </header>
+      </nav>
 
       {/* Hero Section */}
-      <section className="md3-hero">
-        <div className="md3-container">
-          {/* Assist Chip */}
-          <div className="md3-chip-assist">
-            <svg className="md3-chip-icon" viewBox="0 0 24 24" fill="currentColor">
+      <section className="apple-hero">
+        <div className="apple-container">
+          {/* Badge */}
+          <div className="apple-badge">
+            <svg className="apple-badge-icon" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
             </svg>
-            <span>CompTIA Security+ Certification</span>
+            <span>SY0-701 Certification</span>
           </div>
 
-          {/* Display - Large */}
-          <h1 className="md3-display-large">
-            Master Security+ with adaptive AI learning
+          {/* Large Title - iOS Style */}
+          <h1 className="apple-title-large">
+            Master Security+.
+            <br />
+            Learn with AI.
           </h1>
 
-          {/* Body - Large */}
-          <p className="md3-body-large md3-hero-subtitle">
-            Intelligent question generation, real-time analytics, and spaced repetition algorithms
-            designed to help you pass the SY0-701 exam with confidence.
+          {/* Subtitle */}
+          <p className="apple-subtitle">
+            Intelligent adaptive learning with real-time analytics and spaced repetition to help you pass the exam.
           </p>
 
           {/* CTA Buttons */}
-          <div className="md3-button-group">
+          <div className="apple-button-group">
             <button
               onClick={handleGoogleSignIn}
               disabled={loading}
-              className="md3-button-filled md3-button-large"
+              className="apple-button-primary apple-button-large"
             >
-              <svg className="md3-button-icon" viewBox="0 0 24 24" fill="currentColor">
+              <svg className="apple-button-icon" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              <span>{loading ? 'Authenticating...' : 'Start learning free'}</span>
+              <span>{loading ? 'Signing In...' : 'Get Started for Free'}</span>
             </button>
-            <button className="md3-button-outlined md3-button-large">
-              <span>Learn more</span>
-              <svg className="md3-button-icon-trailing" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
-              </svg>
+            <button className="apple-button-secondary apple-button-large">
+              Learn More
             </button>
           </div>
 
-          {/* Supporting Text */}
-          <div className="md3-supporting-text">
-            <div className="md3-supporting-item">
+          {/* Features List */}
+          <div className="apple-feature-list">
+            <div className="apple-feature-item">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
               </svg>
               <span>Free forever</span>
             </div>
-            <div className="md3-supporting-item">
+            <div className="apple-feature-item">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
               </svg>
-              <span>No credit card</span>
+              <span>No credit card required</span>
             </div>
-            <div className="md3-supporting-item">
+            <div className="apple-feature-item">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
               </svg>
-              <span>400+ topics covered</span>
+              <span>400+ topics</span>
             </div>
           </div>
 
-          {/* Error */}
+          {/* Error Alert */}
           {error && (
-            <div className="md3-error-banner">
+            <div className="apple-alert apple-alert-error">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
               </svg>
               <div>
-                <div className="md3-error-title">Authentication error</div>
-                <div className="md3-error-message">{error}</div>
+                <div className="apple-alert-title">Authentication Failed</div>
+                <div className="apple-alert-message">{error}</div>
               </div>
             </div>
           )}
@@ -152,160 +139,158 @@ export default function Login() {
       </section>
 
       {/* Stats Section */}
-      <section className="md3-stats">
-        <div className="md3-container">
-          <div className="md3-stats-grid">
-            <div className="md3-stat-card">
-              <div className="md3-display-medium">400+</div>
-              <div className="md3-label-large">Security+ topics</div>
+      <section className="apple-stats">
+        <div className="apple-container">
+          <div className="apple-stats-grid">
+            <div className="apple-stat-card">
+              <div className="apple-stat-number">400+</div>
+              <div className="apple-stat-label">Security+ Topics</div>
             </div>
-            <div className="md3-stat-card">
-              <div className="md3-display-medium">AI</div>
-              <div className="md3-label-large">Question generation</div>
+            <div className="apple-stat-card">
+              <div className="apple-stat-number">AI</div>
+              <div className="apple-stat-label">Question Generation</div>
             </div>
-            <div className="md3-stat-card">
-              <div className="md3-display-medium">IRT</div>
-              <div className="md3-label-large">Ability tracking</div>
+            <div className="apple-stat-card">
+              <div className="apple-stat-number">IRT</div>
+              <div className="apple-stat-label">Ability Tracking</div>
             </div>
-            <div className="md3-stat-card">
-              <div className="md3-display-medium">FSRS</div>
-              <div className="md3-label-large">Spaced repetition</div>
+            <div className="apple-stat-card">
+              <div className="apple-stat-number">FSRS</div>
+              <div className="apple-stat-label">Spaced Repetition</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="md3-features">
-        <div className="md3-container">
-          <h2 className="md3-headline-large">Platform capabilities</h2>
-          <p className="md3-body-large md3-section-subtitle">
-            Comprehensive learning tools built on proven algorithms
-          </p>
+      <section className="apple-features">
+        <div className="apple-container">
+          <div className="apple-section-header">
+            <h2 className="apple-title-section">Everything you need to pass.</h2>
+            <p className="apple-section-subtitle">
+              Comprehensive learning tools built on proven algorithms.
+            </p>
+          </div>
 
-          <div className="md3-feature-grid">
+          <div className="apple-feature-grid">
             {/* Feature 1 */}
-            <div className="md3-card md3-card-filled">
-              <div className="md3-card-icon md3-card-icon-purple">
+            <div className="apple-card">
+              <div className="apple-card-icon apple-card-icon-blue">
                 <svg viewBox="0 0 24 24" fill="currentColor">
                   <path d="M13 3v7h7l-10 11v-7H3l10-11z"/>
                 </svg>
               </div>
-              <h3 className="md3-title-large">AI question generation</h3>
-              <p className="md3-body-medium">
-                Unlimited unique questions covering all 400+ Security+ topics with deterministic
-                difficulty distribution matching real exam patterns.
+              <h3 className="apple-card-title">AI Question Generation</h3>
+              <p className="apple-card-text">
+                Unlimited unique questions covering all 400+ Security+ topics with balanced difficulty distribution.
               </p>
             </div>
 
             {/* Feature 2 */}
-            <div className="md3-card md3-card-filled">
-              <div className="md3-card-icon md3-card-icon-blue">
+            <div className="apple-card">
+              <div className="apple-card-icon apple-card-icon-purple">
                 <svg viewBox="0 0 24 24" fill="currentColor">
                   <path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99l1.5 1.5z"/>
                 </svg>
               </div>
-              <h3 className="md3-title-large">IRT analytics</h3>
-              <p className="md3-body-medium">
-                Advanced Item Response Theory provides precise ability estimates with confidence
-                intervals and score predictions based on your performance.
+              <h3 className="apple-card-title">IRT Analytics</h3>
+              <p className="apple-card-text">
+                Precise ability estimates with confidence intervals and score predictions based on Item Response Theory.
               </p>
             </div>
 
             {/* Feature 3 */}
-            <div className="md3-card md3-card-filled">
-              <div className="md3-card-icon md3-card-icon-teal">
+            <div className="apple-card">
+              <div className="apple-card-icon apple-card-icon-green">
                 <svg viewBox="0 0 24 24" fill="currentColor">
                   <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
                 </svg>
               </div>
-              <h3 className="md3-title-large">Spaced repetition</h3>
-              <p className="md3-body-medium">
-                FSRS-powered flashcard system with adaptive scheduling optimizes review
-                intervals for maximum long-term retention and recall.
+              <h3 className="apple-card-title">Spaced Repetition</h3>
+              <p className="apple-card-text">
+                FSRS-powered adaptive scheduling optimizes review intervals for maximum long-term retention.
               </p>
             </div>
 
             {/* Feature 4 */}
-            <div className="md3-card md3-card-filled">
-              <div className="md3-card-icon md3-card-icon-pink">
+            <div className="apple-card">
+              <div className="apple-card-icon apple-card-icon-orange">
                 <svg viewBox="0 0 24 24" fill="currentColor">
                   <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
                 </svg>
               </div>
-              <h3 className="md3-title-large">Exam-aligned format</h3>
-              <p className="md3-body-medium">
-                Questions mirror actual exam structure with 30% easy, 40% medium, 30% hard
-                distribution and both single and multiple-select formats.
+              <h3 className="apple-card-title">Exam-Aligned Format</h3>
+              <p className="apple-card-text">
+                Questions mirror actual exam structure with 30% easy, 40% medium, 30% hard distribution.
               </p>
             </div>
 
             {/* Feature 5 */}
-            <div className="md3-card md3-card-filled">
-              <div className="md3-card-icon md3-card-icon-orange">
+            <div className="apple-card">
+              <div className="apple-card-icon apple-card-icon-teal">
                 <svg viewBox="0 0 24 24" fill="currentColor">
                   <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
                 </svg>
               </div>
-              <h3 className="md3-title-large">Full domain coverage</h3>
-              <p className="md3-body-medium">
-                Complete coverage of all 5 Security+ domains: General Security Concepts,
-                Threats, Architecture, Operations, and Governance.
+              <h3 className="apple-card-title">Full Domain Coverage</h3>
+              <p className="apple-card-text">
+                Complete coverage of all 5 Security+ domains: Concepts, Threats, Architecture, Operations, Governance.
               </p>
             </div>
 
             {/* Feature 6 */}
-            <div className="md3-card md3-card-filled">
-              <div className="md3-card-icon md3-card-icon-green">
+            <div className="apple-card">
+              <div className="apple-card-icon apple-card-icon-pink">
                 <svg viewBox="0 0 24 24" fill="currentColor">
                   <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 9h-2V5h2v6zm0 4h-2v-2h2v2z"/>
                 </svg>
               </div>
-              <h3 className="md3-title-large">Detailed explanations</h3>
-              <p className="md3-body-medium">
-                Comprehensive explanations for every answer option help you understand
-                concepts deeply rather than just memorizing facts.
+              <h3 className="apple-card-title">Detailed Explanations</h3>
+              <p className="apple-card-text">
+                Comprehensive explanations for every answer option help you understand concepts deeply.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Steps Section */}
-      <section className="md3-steps">
-        <div className="md3-container">
-          <h2 className="md3-headline-large">Getting started</h2>
-          <p className="md3-body-large md3-section-subtitle">
-            Begin your Security+ certification journey in three steps
-          </p>
+      {/* How It Works */}
+      <section className="apple-steps">
+        <div className="apple-container">
+          <div className="apple-section-header">
+            <h2 className="apple-title-section">Three steps to get started.</h2>
+            <p className="apple-section-subtitle">
+              Begin your certification journey in under a minute.
+            </p>
+          </div>
 
-          <div className="md3-steps-list">
-            <div className="md3-step-card">
-              <div className="md3-step-number">01</div>
-              <div className="md3-step-content">
-                <h3 className="md3-title-large">Authenticate with Google</h3>
-                <p className="md3-body-medium">
-                  Single sign-on authentication. No forms, no credit card, no configuration required.
+          <div className="apple-steps-list">
+            <div className="apple-step">
+              <div className="apple-step-number">1</div>
+              <div className="apple-step-content">
+                <h3 className="apple-step-title">Sign in with Google</h3>
+                <p className="apple-step-text">
+                  One-click authentication. No forms, no credit card required.
                 </p>
               </div>
             </div>
 
-            <div className="md3-step-card">
-              <div className="md3-step-number">02</div>
-              <div className="md3-step-content">
-                <h3 className="md3-title-large">Start adaptive quiz</h3>
-                <p className="md3-body-medium">
-                  Begin with 10 AI-generated questions calibrated to establish your baseline ability level.
+            <div className="apple-step">
+              <div className="apple-step-number">2</div>
+              <div className="apple-step-content">
+                <h3 className="apple-step-title">Take your first quiz</h3>
+                <p className="apple-step-text">
+                  Start with 10 AI-generated questions tailored to your level.
                 </p>
               </div>
             </div>
 
-            <div className="md3-step-card">
-              <div className="md3-step-number">03</div>
-              <div className="md3-step-content">
-                <h3 className="md3-title-large">Monitor analytics</h3>
-                <p className="md3-body-medium">
-                  Track ability progression with IRT-based analytics and confidence intervals.
+            <div className="apple-step">
+              <div className="apple-step-number">3</div>
+              <div className="apple-step-content">
+                <h3 className="apple-step-title">Track your progress</h3>
+                <p className="apple-step-text">
+                  Monitor your ability score with detailed analytics.
                 </p>
               </div>
             </div>
@@ -314,612 +299,654 @@ export default function Login() {
       </section>
 
       {/* Final CTA */}
-      <section className="md3-cta">
-        <div className="md3-container">
-          <div className="md3-cta-card">
-            <h2 className="md3-headline-medium">Ready to begin your certification journey?</h2>
-            <p className="md3-body-large">
-              Join learners using AI-powered adaptive learning to pass Security+ certification.
+      <section className="apple-cta">
+        <div className="apple-container">
+          <div className="apple-cta-card">
+            <h2 className="apple-cta-title">Ready to ace Security+?</h2>
+            <p className="apple-cta-subtitle">
+              Join learners worldwide using AI-powered adaptive learning.
             </p>
             <button
               onClick={handleGoogleSignIn}
               disabled={loading}
-              className="md3-button-filled md3-button-large"
+              className="apple-button-primary apple-button-large"
             >
-              <svg className="md3-button-icon" viewBox="0 0 24 24" fill="currentColor">
+              <svg className="apple-button-icon" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              <span>{loading ? 'Authenticating...' : 'Get started free'}</span>
+              <span>{loading ? 'Signing In...' : 'Get Started Free'}</span>
             </button>
-            <p className="md3-body-small md3-cta-subtitle">
-              No credit card required • Free forever • Start in 30 seconds
-            </p>
+            <p className="apple-cta-note">Free forever • No credit card • Start in 30 seconds</p>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="md3-footer">
-        <div className="md3-container">
-          <div className="md3-footer-content">
-            <div className="md3-footer-section">
-              <div className="md3-title-medium">SecurityPlus AI</div>
-              <p className="md3-body-small">
-                AI-powered learning platform for CompTIA Security+ SY0-701 certification
+      <footer className="apple-footer">
+        <div className="apple-container">
+          <div className="apple-footer-content">
+            <div className="apple-footer-section">
+              <div className="apple-footer-heading">SecurityPlus AI</div>
+              <p className="apple-footer-text">
+                AI-powered learning for CompTIA Security+ SY0-701
               </p>
             </div>
-            <div className="md3-footer-section">
-              <div className="md3-label-large md3-footer-heading">Legal</div>
-              <a href="#" className="md3-body-small">Privacy policy</a>
-              <a href="#" className="md3-body-small">Terms of service</a>
-              <a href="#" className="md3-body-small">Cookie policy</a>
+            <div className="apple-footer-section">
+              <div className="apple-footer-label">Legal</div>
+              <a href="#">Privacy Policy</a>
+              <a href="#">Terms of Service</a>
+              <a href="#">Cookies</a>
             </div>
-            <div className="md3-footer-section">
-              <div className="md3-label-large md3-footer-heading">Support</div>
-              <a href="#" className="md3-body-small">Documentation</a>
-              <a href="#" className="md3-body-small">Contact us</a>
-              <a href="#" className="md3-body-small">Status</a>
+            <div className="apple-footer-section">
+              <div className="apple-footer-label">Support</div>
+              <a href="#">Documentation</a>
+              <a href="#">Contact</a>
+              <a href="#">Status</a>
             </div>
           </div>
-          <div className="md3-divider"></div>
-          <div className="md3-footer-legal">
-            <p className="md3-body-small">© 2024 SecurityPlus AI. All rights reserved.</p>
+          <div className="apple-footer-legal">
+            <p>© 2024 SecurityPlus AI. All rights reserved.</p>
           </div>
         </div>
       </footer>
 
       <style jsx>{`
-        /* Material Design 3 Theme */
-        .md3-login-page {
+        /* Apple Design System */
+        .apple-login-page {
           min-height: 100vh;
-          background: var(--md-sys-color-background, #1c1b1f);
-          color: var(--md-sys-color-on-background, #e6e1e5);
-          font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+          background: #000000;
+          color: #f5f5f7;
+          font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
         }
 
         /* Loading Screen */
-        .md3-loading-screen {
+        .apple-loading-screen {
           min-height: 100vh;
           display: flex;
           align-items: center;
           justify-content: center;
-          background: var(--md-sys-color-background, #1c1b1f);
+          background: #000000;
         }
 
-        .md3-loading-spinner {
-          width: 64px;
-          height: 64px;
-          border: 4px solid rgba(208, 188, 255, 0.2);
-          border-top-color: #d0bcff;
+        .apple-spinner {
+          width: 44px;
+          height: 44px;
+          border: 3px solid rgba(255, 255, 255, 0.15);
+          border-top-color: #0071e3;
           border-radius: 50%;
-          animation: md3-spin 1s linear infinite;
+          animation: apple-spin 0.8s linear infinite;
         }
 
-        @keyframes md3-spin {
+        @keyframes apple-spin {
           to { transform: rotate(360deg); }
         }
 
-        /* Top App Bar */
-        .md3-top-app-bar {
+        /* Navigation Bar */
+        .apple-navbar {
           position: sticky;
           top: 0;
-          z-index: 100;
-          background: var(--md-sys-color-surface, #1c1b1f);
-          border-bottom: 1px solid var(--md-sys-color-outline-variant, #49454f);
-          backdrop-filter: blur(16px);
+          z-index: 9999;
+          background: rgba(0, 0, 0, 0.8);
+          backdrop-filter: saturate(180%) blur(20px);
+          -webkit-backdrop-filter: saturate(180%) blur(20px);
+          border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
         }
 
-        .md3-top-app-bar-container {
-          max-width: 1280px;
+        .apple-navbar-content {
+          max-width: 980px;
           margin: 0 auto;
-          padding: 0 24px;
-          height: 64px;
+          padding: 0 22px;
+          height: 44px;
           display: flex;
           align-items: center;
           justify-content: space-between;
         }
 
-        .md3-top-app-bar-section {
+        .apple-logo-section {
           display: flex;
           align-items: center;
-          gap: 16px;
+          gap: 10px;
         }
 
-        .md3-logo {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-
-        .md3-logo-icon {
-          width: 40px;
-          height: 40px;
-          border-radius: 12px;
-          background: linear-gradient(135deg, #6750a4 0%, #625b71 100%);
+        .apple-logo-icon {
+          width: 28px;
+          height: 28px;
+          border-radius: 6px;
+          background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%);
           display: flex;
           align-items: center;
           justify-content: center;
-          font-weight: 700;
-          font-size: 16px;
+          font-weight: 600;
+          font-size: 14px;
           color: #fff;
         }
 
-        .md3-logo-text {
-          display: flex;
-          flex-direction: column;
+        .apple-logo-text {
+          font-size: 17px;
+          font-weight: 600;
+          color: #f5f5f7;
+          letter-spacing: -0.022em;
         }
 
-        .md3-logo-title {
-          font-size: 16px;
-          font-weight: 500;
-          line-height: 1.2;
-          color: var(--md-sys-color-on-surface, #e6e1e5);
-        }
-
-        .md3-logo-subtitle {
-          font-size: 12px;
-          color: var(--md-sys-color-on-surface-variant, #cac4d0);
-        }
-
-        /* Material Typography Scale */
-        .md3-display-large {
-          font-size: clamp(3.5rem, 7vw, 7rem);
-          font-weight: 400;
-          line-height: 1.12;
-          letter-spacing: -0.25px;
-        }
-
-        .md3-display-medium {
-          font-size: 2.8125rem;
-          font-weight: 400;
-          line-height: 1.15;
-        }
-
-        .md3-headline-large {
-          font-size: 2rem;
-          font-weight: 400;
-          line-height: 1.25;
-        }
-
-        .md3-headline-medium {
-          font-size: 1.75rem;
-          font-weight: 400;
-          line-height: 1.29;
-        }
-
-        .md3-title-large {
-          font-size: 1.375rem;
-          font-weight: 400;
-          line-height: 1.27;
-        }
-
-        .md3-title-medium {
-          font-size: 1rem;
-          font-weight: 500;
-          line-height: 1.5;
-          letter-spacing: 0.15px;
-        }
-
-        .md3-body-large {
-          font-size: 1rem;
-          font-weight: 400;
-          line-height: 1.5;
-          letter-spacing: 0.5px;
-          color: var(--md-sys-color-on-surface-variant, #cac4d0);
-        }
-
-        .md3-body-medium {
-          font-size: 0.875rem;
-          font-weight: 400;
-          line-height: 1.43;
-          letter-spacing: 0.25px;
-          color: var(--md-sys-color-on-surface-variant, #cac4d0);
-        }
-
-        .md3-body-small {
-          font-size: 0.75rem;
-          font-weight: 400;
-          line-height: 1.33;
-          letter-spacing: 0.4px;
-          color: var(--md-sys-color-on-surface-variant, #cac4d0);
-        }
-
-        .md3-label-large {
-          font-size: 0.875rem;
-          font-weight: 500;
-          line-height: 1.43;
-          letter-spacing: 0.1px;
-          text-transform: uppercase;
-        }
-
-        /* Container */
-        .md3-container {
-          max-width: 1280px;
-          margin: 0 auto;
-          padding: 0 24px;
-        }
-
-        /* Hero Section */
-        .md3-hero {
-          padding: 80px 0 120px;
-          text-align: center;
-        }
-
-        .md3-hero .md3-container {
-          max-width: 900px;
-        }
-
-        .md3-chip-assist {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 6px 16px;
-          background: var(--md-sys-color-surface-container-high, #2b2930);
-          border: 1px solid var(--md-sys-color-outline, #938f99);
-          border-radius: 8px;
-          font-size: 0.875rem;
-          font-weight: 500;
-          margin-bottom: 32px;
-        }
-
-        .md3-chip-icon {
-          width: 18px;
-          height: 18px;
-          fill: var(--md-sys-color-primary, #d0bcff);
-        }
-
-        .md3-hero-subtitle {
-          max-width: 720px;
-          margin: 24px auto 48px;
-        }
-
-        /* Buttons */
-        .md3-button-group {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 16px;
-          justify-content: center;
-          margin-bottom: 32px;
-        }
-
-        .md3-button-filled,
-        .md3-button-outlined,
-        .md3-button-text {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          padding: 10px 24px;
-          border-radius: 20px;
-          font-size: 0.875rem;
-          font-weight: 500;
-          letter-spacing: 0.1px;
-          cursor: pointer;
+        .apple-nav-button {
+          background: transparent;
           border: none;
-          transition: all 200ms cubic-bezier(0.2, 0, 0, 1);
-          position: relative;
-          overflow: hidden;
+          color: #2997ff;
+          font-size: 14px;
+          font-weight: 400;
+          cursor: pointer;
+          padding: 4px 12px;
+          border-radius: 980px;
+          transition: background 0.2s;
         }
 
-        .md3-button-large {
-          padding: 16px 32px;
-          font-size: 1rem;
-          border-radius: 28px;
+        .apple-nav-button:hover {
+          background: rgba(41, 151, 255, 0.1);
         }
 
-        .md3-button-filled {
-          background: var(--md-sys-color-primary, #d0bcff);
-          color: var(--md-sys-color-on-primary, #381e72);
-          box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.15), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-        }
-
-        .md3-button-filled:hover:not(:disabled) {
-          box-shadow: 0 2px 6px 2px rgba(0, 0, 0, 0.15), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-          background: #e8def8;
-        }
-
-        .md3-button-filled:disabled {
-          opacity: 0.38;
+        .apple-nav-button:disabled {
+          opacity: 0.5;
           cursor: not-allowed;
         }
 
-        .md3-button-outlined {
+        /* Container */
+        .apple-container {
+          max-width: 980px;
+          margin: 0 auto;
+          padding: 0 22px;
+        }
+
+        /* Hero Section */
+        .apple-hero {
+          padding: 88px 0 110px;
+          text-align: center;
+        }
+
+        .apple-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 4px 12px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 980px;
+          font-size: 12px;
+          font-weight: 500;
+          color: #86868b;
+          margin-bottom: 24px;
+          letter-spacing: -0.01em;
+        }
+
+        .apple-badge-icon {
+          width: 14px;
+          height: 14px;
+          fill: #2997ff;
+        }
+
+        /* Apple Typography */
+        .apple-title-large {
+          font-size: clamp(48px, 6vw, 80px);
+          font-weight: 600;
+          line-height: 1.05;
+          letter-spacing: -0.015em;
+          color: #f5f5f7;
+          margin: 0 0 28px;
+        }
+
+        .apple-subtitle {
+          font-size: 21px;
+          line-height: 1.381;
+          font-weight: 400;
+          color: #a1a1a6;
+          letter-spacing: 0.011em;
+          max-width: 640px;
+          margin: 0 auto 48px;
+        }
+
+        /* Buttons */
+        .apple-button-group {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 40px;
+        }
+
+        .apple-button-primary,
+        .apple-button-secondary {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 12px 22px;
+          border-radius: 980px;
+          font-size: 17px;
+          font-weight: 400;
+          letter-spacing: -0.022em;
+          cursor: pointer;
+          border: none;
+          transition: all 0.2s;
+          min-width: 280px;
+        }
+
+        .apple-button-large {
+          padding: 14px 28px;
+          font-size: 17px;
+        }
+
+        .apple-button-primary {
+          background: #0071e3;
+          color: #fff;
+        }
+
+        .apple-button-primary:hover:not(:disabled) {
+          background: #0077ed;
+        }
+
+        .apple-button-primary:active:not(:disabled) {
+          background: #006edb;
+        }
+
+        .apple-button-primary:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        .apple-button-secondary {
           background: transparent;
-          color: var(--md-sys-color-primary, #d0bcff);
-          border: 1px solid var(--md-sys-color-outline, #938f99);
+          color: #2997ff;
+          border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .md3-button-outlined:hover {
-          background: rgba(208, 188, 255, 0.08);
+        .apple-button-secondary:hover {
+          background: rgba(41, 151, 255, 0.08);
         }
 
-        .md3-button-text {
-          background: transparent;
-          color: var(--md-sys-color-primary, #d0bcff);
-          padding: 10px 12px;
+        .apple-button-icon {
+          width: 16px;
+          height: 16px;
         }
 
-        .md3-button-text:hover {
-          background: rgba(208, 188, 255, 0.08);
-        }
-
-        .md3-button-icon {
-          width: 18px;
-          height: 18px;
-        }
-
-        .md3-button-icon-trailing {
-          width: 18px;
-          height: 18px;
-        }
-
-        /* Supporting Text */
-        .md3-supporting-text {
+        /* Feature List */
+        .apple-feature-list {
           display: flex;
           flex-wrap: wrap;
           justify-content: center;
           gap: 24px;
-          padding-top: 24px;
-          border-top: 1px solid var(--md-sys-color-outline-variant, #49454f);
+          padding-top: 28px;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .md3-supporting-item {
+        .apple-feature-item {
           display: flex;
           align-items: center;
-          gap: 8px;
-          font-size: 0.875rem;
-          color: var(--md-sys-color-on-surface-variant, #cac4d0);
+          gap: 6px;
+          font-size: 14px;
+          color: #a1a1a6;
         }
 
-        .md3-supporting-item svg {
-          width: 18px;
-          height: 18px;
-          fill: var(--md-sys-color-tertiary, #efb8c8);
+        .apple-feature-item svg {
+          width: 16px;
+          height: 16px;
+          fill: #30d158;
         }
 
-        /* Error Banner */
-        .md3-error-banner {
+        /* Alert */
+        .apple-alert {
           display: flex;
-          gap: 16px;
-          padding: 16px;
-          margin-top: 24px;
-          background: var(--md-sys-color-error-container, #93000a);
-          color: var(--md-sys-color-on-error-container, #ffdad6);
-          border-radius: 12px;
+          gap: 12px;
+          padding: 16px 20px;
+          margin-top: 32px;
+          border-radius: 18px;
           text-align: left;
+          max-width: 500px;
+          margin-left: auto;
+          margin-right: auto;
         }
 
-        .md3-error-banner svg {
-          width: 24px;
-          height: 24px;
+        .apple-alert-error {
+          background: rgba(255, 59, 48, 0.1);
+          border: 1px solid rgba(255, 59, 48, 0.2);
+        }
+
+        .apple-alert svg {
+          width: 20px;
+          height: 20px;
           flex-shrink: 0;
+          fill: #ff3b30;
         }
 
-        .md3-error-title {
-          font-weight: 500;
+        .apple-alert-title {
+          font-size: 15px;
+          font-weight: 600;
+          color: #ff3b30;
           margin-bottom: 4px;
         }
 
-        .md3-error-message {
-          font-size: 0.875rem;
-          opacity: 0.9;
+        .apple-alert-message {
+          font-size: 14px;
+          color: #f5f5f7;
+          opacity: 0.8;
         }
 
         /* Stats Section */
-        .md3-stats {
-          background: var(--md-sys-color-surface-container-low, #1d1b20);
-          padding: 64px 0;
-          border-top: 1px solid var(--md-sys-color-outline-variant, #49454f);
+        .apple-stats {
+          background: rgba(255, 255, 255, 0.02);
+          padding: 66px 0;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .md3-stats-grid {
+        .apple-stats-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 32px;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 40px;
         }
 
-        .md3-stat-card {
+        .apple-stat-card {
           text-align: center;
-          padding: 24px;
         }
 
-        .md3-stat-card .md3-display-medium {
+        .apple-stat-number {
+          font-size: 56px;
+          font-weight: 600;
+          line-height: 1.07;
+          letter-spacing: -0.005em;
+          color: #f5f5f7;
           margin-bottom: 8px;
-          color: var(--md-sys-color-primary, #d0bcff);
+        }
+
+        .apple-stat-label {
+          font-size: 14px;
+          line-height: 1.43;
+          font-weight: 400;
+          color: #a1a1a6;
+          letter-spacing: -0.016em;
         }
 
         /* Features Section */
-        .md3-features {
-          padding: 96px 0;
+        .apple-features {
+          padding: 110px 0;
         }
 
-        .md3-section-subtitle {
-          max-width: 720px;
-          margin: 16px auto 64px;
+        .apple-section-header {
           text-align: center;
+          margin-bottom: 80px;
         }
 
-        .md3-feature-grid {
+        .apple-title-section {
+          font-size: 48px;
+          font-weight: 600;
+          line-height: 1.08;
+          letter-spacing: -0.003em;
+          color: #f5f5f7;
+          margin: 0 0 16px;
+        }
+
+        .apple-section-subtitle {
+          font-size: 21px;
+          line-height: 1.381;
+          font-weight: 400;
+          color: #a1a1a6;
+          letter-spacing: 0.011em;
+        }
+
+        .apple-feature-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-          gap: 24px;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 20px;
         }
 
-        .md3-card {
-          background: var(--md-sys-color-surface-container, #211f26);
-          border-radius: 12px;
-          padding: 24px;
-          transition: all 200ms cubic-bezier(0.2, 0, 0, 1);
+        .apple-card {
+          background: rgba(255, 255, 255, 0.03);
+          backdrop-filter: saturate(180%) blur(20px);
+          -webkit-backdrop-filter: saturate(180%) blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 18px;
+          padding: 40px 30px;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .md3-card-filled {
-          background: var(--md-sys-color-surface-container-highest, #36343b);
+        .apple-card:hover {
+          background: rgba(255, 255, 255, 0.05);
+          border-color: rgba(255, 255, 255, 0.15);
+          transform: translateY(-2px);
         }
 
-        .md3-card:hover {
-          box-shadow: 0 4px 8px 3px rgba(0, 0, 0, 0.15), 0 1px 3px 0 rgba(0, 0, 0, 0.3);
-        }
-
-        .md3-card-icon {
-          width: 64px;
-          height: 64px;
-          border-radius: 16px;
+        .apple-card-icon {
+          width: 56px;
+          height: 56px;
+          border-radius: 14px;
           display: flex;
           align-items: center;
           justify-content: center;
-          margin-bottom: 24px;
+          margin-bottom: 20px;
         }
 
-        .md3-card-icon svg {
-          width: 32px;
-          height: 32px;
+        .apple-card-icon svg {
+          width: 28px;
+          height: 28px;
           fill: white;
         }
 
-        .md3-card-icon-purple { background: #6750a4; }
-        .md3-card-icon-blue { background: #0061a4; }
-        .md3-card-icon-teal { background: #006a6a; }
-        .md3-card-icon-pink { background: #7d5260; }
-        .md3-card-icon-orange { background: #9a4521; }
-        .md3-card-icon-green { background: #006e1c; }
+        .apple-card-icon-blue { background: linear-gradient(135deg, #0071e3 0%, #005bb5 100%); }
+        .apple-card-icon-purple { background: linear-gradient(135deg, #bf5af2 0%, #a550e6 100%); }
+        .apple-card-icon-green { background: linear-gradient(135deg, #30d158 0%, #28a745 100%); }
+        .apple-card-icon-orange { background: linear-gradient(135deg, #ff9f0a 0%, #ff8c00 100%); }
+        .apple-card-icon-teal { background: linear-gradient(135deg, #5ac8fa 0%, #4ab8ea 100%); }
+        .apple-card-icon-pink { background: linear-gradient(135deg, #ff375f 0%, #ff2d55 100%); }
 
-        .md3-card h3 {
-          margin-bottom: 12px;
-          color: var(--md-sys-color-on-surface, #e6e1e5);
+        .apple-card-title {
+          font-size: 24px;
+          font-weight: 600;
+          line-height: 1.17;
+          letter-spacing: 0.009em;
+          color: #f5f5f7;
+          margin: 0 0 12px;
+        }
+
+        .apple-card-text {
+          font-size: 17px;
+          line-height: 1.47;
+          font-weight: 400;
+          color: #a1a1a6;
+          letter-spacing: -0.022em;
         }
 
         /* Steps Section */
-        .md3-steps {
-          padding: 96px 0;
-          background: var(--md-sys-color-surface-container-low, #1d1b20);
+        .apple-steps {
+          padding: 110px 0;
+          background: rgba(255, 255, 255, 0.02);
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .md3-steps-list {
+        .apple-steps-list {
           display: flex;
           flex-direction: column;
-          gap: 24px;
-          max-width: 800px;
-          margin: 64px auto 0;
+          gap: 28px;
+          max-width: 700px;
+          margin: 0 auto;
         }
 
-        .md3-step-card {
+        .apple-step {
           display: flex;
           gap: 24px;
-          padding: 32px;
-          background: var(--md-sys-color-surface-container, #211f26);
-          border-radius: 16px;
-          border-left: 4px solid var(--md-sys-color-primary, #d0bcff);
+          align-items: flex-start;
         }
 
-        .md3-step-number {
-          font-size: 3rem;
-          font-weight: 300;
-          color: var(--md-sys-color-primary, #d0bcff);
-          min-width: 80px;
+        .apple-step-number {
+          width: 52px;
+          height: 52px;
+          border-radius: 50%;
+          background: rgba(0, 113, 227, 0.1);
+          border: 2px solid rgba(0, 113, 227, 0.3);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 24px;
+          font-weight: 600;
+          color: #0071e3;
+          flex-shrink: 0;
         }
 
-        .md3-step-content h3 {
-          margin-bottom: 8px;
-          color: var(--md-sys-color-on-surface, #e6e1e5);
+        .apple-step-content {
+          flex: 1;
+          padding-top: 4px;
+        }
+
+        .apple-step-title {
+          font-size: 21px;
+          font-weight: 600;
+          line-height: 1.19;
+          letter-spacing: 0.011em;
+          color: #f5f5f7;
+          margin: 0 0 8px;
+        }
+
+        .apple-step-text {
+          font-size: 17px;
+          line-height: 1.47;
+          font-weight: 400;
+          color: #a1a1a6;
+          letter-spacing: -0.022em;
         }
 
         /* CTA Section */
-        .md3-cta {
-          padding: 96px 0;
+        .apple-cta {
+          padding: 110px 0;
         }
 
-        .md3-cta-card {
-          max-width: 720px;
+        .apple-cta-card {
+          max-width: 692px;
           margin: 0 auto;
-          padding: 64px 48px;
-          background: var(--md-sys-color-surface-container-high, #2b2930);
-          border-radius: 28px;
+          padding: 88px 60px;
+          background: rgba(255, 255, 255, 0.03);
+          backdrop-filter: saturate(180%) blur(20px);
+          -webkit-backdrop-filter: saturate(180%) blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 30px;
           text-align: center;
         }
 
-        .md3-cta-card h2 {
-          margin-bottom: 16px;
+        .apple-cta-title {
+          font-size: 40px;
+          font-weight: 600;
+          line-height: 1.1;
+          letter-spacing: 0em;
+          color: #f5f5f7;
+          margin: 0 0 16px;
         }
 
-        .md3-cta-card p {
-          margin-bottom: 32px;
+        .apple-cta-subtitle {
+          font-size: 21px;
+          line-height: 1.381;
+          font-weight: 400;
+          color: #a1a1a6;
+          letter-spacing: 0.011em;
+          margin-bottom: 40px;
         }
 
-        .md3-cta-subtitle {
+        .apple-cta-note {
+          font-size: 14px;
+          color: #86868b;
           margin-top: 16px;
-          color: var(--md-sys-color-outline, #938f99);
         }
 
         /* Footer */
-        .md3-footer {
-          background: var(--md-sys-color-surface-container-low, #1d1b20);
-          padding: 64px 0 32px;
-          border-top: 1px solid var(--md-sys-color-outline-variant, #49454f);
+        .apple-footer {
+          background: rgba(255, 255, 255, 0.02);
+          padding: 66px 0 32px;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .md3-footer-content {
+        .apple-footer-content {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: 48px;
-          margin-bottom: 32px;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 40px;
+          margin-bottom: 40px;
         }
 
-        .md3-footer-section {
+        .apple-footer-section {
           display: flex;
           flex-direction: column;
-          gap: 12px;
+          gap: 10px;
         }
 
-        .md3-footer-heading {
-          color: var(--md-sys-color-on-surface, #e6e1e5);
+        .apple-footer-heading {
+          font-size: 17px;
+          font-weight: 600;
+          color: #f5f5f7;
+          margin-bottom: 4px;
+        }
+
+        .apple-footer-label {
+          font-size: 12px;
+          font-weight: 600;
+          color: #86868b;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
           margin-bottom: 8px;
         }
 
-        .md3-footer-section a {
-          color: var(--md-sys-color-primary, #d0bcff);
+        .apple-footer-text {
+          font-size: 14px;
+          line-height: 1.43;
+          color: #a1a1a6;
+        }
+
+        .apple-footer-section a {
+          font-size: 14px;
+          color: #a1a1a6;
           text-decoration: none;
-          transition: color 200ms;
+          transition: color 0.2s;
         }
 
-        .md3-footer-section a:hover {
-          color: #e8def8;
+        .apple-footer-section a:hover {
+          color: #f5f5f7;
         }
 
-        .md3-divider {
-          height: 1px;
-          background: var(--md-sys-color-outline-variant, #49454f);
-          margin: 32px 0;
-        }
-
-        .md3-footer-legal {
+        .apple-footer-legal {
+          padding-top: 28px;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
           text-align: center;
-          color: var(--md-sys-color-outline, #938f99);
+        }
+
+        .apple-footer-legal p {
+          font-size: 12px;
+          color: #86868b;
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-          .md3-hero {
-            padding: 48px 0 80px;
+        @media (max-width: 734px) {
+          .apple-hero {
+            padding: 60px 0 80px;
           }
 
-          .md3-button-group {
-            flex-direction: column;
+          .apple-title-large {
+            font-size: 40px;
+          }
+
+          .apple-subtitle {
+            font-size: 19px;
+          }
+
+          .apple-button-group {
             width: 100%;
           }
 
-          .md3-button-group button {
+          .apple-button-primary,
+          .apple-button-secondary {
             width: 100%;
           }
 
-          .md3-step-card {
+          .apple-step {
             flex-direction: column;
-          }
-
-          .md3-step-number {
-            min-width: auto;
+            gap: 16px;
           }
         }
       `}</style>
