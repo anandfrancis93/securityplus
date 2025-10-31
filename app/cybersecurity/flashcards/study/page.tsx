@@ -16,7 +16,6 @@ import { getDueFlashcards } from '@/lib/spacedRepetition';
 import { Flashcard, FlashcardReview } from '@/lib/types';
 import { useRequireAuth } from '@/lib/hooks/useRequireAuth';
 import { LoadingScreen } from '@/components/ui/LoadingScreen';
-import { AdaptiveBackground } from '@/components/ui/LiquidGlassBackground';
 
 export default function StudyFlashcards() {
   const { userId, user, loading: authLoading, liquidGlass } = useApp();
@@ -138,119 +137,259 @@ export default function StudyFlashcards() {
 
   if (dueCardIds.length === 0 || !currentCard) {
     return (
-      <AdaptiveBackground liquidGlass={liquidGlass}>
-
-        {/* Header - Full width */}
-        <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
+      <div style={{
+        minHeight: '100vh',
+        backgroundColor: '#0f0f0f',
+        color: '#e5e5e5',
+      }}>
+        {/* Header */}
+        <div style={{
+          position: 'relative',
+          paddingTop: '24px',
+          paddingBottom: '16px',
+        }}>
           <Header />
         </div>
 
-        <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-5xl flex items-center justify-center min-h-[calc(100vh-200px)]">
-          <div className="max-w-3xl mx-auto text-center space-y-8">
-            <div className="text-7xl md:text-8xl mb-8">✅</div>
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.95]">
-              <span className="block bg-gradient-to-br from-white via-zinc-100 to-zinc-300 bg-clip-text text-transparent">
-                All Done!
-              </span>
+        <div style={{
+          position: 'relative',
+          maxWidth: '1280px',
+          margin: '0 auto',
+          padding: '0 48px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: 'calc(100vh - 200px)',
+        }}>
+          <div style={{
+            maxWidth: '768px',
+            margin: '0 auto',
+            textAlign: 'center',
+          }}>
+            <div style={{
+              fontSize: '112px',
+              marginBottom: '32px',
+            }}>✅</div>
+            <h1 style={{
+              fontSize: '96px',
+              fontWeight: 'bold',
+              letterSpacing: '-0.05em',
+              lineHeight: '0.95',
+              marginBottom: '32px',
+              color: '#e5e5e5',
+            }}>
+              All Done!
             </h1>
-            <p className={`text-2xl md:text-3xl font-light leading-relaxed ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'}`}>
+            <p style={{
+              fontSize: '32px',
+              fontWeight: '300',
+              lineHeight: '1.5',
+              color: '#a8a8a8',
+              marginBottom: '48px',
+            }}>
               No flashcards due right now.
             </p>
             <button
               onClick={() => router.push('/cybersecurity/flashcards')}
-              className={`relative mt-8 ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl rounded-[40px]' : 'bg-violet-600 hover:bg-violet-700 rounded-3xl'} text-white px-12 py-6 font-medium text-xl tracking-tight transition-all duration-700 shadow-xl ${liquidGlass ? 'border border-white/20 hover:shadow-2xl hover:shadow-emerald-500/30 hover:scale-105' : 'hover:shadow-violet-500/50'}`}
+              style={{
+                backgroundColor: '#0f0f0f',
+                color: '#e5e5e5',
+                padding: '24px 48px',
+                fontSize: '20px',
+                fontWeight: '500',
+                letterSpacing: '-0.025em',
+                border: 'none',
+                borderRadius: '16px',
+                cursor: 'pointer',
+                boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = '6px 6px 12px #050505, -6px -6px 12px #191919';
+              }}
             >
               Back to Flashcards
             </button>
           </div>
         </div>
-      </AdaptiveBackground>
+      </div>
     );
   }
 
   const progress = ((currentCardIndex + 1) / dueCardIds.length) * 100;
 
   return (
-    <AdaptiveBackground liquidGlass={liquidGlass}>
-        {/* Header - Full width */}
-        <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
-          <Header />
-        </div>
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#0f0f0f',
+      color: '#e5e5e5',
+    }}>
+      {/* Header */}
+      <div style={{
+        position: 'relative',
+        paddingTop: '24px',
+        paddingBottom: '16px',
+      }}>
+        <Header />
+      </div>
 
-        <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-5xl">
-          {/* Hero Section - Apple Style */}
-          <section className="text-center mb-8 md:mb-12">
-            <div className="max-w-4xl mx-auto space-y-6">
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.95]">
-                <span className="block bg-gradient-to-br from-white via-zinc-100 to-zinc-300 bg-clip-text text-transparent">
-                  Study
-                </span>
-              </h1>
-              <div className="flex items-center justify-center gap-4">
-                <p className={`text-2xl md:text-3xl font-light tracking-tight ${liquidGlass ? 'text-zinc-400' : 'text-zinc-500'}`}>
-                  Card {currentCardIndex + 1} <span className={liquidGlass ? 'text-zinc-600' : 'text-zinc-700'}>of</span> {dueCardIds.length}
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* Progress Bar */}
-          <div className="mb-12 md:mb-16">
-            <div className="relative max-w-3xl mx-auto">
-              <div className={`w-full h-3 relative overflow-hidden ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-full' : 'bg-slate-800 border border-transparent rounded-full'}`}>
-                {liquidGlass && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-full" />
-                )}
-                <div
-                  className={`h-3 relative transition-all duration-700 ${liquidGlass ? 'bg-gradient-to-r from-violet-500 via-purple-500 to-violet-600 rounded-full' : 'bg-violet-500 rounded-full'} ${liquidGlass ? 'shadow-2xl shadow-violet-500/50' : 'shadow-lg shadow-violet-500/30'}`}
-                  style={{ width: `${progress}%` }}
-                >
-                  {liquidGlass && (
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-full" />
-                  )}
-                </div>
-              </div>
+      <div style={{
+        position: 'relative',
+        maxWidth: '1280px',
+        margin: '0 auto',
+        padding: '0 48px',
+      }}>
+        {/* Hero Section */}
+        <section style={{
+          textAlign: 'center',
+          marginBottom: '48px',
+        }}>
+          <div style={{
+            maxWidth: '896px',
+            margin: '0 auto',
+          }}>
+            <h1 style={{
+              fontSize: '96px',
+              fontWeight: 'bold',
+              letterSpacing: '-0.05em',
+              lineHeight: '0.95',
+              marginBottom: '24px',
+              color: '#e5e5e5',
+            }}>
+              Study
+            </h1>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '16px',
+            }}>
+              <p style={{
+                fontSize: '32px',
+                fontWeight: '300',
+                letterSpacing: '-0.025em',
+                color: '#a8a8a8',
+              }}>
+                Card {currentCardIndex + 1} <span style={{ color: '#666666' }}>of</span> {dueCardIds.length}
+              </p>
             </div>
           </div>
+        </section>
+
+        {/* Progress Bar */}
+        <div style={{
+          marginBottom: '64px',
+        }}>
+          <div style={{
+            position: 'relative',
+            maxWidth: '768px',
+            margin: '0 auto',
+          }}>
+            <div style={{
+              width: '100%',
+              height: '12px',
+              position: 'relative',
+              overflow: 'hidden',
+              backgroundColor: '#0f0f0f',
+              borderRadius: '24px',
+              boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
+            }}>
+              <div
+                style={{
+                  height: '12px',
+                  width: `${progress}%`,
+                  position: 'relative',
+                  background: 'linear-gradient(90deg, #8b5cf6, #8b5cf6)',
+                  borderRadius: '24px',
+                  transition: 'width 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: '0 0 20px rgba(139, 92, 246, 0.5)',
+                }}
+              />
+            </div>
+          </div>
+        </div>
 
         {/* Flashcard */}
-        <div className="mb-12" style={{ perspective: '1000px' }}>
+        <div style={{
+          marginBottom: '48px',
+          perspective: '1000px',
+        }}>
           <div
-            id="flip-card"
-            className="relative cursor-pointer"
             style={{
+              position: 'relative',
               minHeight: '480px',
               transformStyle: 'preserve-3d',
               transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
               transition: 'transform 0.7s',
+              cursor: 'pointer',
             }}
             onClick={handleFlip}
           >
             {/* Front of card */}
             <div
-              className={`absolute inset-0 ${liquidGlass ? 'bg-white/5' : 'bg-slate-800/95'} backdrop-blur-2xl ${liquidGlass ? 'rounded-[40px]' : 'rounded-[28px]'} border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700'} shadow-2xl ${liquidGlass ? 'shadow-black/50' : 'shadow-slate-900/50'} overflow-hidden`}
               style={{
+                position: 'absolute',
+                inset: '0',
+                backgroundColor: '#0f0f0f',
+                borderRadius: '24px',
+                boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+                overflow: 'hidden',
                 backfaceVisibility: 'hidden',
                 WebkitBackfaceVisibility: 'hidden',
               }}
             >
-              {/* Light Reflection */}
-              {liquidGlass && (
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
-              )}
-
               {/* Scrollable Content Container */}
-              <div className="flashcard-scroll relative h-full overflow-y-auto overflow-x-hidden p-10 sm:p-12 md:p-16 flex items-center justify-center">
-                <div className="text-center w-full space-y-6 my-auto">
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight">{currentCard.term}</h2>
-                  <p className={`text-lg md:text-xl font-light mt-8 tracking-tight ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>Click to reveal definition</p>
+              <div style={{
+                position: 'relative',
+                height: '100%',
+                overflowY: 'auto',
+                overflowX: 'hidden',
+                padding: '64px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+                <div style={{
+                  textAlign: 'center',
+                  width: '100%',
+                }}>
+                  <h2 style={{
+                    fontSize: '48px',
+                    fontWeight: 'bold',
+                    letterSpacing: '-0.025em',
+                    lineHeight: '1.2',
+                    marginBottom: '32px',
+                    color: '#e5e5e5',
+                  }}>{currentCard.term}</h2>
+                  <p style={{
+                    fontSize: '20px',
+                    fontWeight: '300',
+                    letterSpacing: '-0.025em',
+                    color: '#a8a8a8',
+                  }}>Click to reveal definition</p>
                 </div>
               </div>
 
-              <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
-                <div className={`flex items-center gap-2 ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>
+              <div style={{
+                position: 'absolute',
+                bottom: '24px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  color: '#a8a8a8',
+                }}>
                   <svg
-                    className="w-6 h-6"
+                    style={{
+                      width: '24px',
+                      height: '24px',
+                    }}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -262,36 +401,54 @@ export default function StudyFlashcards() {
                       d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                     />
                   </svg>
-                  <span className="text-base md:text-lg tracking-tight font-medium">Flip</span>
+                  <span style={{
+                    fontSize: '18px',
+                    letterSpacing: '-0.025em',
+                    fontWeight: '500',
+                  }}>Flip</span>
                 </div>
               </div>
             </div>
 
             {/* Back of card */}
             <div
-              className={`absolute inset-0 ${liquidGlass ? 'bg-white/10' : 'bg-violet-900/20'} backdrop-blur-2xl ${liquidGlass ? 'rounded-[40px]' : 'rounded-[28px]'} border-2 ${liquidGlass ? 'border-white/30' : 'border-violet-500/40'} shadow-2xl ${liquidGlass ? 'shadow-violet-500/30' : 'shadow-violet-500/20'} overflow-hidden`}
               style={{
+                position: 'absolute',
+                inset: '0',
+                backgroundColor: '#0f0f0f',
+                borderRadius: '24px',
+                boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919, 0 0 40px rgba(139, 92, 246, 0.3)',
+                overflow: 'hidden',
                 backfaceVisibility: 'hidden',
                 WebkitBackfaceVisibility: 'hidden',
                 transform: 'rotateY(180deg)',
               }}
             >
-              {/* Gradient Overlay */}
-              {liquidGlass && (
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 via-purple-500/10 to-transparent rounded-[40px] opacity-80 pointer-events-none" />
-              )}
-
-              {/* Light Reflection */}
-              {liquidGlass && (
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50 pointer-events-none" />
-              )}
-
               {/* Scrollable Content Container */}
-              <div className="flashcard-scroll relative h-full overflow-y-auto overflow-x-hidden p-10 sm:p-12 md:p-16 flex items-start">
-                <div className="text-left w-full space-y-6 my-auto">
-                  <p className={`text-xl sm:text-2xl leading-relaxed whitespace-pre-wrap ${liquidGlass ? 'text-white' : 'text-slate-200'} tracking-tight font-light`}>{currentCard.definition}</p>
+              <div style={{
+                position: 'relative',
+                height: '100%',
+                overflowY: 'auto',
+                overflowX: 'hidden',
+                padding: '64px',
+                display: 'flex',
+                alignItems: 'start',
+              }}>
+                <div style={{
+                  textAlign: 'left',
+                  width: '100%',
+                  margin: 'auto 0',
+                }}>
+                  <p style={{
+                    fontSize: '24px',
+                    lineHeight: '1.5',
+                    whiteSpace: 'pre-wrap',
+                    color: '#e5e5e5',
+                    letterSpacing: '-0.025em',
+                    fontWeight: '300',
+                  }}>{currentCard.definition}</p>
                   {currentCard.imageUrl && (
-                    <div className="mt-8">
+                    <div style={{ marginTop: '32px' }}>
                       <img
                         src={currentCard.imageUrl}
                         alt="Flashcard visual"
@@ -299,15 +456,41 @@ export default function StudyFlashcards() {
                           e.stopPropagation();
                           setImageEnlarged(true);
                         }}
-                        className={`max-w-full max-h-64 mx-auto ${liquidGlass ? 'rounded-[32px]' : 'rounded-3xl'} border-2 ${liquidGlass ? 'border-white/20' : 'border-slate-600'} cursor-pointer hover:border-violet-400 transition-all duration-700 shadow-xl hover:shadow-violet-500/50`}
+                        style={{
+                          maxWidth: '100%',
+                          maxHeight: '256px',
+                          margin: '0 auto',
+                          borderRadius: '24px',
+                          cursor: 'pointer',
+                          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                          display: 'block',
+                          boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+                        }}
                         title="Click to enlarge"
                       />
-                      <p className={`text-sm ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'} mt-3 text-center tracking-tight`}>Click image to enlarge</p>
+                      <p style={{
+                        fontSize: '14px',
+                        color: '#a8a8a8',
+                        marginTop: '12px',
+                        textAlign: 'center',
+                        letterSpacing: '-0.025em',
+                      }}>Click image to enlarge</p>
                     </div>
                   )}
                   {currentCard.context && (
-                    <div className={`mt-8 pt-8 border-t ${liquidGlass ? 'border-white/20' : 'border-slate-700'}`}>
-                      <p className={`text-lg ${liquidGlass ? 'text-zinc-300' : 'text-slate-300'} italic whitespace-pre-wrap tracking-tight font-light`}>{currentCard.context}</p>
+                    <div style={{
+                      marginTop: '32px',
+                      paddingTop: '32px',
+                      borderTop: '1px solid #191919',
+                    }}>
+                      <p style={{
+                        fontSize: '18px',
+                        color: '#a8a8a8',
+                        fontStyle: 'italic',
+                        whiteSpace: 'pre-wrap',
+                        letterSpacing: '-0.025em',
+                        fontWeight: '300',
+                      }}>{currentCard.context}</p>
                     </div>
                   )}
                 </div>
@@ -318,128 +501,254 @@ export default function StudyFlashcards() {
 
         {/* Answer Buttons - Show when flipped */}
         {isFlipped && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-6 mb-12">
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '24px',
+            marginBottom: '48px',
+          }}>
             {/* Again Button */}
-            <div className="relative group">
+            <div style={{ position: 'relative' }}>
               <button
-                id="again"
                 onClick={() => handleAnswer('again')}
                 disabled={answering}
-                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px]' : 'bg-red-600 rounded-3xl'} ${liquidGlass ? 'hover:bg-white/10 hover:scale-105' : 'hover:bg-red-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-red-400/60' : 'border-transparent hover:border-red-400'} ${liquidGlass ? 'shadow-lg hover:shadow-2xl hover:shadow-red-500/50' : 'shadow-xl hover:shadow-red-500/50'} transition-all duration-700`}
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  backgroundColor: '#0f0f0f',
+                  borderRadius: '16px',
+                  color: '#e5e5e5',
+                  padding: '28px 24px',
+                  fontWeight: 'bold',
+                  minHeight: '72px',
+                  border: 'none',
+                  cursor: answering ? 'not-allowed' : 'pointer',
+                  boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  fontSize: '24px',
+                  letterSpacing: '-0.025em',
+                  opacity: answering ? 0.5 : 1,
+                }}
+                onMouseEnter={(e) => {
+                  if (!answering) {
+                    e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919, 0 0 20px rgba(244, 63, 94, 0.3)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!answering) {
+                    e.currentTarget.style.boxShadow = '6px 6px 12px #050505, -6px -6px 12px #191919';
+                  }
+                }}
               >
-                {liquidGlass && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-red-500/50 via-transparent to-transparent rounded-[32px] group-hover:opacity-100 transition-opacity duration-700" />
-                )}
-                {liquidGlass && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] opacity-50" />
-                )}
-                <div className="relative text-2xl font-bold tracking-tight">Again</div>
+                Again
               </button>
-              {/* Hover tooltip */}
-              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-black/80 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur border border-slate-700 rounded-3xl'} p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
-                <p className={`text-base tracking-tight ${liquidGlass ? 'text-white' : 'text-slate-200'}`}>Failed to recall. Goes to Learning with a 1-day interval.</p>
-              </div>
             </div>
 
             {/* Hard Button */}
-            <div className="relative group">
+            <div style={{ position: 'relative' }}>
               <button
-                id="hard"
                 onClick={() => handleAnswer('hard')}
                 disabled={answering}
-                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px]' : 'bg-yellow-600 rounded-3xl'} ${liquidGlass ? 'hover:bg-white/10 hover:scale-105' : 'hover:bg-yellow-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-yellow-400/60' : 'border-transparent hover:border-yellow-400'} ${liquidGlass ? 'shadow-lg hover:shadow-2xl hover:shadow-yellow-500/50' : 'shadow-xl hover:shadow-yellow-500/50'} transition-all duration-700`}
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  backgroundColor: '#0f0f0f',
+                  borderRadius: '16px',
+                  color: '#e5e5e5',
+                  padding: '28px 24px',
+                  fontWeight: 'bold',
+                  minHeight: '72px',
+                  border: 'none',
+                  cursor: answering ? 'not-allowed' : 'pointer',
+                  boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  fontSize: '24px',
+                  letterSpacing: '-0.025em',
+                  opacity: answering ? 0.5 : 1,
+                }}
+                onMouseEnter={(e) => {
+                  if (!answering) {
+                    e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919, 0 0 20px rgba(245, 158, 11, 0.3)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!answering) {
+                    e.currentTarget.style.boxShadow = '6px 6px 12px #050505, -6px -6px 12px #191919';
+                  }
+                }}
               >
-                {liquidGlass && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/50 via-transparent to-transparent rounded-[32px] group-hover:opacity-100 transition-opacity duration-700" />
-                )}
-                {liquidGlass && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] opacity-50" />
-                )}
-                <div className="relative text-2xl font-bold tracking-tight">Hard</div>
+                Hard
               </button>
-              {/* Hover tooltip */}
-              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-black/80 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur border border-slate-700 rounded-3xl'} p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
-                <p className={`text-base tracking-tight ${liquidGlass ? 'text-white' : 'text-slate-200'}`}>Difficult but recalled. Goes to Review with a 2-day interval.</p>
-              </div>
             </div>
 
             {/* Good Button */}
-            <div className="relative group">
+            <div style={{ position: 'relative' }}>
               <button
-                id="good"
                 onClick={() => handleAnswer('good')}
                 disabled={answering}
-                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px]' : 'bg-green-600 rounded-3xl'} ${liquidGlass ? 'hover:bg-white/10 hover:scale-105' : 'hover:bg-green-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-green-400/60' : 'border-transparent hover:border-green-400'} ${liquidGlass ? 'shadow-lg hover:shadow-2xl hover:shadow-green-500/50' : 'shadow-xl hover:shadow-green-500/50'} transition-all duration-700`}
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  backgroundColor: '#0f0f0f',
+                  borderRadius: '16px',
+                  color: '#e5e5e5',
+                  padding: '28px 24px',
+                  fontWeight: 'bold',
+                  minHeight: '72px',
+                  border: 'none',
+                  cursor: answering ? 'not-allowed' : 'pointer',
+                  boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  fontSize: '24px',
+                  letterSpacing: '-0.025em',
+                  opacity: answering ? 0.5 : 1,
+                }}
+                onMouseEnter={(e) => {
+                  if (!answering) {
+                    e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919, 0 0 20px rgba(16, 185, 129, 0.3)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!answering) {
+                    e.currentTarget.style.boxShadow = '6px 6px 12px #050505, -6px -6px 12px #191919';
+                  }
+                }}
               >
-                {liquidGlass && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/50 via-transparent to-transparent rounded-[32px] group-hover:opacity-100 transition-opacity duration-700" />
-                )}
-                {liquidGlass && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] opacity-50" />
-                )}
-                <div className="relative text-2xl font-bold tracking-tight">Good</div>
+                Good
               </button>
-              {/* Hover tooltip */}
-              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-black/80 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur border border-slate-700 rounded-3xl'} p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
-                <p className={`text-base tracking-tight ${liquidGlass ? 'text-white' : 'text-slate-200'}`}>Recalled correctly. Goes to Review with a 3-day interval.</p>
-              </div>
             </div>
 
             {/* Easy Button */}
-            <div className="relative group">
+            <div style={{ position: 'relative' }}>
               <button
-                id="easy"
                 onClick={() => handleAnswer('easy')}
                 disabled={answering}
-                className={`relative w-full ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px]' : 'bg-blue-600 rounded-3xl'} ${liquidGlass ? 'hover:bg-white/10 hover:scale-105' : 'hover:bg-blue-700'} active:bg-white/10 disabled:bg-slate-800 disabled:cursor-not-allowed text-white py-7 px-6 font-bold min-h-[72px] touch-manipulation border-2 ${liquidGlass ? 'border-white/10 hover:border-blue-400/60' : 'border-transparent hover:border-blue-400'} ${liquidGlass ? 'shadow-lg hover:shadow-2xl hover:shadow-blue-500/50' : 'shadow-xl hover:shadow-blue-500/50'} transition-all duration-700`}
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  backgroundColor: '#0f0f0f',
+                  borderRadius: '16px',
+                  color: '#e5e5e5',
+                  padding: '28px 24px',
+                  fontWeight: 'bold',
+                  minHeight: '72px',
+                  border: 'none',
+                  cursor: answering ? 'not-allowed' : 'pointer',
+                  boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  fontSize: '24px',
+                  letterSpacing: '-0.025em',
+                  opacity: answering ? 0.5 : 1,
+                }}
+                onMouseEnter={(e) => {
+                  if (!answering) {
+                    e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919, 0 0 20px rgba(6, 182, 212, 0.3)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!answering) {
+                    e.currentTarget.style.boxShadow = '6px 6px 12px #050505, -6px -6px 12px #191919';
+                  }
+                }}
               >
-                {liquidGlass && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/50 via-transparent to-transparent rounded-[32px] group-hover:opacity-100 transition-opacity duration-700" />
-                )}
-                {liquidGlass && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] opacity-50" />
-                )}
-                <div className="relative text-2xl font-bold tracking-tight">Easy</div>
+                Easy
               </button>
-              {/* Hover tooltip */}
-              <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-60 ${liquidGlass ? 'bg-black/80 backdrop-blur-2xl border border-white/20 rounded-[32px]' : 'bg-slate-800/95 backdrop-blur border border-slate-700 rounded-3xl'} p-4 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_7.6s_ease-in-out_forwards]`}>
-                <p className={`text-base tracking-tight ${liquidGlass ? 'text-white' : 'text-slate-200'}`}>Instant recall. Goes to Review with an 8-day interval.</p>
-              </div>
             </div>
           </div>
         )}
-        </div>
+      </div>
 
       {/* Image Lightbox */}
       {imageEnlarged && currentCard?.imageUrl && (
         <div
-          className="fixed inset-0 bg-black/95 backdrop-blur-xl flex items-center justify-center z-50 p-6"
+          style={{
+            position: 'fixed',
+            inset: '0',
+            backgroundColor: 'rgba(0, 0, 0, 0.95)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 50,
+            padding: '24px',
+          }}
           onClick={() => setImageEnlarged(false)}
         >
-          <div className="relative max-w-7xl max-h-full">
+          <div style={{
+            position: 'relative',
+            maxWidth: '1280px',
+            maxHeight: '100%',
+          }}>
             <button
               onClick={() => setImageEnlarged(false)}
-              className={`absolute -top-4 -right-4 ${liquidGlass ? 'bg-red-500/90 hover:bg-red-600' : 'bg-red-600 hover:bg-red-700'} text-white p-5 rounded-2xl transition-all duration-700 z-10 shadow-2xl hover:shadow-red-500/50 hover:scale-110`}
+              style={{
+                position: 'absolute',
+                top: '-16px',
+                right: '-16px',
+                backgroundColor: '#0f0f0f',
+                color: '#e5e5e5',
+                padding: '20px',
+                borderRadius: '12px',
+                border: 'none',
+                cursor: 'pointer',
+                zIndex: 10,
+                boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
               title="Close"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919, 0 0 20px rgba(244, 63, 94, 0.5)';
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = '6px 6px 12px #050505, -6px -6px 12px #191919';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+              <svg style={{ width: '24px', height: '24px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            <div className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10' : 'bg-white'} p-8 ${liquidGlass ? 'rounded-[40px]' : 'rounded-3xl'} shadow-2xl overflow-hidden`}>
-              {liquidGlass && (
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50" />
-              )}
+            <div style={{
+              position: 'relative',
+              backgroundColor: '#0f0f0f',
+              padding: '32px',
+              borderRadius: '24px',
+              boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+              overflow: 'hidden',
+            }}>
               <img
                 src={currentCard.imageUrl}
                 alt="Enlarged flashcard visual"
-                className={`relative max-w-full max-h-[85vh] object-contain ${liquidGlass ? 'rounded-[32px]' : 'rounded-2xl'}`}
+                style={{
+                  position: 'relative',
+                  maxWidth: '100%',
+                  maxHeight: '85vh',
+                  objectFit: 'contain',
+                  borderRadius: '24px',
+                }}
                 onClick={(e) => e.stopPropagation()}
               />
             </div>
           </div>
         </div>
       )}
-    </AdaptiveBackground>
+
+      <style jsx>{`
+        .flashcard-scroll::-webkit-scrollbar {
+          width: 8px;
+        }
+        .flashcard-scroll::-webkit-scrollbar-track {
+          background: #0f0f0f;
+          border-radius: 24px;
+        }
+        .flashcard-scroll::-webkit-scrollbar-thumb {
+          background: #191919;
+          border-radius: 24px;
+        }
+        .flashcard-scroll::-webkit-scrollbar-thumb:hover {
+          background: #8b5cf6;
+        }
+      `}</style>
+    </div>
   );
 }

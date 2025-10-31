@@ -10,13 +10,11 @@ import { uploadFlashcardImage, validateImageFile } from '@/lib/imageUpload';
 import { Flashcard } from '@/lib/types';
 import { useRequireAuth } from '@/lib/hooks/useRequireAuth';
 import { LoadingScreen } from '@/components/ui/LoadingScreen';
-import { AdaptiveBackground } from '@/components/ui/LiquidGlassBackground';
-import { LiquidGlassCard } from '@/components/ui/LiquidGlassCard';
 import { DomainDropdown } from '@/components/ui/DomainDropdown';
 import { getDomainColor } from '@/lib/constants/domainColors';
 
 export default function SearchFlashcards() {
-  const { userId, user, loading: authLoading, liquidGlass } = useApp();
+  const { userId, user, loading: authLoading } = useApp();
 
   // Redirect to login if not authenticated
   useRequireAuth(user, authLoading);
@@ -217,9 +215,8 @@ export default function SearchFlashcards() {
       return bScore - aScore;
     });
 
-  const DebugOverlay = () => (
+  const EditModal = () => (
     <>
-      {/* Edit Modal - Working version */}
       {editingCard && (
         <>
           {/* Modal Backdrop */}
@@ -231,74 +228,67 @@ export default function SearchFlashcards() {
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.90)',
-              backdropFilter: 'blur(16px)',
+              backgroundColor: 'rgba(0, 0, 0, 0.85)',
+              backdropFilter: 'blur(8px)',
               zIndex: 999998,
-              transition: 'opacity 700ms cubic-bezier(0.4, 0, 0.2, 1)'
+              transition: 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           />
 
           {/* Modal Content */}
-          <div className="edit-modal-scroll" style={{
+          <div style={{
             position: 'fixed',
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            backgroundColor: liquidGlass ? 'rgba(18, 18, 18, 0.95)' : 'rgba(30, 41, 59, 0.95)',
-            color: 'white',
+            backgroundColor: '#0f0f0f',
+            color: '#e5e5e5',
             padding: '48px',
-            borderRadius: liquidGlass ? '40px' : '32px',
+            borderRadius: '24px',
             width: '90%',
             maxWidth: '700px',
             maxHeight: '90vh',
             overflowY: 'auto',
             zIndex: 999999,
-            boxShadow: liquidGlass ? '0 32px 64px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(52, 211, 153, 0.2)' : '0 24px 48px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(148, 163, 184, 0.1)',
-            backdropFilter: 'blur(24px)',
-            border: liquidGlass ? '1px solid rgba(52, 211, 153, 0.15)' : '1px solid rgba(148, 163, 184, 0.2)',
-            transition: 'all 700ms cubic-bezier(0.4, 0, 0.2, 1)'
+            boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
           }}>
-            {/* Light Reflection */}
-            {liquidGlass && (
-              <div style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, transparent 50%)',
-                borderRadius: '40px',
-                pointerEvents: 'none'
-              }} />
-            )}
-
             {/* Header */}
-            <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '36px' }}>
-              <h2 style={{ fontSize: '36px', fontWeight: '700', margin: 0, letterSpacing: '-0.03em', color: '#fff', textShadow: liquidGlass ? '0 2px 8px rgba(0, 0, 0, 0.3)' : 'none' }}>Edit Flashcard</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '36px' }}>
+              <h2 style={{ fontSize: '36px', fontWeight: '700', margin: 0, letterSpacing: '-0.03em', color: '#e5e5e5' }}>
+                Edit Flashcard
+              </h2>
               <button
                 onClick={handleCancelEdit}
                 style={{
-                  background: liquidGlass ? 'rgba(255, 255, 255, 0.05)' : 'transparent',
+                  background: '#0f0f0f',
                   border: 'none',
-                  color: '#cbd5e1',
+                  color: '#a8a8a8',
                   fontSize: '36px',
                   cursor: 'pointer',
                   padding: '10px',
                   lineHeight: '1',
-                  borderRadius: liquidGlass ? '20px' : '50%',
-                  transition: 'all 700ms cubic-bezier(0.4, 0, 0.2, 1)'
+                  borderRadius: '16px',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.05)' : 'transparent'}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919';
+                  e.currentTarget.style.color = '#e5e5e5';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '6px 6px 12px #050505, -6px -6px 12px #191919';
+                  e.currentTarget.style.color = '#a8a8a8';
+                }}
               >
                 ×
               </button>
             </div>
 
             {/* Form */}
-            <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '28px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
               <div>
-                <label style={{ display: 'block', marginBottom: '14px', fontSize: '16px', fontWeight: '700', color: '#fff', letterSpacing: '0.01em' }}>
+                <label style={{ display: 'block', marginBottom: '14px', fontSize: '16px', fontWeight: '700', color: '#e5e5e5', letterSpacing: '0.01em' }}>
                   Term / Question *
                 </label>
                 <input
@@ -311,35 +301,31 @@ export default function SearchFlashcards() {
                     width: '100%',
                     padding: '18px 24px',
                     fontSize: '18px',
-                    borderRadius: liquidGlass ? '24px' : '28px',
-                    border: liquidGlass ? '2px solid rgba(52, 211, 153, 0.15)' : '2px solid rgba(148, 163, 184, 0.2)',
-                    backgroundColor: liquidGlass ? 'rgba(255, 255, 255, 0.03)' : 'rgba(15, 23, 42, 0.6)',
-                    color: '#fff',
+                    borderRadius: '16px',
+                    border: 'none',
+                    backgroundColor: '#0f0f0f',
+                    color: '#e5e5e5',
                     outline: 'none',
                     boxSizing: 'border-box',
-                    transition: 'all 700ms cubic-bezier(0.4, 0, 0.2, 1)',
-                    backdropFilter: liquidGlass ? 'blur(8px)' : 'none'
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
                   }}
                   onFocus={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.6)';
-                    e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.06)' : 'rgba(15, 23, 42, 0.8)';
-                    e.currentTarget.style.boxShadow = '0 0 0 4px rgba(52, 211, 153, 0.1)';
+                    e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919, 0 0 0 2px #8b5cf6';
                   }}
                   onBlur={(e) => {
-                    e.currentTarget.style.borderColor = liquidGlass ? 'rgba(52, 211, 153, 0.15)' : 'rgba(148, 163, 184, 0.2)';
-                    e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.03)' : 'rgba(15, 23, 42, 0.6)';
-                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919';
                   }}
                 />
                 {editTerm.length > 0 && editTerm.length < 2 && (
-                  <span style={{ color: '#fbbf24', fontSize: '15px', marginTop: '10px', display: 'block', fontWeight: '500' }}>
+                  <span style={{ color: '#f59e0b', fontSize: '15px', marginTop: '10px', display: 'block', fontWeight: '500' }}>
                     Term must be at least 2 characters
                   </span>
                 )}
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: '14px', fontSize: '16px', fontWeight: '700', color: '#fff', letterSpacing: '0.01em' }}>
+                <label style={{ display: 'block', marginBottom: '14px', fontSize: '16px', fontWeight: '700', color: '#e5e5e5', letterSpacing: '0.01em' }}>
                   Definition / Answer *
                 </label>
                 <textarea
@@ -352,43 +338,39 @@ export default function SearchFlashcards() {
                     width: '100%',
                     padding: '18px 24px',
                     fontSize: '18px',
-                    borderRadius: liquidGlass ? '24px' : '28px',
-                    border: liquidGlass ? '2px solid rgba(52, 211, 153, 0.15)' : '2px solid rgba(148, 163, 184, 0.2)',
-                    backgroundColor: liquidGlass ? 'rgba(255, 255, 255, 0.03)' : 'rgba(15, 23, 42, 0.6)',
-                    color: '#fff',
+                    borderRadius: '16px',
+                    border: 'none',
+                    backgroundColor: '#0f0f0f',
+                    color: '#e5e5e5',
                     outline: 'none',
                     resize: 'vertical',
                     boxSizing: 'border-box',
-                    transition: 'all 700ms cubic-bezier(0.4, 0, 0.2, 1)',
-                    backdropFilter: liquidGlass ? 'blur(8px)' : 'none',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
                     lineHeight: '1.6'
                   }}
                   onFocus={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.6)';
-                    e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.06)' : 'rgba(15, 23, 42, 0.8)';
-                    e.currentTarget.style.boxShadow = '0 0 0 4px rgba(52, 211, 153, 0.1)';
+                    e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919, 0 0 0 2px #8b5cf6';
                   }}
                   onBlur={(e) => {
-                    e.currentTarget.style.borderColor = liquidGlass ? 'rgba(52, 211, 153, 0.15)' : 'rgba(148, 163, 184, 0.2)';
-                    e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.03)' : 'rgba(15, 23, 42, 0.6)';
-                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919';
                   }}
                 />
                 {editDefinition.length > 0 && editDefinition.length < 10 && (
-                  <span style={{ color: '#fbbf24', fontSize: '15px', marginTop: '10px', display: 'block', fontWeight: '500' }}>
+                  <span style={{ color: '#f59e0b', fontSize: '15px', marginTop: '10px', display: 'block', fontWeight: '500' }}>
                     Definition must be at least 10 characters
                   </span>
                 )}
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: '14px', fontSize: '16px', fontWeight: '700', color: '#fff', letterSpacing: '0.01em' }}>
+                <label style={{ display: 'block', marginBottom: '14px', fontSize: '16px', fontWeight: '700', color: '#e5e5e5', letterSpacing: '0.01em' }}>
                   Security+ Domain
                 </label>
                 <DomainDropdown
                   value={editDomain}
                   onChange={setEditDomain}
-                  liquidGlass={liquidGlass}
+                  liquidGlass={false}
                   disabled={generating}
                   isOpen={editDomainDropdownOpen}
                   setIsOpen={setEditDomainDropdownOpen}
@@ -403,22 +385,22 @@ export default function SearchFlashcards() {
                   style={{
                     flex: 1,
                     padding: '18px 36px',
-                    backgroundColor: liquidGlass ? 'rgba(255, 255, 255, 0.05)' : 'rgba(71, 85, 105, 0.4)',
-                    color: liquidGlass ? '#d1d5db' : '#cbd5e1',
-                    border: liquidGlass ? '2px solid rgba(255, 255, 255, 0.1)' : 'none',
-                    borderRadius: liquidGlass ? '24px' : '9999px',
+                    backgroundColor: '#0f0f0f',
+                    color: '#a8a8a8',
+                    border: 'none',
+                    borderRadius: '16px',
                     fontSize: '17px',
                     fontWeight: '700',
                     cursor: generating ? 'not-allowed' : 'pointer',
                     opacity: generating ? 0.6 : 1,
-                    transition: 'all 700ms cubic-bezier(0.4, 0, 0.2, 1)',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     letterSpacing: '0.02em',
-                    backdropFilter: liquidGlass ? 'blur(8px)' : 'none'
+                    boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919'
                   }}
-                  onMouseEnter={(e) => !generating && (e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.1)' : 'rgba(71, 85, 105, 0.6)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.05)' : 'rgba(71, 85, 105, 0.4)')}
-                  onMouseDown={(e) => !generating && (e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.15)' : 'rgba(71, 85, 105, 0.7)')}
-                  onMouseUp={(e) => !generating && (e.currentTarget.style.backgroundColor = liquidGlass ? 'rgba(255, 255, 255, 0.1)' : 'rgba(71, 85, 105, 0.6)')}
+                  onMouseEnter={(e) => !generating && (e.currentTarget.style.color = '#e5e5e5')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = '#a8a8a8')}
+                  onMouseDown={(e) => !generating && (e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919')}
+                  onMouseUp={(e) => !generating && (e.currentTarget.style.boxShadow = '6px 6px 12px #050505, -6px -6px 12px #191919')}
                 >
                   Cancel
                 </button>
@@ -428,21 +410,21 @@ export default function SearchFlashcards() {
                   style={{
                     flex: 1,
                     padding: '18px 36px',
-                    backgroundColor: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? (liquidGlass ? 'rgba(255, 255, 255, 0.05)' : 'rgba(71, 85, 105, 0.4)') : 'rgba(52, 211, 153, 1)',
-                    color: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? '#64748b' : '#000',
-                    border: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? (liquidGlass ? '2px solid rgba(255, 255, 255, 0.1)' : 'none') : 'none',
-                    borderRadius: liquidGlass ? '24px' : '9999px',
+                    backgroundColor: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? '#0f0f0f' : '#10b981',
+                    color: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? '#666666' : '#000',
+                    border: 'none',
+                    borderRadius: '16px',
                     fontSize: '17px',
                     fontWeight: '700',
                     cursor: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? 'not-allowed' : 'pointer',
-                    transition: 'all 700ms cubic-bezier(0.4, 0, 0.2, 1)',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     letterSpacing: '0.02em',
-                    boxShadow: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? 'none' : '0 8px 24px rgba(52, 211, 153, 0.4), 0 0 0 1px rgba(52, 211, 153, 0.3)'
+                    boxShadow: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? '6px 6px 12px #050505, -6px -6px 12px #191919' : '6px 6px 12px #050505, -6px -6px 12px #191919'
                   }}
-                  onMouseEnter={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = 'rgba(16, 185, 129, 1)', e.currentTarget.style.boxShadow = '0 12px 32px rgba(52, 211, 153, 0.5), 0 0 0 1px rgba(52, 211, 153, 0.4)')}
-                  onMouseLeave={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = 'rgba(52, 211, 153, 1)', e.currentTarget.style.boxShadow = '0 8px 24px rgba(52, 211, 153, 0.4), 0 0 0 1px rgba(52, 211, 153, 0.3)')}
-                  onMouseDown={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = 'rgba(5, 150, 105, 1)')}
-                  onMouseUp={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = 'rgba(16, 185, 129, 1)')}
+                  onMouseEnter={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = '#059669')}
+                  onMouseLeave={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = '#10b981')}
+                  onMouseDown={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919')}
+                  onMouseUp={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.boxShadow = '6px 6px 12px #050505, -6px -6px 12px #191919')}
                 >
                   {generating ? 'Saving...' : 'Save Changes'}
                 </button>
@@ -456,50 +438,149 @@ export default function SearchFlashcards() {
 
   return (
     <>
-      <DebugOverlay />
-      <AdaptiveBackground liquidGlass={liquidGlass} className="fixed inset-0 h-screen text-white overflow-hidden flex flex-col relative">
-
-      {/* Header - Full width */}
-      <div className="relative pt-6 pb-4 md:pt-8 md:pb-6 flex-shrink-0">
-        <Header />
-      </div>
-
-      <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 pb-8 max-w-5xl flex-1 flex flex-col min-h-0" style={{ overscrollBehavior: 'none' }}>
-        {/* Hero Section */}
-        <div className="mb-6 flex-shrink-0">
-          <div className="text-center mb-8">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-tight mb-6">
-              <span className="block bg-gradient-to-br from-white via-zinc-100 to-zinc-300 bg-clip-text text-transparent">Search</span>
-              <span className="block bg-gradient-to-br from-emerald-400 via-teal-400 to-emerald-500 bg-clip-text text-transparent">Flashcards</span>
-            </h1>
-            <p className={`text-lg sm:text-xl md:text-2xl font-light ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'} leading-relaxed max-w-2xl mx-auto`}>
-              Find and manage your flashcards
-            </p>
-          </div>
+      <EditModal />
+      <div style={{
+        position: 'fixed',
+        inset: 0,
+        height: '100vh',
+        backgroundColor: '#0f0f0f',
+        color: '#e5e5e5',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
+        {/* Header - Full width */}
+        <div style={{
+          position: 'relative',
+          paddingTop: '24px',
+          paddingBottom: '16px',
+          flexShrink: 0
+        }}>
+          <Header />
         </div>
 
-        {/* Flashcard List */}
-        {flashcards.length > 0 && (
-          <LiquidGlassCard liquidGlass={liquidGlass} padding="p-8" className="flex-1 flex flex-col overflow-hidden mb-4">
-              <div className="flex items-center justify-between mb-6 flex-shrink-0">
-                <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
+        <div style={{
+          position: 'relative',
+          maxWidth: '1280px',
+          margin: '0 auto',
+          padding: '0 48px 32px',
+          width: '100%',
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: 0,
+          overscrollBehavior: 'none'
+        }}>
+          {/* Hero Section */}
+          <div style={{ marginBottom: '24px', flexShrink: 0 }}>
+            <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+              <h1 style={{
+                fontSize: '96px',
+                fontWeight: '700',
+                letterSpacing: '-0.025em',
+                lineHeight: '1.1',
+                marginBottom: '24px',
+                margin: 0
+              }}>
+                <span style={{
+                  display: 'block',
+                  background: 'linear-gradient(135deg, #e5e5e5 0%, #a8a8a8 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}>
+                  Search
+                </span>
+                <span style={{
+                  display: 'block',
+                  background: 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}>
+                  Flashcards
+                </span>
+              </h1>
+              <p style={{
+                fontSize: '24px',
+                fontWeight: '300',
+                color: '#a8a8a8',
+                lineHeight: '1.6',
+                maxWidth: '672px',
+                margin: '0 auto'
+              }}>
+                Find and manage your flashcards
+              </p>
+            </div>
+          </div>
+
+          {/* Flashcard List */}
+          {flashcards.length > 0 && (
+            <div style={{
+              backgroundColor: '#0f0f0f',
+              borderRadius: '24px',
+              padding: '32px',
+              boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden',
+              marginBottom: '16px'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', flexShrink: 0 }}>
+                <h3 style={{
+                  fontSize: '30px',
+                  fontWeight: '700',
+                  letterSpacing: '-0.025em',
+                  margin: 0,
+                  color: '#e5e5e5'
+                }}>
                   Your Flashcards ({filteredFlashcards.length}{filteredFlashcards.length !== flashcards.length && ` of ${flashcards.length}`})
                 </h3>
               </div>
 
               {/* Search Input */}
-              <div className="mb-6 flex-shrink-0">
-                <div className="relative">
+              <div style={{ marginBottom: '24px', flexShrink: 0 }}>
+                <div style={{ position: 'relative' }}>
                   <input
                     id="search-input"
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search by term, definition, or domain..."
-                    className={`w-full ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-lg ${liquidGlass ? 'rounded-[28px]' : 'rounded-full'} pl-14 pr-14 py-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} focus:border-emerald-500/50 focus:outline-none ${liquidGlass ? 'focus:bg-white/10' : 'focus:bg-slate-900/80'} transition-all duration-700 ${liquidGlass ? 'backdrop-blur-xl' : ''}`}
+                    style={{
+                      width: '100%',
+                      backgroundColor: '#0f0f0f',
+                      color: '#e5e5e5',
+                      fontSize: '18px',
+                      borderRadius: '16px',
+                      paddingLeft: '56px',
+                      paddingRight: '56px',
+                      paddingTop: '20px',
+                      paddingBottom: '20px',
+                      border: 'none',
+                      outline: 'none',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
+                      boxSizing: 'border-box'
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919, 0 0 0 2px #10b981';
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919';
+                    }}
                   />
                   <svg
-                    className={`absolute left-5 top-1/2 transform -translate-y-1/2 w-6 h-6 ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}
+                    style={{
+                      position: 'absolute',
+                      left: '20px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      width: '24px',
+                      height: '24px',
+                      color: '#a8a8a8'
+                    }}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -514,10 +595,39 @@ export default function SearchFlashcards() {
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery('')}
-                      className={`absolute right-5 top-1/2 transform -translate-y-1/2 ${liquidGlass ? 'text-zinc-400 hover:text-white' : 'text-slate-400 hover:text-white'} hover:bg-white/10 active:bg-white/15 ${liquidGlass ? 'rounded-[20px]' : 'rounded-full'} p-2 transition-all duration-700`}
                       title="Clear search"
+                      style={{
+                        position: 'absolute',
+                        right: '20px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        color: '#a8a8a8',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        borderRadius: '12px',
+                        padding: '8px',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = '#e5e5e5';
+                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = '#a8a8a8';
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }}
+                      onMouseDown={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                      }}
+                      onMouseUp={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+                      }}
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                      <svg style={{ width: '20px', height: '20px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                       </svg>
                     </button>
@@ -525,98 +635,232 @@ export default function SearchFlashcards() {
                 </div>
               </div>
 
-              <div className="flashcard-list-scroll space-y-3 flex-1 overflow-y-auto" style={{ overscrollBehavior: 'contain' }}>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+                flex: 1,
+                overflowY: 'auto',
+                overscrollBehavior: 'contain'
+              }}>
                 {filteredFlashcards.length === 0 ? (
-                  <div className={`text-center py-12 text-lg ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>
+                  <div style={{
+                    textAlign: 'center',
+                    paddingTop: '48px',
+                    paddingBottom: '48px',
+                    fontSize: '18px',
+                    color: '#a8a8a8'
+                  }}>
                     {searchQuery ? 'No flashcards match your search.' : 'No flashcards yet.'}
                   </div>
                 ) : (
                   filteredFlashcards.map((card) => (
-                  <div
-                    key={card.id}
-                    className={`${liquidGlass ? 'bg-white/5 rounded-[32px]' : 'bg-slate-900/40 rounded-3xl'} p-6 hover:bg-white/10 active:bg-white/15 transition-all duration-700 group border ${liquidGlass ? 'border-white/10 hover:border-white/20' : 'border-transparent hover:border-slate-700/50'}`}
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 min-w-0">
-                        <div className="font-bold text-base md:text-lg">{card.term}</div>
-                        <div className={`text-sm md:text-base ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'} mt-2 line-clamp-2 leading-relaxed`}>
-                          {card.definition}
-                        </div>
-                        {card.domain && (
-                          <div className={`text-xs md:text-sm mt-3 flex items-center gap-2 flex-wrap`}>
-                            <span style={{ color: getDomainColor(card.domain) }}>{card.domain}</span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2 relative z-10">
-                        <button
-                          id={`edit-flashcard-${card.id}`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            console.log('Button clicked!', card.term);
-                            handleEditFlashcard(card);
-                          }}
-                          className={`opacity-0 group-hover:opacity-100 transition-all duration-700 flex-shrink-0 text-emerald-400 hover:text-emerald-300 hover:bg-white/5 active:bg-white/10 p-2.5 ${liquidGlass ? 'rounded-[20px]' : 'rounded-full'}`}
-                          title="Edit flashcard"
-                        >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            strokeWidth={2}
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                            />
-                          </svg>
-                        </button>
-                        <button
-                          id={`delete-flashcard-${card.id}`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            console.log('Delete button clicked!', card.id);
-                            handleDeleteFlashcard(card.id);
-                          }}
-                          className={`opacity-0 group-hover:opacity-100 transition-all duration-700 flex-shrink-0 text-red-400 hover:text-red-300 hover:bg-white/5 active:bg-white/10 p-2.5 ${liquidGlass ? 'rounded-[20px]' : 'rounded-full'}`}
-                          title="Delete flashcard"
-                        >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                    <FlashcardItem key={card.id} card={card} />
                   ))
                 )}
               </div>
-          </LiquidGlassCard>
-        )}
+            </div>
+          )}
 
-        {flashcards.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-6xl mb-4">📚</div>
-            <p className="text-slate-300 text-lg font-medium">No flashcards yet</p>
-            <p className="text-slate-500 text-sm mt-2">
-              Create flashcards to start searching
-            </p>
-          </div>
-        )}
+          {flashcards.length === 0 && (
+            <div style={{ textAlign: 'center', paddingTop: '48px', paddingBottom: '48px' }}>
+              <div style={{ fontSize: '96px', marginBottom: '16px' }}>📚</div>
+              <p style={{ color: '#e5e5e5', fontSize: '18px', fontWeight: '500', margin: 0 }}>
+                No flashcards yet
+              </p>
+              <p style={{ color: '#666666', fontSize: '14px', marginTop: '8px' }}>
+                Create flashcards to start searching
+              </p>
+            </div>
+          )}
+        </div>
       </div>
-    </AdaptiveBackground>
+
+      <style jsx>{`
+        div::-webkit-scrollbar {
+          width: 8px;
+          height: 8px;
+        }
+        div::-webkit-scrollbar-track {
+          background: #0f0f0f;
+          border-radius: 4px;
+        }
+        div::-webkit-scrollbar-thumb {
+          background: #191919;
+          border-radius: 4px;
+          transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        div::-webkit-scrollbar-thumb:hover {
+          background: #222222;
+        }
+        ::placeholder {
+          color: #666666;
+          opacity: 1;
+        }
+      `}</style>
     </>
   );
+
+  function FlashcardItem({ card }: { card: Flashcard }) {
+    const [isHovered, setIsHovered] = useState(false);
+
+    return (
+      <div
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        style={{
+          backgroundColor: '#0f0f0f',
+          borderRadius: '24px',
+          padding: '24px',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+          border: 'none'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px' }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontWeight: '700', fontSize: '18px', color: '#e5e5e5', marginBottom: '8px' }}>
+              {card.term}
+            </div>
+            <div style={{
+              fontSize: '16px',
+              color: '#a8a8a8',
+              marginTop: '8px',
+              lineHeight: '1.6',
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical'
+            }}>
+              {card.definition}
+            </div>
+            {card.domain && (
+              <div style={{
+                fontSize: '14px',
+                marginTop: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                flexWrap: 'wrap'
+              }}>
+                <span style={{
+                  color: getDomainColor(card.domain),
+                  backgroundColor: '#0f0f0f',
+                  padding: '6px 16px',
+                  borderRadius: '12px',
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919'
+                }}>
+                  {card.domain}
+                </span>
+              </div>
+            )}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', position: 'relative', zIndex: 10 }}>
+            <button
+              id={`edit-flashcard-${card.id}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                console.log('Button clicked!', card.term);
+                handleEditFlashcard(card);
+              }}
+              title="Edit flashcard"
+              style={{
+                opacity: isHovered ? 1 : 0,
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                flexShrink: 0,
+                color: '#10b981',
+                backgroundColor: '#0f0f0f',
+                border: 'none',
+                padding: '10px',
+                borderRadius: '16px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#059669';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#10b981';
+              }}
+              onMouseDown={(e) => {
+                e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919';
+              }}
+              onMouseUp={(e) => {
+                e.currentTarget.style.boxShadow = '6px 6px 12px #050505, -6px -6px 12px #191919';
+              }}
+            >
+              <svg
+                style={{ width: '20px', height: '20px' }}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                />
+              </svg>
+            </button>
+            <button
+              id={`delete-flashcard-${card.id}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                console.log('Delete button clicked!', card.id);
+                handleDeleteFlashcard(card.id);
+              }}
+              title="Delete flashcard"
+              style={{
+                opacity: isHovered ? 1 : 0,
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                flexShrink: 0,
+                color: '#f43f5e',
+                backgroundColor: '#0f0f0f',
+                border: 'none',
+                padding: '10px',
+                borderRadius: '16px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#dc2626';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#f43f5e';
+              }}
+              onMouseDown={(e) => {
+                e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919';
+              }}
+              onMouseUp={(e) => {
+                e.currentTarget.style.boxShadow = '6px 6px 12px #050505, -6px -6px 12px #191919';
+              }}
+            >
+              <svg
+                style={{ width: '20px', height: '20px' }}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }

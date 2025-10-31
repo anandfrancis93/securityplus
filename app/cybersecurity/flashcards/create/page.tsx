@@ -9,12 +9,17 @@ import { getUserFlashcards, saveFlashcards } from '@/lib/flashcardDb';
 import { uploadFlashcardImage, validateImageFile } from '@/lib/imageUpload';
 import { Flashcard } from '@/lib/types';
 import { useRequireAuth } from '@/lib/hooks/useRequireAuth';
-import { AdaptiveBackground } from '@/components/ui/LiquidGlassBackground';
-import { LiquidGlassCard } from '@/components/ui/LiquidGlassCard';
-import { DomainDropdown } from '@/components/ui/DomainDropdown';
+
+const DOMAINS = [
+  'General Security Concepts',
+  'Threats, Vulnerabilities, and Mitigations',
+  'Security Architecture',
+  'Security Operations',
+  'Security Program Management and Oversight'
+];
 
 export default function CreateFlashcards() {
-  const { userId, user, loading: authLoading, liquidGlass } = useApp();
+  const { userId, user, loading: authLoading } = useApp();
 
   const [generating, setGenerating] = useState(false);
 
@@ -123,142 +128,477 @@ export default function CreateFlashcards() {
   };
 
   return (
-    <AdaptiveBackground liquidGlass={liquidGlass}>
-
-      {/* Header - Full width */}
-      <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#0f0f0f',
+      position: 'relative'
+    }}>
+      {/* Header */}
+      <div style={{
+        position: 'relative',
+        paddingTop: '24px',
+        paddingBottom: '16px'
+      }}>
         <Header />
       </div>
 
-      <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 pb-8 max-w-5xl">
+      <div style={{
+        position: 'relative',
+        maxWidth: '1024px',
+        margin: '0 auto',
+        padding: '0 48px 32px'
+      }}>
         {/* Hero Section */}
-        <div className="mb-12 md:mb-16">
-          <div className="text-center mb-12">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-tight mb-6">
-              <span className="block bg-gradient-to-br from-white via-zinc-100 to-zinc-300 bg-clip-text text-transparent">Create</span>
-              <span className="block bg-gradient-to-br from-cyan-400 via-blue-400 to-cyan-500 bg-clip-text text-transparent">Flashcards</span>
+        <div style={{ marginBottom: '64px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+            <h1 style={{
+              fontSize: '80px',
+              fontWeight: 'bold',
+              letterSpacing: '-0.025em',
+              lineHeight: '1.1',
+              marginBottom: '24px',
+              color: '#e5e5e5'
+            }}>
+              <span style={{ display: 'block' }}>Create</span>
+              <span style={{
+                display: 'block',
+                background: 'linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>Flashcards</span>
             </h1>
-            <p className={`text-xl md:text-2xl font-light ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'} max-w-2xl mx-auto leading-relaxed`}>
+            <p style={{
+              fontSize: '24px',
+              fontWeight: '300',
+              color: '#a8a8a8',
+              maxWidth: '672px',
+              margin: '0 auto',
+              lineHeight: '1.5'
+            }}>
               Build your personal study collection
             </p>
           </div>
         </div>
 
         {/* Flashcard Creation Form */}
-        <div className="mb-8">
-      <LiquidGlassCard liquidGlass={liquidGlass}>
-          <div className="space-y-8">
-            <div>
-              <label className={`block text-lg font-medium mb-3 tracking-tight ${liquidGlass ? 'text-zinc-300' : 'text-slate-300'}`}>
-                Term / Question
-              </label>
-              <input
-                id="term-input"
-                type="text"
-                value={manualTerm}
-                onChange={(e) => {
-                  setManualTerm(e.target.value);
-                  if (manualTermError) setManualTermError('');
-                }}
-                placeholder="e.g., What is Zero Trust?"
-                className={`w-full ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-lg ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} p-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} focus:border-cyan-500/50 focus:outline-none ${liquidGlass ? 'focus:bg-white/10' : 'focus:bg-slate-900/80'} transition-all duration-700 placeholder:text-zinc-500`}
-                disabled={generating}
-              />
-              {manualTermError && (
-                <p className="text-red-400 text-base mt-3 ml-2">{manualTermError}</p>
-              )}
-            </div>
+        <div style={{ marginBottom: '32px' }}>
+          <div style={{
+            backgroundColor: '#0f0f0f',
+            borderRadius: '24px',
+            padding: '48px',
+            boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919'
+          }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+              {/* Term Input */}
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '18px',
+                  fontWeight: '500',
+                  marginBottom: '12px',
+                  letterSpacing: '-0.025em',
+                  color: '#e5e5e5'
+                }}>
+                  Term / Question
+                </label>
+                <input
+                  id="term-input"
+                  type="text"
+                  value={manualTerm}
+                  onChange={(e) => {
+                    setManualTerm(e.target.value);
+                    if (manualTermError) setManualTermError('');
+                  }}
+                  placeholder="e.g., What is Zero Trust?"
+                  disabled={generating}
+                  style={{
+                    width: '100%',
+                    backgroundColor: '#0f0f0f',
+                    color: '#e5e5e5',
+                    fontSize: '18px',
+                    borderRadius: '16px',
+                    padding: '20px',
+                    border: 'none',
+                    outline: 'none',
+                    boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    opacity: generating ? 0.5 : 1,
+                    cursor: generating ? 'not-allowed' : 'text'
+                  }}
+                  onFocus={(e) => {
+                    if (!generating) {
+                      e.target.style.boxShadow = 'inset 6px 6px 12px #050505, inset -6px -6px 12px #191919';
+                    }
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919';
+                  }}
+                />
+                {manualTermError && (
+                  <p style={{
+                    color: '#f43f5e',
+                    fontSize: '16px',
+                    marginTop: '12px',
+                    marginLeft: '8px'
+                  }}>{manualTermError}</p>
+                )}
+              </div>
 
-            <div>
-              <label className={`block text-lg font-medium mb-3 tracking-tight ${liquidGlass ? 'text-zinc-300' : 'text-slate-300'}`}>
-                Definition / Answer
-              </label>
-              <textarea
-                id="definition-input"
-                value={manualDefinition}
-                onChange={(e) => {
-                  setManualDefinition(e.target.value);
-                  if (manualDefinitionError) setManualDefinitionError('');
-                }}
-                placeholder="Enter the definition or answer here..."
-                className={`no-scrollbar w-full h-40 ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-lg ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} p-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} focus:border-cyan-500/50 focus:outline-none ${liquidGlass ? 'focus:bg-white/10' : 'focus:bg-slate-900/80'} resize-none transition-all duration-700 placeholder:text-zinc-500`}
-                disabled={generating}
-              />
-              {manualDefinitionError && (
-                <p className="text-red-400 text-base mt-3 ml-2">{manualDefinitionError}</p>
-              )}
-            </div>
+              {/* Definition Textarea */}
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '18px',
+                  fontWeight: '500',
+                  marginBottom: '12px',
+                  letterSpacing: '-0.025em',
+                  color: '#e5e5e5'
+                }}>
+                  Definition / Answer
+                </label>
+                <textarea
+                  id="definition-input"
+                  value={manualDefinition}
+                  onChange={(e) => {
+                    setManualDefinition(e.target.value);
+                    if (manualDefinitionError) setManualDefinitionError('');
+                  }}
+                  placeholder="Enter the definition or answer here..."
+                  disabled={generating}
+                  style={{
+                    width: '100%',
+                    height: '160px',
+                    backgroundColor: '#0f0f0f',
+                    color: '#e5e5e5',
+                    fontSize: '18px',
+                    borderRadius: '16px',
+                    padding: '20px',
+                    border: 'none',
+                    outline: 'none',
+                    boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
+                    resize: 'none',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    opacity: generating ? 0.5 : 1,
+                    cursor: generating ? 'not-allowed' : 'text'
+                  }}
+                  onFocus={(e) => {
+                    if (!generating) {
+                      e.target.style.boxShadow = 'inset 6px 6px 12px #050505, inset -6px -6px 12px #191919';
+                    }
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919';
+                  }}
+                />
+                {manualDefinitionError && (
+                  <p style={{
+                    color: '#f43f5e',
+                    fontSize: '16px',
+                    marginTop: '12px',
+                    marginLeft: '8px'
+                  }}>{manualDefinitionError}</p>
+                )}
+              </div>
 
-            <div>
-              <label className={`block text-lg font-medium mb-3 tracking-tight ${liquidGlass ? 'text-zinc-300' : 'text-slate-300'}`}>
-                Security+ Domain
-              </label>
-              <DomainDropdown
-                value={manualDomain}
-                onChange={setManualDomain}
-                liquidGlass={liquidGlass}
-                disabled={generating}
-                isOpen={domainDropdownOpen}
-                setIsOpen={setDomainDropdownOpen}
-              />
-            </div>
-
-            <div>
-              <label className={`block text-lg font-medium mb-3 tracking-tight ${liquidGlass ? 'text-zinc-300' : 'text-slate-300'}`}>
-                Image (Optional)
-              </label>
-              {manualImagePreview ? (
-                <div className="relative">
-                  <img
-                    src={manualImagePreview}
-                    alt="Preview"
-                    className={`w-full max-h-64 object-contain ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} border-2 ${liquidGlass ? 'border-white/20' : 'border-slate-700/50'} bg-black/40`}
-                  />
+              {/* Domain Dropdown */}
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '18px',
+                  fontWeight: '500',
+                  marginBottom: '12px',
+                  letterSpacing: '-0.025em',
+                  color: '#e5e5e5'
+                }}>
+                  Security+ Domain
+                </label>
+                <div style={{ position: 'relative' }}>
                   <button
-                    onClick={handleRemoveManualImage}
-                    className="absolute top-4 right-4 bg-red-500/90 hover:bg-red-600 active:bg-red-700 text-white p-3 rounded-2xl transition-all duration-700 shadow-xl hover:scale-110"
+                    onClick={() => !generating && setDomainDropdownOpen(!domainDropdownOpen)}
                     disabled={generating}
+                    style={{
+                      width: '100%',
+                      backgroundColor: '#0f0f0f',
+                      color: '#e5e5e5',
+                      fontSize: '18px',
+                      borderRadius: '16px',
+                      padding: '20px',
+                      border: 'none',
+                      outline: 'none',
+                      boxShadow: domainDropdownOpen
+                        ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+                        : '6px 6px 12px #050505, -6px -6px 12px #191919',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      cursor: generating ? 'not-allowed' : 'pointer',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      textAlign: 'left',
+                      opacity: generating ? 0.5 : 1
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!generating && !domainDropdownOpen) {
+                        e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!domainDropdownOpen) {
+                        e.currentTarget.style.boxShadow = '6px 6px 12px #050505, -6px -6px 12px #191919';
+                      }
+                    }}
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    <span>{manualDomain}</span>
+                    <svg
+                      style={{
+                        width: '20px',
+                        height: '20px',
+                        transform: domainDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                      }}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      strokeWidth={2}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                     </svg>
                   </button>
-                </div>
-              ) : (
-                <input
-                  id="file-input"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleManualImageChange}
-                  className={`w-full ${liquidGlass ? 'bg-white/5' : 'bg-slate-900/60'} text-slate-100 text-base ${liquidGlass ? 'rounded-[28px]' : 'rounded-3xl'} p-5 border-2 ${liquidGlass ? 'border-white/10' : 'border-slate-700/50'} focus:border-cyan-500/50 focus:outline-none transition-all duration-700 file:mr-4 file:py-3 file:px-6 ${liquidGlass ? 'file:rounded-full file:border-2 file:border-white/10 file:bg-white/5 file:backdrop-blur-2xl hover:file:bg-white/10 hover:file:border-cyan-400/60 hover:file:shadow-xl hover:file:shadow-cyan-500/50' : 'file:rounded-full file:border-0 file:bg-cyan-600 hover:file:bg-cyan-700'} file:text-base file:font-semibold file:text-white file:cursor-pointer file:transition-all file:duration-700`}
-                  disabled={generating}
-                />
-              )}
-              <p className={`text-sm ${liquidGlass ? 'text-zinc-500' : 'text-slate-500'} mt-3 ml-2`}>Max 5MB, JPG/PNG/GIF/WebP</p>
-            </div>
 
-            <div className="flex items-center justify-end pt-6">
-              <div className="relative group">
+                  {domainDropdownOpen && (
+                    <div style={{
+                      position: 'absolute',
+                      top: 'calc(100% + 8px)',
+                      left: 0,
+                      right: 0,
+                      backgroundColor: '#0f0f0f',
+                      borderRadius: '16px',
+                      boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+                      zIndex: 50,
+                      overflow: 'hidden'
+                    }}>
+                      {DOMAINS.map((domain) => (
+                        <button
+                          key={domain}
+                          onClick={() => {
+                            setManualDomain(domain);
+                            setDomainDropdownOpen(false);
+                          }}
+                          style={{
+                            width: '100%',
+                            padding: '16px 20px',
+                            textAlign: 'left',
+                            fontSize: '16px',
+                            color: manualDomain === domain ? '#8b5cf6' : '#e5e5e5',
+                            backgroundColor: manualDomain === domain ? '#8b5cf6/10' : 'transparent',
+                            border: 'none',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                            fontWeight: manualDomain === domain ? '600' : '400'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = manualDomain === domain ? 'rgba(139, 92, 246, 0.2)' : 'rgba(25, 25, 25, 0.5)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = manualDomain === domain ? 'rgba(139, 92, 246, 0.1)' : 'transparent';
+                          }}
+                        >
+                          {domain}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Image Upload */}
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '18px',
+                  fontWeight: '500',
+                  marginBottom: '12px',
+                  letterSpacing: '-0.025em',
+                  color: '#e5e5e5'
+                }}>
+                  Image (Optional)
+                </label>
+                {manualImagePreview ? (
+                  <div style={{ position: 'relative' }}>
+                    <img
+                      src={manualImagePreview}
+                      alt="Preview"
+                      style={{
+                        width: '100%',
+                        maxHeight: '256px',
+                        objectFit: 'contain',
+                        borderRadius: '16px',
+                        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                        padding: '16px',
+                        boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+                      }}
+                    />
+                    <button
+                      onClick={handleRemoveManualImage}
+                      disabled={generating}
+                      style={{
+                        position: 'absolute',
+                        top: '16px',
+                        right: '16px',
+                        backgroundColor: '#f43f5e',
+                        color: '#ffffff',
+                        padding: '12px',
+                        borderRadius: '12px',
+                        border: 'none',
+                        cursor: generating ? 'not-allowed' : 'pointer',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
+                        opacity: generating ? 0.5 : 1
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!generating) {
+                          e.currentTarget.style.boxShadow = 'inset 4px 4px 8px rgba(0,0,0,0.5), inset -4px -4px 8px rgba(255,255,255,0.1)';
+                          e.currentTarget.style.transform = 'scale(1.05)';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.boxShadow = '6px 6px 12px #050505, -6px -6px 12px #191919';
+                        e.currentTarget.style.transform = 'scale(1)';
+                      }}
+                    >
+                      <svg style={{ width: '20px', height: '20px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                ) : (
+                  <div style={{ position: 'relative' }}>
+                    <input
+                      id="file-input"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleManualImageChange}
+                      disabled={generating}
+                      style={{
+                        width: '100%',
+                        backgroundColor: '#0f0f0f',
+                        color: '#e5e5e5',
+                        fontSize: '16px',
+                        borderRadius: '16px',
+                        padding: '20px',
+                        border: 'none',
+                        outline: 'none',
+                        boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        cursor: generating ? 'not-allowed' : 'pointer',
+                        opacity: generating ? 0.5 : 1
+                      }}
+                    />
+                  </div>
+                )}
+                <p style={{
+                  fontSize: '14px',
+                  color: '#666666',
+                  marginTop: '12px',
+                  marginLeft: '8px'
+                }}>Max 5MB, JPG/PNG/GIF/WebP</p>
+              </div>
+
+              {/* Create Button */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                paddingTop: '24px'
+              }}>
                 <button
                   id="create-flashcard"
                   onClick={handleManualCreate}
                   disabled={generating}
-                  className={`relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[32px] hover:bg-white/10 border-2 border-white/10 hover:border-cyan-400/60 shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50' : 'bg-cyan-600 hover:bg-cyan-700 rounded-full shadow-xl hover:shadow-cyan-600/50'} active:bg-white/10 disabled:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50 text-white px-10 py-5 text-xl font-bold transition-all duration-700 disabled:shadow-none hover:scale-105`}
+                  style={{
+                    position: 'relative',
+                    backgroundColor: '#0f0f0f',
+                    color: '#ffffff',
+                    padding: '20px 40px',
+                    fontSize: '20px',
+                    fontWeight: 'bold',
+                    borderRadius: '16px',
+                    border: 'none',
+                    cursor: generating ? 'not-allowed' : 'pointer',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    boxShadow: generating
+                      ? 'none'
+                      : '6px 6px 12px #050505, -6px -6px 12px #191919',
+                    opacity: generating ? 0.5 : 1,
+                    background: generating ? '#666666' : 'linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%)'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!generating) {
+                      e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919';
+                      e.currentTarget.style.transform = 'scale(1.02)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!generating) {
+                      e.currentTarget.style.boxShadow = '6px 6px 12px #050505, -6px -6px 12px #191919';
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }
+                  }}
                 >
-                  {liquidGlass && (
-                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/50 via-transparent to-transparent rounded-[32px] group-hover:opacity-100 transition-opacity duration-700" />
-                  )}
-                  {liquidGlass && (
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[32px] opacity-50" />
-                  )}
-                  <span className="relative">{generating ? 'Creating...' : 'Create Flashcard'}</span>
+                  {generating ? 'Creating...' : 'Create Flashcard'}
                 </button>
               </div>
             </div>
           </div>
-      </LiquidGlassCard>
         </div>
       </div>
-    </AdaptiveBackground>
+
+      <style jsx>{`
+        input::placeholder,
+        textarea::placeholder {
+          color: #666666;
+        }
+
+        input::-webkit-file-upload-button {
+          margin-right: 16px;
+          padding: 12px 24px;
+          border-radius: 16px;
+          border: none;
+          background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+          color: #ffffff;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+        }
+
+        input::-webkit-file-upload-button:hover {
+          box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #191919;
+        }
+
+        input:disabled::-webkit-file-upload-button {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        textarea::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        textarea::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        textarea::-webkit-scrollbar-thumb {
+          background: #191919;
+          border-radius: 4px;
+        }
+
+        textarea::-webkit-scrollbar-thumb:hover {
+          background: #222222;
+        }
+      `}</style>
+    </div>
   );
 }
