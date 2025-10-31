@@ -414,7 +414,11 @@ export async function resetUserProgress(userId: string): Promise<void> {
       estimatedAbility: 0,
       lastUpdated: Date.now(),
       quizHistory: [],
-      // Do NOT preserve cachedQuiz or quizMetadata - complete reset
+      topicPerformance: {},  // Clear topic review schedule
+      domainPerformance: {}, // Clear domain performance
+      quizMetadata: undefined, // Clear quiz metadata (FSRS data)
+      cachedQuiz: undefined,   // Clear any cached questions
+      // Complete reset - all fields explicitly cleared
     };
 
     console.log('[DEBUG db.ts] Reset data prepared:', resetProgress);
