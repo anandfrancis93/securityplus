@@ -415,7 +415,7 @@ export default function Login() {
         .modern-login-container {
           min-height: 100vh;
           position: relative;
-          background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+          background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16161a 100%);
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
@@ -428,7 +428,7 @@ export default function Login() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+          background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16161a 100%);
         }
 
         .modern-loading-container {
@@ -480,7 +480,7 @@ export default function Login() {
           height: 500px;
           top: -100px;
           right: -100px;
-          background: radial-gradient(circle, #667eea 0%, #764ba2 100%);
+          background: radial-gradient(circle, #5a67d8 0%, #6b46c1 100%);
           animation-delay: 0s;
         }
 
@@ -489,7 +489,7 @@ export default function Login() {
           height: 400px;
           bottom: -50px;
           left: -50px;
-          background: radial-gradient(circle, #f093fb 0%, #f5576c 100%);
+          background: radial-gradient(circle, #d946ef 0%, #9333ea 100%);
           animation-delay: 7s;
         }
 
@@ -499,7 +499,7 @@ export default function Login() {
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          background: radial-gradient(circle, #4facfe 0%, #00f2fe 100%);
+          background: radial-gradient(circle, #3b82f6 0%, #2563eb 100%);
           animation-delay: 14s;
         }
 
@@ -690,23 +690,23 @@ export default function Login() {
         .modern-glass-card {
           position: relative;
           padding: 2.5rem;
-          background: rgba(255, 255, 255, 0.05);
+          background: rgba(20, 20, 30, 0.7);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
           border-radius: 24px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(139, 92, 246, 0.2);
           box-shadow:
-            0 20px 60px rgba(0, 0, 0, 0.3),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            0 20px 60px rgba(0, 0, 0, 0.5),
+            inset 0 1px 0 rgba(139, 92, 246, 0.1);
           transition: transform 0.3s ease, box-shadow 0.3s ease;
           margin-bottom: 2.5rem;
         }
 
         .modern-glass-card:hover {
           box-shadow:
-            0 30px 80px rgba(0, 0, 0, 0.4),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2),
-            0 0 40px rgba(167, 139, 250, 0.2);
+            0 30px 80px rgba(0, 0, 0, 0.6),
+            inset 0 1px 0 rgba(139, 92, 246, 0.2),
+            0 0 40px rgba(139, 92, 246, 0.3);
         }
 
         .modern-card-glow {
@@ -959,18 +959,18 @@ export default function Login() {
 
         .modern-feature-card {
           padding: 2rem;
-          background: rgba(255, 255, 255, 0.03);
+          background: rgba(20, 20, 30, 0.5);
           backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(139, 92, 246, 0.15);
           border-radius: 20px;
           transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .modern-feature-card:hover {
-          background: rgba(255, 255, 255, 0.06);
-          border-color: rgba(167, 139, 250, 0.3);
+          background: rgba(30, 30, 45, 0.7);
+          border-color: rgba(139, 92, 246, 0.4);
           transform: translateY(-5px);
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
         }
 
         .modern-feature-icon {
@@ -1041,8 +1041,8 @@ export default function Login() {
         /* === Footer === */
         .modern-footer {
           padding: 3rem 1.5rem 2rem;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-          background: rgba(0, 0, 0, 0.2);
+          border-top: 1px solid rgba(139, 92, 246, 0.2);
+          background: rgba(10, 10, 15, 0.8);
         }
 
         .modern-footer-content {
