@@ -158,8 +158,8 @@ export default function QuestionCard({
                 }
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '20px', marginRight: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', width: '100%' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginRight: '20px', flexShrink: 0 }}>
                   {/* Checkbox or Radio indicator */}
                   {question.questionType === 'multiple' ? (
                     <div style={{
@@ -213,6 +213,7 @@ export default function QuestionCard({
                     fontWeight: 'bold',
                     fontSize: showExplanation ? '18px' : '20px',
                     color: '#a8a8a8',
+                    flexShrink: 0,
                   }}>
                     {String.fromCharCode(65 + index)}.
                   </span>
@@ -222,6 +223,8 @@ export default function QuestionCard({
                   fontSize: showExplanation ? '18px' : '16px',
                   lineHeight: '1.6',
                   flex: 1,
+                  minWidth: 0,
+                  wordBreak: 'break-word',
                 }}>
                   {option}
                 </span>
