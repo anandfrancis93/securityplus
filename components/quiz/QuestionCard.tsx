@@ -101,13 +101,13 @@ export default function QuestionCard({
                 return {
                   ...baseStyle,
                   boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
-                  border: '1px solid rgba(16, 185, 129, 0.5)',
+                  border: '3px solid #10b981',
                 };
               } else if (showIncorrect) {
                 return {
                   ...baseStyle,
                   boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
-                  border: '1px solid rgba(244, 63, 94, 0.5)',
+                  border: '3px solid #f43f5e',
                 };
               } else {
                 return {
