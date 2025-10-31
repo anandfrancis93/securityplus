@@ -306,6 +306,18 @@ export default function Quiz() {
 
       if (questionNumber > totalQuestions) {
         console.log('All questions generated');
+
+        // Log difficulty distribution for current quiz
+        const distribution = {
+          easy: questions.filter(q => q.questionCategory === 'single-domain-single-topic').length,
+          medium: questions.filter(q => q.questionCategory === 'single-domain-multiple-topics').length,
+          hard: questions.filter(q => q.questionCategory === 'multiple-domains-multiple-topics').length,
+        };
+        const isCorrect = distribution.easy === 3 && distribution.medium === 4 && distribution.hard === 3;
+        console.log(
+          `${isCorrect ? '✅' : '⚠️'} [CURRENT QUIZ DISTRIBUTION] ${distribution.easy} easy, ${distribution.medium} medium, ${distribution.hard} hard (Expected: 3/4/3)`
+        );
+
         return;
       }
 
