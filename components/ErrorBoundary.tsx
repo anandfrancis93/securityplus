@@ -81,7 +81,7 @@ export class ErrorBoundary extends Component<Props, State> {
             <h1 className="error-boundary-title">Something went wrong</h1>
 
             <p className="error-boundary-description">
-              We're sorry, but something unexpected happened. The error has been logged and we'll look into it.
+              We&apos;re sorry, but something unexpected happened. The error has been logged and we&apos;ll look into it.
             </p>
 
             {process.env.NODE_ENV === 'development' && this.state.error && (
