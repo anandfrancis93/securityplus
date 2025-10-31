@@ -376,11 +376,41 @@ export default function Login() {
           width: 60px;
           height: 60px;
           border-radius: 12px;
-          background: #000000;
+          background: linear-gradient(145deg, #0a0a0a, #000000);
           display: flex;
           align-items: center;
           justify-content: center;
           border: 2px solid #2563eb;
+          transform-style: preserve-3d;
+          transition: all 0.3s ease;
+          box-shadow:
+            0 4px 12px rgba(37, 99, 235, 0.3),
+            0 2px 4px rgba(0, 0, 0, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+          position: relative;
+        }
+
+        .neu-logo-icon::before {
+          content: '';
+          position: absolute;
+          inset: -2px;
+          border-radius: 12px;
+          background: linear-gradient(145deg, #2563eb, #3b82f6);
+          z-index: -1;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        .neu-logo-icon:hover::before {
+          opacity: 0.2;
+        }
+
+        .neu-logo-icon:hover {
+          transform: translateZ(10px) rotateY(5deg);
+          box-shadow:
+            0 8px 20px rgba(37, 99, 235, 0.5),
+            0 4px 8px rgba(0, 0, 0, 0.6),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
         .neu-logo-icon svg {
@@ -418,12 +448,25 @@ export default function Login() {
           gap: 0.5rem;
           padding: 0.75rem 1.25rem;
           border-radius: 50px;
-          background: rgba(37, 99, 235, 0.1);
+          background: linear-gradient(135deg, rgba(37, 99, 235, 0.15), rgba(37, 99, 235, 0.05));
           border: 1px solid #2563eb;
           margin-bottom: 2rem;
           font-size: 0.875rem;
           color: #60a5fa;
           font-weight: 600;
+          transform-style: preserve-3d;
+          transition: all 0.3s ease;
+          box-shadow:
+            0 2px 8px rgba(37, 99, 235, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+          position: relative;
+        }
+
+        .neu-badge:hover {
+          transform: translateY(-2px) translateZ(5px);
+          box-shadow:
+            0 4px 15px rgba(37, 99, 235, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
         .neu-badge-dot {
@@ -465,9 +508,42 @@ export default function Login() {
         .neu-card {
           padding: 2.5rem;
           border-radius: 16px;
-          background: #0a0a0a;
+          background: linear-gradient(145deg, #0d0d0d, #080808);
           border: 1px solid #1a1a1a;
           margin-bottom: 3rem;
+          position: relative;
+          box-shadow:
+            0 10px 30px rgba(0, 0, 0, 0.5),
+            0 1px 2px rgba(37, 99, 235, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.03);
+          transform-style: preserve-3d;
+          transition: all 0.3s ease;
+        }
+
+        .neu-card::before {
+          content: '';
+          position: absolute;
+          inset: -1px;
+          border-radius: 16px;
+          padding: 1px;
+          background: linear-gradient(145deg, rgba(37, 99, 235, 0.3), transparent, rgba(37, 99, 235, 0.1));
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        .neu-card:hover::before {
+          opacity: 1;
+        }
+
+        .neu-card:hover {
+          transform: translateZ(10px) translateY(-4px);
+          box-shadow:
+            0 20px 60px rgba(0, 0, 0, 0.7),
+            0 4px 8px rgba(37, 99, 235, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
         .neu-card-title {
@@ -484,41 +560,67 @@ export default function Login() {
           padding: 0;
           border: none;
           border-radius: 12px;
-          background: #2563eb;
+          background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           overflow: hidden;
           position: relative;
+          transform-style: preserve-3d;
+          box-shadow:
+            0 4px 15px rgba(37, 99, 235, 0.4),
+            0 2px 4px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
         .neu-btn::before {
           content: '';
           position: absolute;
           inset: 0;
-          background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+          background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%, rgba(0,0,0,0.1) 100%);
           opacity: 0;
-          transition: opacity 0.2s ease;
+          transition: opacity 0.3s ease;
+        }
+
+        .neu-btn::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle at center, rgba(255,255,255,0.3), transparent 70%);
+          opacity: 0;
+          transform: scale(0);
+          transition: all 0.5s ease;
         }
 
         .neu-btn:hover:not(:disabled)::before {
           opacity: 1;
         }
 
+        .neu-btn:hover:not(:disabled)::after {
+          opacity: 1;
+          transform: scale(1);
+        }
+
         .neu-btn:hover:not(:disabled) {
-          background: #1d4ed8;
-          transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+          transform: translateY(-3px) translateZ(20px) rotateX(5deg);
+          box-shadow:
+            0 12px 35px rgba(37, 99, 235, 0.6),
+            0 6px 12px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
 
         .neu-btn:active:not(:disabled) {
-          transform: translateY(0);
-          box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+          transform: translateY(-1px) translateZ(10px) rotateX(2deg);
+          box-shadow:
+            0 6px 20px rgba(37, 99, 235, 0.5),
+            0 3px 6px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
         .neu-btn:disabled {
           opacity: 0.6;
           cursor: not-allowed;
-          background: #1e40af;
+          background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
         }
 
         .neu-btn-inner {
@@ -619,16 +721,38 @@ export default function Login() {
         .neu-stat-card {
           padding: 1.5rem;
           border-radius: 12px;
-          background: #0a0a0a;
+          background: linear-gradient(145deg, #0d0d0d, #080808);
           border: 1px solid #1a1a1a;
           text-align: center;
-          transition: all 0.2s ease;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          position: relative;
+          transform-style: preserve-3d;
+          box-shadow:
+            0 4px 12px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.02);
+        }
+
+        .neu-stat-card::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 12px;
+          background: linear-gradient(145deg, rgba(37, 99, 235, 0.1), transparent);
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        .neu-stat-card:hover::after {
+          opacity: 1;
         }
 
         .neu-stat-card:hover {
           border-color: #2563eb;
-          transform: translateY(-4px);
-          box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+          transform: translateY(-6px) translateZ(15px) rotateX(5deg);
+          box-shadow:
+            0 12px 30px rgba(37, 99, 235, 0.3),
+            0 6px 12px rgba(0, 0, 0, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
         .neu-stat-value {
@@ -667,11 +791,16 @@ export default function Login() {
         .neu-feature-card {
           padding: 2rem;
           border-radius: 16px;
-          background: #0a0a0a;
+          background: linear-gradient(145deg, #0d0d0d, #070707);
           border: 1px solid #1a1a1a;
-          transition: all 0.3s ease;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
           position: relative;
           overflow: hidden;
+          transform-style: preserve-3d;
+          box-shadow:
+            0 8px 24px rgba(0, 0, 0, 0.5),
+            0 2px 4px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.02);
         }
 
         .neu-feature-card::before {
@@ -680,20 +809,38 @@ export default function Login() {
           top: 0;
           left: 0;
           right: 0;
-          height: 2px;
-          background: linear-gradient(90deg, #2563eb, #3b82f6, #2563eb);
+          height: 3px;
+          background: linear-gradient(90deg, transparent, #2563eb 50%, #3b82f6, #2563eb, transparent);
           transform: scaleX(0);
-          transition: transform 0.3s ease;
+          transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 0 20px rgba(37, 99, 235, 0.6);
+        }
+
+        .neu-feature-card::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.05), transparent 70%);
+          opacity: 0;
+          transition: opacity 0.4s ease;
         }
 
         .neu-feature-card:hover::before {
           transform: scaleX(1);
         }
 
+        .neu-feature-card:hover::after {
+          opacity: 1;
+        }
+
         .neu-feature-card:hover {
           border-color: #2563eb;
-          transform: translateY(-8px);
-          box-shadow: 0 12px 32px rgba(37, 99, 235, 0.3);
+          transform: translateY(-12px) translateZ(25px) rotateX(3deg);
+          box-shadow:
+            0 20px 50px rgba(37, 99, 235, 0.4),
+            0 10px 20px rgba(0, 0, 0, 0.6),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05),
+            0 0 60px rgba(37, 99, 235, 0.1);
         }
 
         .neu-feature-card-icon {
