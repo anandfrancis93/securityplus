@@ -48,7 +48,7 @@ export default function ExplanationSection({
   };
 
   // Helper function to check if explanation is valid (not a placeholder or too short)
-  const isValidExplanation = (text: string): boolean => {
+  const isValidExplanation = (text: string, optionIndex: number): boolean => {
     if (!text || text.trim() === '') return false;
 
     const cleaned = cleanExplanation(text).toLowerCase();
@@ -73,6 +73,30 @@ export default function ExplanationSection({
     // Check if explanation is too short (less than 10 characters after cleaning)
     if (cleaned.length < 10) {
       return false;
+    }
+
+    // Check if explanation mentions OTHER options' text (indicating misalignment)
+    // This happens when AI generates explanations in wrong order
+    const currentOption = question.options[optionIndex]?.toLowerCase() || '';
+    const currentOptionKeywords = currentOption.split(/\s+/).filter(word => word.length > 4);
+
+    for (let i = 0; i < question.options.length; i++) {
+      if (i === optionIndex) continue; // Skip the current option
+
+      const otherOption = question.options[i]?.toLowerCase() || '';
+      const otherOptionKeywords = otherOption.split(/\s+/).filter(word => word.length > 4);
+
+      // If the explanation contains significant keywords from a DIFFERENT option,
+      // it's likely explaining the wrong option
+      const matchCount = otherOptionKeywords.filter(keyword =>
+        cleaned.includes(keyword)
+      ).length;
+
+      // If more than 2 keywords from another option appear, it's likely misaligned
+      if (matchCount >= 2) {
+        console.warn(`[ExplanationSection] Detected misaligned explanation for option ${optionIndex}: contains keywords from option ${i}`);
+        return false;
+      }
     }
 
     return true;
@@ -187,7 +211,7 @@ export default function ExplanationSection({
               {/* Show correct answer explanations first */}
               {correctAnswers.map((index) => {
                 const explanation = question.incorrectExplanations[index];
-                if (!isValidExplanation(explanation)) return null;
+                if (!isValidExplanation(explanation, index)) return null;
 
                 return (
                   <div key={`correct-${index}`} style={{ fontSize: '16px' }}>
@@ -220,7 +244,7 @@ export default function ExplanationSection({
                 const wasSelectedByUser = userSelectedAnswers.includes(index);
                 const isWrongSelection = wasSelectedByUser && !isCorrectAnswer;
 
-                if (isCorrectAnswer || !isValidExplanation(explanation)) {
+                if (isCorrectAnswer || !isValidExplanation(explanation, index)) {
                   return null;
                 }
 
