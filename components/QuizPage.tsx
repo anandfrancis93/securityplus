@@ -546,79 +546,203 @@ export default function Quiz() {
 
   if (loading) {
     return (
-      <AdaptiveBackground liquidGlass={liquidGlass}>
-        <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
+      <div className="loading-screen">
+        <div className="header-container">
           <Header onHomeClick={handleHomeClick} onSignOutClick={handleSignOutClick} />
         </div>
-        <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
-
-          {/* Loading spinner */}
-          <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
-            <div className={`${liquidGlass ? 'bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[40px]' : 'bg-slate-800/95 backdrop-blur-xl border border-slate-700/50 rounded-3xl'} p-16 md:p-20 shadow-2xl relative`}>
-              {liquidGlass && (
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px] opacity-50 pointer-events-none" />
-              )}
-              <div className="relative text-center">
-                {/* Animated icon */}
-                <div className="relative mx-auto w-32 h-32 md:w-40 md:h-40 mb-8">
-                  {/* Outer ring */}
-                  <div className={`absolute inset-0 ${liquidGlass ? 'border-4 border-white/20 rounded-full' : 'border-4 border-slate-700 rounded-full'}`}></div>
-                  {/* Spinning gradient ring */}
-                  <div className="absolute inset-0 animate-spin">
-                    <div className={`w-full h-full rounded-full ${liquidGlass ? 'border-4 border-transparent border-t-cyan-400 border-r-cyan-400/50' : 'border-4 border-transparent border-t-cyan-500 border-r-cyan-500/50'}`}></div>
-                  </div>
-                  {/* Center icon - graduation cap */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <svg className={`w-16 h-16 md:w-20 md:h-20 ${liquidGlass ? 'text-cyan-400' : 'text-cyan-500'}`} fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M11.7 2.805a.75.75 0 01.6 0A60.65 60.65 0 0122.83 8.72a.75.75 0 01-.231 1.337 49.949 49.949 0 00-9.902 3.912l-.003.002-.34.18a.75.75 0 01-.707 0A50.009 50.009 0 007.5 12.174v-.224c0-.131.067-.248.172-.311a54.614 54.614 0 014.653-2.52.75.75 0 00-.65-1.352 56.129 56.129 0 00-4.78 2.589 1.858 1.858 0 00-.859 1.228 49.803 49.803 0 00-4.634-1.527.75.75 0 01-.231-1.337A60.653 60.653 0 0111.7 2.805z" />
-                      <path d="M13.06 15.473a48.45 48.45 0 017.666-3.282c.134 1.414.22 2.843.255 4.285a.75.75 0 01-.46.71 47.878 47.878 0 00-8.105 4.342.75.75 0 01-.832 0 47.877 47.877 0 00-8.104-4.342.75.75 0 01-.461-.71c.035-1.442.121-2.87.255-4.286A48.4 48.4 0 016 13.18v1.27a1.5 1.5 0 00-.14 2.508c-.09.38-.222.753-.397 1.11.452.213.901.434 1.346.661a6.729 6.729 0 00.551-1.608 1.5 1.5 0 00.14-2.67v-.645a48.549 48.549 0 013.44 1.668 2.25 2.25 0 002.12 0z" />
-                      <path d="M4.462 19.462c.42-.419.753-.89 1-1.394.453.213.902.434 1.347.661a6.743 6.743 0 01-1.286 1.794.75.75 0 11-1.06-1.06z" />
-                    </svg>
-                  </div>
+        <div className="content-container">
+          <div className="loading-wrapper">
+            <div className="loading-card">
+              <div className="loading-icon-container">
+                <div className="loading-icon-outer-ring"></div>
+                <div className="loading-icon-spinner">
+                  <div className="loading-icon-spinner-ring"></div>
                 </div>
-                {/* Loading text */}
-                <p className={`text-2xl md:text-3xl font-bold tracking-tight ${liquidGlass ? 'text-white' : 'text-slate-200'}`}>
-                  Generating first question...
-                </p>
-                <p className={`text-base md:text-lg mt-4 ${liquidGlass ? 'text-zinc-400' : 'text-slate-400'}`}>
-                  This will take about 10 seconds
-                </p>
+                <div className="loading-icon-center">
+                  <svg className="graduation-cap-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M11.7 2.805a.75.75 0 01.6 0A60.65 60.65 0 0122.83 8.72a.75.75 0 01-.231 1.337 49.949 49.949 0 00-9.902 3.912l-.003.002-.34.18a.75.75 0 01-.707 0A50.009 50.009 0 007.5 12.174v-.224c0-.131.067-.248.172-.311a54.614 54.614 0 014.653-2.52.75.75 0 00-.65-1.352 56.129 56.129 0 00-4.78 2.589 1.858 1.858 0 00-.859 1.228 49.803 49.803 0 00-4.634-1.527.75.75 0 01-.231-1.337A60.653 60.653 0 0111.7 2.805z" />
+                    <path d="M13.06 15.473a48.45 48.45 0 017.666-3.282c.134 1.414.22 2.843.255 4.285a.75.75 0 01-.46.71 47.878 47.878 0 00-8.105 4.342.75.75 0 01-.832 0 47.877 47.877 0 00-8.104-4.342.75.75 0 01-.461-.71c.035-1.442.121-2.87.255-4.286A48.4 48.4 0 016 13.18v1.27a1.5 1.5 0 00-.14 2.508c-.09.38-.222.753-.397 1.11.452.213.901.434 1.346.661a6.729 6.729 0 00.551-1.608 1.5 1.5 0 00.14-2.67v-.645a48.549 48.549 0 013.44 1.668 2.25 2.25 0 002.12 0z" />
+                    <path d="M4.462 19.462c.42-.419.753-.89 1-1.394.453.213.902.434 1.347.661a6.743 6.743 0 01-1.286 1.794.75.75 0 11-1.06-1.06z" />
+                  </svg>
+                </div>
               </div>
+              <p className="loading-text-primary">Generating first question...</p>
+              <p className="loading-text-secondary">This will take about 10 seconds</p>
             </div>
           </div>
         </div>
-      </AdaptiveBackground>
+
+        <style jsx>{`
+          .loading-screen {
+            min-height: 100vh;
+            background: #0f0f0f;
+          }
+
+          .header-container {
+            padding: 24px 0 16px;
+          }
+
+          @media (min-width: 768px) {
+            .header-container {
+              padding: 32px 0 24px;
+            }
+          }
+
+          .content-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+          }
+
+          @media (min-width: 640px) {
+            .content-container {
+              padding: 0 32px;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .content-container {
+              padding: 0 48px;
+            }
+          }
+
+          .loading-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 200px);
+          }
+
+          .loading-card {
+            background: #0f0f0f;
+            padding: 64px;
+            border-radius: 24px;
+            box-shadow: 12px 12px 24px #050505, -12px -12px 24px #191919;
+            text-align: center;
+          }
+
+          @media (min-width: 768px) {
+            .loading-card {
+              padding: 80px;
+            }
+          }
+
+          .loading-icon-container {
+            position: relative;
+            width: 128px;
+            height: 128px;
+            margin: 0 auto 32px;
+          }
+
+          @media (min-width: 768px) {
+            .loading-icon-container {
+              width: 160px;
+              height: 160px;
+            }
+          }
+
+          .loading-icon-outer-ring {
+            position: absolute;
+            inset: 0;
+            border: 4px solid #1a1a1a;
+            border-radius: 50%;
+          }
+
+          .loading-icon-spinner {
+            position: absolute;
+            inset: 0;
+            animation: spin 1s linear infinite;
+          }
+
+          @keyframes spin {
+            to {
+              transform: rotate(360deg);
+            }
+          }
+
+          .loading-icon-spinner-ring {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid transparent;
+            border-top-color: #06b6d4;
+            border-right-color: rgba(6, 182, 212, 0.5);
+          }
+
+          .loading-icon-center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .graduation-cap-icon {
+            width: 64px;
+            height: 64px;
+            color: #06b6d4;
+          }
+
+          @media (min-width: 768px) {
+            .graduation-cap-icon {
+              width: 80px;
+              height: 80px;
+            }
+          }
+
+          .loading-text-primary {
+            font-size: 24px;
+            font-weight: 700;
+            color: #e5e5e5;
+            margin: 0;
+          }
+
+          @media (min-width: 768px) {
+            .loading-text-primary {
+              font-size: 30px;
+            }
+          }
+
+          .loading-text-secondary {
+            font-size: 16px;
+            color: #a8a8a8;
+            margin-top: 16px;
+          }
+
+          @media (min-width: 768px) {
+            .loading-text-secondary {
+              font-size: 18px;
+            }
+          }
+        `}</style>
+      </div>
     );
   }
 
   if (questions.length === 0) {
     return (
-      <AdaptiveBackground liquidGlass={liquidGlass} colors={{ top: 'bg-red-500/10', bottom: 'bg-red-500/10' }}>
-        <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
+      <div className="error-screen">
+        <div className="header-container">
           <Header onHomeClick={handleHomeClick} onSignOutClick={handleSignOutClick} />
         </div>
-        <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
-
-          {/* Error message */}
-          <div className="flex items-center justify-center" style={{ minHeight: 'calc(100vh - 200px)' }}>
-            <div className="text-center max-w-3xl">
-              <div className={`border-2 border-red-500/50 p-16 mb-12 relative ${liquidGlass ? 'bg-white/5 backdrop-blur-2xl rounded-[40px]' : 'bg-zinc-950 rounded-md'}`}>
-                {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 via-transparent to-transparent rounded-[40px]" />}
-                {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
-                <div className="text-red-400 text-8xl md:text-9xl mb-10 relative">⚠️</div>
-                <h3 className="text-4xl md:text-5xl font-bold text-red-400 mb-8 relative">Question Generation Failed</h3>
-                <p className={`text-xl md:text-2xl leading-relaxed relative ${liquidGlass ? 'text-zinc-300' : 'text-zinc-200'}`}>
+        <div className="content-container">
+          <div className="error-wrapper">
+            <div className="error-content">
+              <div className="error-card">
+                <div className="error-icon">⚠️</div>
+                <h3 className="error-title">Question Generation Failed</h3>
+                <p className="error-message">
                   {errorMessage || 'Failed to generate questions. Please try again.'}
                 </p>
               </div>
-              <div className="flex gap-6 justify-center flex-wrap">
+              <div className="error-actions">
                 {errorMessage?.includes('session has expired') || errorMessage?.includes('Invalid authentication') ? (
                   <button
                     onClick={async () => {
                       await handleSignOut();
                       router.push('/');
                     }}
-                    className={`px-12 py-5 font-bold text-xl ${liquidGlass ? 'bg-red-500/20 hover:bg-red-500/30 backdrop-blur-xl border border-red-500/50 rounded-3xl text-red-300 transition-all duration-700 hover:scale-105 shadow-lg hover:shadow-2xl hover:shadow-red-500/30' : 'bg-red-900 hover:bg-red-800 text-red-200 rounded-md transition-all duration-150'}`}
+                    className="error-button error-button-signout"
                   >
                     Sign Out and Return to Login
                   </button>
@@ -629,7 +753,7 @@ export default function Quiz() {
                         setErrorMessage('');
                         router.push('/cybersecurity');
                       }}
-                      className={`px-12 py-5 font-bold text-xl ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 rounded-3xl text-white transition-all duration-700 hover:scale-105 shadow-lg hover:shadow-2xl hover:shadow-white/20' : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-md transition-all duration-150'}`}
+                      className="error-button error-button-back"
                     >
                       Back to Cybersecurity
                     </button>
@@ -638,17 +762,160 @@ export default function Quiz() {
                         setErrorMessage('');
                         window.location.reload();
                       }}
-                      className={`px-12 py-5 font-bold text-xl ${liquidGlass ? 'bg-white/5 hover:bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl text-white transition-all duration-700 hover:scale-105 shadow-lg hover:shadow-2xl hover:shadow-white/20' : 'bg-zinc-700 hover:bg-zinc-600 text-white rounded-md transition-all duration-150'}`}
-                >
-                  Try Again
-                </button>
+                      className="error-button error-button-retry"
+                    >
+                      Try Again
+                    </button>
                   </>
                 )}
               </div>
             </div>
           </div>
         </div>
-      </AdaptiveBackground>
+
+        <style jsx>{`
+          .error-screen {
+            min-height: 100vh;
+            background: #0f0f0f;
+          }
+
+          .header-container {
+            padding: 24px 0 16px;
+          }
+
+          @media (min-width: 768px) {
+            .header-container {
+              padding: 32px 0 24px;
+            }
+          }
+
+          .content-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+          }
+
+          @media (min-width: 640px) {
+            .content-container {
+              padding: 0 32px;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .content-container {
+              padding: 0 48px;
+            }
+          }
+
+          .error-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 200px);
+          }
+
+          .error-content {
+            text-align: center;
+            max-width: 768px;
+          }
+
+          .error-card {
+            background: #0f0f0f;
+            padding: 64px;
+            margin-bottom: 48px;
+            border-radius: 24px;
+            box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #191919;
+            border: 2px solid rgba(239, 68, 68, 0.3);
+          }
+
+          .error-icon {
+            font-size: 96px;
+            margin-bottom: 40px;
+          }
+
+          @media (min-width: 768px) {
+            .error-icon {
+              font-size: 112px;
+            }
+          }
+
+          .error-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #f87171;
+            margin: 0 0 32px;
+          }
+
+          @media (min-width: 768px) {
+            .error-title {
+              font-size: 48px;
+            }
+          }
+
+          .error-message {
+            font-size: 20px;
+            color: #e5e5e5;
+            line-height: 1.6;
+            margin: 0;
+          }
+
+          @media (min-width: 768px) {
+            .error-message {
+              font-size: 24px;
+            }
+          }
+
+          .error-actions {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+          }
+
+          .error-button {
+            padding: 20px 48px;
+            font-size: 20px;
+            font-weight: 700;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+          }
+
+          .error-button-signout {
+            background: #0f0f0f;
+            color: #f87171;
+            box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+          }
+
+          .error-button-signout:hover {
+            box-shadow: 4px 4px 8px #050505, -4px -4px 8px #191919;
+            transform: translateY(2px);
+          }
+
+          .error-button-back {
+            background: #0f0f0f;
+            color: #e5e5e5;
+            box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+          }
+
+          .error-button-back:hover {
+            box-shadow: 4px 4px 8px #050505, -4px -4px 8px #191919;
+            transform: translateY(2px);
+          }
+
+          .error-button-retry {
+            background: #0f0f0f;
+            color: #e5e5e5;
+            box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+          }
+
+          .error-button-retry:hover {
+            box-shadow: 4px 4px 8px #050505, -4px -4px 8px #191919;
+            transform: translateY(2px);
+          }
+        `}</style>
+      </div>
     );
   }
 
@@ -687,28 +954,19 @@ export default function Quiz() {
   }
 
   return (
-    <AdaptiveBackground liquidGlass={liquidGlass} colors={{ top: 'bg-violet-500/10', bottom: 'bg-cyan-500/10', center: 'bg-emerald-500/5' }}>
+    <div className="quiz-page">
       {/* Navigation Warning Modal */}
       {showNavigationWarning && (
-        <div className={`fixed inset-0 flex items-center justify-center z-50 p-4 ${liquidGlass ? 'bg-black/80 backdrop-blur-xl' : 'bg-black/90'}`}>
-          <div className={`p-8 sm:p-12 md:p-16 max-w-3xl w-full border relative ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border-white/20 rounded-[40px] shadow-2xl' : 'bg-zinc-950 border-zinc-800 rounded-md'}`}>
-            {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
-            {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-transparent rounded-[40px]" />}
-            <div className="text-center relative space-y-8">
-              <div className="text-6xl mb-4">💾</div>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
-                What would you like to do?
-              </h2>
-
-              <p className="text-lg sm:text-xl md:text-2xl text-zinc-300 leading-relaxed">
+        <div className="modal-overlay">
+          <div className="modal-card modal-navigation">
+            <div className="modal-content">
+              <div className="modal-icon">💾</div>
+              <h2 className="modal-title">What would you like to do?</h2>
+              <p className="modal-description">
                 You can save your quiz to resume later (even from a different device), end the quiz and record your progress, or stay and continue.
               </p>
-
-              <div className="flex gap-4 justify-center flex-wrap">
-                <button
-                  onClick={handleNavigationCancel}
-                  className={`px-6 sm:px-8 py-4 sm:py-5 font-bold text-lg sm:text-xl ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 rounded-3xl text-white transition-all duration-700 hover:scale-105 shadow-xl hover:shadow-2xl' : 'bg-zinc-800 hover:bg-zinc-700 text-white rounded-md transition-all duration-150'}`}
-                >
+              <div className="modal-actions">
+                <button onClick={handleNavigationCancel} className="modal-button modal-button-cancel">
                   Cancel
                 </button>
                 <button
@@ -748,7 +1006,7 @@ export default function Quiz() {
                     // Execute the pending navigation
                     handleNavigationConfirm();
                   }}
-                  className={`px-6 sm:px-8 py-4 sm:py-5 font-bold text-lg sm:text-xl ${liquidGlass ? 'bg-blue-500/20 hover:bg-blue-500/30 backdrop-blur-xl border border-blue-500/50 rounded-3xl text-blue-300 transition-all duration-700 hover:scale-105 shadow-xl hover:shadow-2xl hover:shadow-blue-500/30' : 'bg-blue-900 hover:bg-blue-800 text-blue-200 rounded-md transition-all duration-150'}`}
+                  className="modal-button modal-button-save"
                 >
                   Save & Leave
                 </button>
@@ -764,7 +1022,7 @@ export default function Quiz() {
                       }
                     });
                   }}
-                  className={`px-6 sm:px-8 py-4 sm:py-5 font-bold text-lg sm:text-xl ${liquidGlass ? 'bg-red-500/20 hover:bg-red-500/30 backdrop-blur-xl border border-red-500/50 rounded-3xl text-red-300 transition-all duration-700 hover:scale-105 shadow-xl hover:shadow-2xl hover:shadow-red-500/30' : 'bg-red-900 hover:bg-red-800 text-red-200 rounded-md transition-all duration-150'}`}
+                  className="modal-button modal-button-end"
                 >
                   End Quiz
                 </button>
@@ -776,51 +1034,35 @@ export default function Quiz() {
 
       {/* Celebration Modal */}
       {showCelebration && (
-        <div className={`fixed inset-0 flex items-center justify-center z-50 p-4 overflow-y-auto ${liquidGlass ? 'bg-black/80 backdrop-blur-xl' : 'bg-black/90'}`}>
-          <div className={`p-8 sm:p-12 md:p-16 max-w-2xl w-full my-auto border relative ${liquidGlass ? 'bg-white/10 backdrop-blur-2xl border-white/20 rounded-[40px] shadow-2xl' : 'bg-zinc-950 border-zinc-800 rounded-md'}`}>
-            {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-[40px]" />}
-            {liquidGlass && isPassing && <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-transparent rounded-[40px]" />}
-            {liquidGlass && !isPassing && <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-transparent to-transparent rounded-[40px]" />}
-            <div className="text-center relative space-y-8">
-              <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white">
-                Quiz Complete!
-              </h2>
-
-              <div className="space-y-4">
-                <div className="text-6xl sm:text-7xl md:text-8xl font-bold text-white">
-                  {correctAnswers}/{totalAnswered}
-                </div>
-                <div className="text-2xl sm:text-3xl md:text-4xl text-zinc-200 font-bold">{accuracy}% Accuracy</div>
+        <div className="modal-overlay">
+          <div className={`modal-card modal-celebration ${isPassing ? 'modal-celebration-pass' : 'modal-celebration-fail'}`}>
+            <div className="modal-content">
+              <h2 className="modal-title celebration-title">Quiz Complete!</h2>
+              <div className="celebration-stats">
+                <div className="celebration-score">{correctAnswers}/{totalAnswered}</div>
+                <div className="celebration-accuracy">{accuracy}% Accuracy</div>
               </div>
-
               {isPassing ? (
-                <div className={`border-2 border-green-500/50 p-6 sm:p-8 relative ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl' : 'bg-zinc-900 rounded-md'}`}>
-                  {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 via-transparent to-transparent rounded-3xl" />}
-                  <p className="text-green-400 font-bold text-xl sm:text-2xl md:text-3xl mb-3 relative">Great Job!</p>
-                  <p className="text-zinc-200 text-lg sm:text-xl md:text-2xl leading-relaxed relative">
+                <div className="celebration-feedback celebration-feedback-pass">
+                  <p className="celebration-feedback-title">Great Job!</p>
+                  <p className="celebration-feedback-text">
                     You&apos;re showing strong understanding of Security+ concepts. Keep up the excellent work!
                   </p>
                 </div>
               ) : (
-                <div className={`border-2 border-yellow-500/50 p-6 sm:p-8 relative ${liquidGlass ? 'bg-white/5 backdrop-blur-xl rounded-3xl' : 'bg-zinc-900 rounded-md'}`}>
-                  {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 via-transparent to-transparent rounded-3xl" />}
-                  <p className="text-yellow-400 font-bold text-xl sm:text-2xl md:text-3xl mb-3 relative">Keep Practicing!</p>
-                  <p className="text-zinc-200 text-lg sm:text-xl md:text-2xl leading-relaxed relative">
+                <div className="celebration-feedback celebration-feedback-fail">
+                  <p className="celebration-feedback-title">Keep Practicing!</p>
+                  <p className="celebration-feedback-text">
                     Review the explanations and try again. Each quiz helps you improve!
                   </p>
                 </div>
               )}
-
-              <div className="space-y-2 text-lg sm:text-xl md:text-2xl text-zinc-300">
+              <div className="celebration-info">
                 <p>✓ Progress saved to your account</p>
                 <p>✓ IRT score updated</p>
                 <p>✓ Predicted exam score recalculated</p>
               </div>
-
-              <button
-                onClick={handleCelebrationClose}
-                className={`w-full font-bold py-5 text-xl sm:text-2xl ${liquidGlass ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 rounded-3xl text-white transition-all duration-700 hover:scale-105 shadow-xl hover:shadow-2xl' : 'bg-zinc-800 hover:bg-zinc-700 text-white rounded-md transition-all duration-150'}`}
-              >
+              <button onClick={handleCelebrationClose} className="modal-button modal-button-done">
                 Done
               </button>
             </div>
@@ -828,43 +1070,37 @@ export default function Quiz() {
         </div>
       )}
 
-      {/* Header - Full width */}
-      <div className="relative pt-6 pb-4 md:pt-8 md:pb-6">
+      {/* Header */}
+      <div className="header-container">
         <Header onHomeClick={handleHomeClick} onSignOutClick={handleSignOutClick} />
       </div>
 
-      <div className="relative container mx-auto px-6 sm:px-8 lg:px-12 max-w-7xl">
+      <div className="content-container">
         {/* Question Header */}
-        <div className="mb-8 md:mb-12">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-4">
+        <div className="question-header">
+          <h1 className="question-title">
             Question {currentQuestionIndex + 1} of {totalQuestions}
           </h1>
           {generatingNext && (
-            <div className="text-lg md:text-xl text-zinc-400 mt-4 flex items-center gap-3 font-medium">
-              <div className={`animate-spin rounded-xl h-6 w-6 border-2 ${liquidGlass ? 'border-white/10 border-t-violet-400/80' : 'border-zinc-700 border-t-zinc-400'}`}></div>
+            <div className="generating-indicator">
+              <div className="generating-spinner"></div>
               Generating next question...
             </div>
           )}
-          <div className="text-lg md:text-xl text-zinc-400 mt-3">
+          <div className="questions-count">
             {questions.length} question{questions.length !== 1 ? 's' : ''} generated so far
           </div>
         </div>
 
         {/* Progress Bar */}
-        <div className="mb-16">
-          <div className={`w-full h-6 relative overflow-hidden ${liquidGlass ? 'bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl' : 'bg-zinc-900 rounded-md'}`}>
-            {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-2xl" />}
-            <div
-              className={`h-6 relative transition-all duration-700 ${liquidGlass ? 'bg-gradient-to-r from-violet-500 via-purple-500 to-violet-600 rounded-2xl' : 'bg-zinc-700 rounded-md'}`}
-              style={{ width: `${progress}%` }}
-            >
-              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-2xl" />}
-            </div>
+        <div className="progress-container">
+          <div className="progress-bar">
+            <div className="progress-fill" style={{ width: `${progress}%` }}></div>
           </div>
         </div>
 
         {/* Question Card */}
-        <div className="mb-16">
+        <div className="question-section">
           <QuestionCard
             question={currentQuestion}
             questionNumber={currentQuestionIndex + 1}
@@ -885,35 +1121,26 @@ export default function Quiz() {
                   ? selectedAnswers.length === 0
                   : selectedAnswer === null
               }
-              className={`relative w-full mt-12 py-6 md:py-7 font-bold text-2xl md:text-3xl transition-all duration-700 ${
+              className={`submit-button ${
                 (currentQuestion.questionType === 'multiple' ? selectedAnswers.length === 0 : selectedAnswer === null)
-                  ? liquidGlass
-                    ? 'bg-white/5 backdrop-blur-xl border border-white/10 text-zinc-500 cursor-not-allowed rounded-3xl'
-                    : 'bg-zinc-800 text-zinc-500 cursor-not-allowed rounded-md'
-                  : liquidGlass
-                    ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-violet-400/50 text-white rounded-3xl hover:scale-105 shadow-xl hover:shadow-2xl hover:shadow-violet-500/30'
-                    : 'bg-zinc-800 hover:bg-zinc-700 text-white rounded-md'
+                  ? 'submit-button-disabled'
+                  : 'submit-button-enabled'
               }`}
             >
-              {liquidGlass && !(currentQuestion.questionType === 'multiple' ? selectedAnswers.length === 0 : selectedAnswer === null) && (
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 via-transparent to-transparent rounded-3xl opacity-0 hover:opacity-100 transition-opacity duration-700" />
-              )}
-              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />}
-              <span className="relative">Submit Answer</span>
+              Submit Answer
             </button>
           )}
         </div>
 
         {/* Explanation */}
         {showExplanation && (
-          <div className="space-y-20 mb-16">
+          <div className="explanation-container">
             {/* Question Number Header */}
-            <div className="flex items-center gap-5">
-              <div className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 flex items-center justify-center text-white font-bold text-2xl md:text-3xl relative ${liquidGlass ? 'bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl' : 'bg-zinc-800 border-2 border-zinc-700 rounded-md'}`}>
-                {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl" />}
-                <span className="relative">{currentQuestionIndex + 1}</span>
+            <div className="explanation-header">
+              <div className="explanation-badge">
+                <span>{currentQuestionIndex + 1}</span>
               </div>
-              <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">Question {currentQuestionIndex + 1}</h3>
+              <h3 className="explanation-title">Question {currentQuestionIndex + 1}</h3>
             </div>
 
             <ExplanationSection
@@ -935,44 +1162,626 @@ export default function Quiz() {
               id="next"
               onClick={handleNextQuestion}
               disabled={currentQuestionIndex >= questions.length - 1 && currentQuestionIndex < totalQuestions - 1}
-              className={`relative w-full py-6 md:py-7 font-bold text-2xl md:text-3xl transition-all duration-700 ${
+              className={`next-button ${
                 currentQuestionIndex >= questions.length - 1 && currentQuestionIndex < totalQuestions - 1
-                  ? liquidGlass
-                    ? 'bg-white/5 backdrop-blur-xl border border-white/10 cursor-not-allowed text-zinc-500 rounded-3xl'
-                    : 'bg-zinc-800 cursor-not-allowed text-zinc-500 rounded-md'
-                  : liquidGlass
-                    ? 'bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-cyan-400/50 text-white rounded-3xl hover:scale-105 shadow-xl hover:shadow-2xl hover:shadow-cyan-500/30'
-                    : 'bg-zinc-800 hover:bg-zinc-700 text-white rounded-md'
+                  ? 'next-button-disabled'
+                  : 'next-button-enabled'
               }`}
             >
-              {liquidGlass && !(currentQuestionIndex >= questions.length - 1 && currentQuestionIndex < totalQuestions - 1) && (
-                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-transparent to-transparent rounded-3xl opacity-0 hover:opacity-100 transition-opacity duration-700" />
-              )}
-              {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />}
-              <span className="relative">
-                {currentQuestionIndex >= questions.length - 1 && currentQuestionIndex < totalQuestions - 1
-                  ? 'Generating next question...'
-                  : currentQuestionIndex < totalQuestions - 1
-                  ? 'Next Question'
-                  : 'Finish Quiz'}
-              </span>
+              {currentQuestionIndex >= questions.length - 1 && currentQuestionIndex < totalQuestions - 1
+                ? 'Generating next question...'
+                : currentQuestionIndex < totalQuestions - 1
+                ? 'Next Question'
+                : 'Finish Quiz'}
             </button>
           </div>
         )}
 
         {/* End Quiz Button */}
-        <div className="mt-20 text-center">
-          <button
-            id="end-quiz"
-            onClick={handleEndQuiz}
-            className={`relative px-16 md:px-20 py-6 md:py-7 font-bold text-xl md:text-2xl transition-all duration-700 ${liquidGlass ? 'bg-red-500/20 hover:bg-red-500/30 backdrop-blur-xl border border-red-500/50 hover:border-red-500/80 text-red-300 hover:text-red-200 rounded-3xl hover:scale-105 shadow-xl hover:shadow-2xl hover:shadow-red-500/30' : 'bg-red-900 hover:bg-red-800 text-white rounded-md'}`}
-          >
-            {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-transparent to-transparent rounded-3xl opacity-0 hover:opacity-100 transition-opacity duration-700" />}
-            {liquidGlass && <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl" />}
-            <span className="relative">End Quiz</span>
+        <div className="end-quiz-container">
+          <button id="end-quiz" onClick={handleEndQuiz} className="end-quiz-button">
+            End Quiz
           </button>
         </div>
       </div>
-    </AdaptiveBackground>
+
+      <style jsx>{`
+        .quiz-page {
+          min-height: 100vh;
+          background: #0f0f0f;
+        }
+
+        .header-container {
+          padding: 24px 0 16px;
+        }
+
+        @media (min-width: 768px) {
+          .header-container {
+            padding: 32px 0 24px;
+          }
+        }
+
+        .content-container {
+          max-width: 1280px;
+          margin: 0 auto;
+          padding: 0 24px;
+        }
+
+        @media (min-width: 640px) {
+          .content-container {
+            padding: 0 32px;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .content-container {
+            padding: 0 48px;
+          }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+          position: fixed;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 50;
+          padding: 16px;
+          background: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal-card {
+          background: #0f0f0f;
+          padding: 48px;
+          max-width: 768px;
+          width: 100%;
+          border-radius: 24px;
+          box-shadow: 12px 12px 24px #050505, -12px -12px 24px #191919;
+        }
+
+        @media (min-width: 640px) {
+          .modal-card {
+            padding: 48px;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .modal-card {
+            padding: 64px;
+          }
+        }
+
+        .modal-content {
+          text-align: center;
+        }
+
+        .modal-icon {
+          font-size: 64px;
+          margin-bottom: 16px;
+        }
+
+        .modal-title {
+          font-size: 36px;
+          font-weight: 700;
+          color: #e5e5e5;
+          margin: 0 0 32px;
+        }
+
+        @media (min-width: 640px) {
+          .modal-title {
+            font-size: 42px;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .modal-title {
+            font-size: 48px;
+          }
+        }
+
+        .modal-description {
+          font-size: 18px;
+          color: #a8a8a8;
+          line-height: 1.6;
+          margin: 0 0 32px;
+        }
+
+        @media (min-width: 640px) {
+          .modal-description {
+            font-size: 20px;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .modal-description {
+            font-size: 24px;
+          }
+        }
+
+        .modal-actions {
+          display: flex;
+          gap: 16px;
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+
+        .modal-button {
+          padding: 16px 24px;
+          font-size: 18px;
+          font-weight: 700;
+          border: none;
+          border-radius: 16px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        @media (min-width: 640px) {
+          .modal-button {
+            padding: 20px 32px;
+            font-size: 18px;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .modal-button {
+            font-size: 20px;
+          }
+        }
+
+        .modal-button-cancel {
+          background: #0f0f0f;
+          color: #e5e5e5;
+          box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+        }
+
+        .modal-button-cancel:hover {
+          box-shadow: 4px 4px 8px #050505, -4px -4px 8px #191919;
+          transform: translateY(2px);
+        }
+
+        .modal-button-save {
+          background: #0f0f0f;
+          color: #60a5fa;
+          box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+        }
+
+        .modal-button-save:hover {
+          box-shadow: 4px 4px 8px #050505, -4px -4px 8px #191919;
+          transform: translateY(2px);
+        }
+
+        .modal-button-end {
+          background: #0f0f0f;
+          color: #f87171;
+          box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+        }
+
+        .modal-button-end:hover {
+          box-shadow: 4px 4px 8px #050505, -4px -4px 8px #191919;
+          transform: translateY(2px);
+        }
+
+        .modal-button-done {
+          width: 100%;
+          padding: 20px;
+          font-size: 20px;
+          background: #0f0f0f;
+          color: #e5e5e5;
+          box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+        }
+
+        @media (min-width: 640px) {
+          .modal-button-done {
+            font-size: 24px;
+          }
+        }
+
+        .modal-button-done:hover {
+          box-shadow: 4px 4px 8px #050505, -4px -4px 8px #191919;
+          transform: translateY(2px);
+        }
+
+        /* Celebration Modal */
+        .celebration-title {
+          font-size: 42px;
+          margin-bottom: 32px;
+        }
+
+        @media (min-width: 640px) {
+          .celebration-title {
+            font-size: 48px;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .celebration-title {
+            font-size: 60px;
+          }
+        }
+
+        .celebration-stats {
+          margin-bottom: 32px;
+        }
+
+        .celebration-score {
+          font-size: 64px;
+          font-weight: 700;
+          color: #e5e5e5;
+          margin-bottom: 16px;
+        }
+
+        @media (min-width: 640px) {
+          .celebration-score {
+            font-size: 72px;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .celebration-score {
+            font-size: 96px;
+          }
+        }
+
+        .celebration-accuracy {
+          font-size: 24px;
+          font-weight: 700;
+          color: #e5e5e5;
+        }
+
+        @media (min-width: 640px) {
+          .celebration-accuracy {
+            font-size: 30px;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .celebration-accuracy {
+            font-size: 36px;
+          }
+        }
+
+        .celebration-feedback {
+          background: #0f0f0f;
+          padding: 24px;
+          border-radius: 16px;
+          margin-bottom: 32px;
+          box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #191919;
+        }
+
+        @media (min-width: 640px) {
+          .celebration-feedback {
+            padding: 32px;
+          }
+        }
+
+        .celebration-feedback-pass {
+          border: 2px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .celebration-feedback-fail {
+          border: 2px solid rgba(234, 179, 8, 0.3);
+        }
+
+        .celebration-feedback-title {
+          font-size: 20px;
+          font-weight: 700;
+          margin: 0 0 12px;
+        }
+
+        @media (min-width: 640px) {
+          .celebration-feedback-title {
+            font-size: 24px;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .celebration-feedback-title {
+            font-size: 30px;
+          }
+        }
+
+        .celebration-feedback-pass .celebration-feedback-title {
+          color: #10b981;
+        }
+
+        .celebration-feedback-fail .celebration-feedback-title {
+          color: #eab308;
+        }
+
+        .celebration-feedback-text {
+          font-size: 18px;
+          color: #e5e5e5;
+          line-height: 1.6;
+          margin: 0;
+        }
+
+        @media (min-width: 640px) {
+          .celebration-feedback-text {
+            font-size: 20px;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .celebration-feedback-text {
+            font-size: 24px;
+          }
+        }
+
+        .celebration-info {
+          font-size: 18px;
+          color: #a8a8a8;
+          margin-bottom: 32px;
+        }
+
+        @media (min-width: 640px) {
+          .celebration-info {
+            font-size: 20px;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .celebration-info {
+            font-size: 24px;
+          }
+        }
+
+        .celebration-info p {
+          margin: 8px 0;
+        }
+
+        /* Question Header */
+        .question-header {
+          margin-bottom: 32px;
+        }
+
+        @media (min-width: 768px) {
+          .question-header {
+            margin-bottom: 48px;
+          }
+        }
+
+        .question-title {
+          font-size: 48px;
+          font-weight: 700;
+          color: #e5e5e5;
+          margin: 0 0 16px;
+        }
+
+        @media (min-width: 640px) {
+          .question-title {
+            font-size: 56px;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .question-title {
+            font-size: 64px;
+          }
+        }
+
+        .generating-indicator {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          font-size: 18px;
+          color: #a8a8a8;
+          font-weight: 500;
+          margin-top: 16px;
+        }
+
+        @media (min-width: 768px) {
+          .generating-indicator {
+            font-size: 20px;
+          }
+        }
+
+        .generating-spinner {
+          width: 24px;
+          height: 24px;
+          border: 2px solid #1a1a1a;
+          border-top-color: #8b5cf6;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        }
+
+        .questions-count {
+          font-size: 18px;
+          color: #a8a8a8;
+          margin-top: 12px;
+        }
+
+        @media (min-width: 768px) {
+          .questions-count {
+            font-size: 20px;
+          }
+        }
+
+        /* Progress Bar */
+        .progress-container {
+          margin-bottom: 64px;
+        }
+
+        .progress-bar {
+          width: 100%;
+          height: 24px;
+          background: #0f0f0f;
+          border-radius: 12px;
+          box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #191919;
+          overflow: hidden;
+        }
+
+        .progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #8b5cf6 0%, #7c3aed 50%, #8b5cf6 100%);
+          border-radius: 12px;
+          transition: width 0.7s ease;
+        }
+
+        /* Question Section */
+        .question-section {
+          margin-bottom: 64px;
+        }
+
+        .submit-button {
+          width: 100%;
+          margin-top: 48px;
+          padding: 24px;
+          font-size: 24px;
+          font-weight: 700;
+          border: none;
+          border-radius: 16px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+          .submit-button {
+            padding: 28px;
+            font-size: 30px;
+          }
+        }
+
+        .submit-button-disabled {
+          background: #0f0f0f;
+          color: #666666;
+          box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #191919;
+          cursor: not-allowed;
+        }
+
+        .submit-button-enabled {
+          background: #0f0f0f;
+          color: #8b5cf6;
+          box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+        }
+
+        .submit-button-enabled:hover {
+          box-shadow: 4px 4px 8px #050505, -4px -4px 8px #191919;
+          transform: translateY(2px);
+        }
+
+        /* Explanation Section */
+        .explanation-container {
+          margin-bottom: 64px;
+        }
+
+        .explanation-header {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          margin-bottom: 80px;
+        }
+
+        .explanation-badge {
+          flex-shrink: 0;
+          width: 64px;
+          height: 64px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #0f0f0f;
+          color: #e5e5e5;
+          font-size: 24px;
+          font-weight: 700;
+          border-radius: 12px;
+          box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+        }
+
+        @media (min-width: 768px) {
+          .explanation-badge {
+            width: 80px;
+            height: 80px;
+            font-size: 30px;
+          }
+        }
+
+        .explanation-title {
+          font-size: 30px;
+          font-weight: 700;
+          color: #e5e5e5;
+          margin: 0;
+        }
+
+        @media (min-width: 768px) {
+          .explanation-title {
+            font-size: 36px;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .explanation-title {
+            font-size: 48px;
+          }
+        }
+
+        .next-button {
+          width: 100%;
+          padding: 24px;
+          font-size: 24px;
+          font-weight: 700;
+          border: none;
+          border-radius: 16px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          margin-top: 80px;
+        }
+
+        @media (min-width: 768px) {
+          .next-button {
+            padding: 28px;
+            font-size: 30px;
+          }
+        }
+
+        .next-button-disabled {
+          background: #0f0f0f;
+          color: #666666;
+          box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #191919;
+          cursor: not-allowed;
+        }
+
+        .next-button-enabled {
+          background: #0f0f0f;
+          color: #06b6d4;
+          box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+        }
+
+        .next-button-enabled:hover {
+          box-shadow: 4px 4px 8px #050505, -4px -4px 8px #191919;
+          transform: translateY(2px);
+        }
+
+        /* End Quiz Button */
+        .end-quiz-container {
+          margin-top: 80px;
+          text-align: center;
+        }
+
+        .end-quiz-button {
+          padding: 24px 64px;
+          font-size: 20px;
+          font-weight: 700;
+          background: #0f0f0f;
+          color: #f43f5e;
+          border: none;
+          border-radius: 16px;
+          cursor: pointer;
+          box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+          transition: all 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+          .end-quiz-button {
+            padding: 28px 80px;
+            font-size: 24px;
+          }
+        }
+
+        .end-quiz-button:hover {
+          box-shadow: 4px 4px 8px #050505, -4px -4px 8px #191919;
+          transform: translateY(2px);
+        }
+      `}</style>
+    </div>
   );
 }
