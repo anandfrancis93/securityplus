@@ -414,8 +414,7 @@ export async function resetUserProgress(userId: string): Promise<void> {
       estimatedAbility: 0,
       lastUpdated: Date.now(),
       quizHistory: [],
-      topicPerformance: {},  // Clear topic review schedule
-      domainPerformance: {}, // Clear domain performance
+      topicPerformance: {},    // Clear topic review schedule
       quizMetadata: undefined, // Clear quiz metadata (FSRS data)
       cachedQuiz: undefined,   // Clear any cached questions
       // Complete reset - all fields explicitly cleared
