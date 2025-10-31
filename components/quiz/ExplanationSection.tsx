@@ -34,6 +34,57 @@ export default function ExplanationSection({
     ? selectedAnswers
     : selectedAnswer !== null ? [selectedAnswer] : [];
 
+  // Auto-correct misaligned explanations by matching them to the right options
+  const reorderExplanations = (explanations: string[]): string[] => {
+    if (!explanations || explanations.length !== 4) return explanations;
+
+    const reordered: string[] = [...explanations];
+    const used: boolean[] = new Array(4).fill(false);
+
+    // For each option, find the explanation that best matches it
+    for (let optionIdx = 0; optionIdx < 4; optionIdx++) {
+      const option = question.options[optionIdx]?.toLowerCase() || '';
+      const optionKeywords = option.split(/\s+/).filter(word => word.length > 4);
+
+      let bestMatchIdx = optionIdx; // Default to same index
+      let bestMatchScore = 0;
+
+      // Check all unused explanations
+      for (let expIdx = 0; expIdx < 4; expIdx++) {
+        if (used[expIdx]) continue;
+
+        const explanation = explanations[expIdx]?.toLowerCase() || '';
+
+        // Count how many keywords from the option appear in this explanation
+        let score = 0;
+        optionKeywords.forEach(keyword => {
+          if (explanation.includes(keyword)) score++;
+        });
+
+        // Bonus points if the explanation contains the first 15 chars of the option
+        if (explanation.includes(option.substring(0, Math.min(15, option.length)))) {
+          score += 10;
+        }
+
+        if (score > bestMatchScore) {
+          bestMatchScore = score;
+          bestMatchIdx = expIdx;
+        }
+      }
+
+      // Assign the best matching explanation to this option
+      reordered[optionIdx] = explanations[bestMatchIdx];
+      used[bestMatchIdx] = true;
+    }
+
+    return reordered;
+  };
+
+  // Get properly ordered explanations
+  const orderedExplanations = question.incorrectExplanations
+    ? reorderExplanations(question.incorrectExplanations)
+    : [];
+
   // Helper function to clean explanation text
   // Removes prefixes like "Correct:", "Incorrect:", "This option is correct", etc.
   const cleanExplanation = (text: string): string => {
@@ -48,7 +99,7 @@ export default function ExplanationSection({
   };
 
   // Helper function to check if explanation is valid (not a placeholder or too short)
-  const isValidExplanation = (text: string, optionIndex: number): boolean => {
+  const isValidExplanation = (text: string): boolean => {
     if (!text || text.trim() === '') return false;
 
     const cleaned = cleanExplanation(text).toLowerCase();
@@ -73,41 +124,6 @@ export default function ExplanationSection({
     // Check if explanation is too short (less than 10 characters after cleaning)
     if (cleaned.length < 10) {
       return false;
-    }
-
-    // Check if explanation mentions the EXACT text of OTHER options (indicating misalignment)
-    // This happens when AI generates explanations in wrong order
-    const currentOption = question.options[optionIndex]?.toLowerCase() || '';
-
-    for (let i = 0; i < question.options.length; i++) {
-      if (i === optionIndex) continue; // Skip the current option
-
-      const otherOption = question.options[i]?.toLowerCase() || '';
-
-      // Extract the core meaningful part of the option (remove common words)
-      const commonWords = ['the', 'and', 'for', 'with', 'this', 'that', 'from', 'have', 'been', 'will'];
-      const otherOptionWords = otherOption.split(/\s+/)
-        .filter(word => word.length > 3 && !commonWords.includes(word));
-
-      // Check if the explanation contains the FULL option text or most of the unique words
-      // Only flag as misaligned if it's clearly describing a different option
-      const fullOptionInExplanation = cleaned.includes(otherOption.substring(0, Math.min(20, otherOption.length)));
-
-      // Count how many unique words from the other option appear consecutively
-      const consecutiveMatches = otherOptionWords.filter((word, idx) => {
-        if (idx === 0) return cleaned.includes(word);
-        // Check if this word appears near the previous word
-        const prevWord = otherOptionWords[idx - 1];
-        const pattern = new RegExp(`${prevWord}.*${word}`, 'i');
-        return pattern.test(cleaned);
-      }).length;
-
-      // If the explanation contains the full option text or 3+ consecutive words from another option,
-      // it's clearly describing the wrong option
-      if (fullOptionInExplanation || consecutiveMatches >= 3) {
-        console.warn(`[ExplanationSection] Detected misaligned explanation for option ${optionIndex}: clearly describes option ${i}`);
-        return false;
-      }
     }
 
     return true;
@@ -217,12 +233,12 @@ export default function ExplanationSection({
           </p>
 
           {/* Show explanation for ALL options (correct first, then A-D order for incorrect) */}
-          {question.incorrectExplanations && question.incorrectExplanations.length === 4 ? (
+          {orderedExplanations && orderedExplanations.length === 4 ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               {/* Show correct answer explanations first */}
               {correctAnswers.map((index) => {
-                const explanation = question.incorrectExplanations[index];
-                if (!isValidExplanation(explanation, index)) return null;
+                const explanation = orderedExplanations[index];
+                if (!isValidExplanation(explanation)) return null;
 
                 return (
                   <div key={`correct-${index}`} style={{ fontSize: '16px' }}>
@@ -249,13 +265,13 @@ export default function ExplanationSection({
               })}
 
               {/* Then show incorrect answer explanations in A-D order */}
-              {question.incorrectExplanations.map((explanation, index) => {
+              {orderedExplanations.map((explanation, index) => {
                 // Skip if this is a correct answer or if explanation is invalid
                 const isCorrectAnswer = correctAnswers.includes(index);
                 const wasSelectedByUser = userSelectedAnswers.includes(index);
                 const isWrongSelection = wasSelectedByUser && !isCorrectAnswer;
 
-                if (isCorrectAnswer || !isValidExplanation(explanation, index)) {
+                if (isCorrectAnswer || !isValidExplanation(explanation)) {
                   return null;
                 }
 
