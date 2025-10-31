@@ -1201,18 +1201,18 @@ export default function Quiz() {
         .content-container {
           max-width: 1280px;
           margin: 0 auto;
-          padding: 0 24px;
+          padding: 0 24px 80px 24px;
         }
 
         @media (min-width: 640px) {
           .content-container {
-            padding: 0 32px;
+            padding: 0 32px 80px 32px;
           }
         }
 
         @media (min-width: 1024px) {
           .content-container {
-            padding: 0 48px;
+            padding: 0 48px 80px 48px;
           }
         }
 
@@ -1751,7 +1751,6 @@ export default function Quiz() {
         /* End Quiz Button */
         .end-quiz-container {
           margin-top: 80px;
-          margin-bottom: 80px;
           text-align: center;
         }
 
