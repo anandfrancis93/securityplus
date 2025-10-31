@@ -426,9 +426,14 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             alignItems: 'center',
             justifyContent: 'space-between',
             textAlign: 'left',
-            background: 'none',
+            background: '#0f0f0f',
             border: 'none',
-            cursor: 'pointer'
+            borderRadius: '24px',
+            boxShadow: isAbilityGraphOpen
+              ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+              : '6px 6px 12px #050505, -6px -6px 12px #191919',
+            cursor: 'pointer',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
           }}
         >
           <h3 style={{
@@ -537,9 +542,14 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             alignItems: 'center',
             justifyContent: 'space-between',
             textAlign: 'left',
-            background: 'none',
+            background: '#0f0f0f',
             border: 'none',
-            cursor: 'pointer'
+            borderRadius: '24px',
+            boxShadow: isPredictedScoreGraphOpen
+              ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+              : '6px 6px 12px #050505, -6px -6px 12px #191919',
+            cursor: 'pointer',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
           }}
         >
           <h3 style={{
@@ -650,9 +660,14 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             alignItems: 'center',
             justifyContent: 'space-between',
             textAlign: 'left',
-            background: 'none',
+            background: '#0f0f0f',
             border: 'none',
-            cursor: 'pointer'
+            borderRadius: '24px',
+            boxShadow: isAccuracyByDifficultyOpen
+              ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+              : '6px 6px 12px #050505, -6px -6px 12px #191919',
+            cursor: 'pointer',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
           }}
         >
           <h3 style={{
@@ -731,9 +746,14 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               alignItems: 'center',
               justifyContent: 'space-between',
               textAlign: 'left',
-              background: 'none',
+              background: '#0f0f0f',
               border: 'none',
-              cursor: 'pointer'
+              borderRadius: '24px',
+              boxShadow: isPerformanceByDomainOpen
+                ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+                : '6px 6px 12px #050505, -6px -6px 12px #191919',
+              cursor: 'pointer',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           >
             <h3 style={{
@@ -810,9 +830,14 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             alignItems: 'center',
             justifyContent: 'space-between',
             textAlign: 'left',
-            background: 'none',
+            background: '#0f0f0f',
             border: 'none',
-            cursor: 'pointer'
+            borderRadius: '24px',
+            boxShadow: isTopicCoverageOpen
+              ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+              : '6px 6px 12px #050505, -6px -6px 12px #191919',
+            cursor: 'pointer',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
           }}
         >
           <h3 style={{
