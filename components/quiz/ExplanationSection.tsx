@@ -41,10 +41,14 @@ export default function ExplanationSection({
     const reordered: string[] = [...explanations];
     const used: boolean[] = new Array(4).fill(false);
 
+    console.log('[ExplanationSection] Original explanations order:', explanations.map((e, i) => `${i}: ${e.substring(0, 50)}...`));
+
     // For each option, find the explanation that best matches it
     for (let optionIdx = 0; optionIdx < 4; optionIdx++) {
       const option = question.options[optionIdx]?.toLowerCase() || '';
       const optionKeywords = option.split(/\s+/).filter(word => word.length > 4);
+
+      console.log(`[ExplanationSection] Matching option ${optionIdx}: "${question.options[optionIdx]}" (keywords: ${optionKeywords.join(', ')})`);
 
       let bestMatchIdx = optionIdx; // Default to same index
       let bestMatchScore = 0;
@@ -62,9 +66,12 @@ export default function ExplanationSection({
         });
 
         // Bonus points if the explanation contains the first 15 chars of the option
-        if (explanation.includes(option.substring(0, Math.min(15, option.length)))) {
+        const first15 = option.substring(0, Math.min(15, option.length));
+        if (explanation.includes(first15)) {
           score += 10;
         }
+
+        console.log(`  Explanation ${expIdx}: score=${score} (first15="${first15}" found=${explanation.includes(first15)})`);
 
         if (score > bestMatchScore) {
           bestMatchScore = score;
@@ -72,10 +79,14 @@ export default function ExplanationSection({
         }
       }
 
+      console.log(`  → Best match: explanation ${bestMatchIdx} with score ${bestMatchScore}`);
+
       // Assign the best matching explanation to this option
       reordered[optionIdx] = explanations[bestMatchIdx];
       used[bestMatchIdx] = true;
     }
+
+    console.log('[ExplanationSection] Reordered explanations:', reordered.map((e, i) => `${i}: ${e.substring(0, 50)}...`));
 
     return reordered;
   };
