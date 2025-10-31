@@ -1107,7 +1107,6 @@ export default function Quiz() {
             showExplanation={showExplanation}
             selectedAnswer={currentQuestion.questionType === 'single' ? selectedAnswer : null}
             selectedAnswers={currentQuestion.questionType === 'multiple' ? selectedAnswers : []}
-            liquidGlass={liquidGlass}
             onAnswerSelect={handleAnswerSelect}
           />
 

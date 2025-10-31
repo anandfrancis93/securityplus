@@ -198,7 +198,6 @@ export default function QuizReviewPage() {
                   showExplanation={true}
                   selectedAnswer={question.questionType === 'single' ? (userAnswers[0] ?? null) : null}
                   selectedAnswers={question.questionType === 'multiple' ? userAnswers : []}
-                  liquidGlass={liquidGlass}
                 />
 
                 {/* Explanation Section */}
