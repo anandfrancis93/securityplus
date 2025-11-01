@@ -296,6 +296,12 @@ function validateExplanations(
         pattern: /\b(correct|right|appropriate|suitable|best (option|answer|choice))\b/,
         shouldMatch: isCorrectOption,
         issue: `Option ${i} is ${isCorrectOption ? 'CORRECT' : 'INCORRECT'} but explanation says it's ${isCorrectOption ? 'correct' : 'wrong'}`
+      },
+      // Explanation criticizes with negative phrases (for correct answers)
+      {
+        pattern: /\b(fails? to|lacks?|doesn't (address|provide|meet|include|ensure)|does not (address|provide|meet|include|ensure)|unable to|cannot|insufficient|inadequate)\b/,
+        shouldMatch: !isCorrectOption,
+        issue: `Option ${i} is ${isCorrectOption ? 'CORRECT' : 'INCORRECT'} but explanation uses negative criticism like "${explanation.match(/\b(fails? to|lacks?|doesn't (address|provide|meet|include|ensure)|does not (address|provide|meet|include|ensure)|unable to|cannot|insufficient|inadequate)\b/)?.[0]}"`
       }
     ];
 
