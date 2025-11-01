@@ -668,7 +668,7 @@ export default function QuizPerformance() {
 
             {hasEnoughQuestions ? (
               <>
-                <div className="score-display group relative cursor-help">
+                <div className="score-display" style={{ position: 'relative', cursor: 'help' }}>
                   {/* Score Range Display */}
                   {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
                     <>
@@ -1000,7 +1000,7 @@ export default function QuizPerformance() {
                 marginBottom: '1rem',
                 letterSpacing: '-0.025em'
               }}>Accuracy</div>
-              <div className="accuracy-display group relative cursor-help">
+              <div className="accuracy-display" style={{ position: 'relative', cursor: 'help' }}>
                 <div style={{
                   fontSize: 'clamp(3rem, 8vw, 4rem)',
                   fontWeight: 'bold',
@@ -1160,7 +1160,7 @@ export default function QuizPerformance() {
                           color: '#e5e5e5',
                           letterSpacing: '-0.025em'
                         }}>Ability Level</h4>
-                        <div className="ability-display group relative cursor-help">
+                        <div className="ability-display" style={{ position: 'relative', cursor: 'help' }}>
                           {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
                             <>
                               <div style={{
