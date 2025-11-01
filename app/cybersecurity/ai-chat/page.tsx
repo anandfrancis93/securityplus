@@ -7,6 +7,8 @@ import Header from '@/components/Header';
 import { authenticatedPost } from '@/lib/apiClient';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { db } from '@/lib/firebase';
+import { collection, doc, setDoc, getDoc, getDocs, deleteDoc, query, orderBy } from 'firebase/firestore';
 
 interface Message {
   id: string;
@@ -15,14 +17,26 @@ interface Message {
   timestamp: number;
 }
 
+interface ChatSession {
+  id: string;
+  title: string;
+  messages: Message[];
+  createdAt: number;
+  updatedAt: number;
+}
+
 export default function AIChatPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useApp();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [currentChatId, setCurrentChatId] = useState<string | null>(null);
+  const [chatHistory, setChatHistory] = useState<ChatSession[]>([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -30,6 +44,13 @@ export default function AIChatPage() {
       router.push('/');
     }
   }, [user, authLoading, router]);
+
+  // Load chat history on mount
+  useEffect(() => {
+    if (user) {
+      loadChatHistory();
+    }
+  }, [user]);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -44,6 +65,135 @@ export default function AIChatPage() {
     }
   }, [inputValue]);
 
+  // Close sidebar when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        const target = event.target as HTMLElement;
+        // Don't close if clicking the toggle button
+        if (!target.closest('.sidebar-toggle-button')) {
+          setSidebarOpen(false);
+        }
+      }
+    }
+
+    if (sidebarOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [sidebarOpen]);
+
+  // Generate chat title from first user message
+  const generateChatTitle = (firstMessage: string): string => {
+    const maxLength = 30;
+    if (firstMessage.length <= maxLength) {
+      return firstMessage;
+    }
+    return firstMessage.substring(0, maxLength) + '...';
+  };
+
+  // Load all chat sessions from Firestore
+  const loadChatHistory = async () => {
+    if (!user) return;
+
+    try {
+      const chatsRef = collection(db, 'users', user.uid, 'aiChats');
+      const q = query(chatsRef, orderBy('updatedAt', 'desc'));
+      const querySnapshot = await getDocs(q);
+
+      const chats: ChatSession[] = [];
+      querySnapshot.forEach((doc) => {
+        chats.push({ id: doc.id, ...doc.data() } as ChatSession);
+      });
+
+      setChatHistory(chats);
+    } catch (error) {
+      console.error('Error loading chat history:', error);
+    }
+  };
+
+  // Save current chat to Firestore
+  const saveCurrentChat = async (newMessages: Message[]) => {
+    if (!user || newMessages.length === 0) return;
+
+    try {
+      const chatId = currentChatId || Date.now().toString();
+      const firstUserMessage = newMessages.find(m => m.role === 'user');
+      const title = firstUserMessage ? generateChatTitle(firstUserMessage.content) : 'New Chat';
+
+      const chatData: ChatSession = {
+        id: chatId,
+        title,
+        messages: newMessages,
+        createdAt: currentChatId ? chatHistory.find(c => c.id === currentChatId)?.createdAt || Date.now() : Date.now(),
+        updatedAt: Date.now(),
+      };
+
+      const chatRef = doc(db, 'users', user.uid, 'aiChats', chatId);
+      await setDoc(chatRef, chatData);
+
+      if (!currentChatId) {
+        setCurrentChatId(chatId);
+      }
+
+      // Reload chat history to update sidebar
+      await loadChatHistory();
+    } catch (error) {
+      console.error('Error saving chat:', error);
+    }
+  };
+
+  // Load a specific chat
+  const loadChat = async (chatId: string) => {
+    if (!user) return;
+
+    try {
+      const chatRef = doc(db, 'users', user.uid, 'aiChats', chatId);
+      const chatDoc = await getDoc(chatRef);
+
+      if (chatDoc.exists()) {
+        const chatData = chatDoc.data() as ChatSession;
+        setMessages(chatData.messages);
+        setCurrentChatId(chatId);
+        setSidebarOpen(false);
+      }
+    } catch (error) {
+      console.error('Error loading chat:', error);
+    }
+  };
+
+  // Delete a chat
+  const deleteChat = async (chatId: string, event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent loading the chat when clicking delete
+
+    if (!user) return;
+    if (!confirm('Are you sure you want to delete this chat?')) return;
+
+    try {
+      const chatRef = doc(db, 'users', user.uid, 'aiChats', chatId);
+      await deleteDoc(chatRef);
+
+      // If deleting current chat, start a new one
+      if (chatId === currentChatId) {
+        createNewChat();
+      }
+
+      // Reload chat history
+      await loadChatHistory();
+    } catch (error) {
+      console.error('Error deleting chat:', error);
+    }
+  };
+
+  // Create a new chat
+  const createNewChat = () => {
+    setMessages([]);
+    setCurrentChatId(null);
+    setSidebarOpen(false);
+  };
+
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
 
@@ -54,14 +204,15 @@ export default function AIChatPage() {
       timestamp: Date.now(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
     setInputValue('');
     setIsLoading(true);
 
     try {
       // Call AI chat API with full conversation history using authenticated request
       const data = await authenticatedPost('/api/ai-chat', {
-        messages: [...messages, userMessage].map(msg => ({
+        messages: updatedMessages.map(msg => ({
           role: msg.role,
           content: msg.content
         })),
@@ -75,7 +226,11 @@ export default function AIChatPage() {
         timestamp: Date.now(),
       };
 
-      setMessages((prev) => [...prev, aiMessage]);
+      const finalMessages = [...updatedMessages, aiMessage];
+      setMessages(finalMessages);
+
+      // Auto-save chat after AI response
+      await saveCurrentChat(finalMessages);
     } catch (error) {
       console.error('Error sending message:', error);
       const errorMessage: Message = {
@@ -126,6 +281,88 @@ export default function AIChatPage() {
       <div className="chat-header">
         <Header />
       </div>
+
+      {/* Sidebar Toggle Button & New Chat Button */}
+      <div className="top-controls">
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="sidebar-toggle-button"
+          title="Chat History"
+        >
+          <svg
+            className="sidebar-toggle-icon"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+          </svg>
+        </button>
+
+        <button
+          onClick={createNewChat}
+          className="new-chat-button"
+          title="New Chat"
+        >
+          <svg
+            className="new-chat-icon"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          <span className="new-chat-text">New Chat</span>
+        </button>
+      </div>
+
+      {/* Chat History Sidebar */}
+      {sidebarOpen && (
+        <div ref={sidebarRef} className="chat-sidebar">
+          <div className="sidebar-header">
+            <h3 className="sidebar-title">Chat History</h3>
+          </div>
+          <div className="sidebar-content">
+            {chatHistory.length === 0 ? (
+              <p className="sidebar-empty">No chat history yet</p>
+            ) : (
+              <div className="chat-list">
+                {chatHistory.map((chat) => (
+                  <div
+                    key={chat.id}
+                    onClick={() => loadChat(chat.id)}
+                    className={`chat-item ${chat.id === currentChatId ? 'chat-item-active' : ''}`}
+                  >
+                    <div className="chat-item-content">
+                      <div className="chat-item-title">{chat.title}</div>
+                      <div className="chat-item-date">
+                        {new Date(chat.updatedAt).toLocaleDateString()}
+                      </div>
+                    </div>
+                    <button
+                      onClick={(e) => deleteChat(chat.id, e)}
+                      className="chat-item-delete"
+                      title="Delete chat"
+                    >
+                      <svg
+                        className="delete-icon"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Chat Area */}
       <div className="chat-content">
@@ -221,12 +458,202 @@ export default function AIChatPage() {
           flex-direction: column;
           background: #0f0f0f;
           color: #e5e5e5;
+          position: relative;
         }
 
         .chat-header {
           padding-top: 32px;
           padding-bottom: 16px;
           flex-shrink: 0;
+        }
+
+        /* Top Controls */
+        .top-controls {
+          display: flex;
+          gap: 12px;
+          padding: 0 clamp(20px, 4vw, 48px);
+          margin-bottom: 16px;
+          max-width: 1280px;
+          width: 100%;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .sidebar-toggle-button {
+          padding: 12px;
+          background: #0f0f0f;
+          box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+          border-radius: 12px;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          border: none;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .sidebar-toggle-button:hover {
+          box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #191919;
+        }
+
+        .sidebar-toggle-icon {
+          width: 20px;
+          height: 20px;
+          color: #8b5cf6;
+        }
+
+        .new-chat-button {
+          padding: 12px 20px;
+          background: #0f0f0f;
+          box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+          border-radius: 12px;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          border: none;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #e5e5e5;
+          font-size: 14px;
+          font-weight: 600;
+        }
+
+        .new-chat-button:hover {
+          box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #191919;
+        }
+
+        .new-chat-icon {
+          width: 20px;
+          height: 20px;
+          color: #10b981;
+        }
+
+        .new-chat-text {
+          display: none;
+        }
+
+        @media (min-width: 640px) {
+          .new-chat-text {
+            display: inline;
+          }
+        }
+
+        /* Chat Sidebar */
+        .chat-sidebar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          height: 100vh;
+          width: clamp(280px, 80vw, 360px);
+          background: #0f0f0f;
+          box-shadow: 12px 0 24px rgba(0, 0, 0, 0.5);
+          z-index: 100;
+          display: flex;
+          flex-direction: column;
+          animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+          from {
+            transform: translateX(-100%);
+          }
+          to {
+            transform: translateX(0);
+          }
+        }
+
+        .sidebar-header {
+          padding: 32px 24px 24px;
+          border-bottom: 1px solid #1a1a1a;
+        }
+
+        .sidebar-title {
+          font-size: 24px;
+          font-weight: bold;
+          color: #e5e5e5;
+          margin: 0;
+        }
+
+        .sidebar-content {
+          flex: 1;
+          overflow-y: auto;
+          padding: 16px;
+        }
+
+        .sidebar-empty {
+          text-align: center;
+          color: #666666;
+          padding: 40px 20px;
+          font-size: 14px;
+        }
+
+        .chat-list {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .chat-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px;
+          background: #0f0f0f;
+          box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+          border-radius: 12px;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          gap: 12px;
+        }
+
+        .chat-item:hover {
+          box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #191919;
+        }
+
+        .chat-item-active {
+          border: 2px solid #8b5cf6;
+        }
+
+        .chat-item-content {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .chat-item-title {
+          font-size: 14px;
+          font-weight: 600;
+          color: #e5e5e5;
+          margin-bottom: 4px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .chat-item-date {
+          font-size: 12px;
+          color: #a8a8a8;
+        }
+
+        .chat-item-delete {
+          padding: 8px;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          border-radius: 8px;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .chat-item-delete:hover {
+          background: #1a1a1a;
+        }
+
+        .delete-icon {
+          width: 16px;
+          height: 16px;
+          color: #f43f5e;
         }
 
         .chat-content {
@@ -578,6 +1005,10 @@ export default function AIChatPage() {
           }
 
           .chat-input-wrapper {
+            max-width: 1600px;
+          }
+
+          .top-controls {
             max-width: 1600px;
           }
         }
