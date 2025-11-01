@@ -699,16 +699,32 @@ export default function QuizPerformance() {
                         </span>
                       </div>
                       {/* Hover tooltip */}
-                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 bg-slate-900/95 backdrop-blur-xl border border-violet-500/30 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_0.6s_ease-in-out_forwards]">
-                        <div className="space-y-1 text-sm text-slate-300">
+                      <div className="score-tooltip" style={{
+                        position: 'absolute',
+                        bottom: '100%',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        marginBottom: '0.5rem',
+                        width: '16rem',
+                        background: '#0f0f0f',
+                        borderRadius: '1.5rem',
+                        boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+                        padding: '1rem',
+                        zIndex: 50,
+                        pointerEvents: 'none',
+                        opacity: 0,
+                        transition: 'opacity 0.3s ease, transform 0.3s ease',
+                        border: '1px solid rgba(139, 92, 246, 0.2)'
+                      }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.875rem', color: '#a8a8a8' }}>
                           <div>
-                            <span className="text-green-400 font-medium">Green:</span> 750 - 900
+                            <span style={{ color: '#10b981', fontWeight: '600' }}>Green:</span> 750 - 900
                           </div>
                           <div>
-                            <span className="text-yellow-400 font-medium">Yellow:</span> 600 - 749
+                            <span style={{ color: '#f59e0b', fontWeight: '600' }}>Yellow:</span> 600 - 749
                           </div>
                           <div>
-                            <span className="text-red-400 font-medium">Red:</span> 100 - 599
+                            <span style={{ color: '#f43f5e', fontWeight: '600' }}>Red:</span> 100 - 599
                           </div>
                         </div>
                       </div>
@@ -735,16 +751,32 @@ export default function QuizPerformance() {
                         Point Estimate (need more data for CI)
                       </div>
                       {/* Hover tooltip */}
-                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 bg-slate-900/95 backdrop-blur-xl border border-violet-500/30 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_0.6s_ease-in-out_forwards]">
-                        <div className="space-y-1 text-sm text-slate-300">
+                      <div className="score-tooltip" style={{
+                        position: 'absolute',
+                        bottom: '100%',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        marginBottom: '0.5rem',
+                        width: '16rem',
+                        background: '#0f0f0f',
+                        borderRadius: '1.5rem',
+                        boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+                        padding: '1rem',
+                        zIndex: 50,
+                        pointerEvents: 'none',
+                        opacity: 0,
+                        transition: 'opacity 0.3s ease, transform 0.3s ease',
+                        border: '1px solid rgba(139, 92, 246, 0.2)'
+                      }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.875rem', color: '#a8a8a8' }}>
                           <div>
-                            <span className="text-green-400 font-medium">Green:</span> 750 - 900
+                            <span style={{ color: '#10b981', fontWeight: '600' }}>Green:</span> 750 - 900
                           </div>
                           <div>
-                            <span className="text-yellow-400 font-medium">Yellow:</span> 600 - 749
+                            <span style={{ color: '#f59e0b', fontWeight: '600' }}>Yellow:</span> 600 - 749
                           </div>
                           <div>
-                            <span className="text-red-400 font-medium">Red:</span> 100 - 599
+                            <span style={{ color: '#f43f5e', fontWeight: '600' }}>Red:</span> 100 - 599
                           </div>
                         </div>
                       </div>
@@ -1156,8 +1188,23 @@ export default function QuizPerformance() {
                                 </span>
                               </div>
                               {/* Hover tooltip */}
-                              <div className="absolute bottom-full left-0 mb-2 w-64 bg-slate-900/95 backdrop-blur-xl border border-violet-500/30 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_0.6s_ease-in-out_forwards]">
-                                <p className="text-sm text-slate-300 leading-relaxed">Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
+                              <div className="ability-tooltip" style={{
+                                position: 'absolute',
+                                bottom: '100%',
+                                left: '0',
+                                marginBottom: '0.5rem',
+                                width: '16rem',
+                                background: '#0f0f0f',
+                                borderRadius: '1.5rem',
+                                boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+                                padding: '1rem',
+                                zIndex: 50,
+                                pointerEvents: 'none',
+                                opacity: 0,
+                                transition: 'opacity 0.3s ease, transform 0.3s ease',
+                                border: '1px solid rgba(139, 92, 246, 0.2)'
+                              }}>
+                                <p style={{ fontSize: '0.875rem', color: '#a8a8a8', lineHeight: '1.5' }}>Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
                               </div>
                             </>
                           ) : (
@@ -1173,8 +1220,23 @@ export default function QuizPerformance() {
                                 {estimatedAbility.toFixed(2)}
                               </div>
                               {/* Hover tooltip */}
-                              <div className="absolute bottom-full left-0 mb-2 w-64 bg-slate-900/95 backdrop-blur-xl border border-violet-500/30 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_0.6s_ease-in-out_forwards]">
-                                <p className="text-sm text-slate-300 leading-relaxed">Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
+                              <div className="ability-tooltip" style={{
+                                position: 'absolute',
+                                bottom: '100%',
+                                left: '0',
+                                marginBottom: '0.5rem',
+                                width: '16rem',
+                                background: '#0f0f0f',
+                                borderRadius: '1.5rem',
+                                boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+                                padding: '1rem',
+                                zIndex: 50,
+                                pointerEvents: 'none',
+                                opacity: 0,
+                                transition: 'opacity 0.3s ease, transform 0.3s ease',
+                                border: '1px solid rgba(139, 92, 246, 0.2)'
+                              }}>
+                                <p style={{ fontSize: '0.875rem', color: '#a8a8a8', lineHeight: '1.5' }}>Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
                               </div>
                             </>
                           )}
@@ -1451,9 +1513,9 @@ export default function QuizPerformance() {
           }
         }
 
-        .score-display:hover .tooltip,
-        .accuracy-display:hover .tooltip,
-        .ability-display:hover .tooltip {
+        .score-display:hover .score-tooltip,
+        .ability-display:hover .ability-tooltip,
+        .accuracy-display:hover .tooltip {
           opacity: 1;
         }
 
@@ -1468,6 +1530,8 @@ export default function QuizPerformance() {
         }
 
         @media (max-width: 768px) {
+          .score-tooltip,
+          .ability-tooltip,
           .tooltip {
             left: 50%;
             right: auto;
