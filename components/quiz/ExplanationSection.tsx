@@ -43,35 +43,83 @@ export default function ExplanationSection({
 
     console.log('[ExplanationSection] Original explanations order:', explanations.map((e, i) => `${i}: ${e.substring(0, 50)}...`));
 
+    // Determine if each option is correct
+    const isCorrectOption = (idx: number): boolean => {
+      return correctAnswers.includes(idx);
+    };
+
+    // Check if explanation indicates correctness
+    const explanationIndicatesCorrect = (exp: string): boolean => {
+      const lower = exp.toLowerCase();
+      // Check for "this is correct" type phrases
+      return lower.includes('this is correct') ||
+             lower.includes('this option is correct') ||
+             lower.match(/^correct[:\s]/i) !== null;
+    };
+
+    const explanationIndicatesIncorrect = (exp: string): boolean => {
+      const lower = exp.toLowerCase();
+      // Check for "this is incorrect" type phrases
+      return lower.includes('this is incorrect') ||
+             lower.includes('this option is incorrect') ||
+             lower.includes('this is wrong') ||
+             lower.match(/^incorrect[:\s]/i) !== null;
+    };
+
     // For each option, find the explanation that best matches it
     for (let optionIdx = 0; optionIdx < 4; optionIdx++) {
       const option = question.options[optionIdx]?.toLowerCase() || '';
       const optionKeywords = option.split(/\s+/).filter(word => word.length > 4);
+      const isCorrect = isCorrectOption(optionIdx);
 
-      console.log(`[ExplanationSection] Matching option ${optionIdx}: "${question.options[optionIdx]}" (keywords: ${optionKeywords.join(', ')})`);
+      console.log(`[ExplanationSection] Matching option ${optionIdx}: "${question.options[optionIdx]}" (correct: ${isCorrect}, keywords: ${optionKeywords.join(', ')})`);
 
-      let bestMatchIdx = -1; // Will be set to first unused if no good matches found
-      let bestMatchScore = -1; // Start at -1 so any match (even 0) wins
+      let bestMatchIdx = -1;
+      let bestMatchScore = -1;
 
       // Check all unused explanations
       for (let expIdx = 0; expIdx < 4; expIdx++) {
         if (used[expIdx]) continue;
 
-        const explanation = explanations[expIdx]?.toLowerCase() || '';
+        const explanation = explanations[expIdx] || '';
+        const explanationLower = explanation.toLowerCase();
+
+        let score = 0;
+
+        // CRITICAL: Check correct/incorrect alignment (highest priority)
+        const expIndicatesCorrect = explanationIndicatesCorrect(explanation);
+        const expIndicatesIncorrect = explanationIndicatesIncorrect(explanation);
+
+        if (isCorrect && expIndicatesCorrect) {
+          // Correct option should match "this is correct" explanation
+          score += 1000; // Very high priority
+          console.log(`  Explanation ${expIdx}: CORRECT MATCH (option is correct, exp says correct)`);
+        } else if (!isCorrect && expIndicatesIncorrect) {
+          // Incorrect option should match "this is incorrect" explanation
+          score += 1000; // Very high priority
+          console.log(`  Explanation ${expIdx}: CORRECT MATCH (option is incorrect, exp says incorrect)`);
+        } else if (isCorrect && expIndicatesIncorrect) {
+          // MISMATCH: correct option with "incorrect" explanation
+          score -= 10000; // Massive penalty
+          console.log(`  Explanation ${expIdx}: MISMATCH (option is correct but exp says incorrect)`);
+        } else if (!isCorrect && expIndicatesCorrect) {
+          // MISMATCH: incorrect option with "correct" explanation
+          score -= 10000; // Massive penalty
+          console.log(`  Explanation ${expIdx}: MISMATCH (option is incorrect but exp says correct)`);
+        }
 
         // Count how many keywords from the option appear in this explanation
-        let score = 0;
         optionKeywords.forEach(keyword => {
-          if (explanation.includes(keyword)) score++;
+          if (explanationLower.includes(keyword)) score += 1;
         });
 
         // Bonus points if the explanation contains the first 15 chars of the option
         const first15 = option.substring(0, Math.min(15, option.length));
-        if (explanation.includes(first15)) {
+        if (explanationLower.includes(first15)) {
           score += 10;
         }
 
-        console.log(`  Explanation ${expIdx}: score=${score} (first15="${first15}" found=${explanation.includes(first15)})`);
+        console.log(`  Explanation ${expIdx}: total score=${score}`);
 
         if (score > bestMatchScore) {
           bestMatchScore = score;
