@@ -36,6 +36,12 @@ export default function QuestionCard({
     }
   };
 
+  // Strip letter prefix (A. B. C. D.) from option text for display
+  // Letters are kept internally for AI generation and validation
+  const stripLetterPrefix = (option: string): string => {
+    return option.replace(/^[A-D]\.\s*/, '');
+  };
+
   return (
     <div className="question-card-container" style={{
       position: 'relative',
@@ -154,56 +160,67 @@ export default function QuestionCard({
               }}
             >
               <div style={{ display: 'flex', alignItems: 'flex-start', width: '100%', gap: '16px' }}>
-                {/* Checkbox or Radio indicator */}
-                {question.questionType === 'multiple' ? (
-                  <div style={{
-                    width: showExplanation ? '28px' : '36px',
-                    height: showExplanation ? '28px' : '36px',
-                    borderRadius: '12px',
-                    border: '2px solid #666666',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    flexShrink: 0,
-                    backgroundColor: isSelected ? '#0f0f0f' : 'transparent',
-                    boxShadow: isSelected
-                      ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
-                      : '6px 6px 12px #050505, -6px -6px 12px #191919',
-                    borderColor: isSelected ? '#a8a8a8' : '#666666',
-                  }}>
-                    {isSelected && <span style={{
-                      color: '#e5e5e5',
-                      fontSize: showExplanation ? '16px' : '20px',
-                      fontWeight: 'bold',
-                    }}>✓</span>}
-                  </div>
-                ) : (
-                  <div style={{
-                    width: showExplanation ? '28px' : '36px',
-                    height: showExplanation ? '28px' : '36px',
-                    borderRadius: '50%',
-                    border: '2px solid #666666',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    flexShrink: 0,
-                    boxShadow: isSelected
-                      ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
-                      : '6px 6px 12px #050505, -6px -6px 12px #191919',
-                    borderColor: isSelected ? '#a8a8a8' : '#666666',
-                  }}>
-                    {isSelected && <div style={{
-                      width: showExplanation ? '16px' : '20px',
-                      height: showExplanation ? '16px' : '20px',
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
+                  {/* Checkbox or Radio indicator */}
+                  {question.questionType === 'multiple' ? (
+                    <div style={{
+                      width: showExplanation ? '28px' : '36px',
+                      height: showExplanation ? '28px' : '36px',
+                      borderRadius: '12px',
+                      border: '2px solid #666666',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      flexShrink: 0,
+                      backgroundColor: isSelected ? '#0f0f0f' : 'transparent',
+                      boxShadow: isSelected
+                        ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+                        : '6px 6px 12px #050505, -6px -6px 12px #191919',
+                      borderColor: isSelected ? '#a8a8a8' : '#666666',
+                    }}>
+                      {isSelected && <span style={{
+                        color: '#e5e5e5',
+                        fontSize: showExplanation ? '16px' : '20px',
+                        fontWeight: 'bold',
+                      }}>✓</span>}
+                    </div>
+                  ) : (
+                    <div style={{
+                      width: showExplanation ? '28px' : '36px',
+                      height: showExplanation ? '28px' : '36px',
                       borderRadius: '50%',
-                      backgroundColor: '#e5e5e5',
-                      boxShadow: 'inset 2px 2px 4px #050505',
-                    }}></div>}
-                  </div>
-                )}
-                {/* Option text now includes letter prefix (A. B. C. D.) from AI generation */}
+                      border: '2px solid #666666',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      flexShrink: 0,
+                      boxShadow: isSelected
+                        ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+                        : '6px 6px 12px #050505, -6px -6px 12px #191919',
+                      borderColor: isSelected ? '#a8a8a8' : '#666666',
+                    }}>
+                      {isSelected && <div style={{
+                        width: showExplanation ? '16px' : '20px',
+                        height: showExplanation ? '16px' : '20px',
+                        borderRadius: '50%',
+                        backgroundColor: '#e5e5e5',
+                        boxShadow: 'inset 2px 2px 4px #050505',
+                      }}></div>}
+                    </div>
+                  )}
+                  {/* UI-generated letter label (A, B, C, D) based on display position */}
+                  <span style={{
+                    fontWeight: 'bold',
+                    fontSize: showExplanation ? '18px' : '20px',
+                    color: '#a8a8a8',
+                    flexShrink: 0,
+                  }}>
+                    {String.fromCharCode(65 + index)}.
+                  </span>
+                </div>
+                {/* Display option text with letter prefix stripped */}
                 <span style={{
                   color: '#e5e5e5',
                   fontSize: showExplanation ? '18px' : '16px',
@@ -212,7 +229,7 @@ export default function QuestionCard({
                   minWidth: 0,
                   wordBreak: 'break-word',
                 }}>
-                  {option}
+                  {stripLetterPrefix(option)}
                 </span>
               </div>
             </ButtonElement>
