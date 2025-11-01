@@ -261,7 +261,7 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
           margin: '8px 0',
         }} />
 
-        {/* AI Provider */}
+        {/* Cost - Compact with Tooltip */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
           <span style={{
             fontSize: '1.25rem',
@@ -269,123 +269,111 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
             color: '#a8a8a8',
             minWidth: '120px',
           }}>
-            AI Provider:
-          </span>
-          <span style={{
-            fontSize: '1.25rem',
-            fontWeight: 600,
-            color: '#8b5cf6',
-          }}>
-            {provider}
-          </span>
-        </div>
-
-        {/* Token Usage */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-          <span style={{
-            fontSize: '1.25rem',
-            fontWeight: 600,
-            color: '#a8a8a8',
-            minWidth: '120px',
-            flexShrink: 0,
-          }}>
-            Tokens:
-          </span>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <span style={{
-                fontSize: '1.25rem',
-                fontWeight: 600,
-                color: '#06b6d4',
-              }}>
-                Input:
-              </span>
-              <span style={{
-                fontSize: '1.25rem',
-                fontWeight: 600,
-                color: '#e5e5e5',
-              }}>
-                {costData.inputTokens.toLocaleString()} tokens
-              </span>
-            </div>
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <span style={{
-                fontSize: '1.25rem',
-                fontWeight: 600,
-                color: '#f59e0b',
-              }}>
-                Output:
-              </span>
-              <span style={{
-                fontSize: '1.25rem',
-                fontWeight: 600,
-                color: '#e5e5e5',
-              }}>
-                {costData.outputTokens.toLocaleString()} tokens
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Cost Breakdown */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-          <span style={{
-            fontSize: '1.25rem',
-            fontWeight: 600,
-            color: '#a8a8a8',
-            minWidth: '120px',
-            flexShrink: 0,
-          }}>
             Cost:
           </span>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <span style={{
-                fontSize: '1.25rem',
-                fontWeight: 600,
-                color: '#06b6d4',
-              }}>
-                Input:
-              </span>
-              <span style={{
-                fontSize: '1.25rem',
-                fontWeight: 600,
-                color: '#e5e5e5',
-              }}>
-                ${costData.inputCost.toFixed(6)}
-              </span>
-            </div>
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <span style={{
-                fontSize: '1.25rem',
-                fontWeight: 600,
-                color: '#f59e0b',
-              }}>
-                Output:
-              </span>
-              <span style={{
-                fontSize: '1.25rem',
-                fontWeight: 600,
-                color: '#e5e5e5',
-              }}>
-                ${costData.outputCost.toFixed(6)}
-              </span>
-            </div>
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', paddingTop: '0.25rem', borderTop: '1px solid #333' }}>
-              <span style={{
+          <div className="cost-container" style={{ position: 'relative', display: 'inline-block' }}>
+            <span
+              className="cost-value"
+              style={{
                 fontSize: '1.25rem',
                 fontWeight: 700,
                 color: '#10b981',
-              }}>
-                Total:
-              </span>
-              <span style={{
-                fontSize: '1.25rem',
-                fontWeight: 700,
-                color: '#10b981',
-              }}>
-                ${costData.totalCost.toFixed(6)}
-              </span>
+                cursor: 'help',
+                borderBottom: '1px dotted #10b981',
+              }}
+            >
+              ${costData.totalCost.toFixed(6)}
+            </span>
+            <div className="cost-tooltip" style={{
+              position: 'absolute',
+              bottom: '100%',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              marginBottom: '8px',
+              padding: '16px',
+              background: '#1a1a1a',
+              border: '1px solid #333',
+              borderRadius: '12px',
+              boxShadow: '0 8px 16px rgba(0, 0, 0, 0.6)',
+              opacity: 0,
+              visibility: 'hidden',
+              transition: 'opacity 0.2s, visibility 0.2s',
+              pointerEvents: 'none',
+              minWidth: '280px',
+              zIndex: 1000,
+            }}>
+              {/* Tooltip Arrow */}
+              <div style={{
+                position: 'absolute',
+                top: '100%',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: 0,
+                height: 0,
+                borderLeft: '8px solid transparent',
+                borderRight: '8px solid transparent',
+                borderTop: '8px solid #1a1a1a',
+              }} />
+
+              {/* Tooltip Content */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div>
+                  <div style={{ fontSize: '14px', fontWeight: 600, color: '#8b5cf6', marginBottom: '4px' }}>
+                    AI Provider
+                  </div>
+                  <div style={{ fontSize: '13px', color: '#e5e5e5' }}>
+                    {provider}
+                  </div>
+                </div>
+
+                <div style={{ height: '1px', background: '#333' }} />
+
+                <div>
+                  <div style={{ fontSize: '14px', fontWeight: 600, color: '#a8a8a8', marginBottom: '8px' }}>
+                    Token Usage
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <div style={{ fontSize: '13px', display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ color: '#06b6d4' }}>Input:</span>
+                      <span style={{ color: '#e5e5e5' }}>{costData.inputTokens.toLocaleString()} tokens</span>
+                    </div>
+                    <div style={{ fontSize: '13px', display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ color: '#f59e0b' }}>Output:</span>
+                      <span style={{ color: '#e5e5e5' }}>{costData.outputTokens.toLocaleString()} tokens</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ height: '1px', background: '#333' }} />
+
+                <div>
+                  <div style={{ fontSize: '14px', fontWeight: 600, color: '#a8a8a8', marginBottom: '8px' }}>
+                    Cost Breakdown
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <div style={{ fontSize: '13px', display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ color: '#06b6d4' }}>Input:</span>
+                      <span style={{ color: '#e5e5e5' }}>${costData.inputCost.toFixed(6)}</span>
+                    </div>
+                    <div style={{ fontSize: '13px', display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ color: '#f59e0b' }}>Output:</span>
+                      <span style={{ color: '#e5e5e5' }}>${costData.outputCost.toFixed(6)}</span>
+                    </div>
+                    <div style={{
+                      fontSize: '14px',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      paddingTop: '8px',
+                      marginTop: '4px',
+                      borderTop: '1px solid #333',
+                      fontWeight: 700,
+                    }}>
+                      <span style={{ color: '#10b981' }}>Total:</span>
+                      <span style={{ color: '#10b981' }}>${costData.totalCost.toFixed(6)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -402,6 +390,12 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
         .metadata-card {
           padding: clamp(20px, 4vw, 32px);
           margin-top: clamp(24px, 4vw, 48px);
+        }
+
+        /* Cost tooltip hover effect */
+        .cost-container:hover .cost-tooltip {
+          opacity: 1;
+          visibility: visible;
         }
 
         /* Tablet (768px+) */
