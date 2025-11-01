@@ -1,8 +1,25 @@
 # Security+ SY0-701 Learning Platform
 
-An AI-powered web application for CompTIA Security+ SY0-701 certification exam preparation featuring intelligent adaptive testing with FSRS-based topic scheduling, comprehensive performance analytics with confidence intervals, and flashcard study system with spaced repetition.
+An AI-powered Progressive Web App (PWA) for CompTIA Security+ SY0-701 certification exam preparation featuring intelligent adaptive testing with FSRS-based topic scheduling, comprehensive performance analytics with confidence intervals, AI-powered chat assistant, and flashcard study system with spaced repetition.
 
 ## Features
+
+### AI Chat Assistant (NEW)
+
+- **Grok 4 Fast Integration**: Powered by xAI's Grok-4-Fast-Non-Reasoning model for fast, accurate responses
+- **Official SY0-701 Syllabus**: Complete CompTIA Security+ exam structure with all 5 domains and objectives
+- **Structured Responses**: Formatted answers with numbered points, bullet lists, and markdown support
+- **Chat History Management**:
+  - Auto-save conversations to Firestore
+  - Load previous chats to continue conversations
+  - Delete chats with confirmation
+  - Auto-generated chat titles from first message
+  - Slide-in sidebar with all chat history
+- **Neomorphic Design**: Dark theme with soft shadows and purple accents
+- **Markdown Rendering**: Beautiful formatting for headings, code blocks, lists, and more
+- **Context-Aware**: Maintains full conversation history for contextual responses
+- **Mobile-First**: Responsive design from 320px to 4K displays
+- **Real-Time Streaming**: Instant responses with loading indicators
 
 ### Quiz Mode with Adaptive Testing & FSRS Scheduling
 
@@ -32,6 +49,7 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 - **Intelligent Score Prediction**: IRT-based ability estimation predicts your exam score (100-900 scale)
 - **Cross-Device Resume**: Quiz state saved to cloud, resume on any device
 - **Local Storage Backup**: Quiz auto-saved to localStorage for reliability
+- **Pause/Resume Question Generation**: Control over background question generation to manage API costs and battery usage
 
 ### Performance Analytics & Progress Tracking
 
@@ -53,12 +71,15 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
   - Due soon (coming up in next few quizzes)
   - Future topics (well-learned, long intervals)
 - **Quiz History**: Review all past quizzes with detailed breakdowns
+- **Quiz Review Page**: Review completed quizzes with full question details, explanations, and your answers
+- **Delete Quizzes**: Remove individual quizzes from history with automatic stat recalculation
 - **Export/Import Progress**: Backup and restore your performance data
   - Export all quiz history and performance metrics to JSON
   - Import with merge or replace options
   - Automatic recalculation of all metrics after import
 - **Confidence Intervals**: Wilson score intervals and IRT standard errors for statistical accuracy
 - **Cross-Session Topic Tracking**: Comprehensive tracking of performance across all SY0-701 topics with FSRS scheduling
+- **Recalculate Progress**: Recompute all performance metrics from quiz history
 
 ### Flashcard Mode with Spaced Repetition
 
@@ -80,31 +101,55 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 
 - **Google Sign-In**: Secure authentication via Google OAuth
 - **Anonymous Mode**: Try the app without signing in (data not persisted)
-- **Cloud Sync**: All progress and flashcards automatically saved to Firebase (Firestore + Storage)
+- **Cloud Sync**: All progress, flashcards, and chat history automatically saved to Firebase (Firestore + Storage)
 - **Comprehensive Progress Tracking**: Track answered questions, points earned, ability estimate, predicted exam score, and topic mastery
-- **Liquid Glass UI**: Modern, eye-friendly interface with glassmorphism design
+- **Neomorphic Dark UI**: Modern dark theme (#0f0f0f) with soft inset/outset shadows and purple accents (#8b5cf6)
+- **Responsive Design**: Mobile-first design with fluid typography using clamp() from 320px to 4K (3840px)
+- **Progressive Web App**: Installable on mobile devices with offline support
 - **Smart Question Management**: Never repeats previously answered questions within a quiz session
-- **Detailed Explanations**: Learn why correct answers are right and incorrect answers are wrong
+- **Detailed Explanations**: Learn why correct answers are right and incorrect answers are wrong with per-option explanations
 - **Question Metadata**: Each question shows domains, topics, difficulty, question type, and points
 - **Flexible Quiz Flow**: Save and end quiz anytime, resume later on any device
 - **Reset Progress**: Clear quiz progress with localStorage cleanup
-- **Quiz Review**: Review completed quizzes with full question details and your answers
-- **Delete Quizzes**: Remove individual quizzes from history with automatic stat recalculation
+- **Hamburger Menu**: Access AI Chat, Export/Import, Recalculate Progress, and Sign Out
 
 ## Tech Stack
 
-- **Frontend**: Next.js 15.5.6 (App Router), React 19, TypeScript, Tailwind CSS
+- **Frontend**: Next.js 15.5.6 (App Router), React 19, TypeScript
+- **Styling**: CSS-in-JS with styled-jsx (neomorphic dark theme)
 - **Charting**: Recharts 3.3.0 for data visualization
 - **AI**:
-  - xAI Grok (grok-4-fast-reasoning) - Question generation
-  - xAI Grok (grok-4-fast-non-reasoning) - Topic identification
-  - OpenAI text-embedding-3-small - Question similarity detection (deduplication)
+  - **Quiz Generation**: xAI Grok (grok-4-fast-reasoning) - Question generation
+  - **Topic Identification**: xAI Grok (grok-4-fast-non-reasoning) - Topic identification
+  - **AI Chat**: xAI Grok (grok-4-fast-non-reasoning) - Conversational assistant
+  - **Embeddings**: OpenAI text-embedding-3-small - Question similarity detection (deduplication)
 - **Backend**: Firebase (Firestore Database + Firebase Storage + Google Authentication)
 - **Image Hosting**: Firebase Storage with CORS configuration
 - **Spaced Repetition**: ts-fsrs 5.2.3 (FSRS algorithm for both flashcards and quiz topic scheduling)
+- **Markdown**: react-markdown + remark-gfm for rich text rendering in AI Chat
 - **Deployment**: Vercel with automatic CI/CD
+- **Authentication**: Firebase Auth with Google OAuth provider
 
 ## How It Works
+
+### AI Chat Assistant
+
+1. **Access**: Click "AI Chat" from hamburger menu
+2. **Ask Questions**: Type any Security+ or general question
+3. **Structured Responses**: AI provides formatted answers with:
+   - Clear introductory statement
+   - Numbered main points (1, 2, 3...)
+   - Bullet points (•) for sub-points
+   - Practical examples
+   - Concluding statement
+   - Proper markdown formatting (headings, code blocks, lists)
+4. **Official Syllabus Context**: AI references specific exam objectives (e.g., "This relates to objective 2.4 - Analyzing indicators of malicious activity")
+5. **Chat History**: All conversations auto-saved to Firestore
+   - Click chat history icon to view all past chats
+   - Click any chat to continue the conversation
+   - Delete chats you no longer need
+   - Start new chats anytime
+6. **Grok Integration**: Powered by xAI's Grok-4-Fast model (temperature: 0.7, max tokens: 2048)
 
 ### Quiz Mode with FSRS Topic Scheduling
 
@@ -121,6 +166,7 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
    - Subsequent questions generate automatically in the background
    - Each new question triggers generation of the next one
    - Zero wait time between questions for seamless experience
+   - Pause/Resume button to control background generation
 4. **AI Question Generation**: xAI Grok creates unique synthesis questions from comprehensive SY0-701 exam objectives
 5. **AI-Based Topic Identification**:
    - After generation, Grok Vision analyzes the question to identify which topics it actually tests
@@ -246,6 +292,25 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 - Recover from accidental resets
 - Archive historical progress
 
+## AI Chat System Prompt Structure
+
+The AI Chat assistant is configured with the complete **Official CompTIA Security+ SY0-701 Exam Syllabus** including:
+
+**5 Domains:**
+1. General Security Concepts (1.1-1.4)
+2. Threats, Vulnerabilities, and Mitigations (2.1-2.5)
+3. Security Architecture (3.1-3.4)
+4. Security Operations (4.1-4.9)
+5. Security Program Management and Oversight (5.1-5.6)
+
+**Response Format Instructions:**
+- Clear introductory statement
+- Numbered main points with bullet sub-points
+- Practical examples
+- Concluding statements
+- Reference specific exam objectives
+- Markdown formatting with proper spacing
+
 ## Technology Details
 
 **IRT Implementation:**
@@ -269,12 +334,27 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 - Semantic topic extraction
 - Deduplication via embeddings
 
+**AI Chat System:**
+- xAI Grok-4-Fast-Non-Reasoning model
+- Temperature: 0.7 for balanced creativity/accuracy
+- Max tokens: 2048
+- Full conversation history for context
+- Firestore storage for chat persistence
+- Auto-generated titles from first user message
+
 **Data Visualization:**
 - Recharts library for responsive charts
 - Interactive tooltips with detailed statistics
 - Color-coded performance indicators
 - Confidence interval visualizations
 - Collapsible sections for information density
+
+**Markdown Rendering:**
+- react-markdown with remark-gfm
+- Custom neomorphic styling with :global() selectors
+- Responsive typography with clamp()
+- Syntax highlighting for code blocks
+- Proper line-height and spacing
 
 **Performance Optimization:**
 - On-demand question generation
@@ -283,6 +363,70 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 - Efficient Firestore queries
 - Client-side calculation caching
 - Subcollection architecture for scalability
+- Pause/Resume control for API cost management
+
+## Neomorphic Design System
+
+**Color Palette:**
+- **Background**: #0f0f0f (dark base)
+- **Shadows**:
+  - Light: #191919
+  - Dark: #050505
+- **Primary Accent**: #8b5cf6 (purple)
+- **Success**: #10b981 (green)
+- **Warning**: #f59e0b (amber)
+- **Error**: #f43f5e (rose)
+- **Text Primary**: #e5e5e5 (light gray)
+- **Text Secondary**: #a8a8a8 (medium gray)
+
+**Shadow Styles:**
+- **Raised Elements**: `12px 12px 24px #050505, -12px -12px 24px #191919`
+- **Pressed/Inset**: `inset 4px 4px 8px #050505, inset -4px -4px 8px #191919`
+- **Small Raised**: `6px 6px 12px #050505, -6px -6px 12px #191919`
+
+**Typography:**
+- Fluid scaling with `clamp()` for all text sizes
+- Responsive from 320px (mobile) to 3840px (4K)
+- System font stack for optimal performance
+
+## Firestore Data Structure
+
+```
+users/
+  {userId}/
+    userProgress (document)
+      - quizHistory[]
+      - totalQuestionsAnswered
+      - totalPointsEarned
+      - abilityEstimate
+      - predictedScore
+      - topicPerformance{}
+
+    quizSessions/
+      {quizId}/ (subcollection)
+        - questions[]
+        - userAnswers[]
+        - state
+        - timestamp
+
+    flashcards/
+      {flashcardId}/
+        - term
+        - definition
+        - context
+        - imageUrl
+        - domain
+        - fsrsState
+        - reviewHistory
+
+    aiChats/
+      {chatId}/
+        - id
+        - title
+        - messages[]
+        - createdAt
+        - updatedAt
+```
 
 ## Developer Documentation
 
@@ -294,137 +438,7 @@ An AI-powered web application for CompTIA Security+ SY0-701 certification exam p
 
 **Golden Rule:** Search before you code. If a pattern exists, reuse it. If it will be used 2+ times, make it shared.
 
----
-
----
-
-## Professional Development Standards
-
-This project follows enterprise-grade web development standards with a focus on performance, security, and accessibility.
-
-### Design System
-
-**Design Tokens** (`/styles/design-tokens.css`):
-- Comprehensive CSS custom properties for colors, typography, spacing, shadows
-- Light/dark theme support with `[data-theme]` selector
-- High contrast mode support (`prefers-contrast: high`)
-- Reduced motion support (`prefers-reduced-motion: reduce`)
-- WCAG 2.2 AA compliant color contrasts
-
-**Usage:**
-```css
-/* Use tokens instead of hard-coded values */
-.button {
-  background: var(--color-primary);
-  padding: var(--space-4);
-  border-radius: var(--radius-lg);
-  transition: all var(--transition-base);
-}
-```
-
-### Security Headers
-
-Configured in `next.config.mjs` following OWASP guidelines:
-
-- **HSTS**: 2-year max-age with includeSubDomains and preload
-- **CSP**: Strict Content Security Policy
-- **X-Frame-Options**: DENY (clickjacking protection)
-- **X-Content-Type-Options**: nosniff
-- **Referrer-Policy**: strict-origin-when-cross-origin
-- **Permissions-Policy**: Restricted camera, microphone, geolocation
-
-**Verify headers:**
-```bash
-curl -I https://securityplusai.com | grep -i "security\|strict\|content-security"
-```
-
-### SEO & Metadata
-
-**Comprehensive metadata** in `app/layout.tsx`:
-- Dynamic page titles with template
-- Open Graph tags for social sharing
-- Twitter Card meta tags
-- Keywords and structured descriptions
-- Canonical URLs
-
-**Structured Data** (JSON-LD):
-- Organization schema
-- WebSite schema
-- WebApplication schema
-- Course schema
-- FAQPage schema
-
-**Sitemap & Robots:**
-- Dynamic sitemap at `/sitemap.xml` (generated from `app/sitemap.ts`)
-- Robots.txt at `/public/robots.txt`
-
-**Validate SEO:**
-- [Google Rich Results Test](https://search.google.com/test/rich-results)
-- [Schema.org Validator](https://validator.schema.org/)
-
-### Accessibility (WCAG 2.2 AA)
-
-**Implemented:**
-- ✅ Semantic HTML with proper heading hierarchy
-- ✅ ARIA labels on interactive elements
-- ✅ Focus-visible styles (`outline: 2px solid var(--color-border-focus)`)
-- ✅ Keyboard navigation support
-- ✅ Skip-to-content link (`.skip-to-content` class)
-- ✅ Color contrast ratios ≥ 4.5:1
-- ✅ Reduced motion support
-- ✅ Screen reader announcements
-
-**Test Accessibility:**
-```bash
-# Install axe-core
-npm install --save-dev @axe-core/react
-
-# Run Lighthouse accessibility audit
-npx lighthouse https://securityplusai.com --only-categories=accessibility
-```
-
-### Error Handling
-
-**Error Boundary** (`components/ErrorBoundary.tsx`):
-- Catches JavaScript errors in component tree
-- Displays user-friendly fallback UI
-- Logs errors to console (extend to send to error tracking service)
-- Graceful degradation with "Try Again" and "Go to Homepage" actions
-
-**Usage:**
-```tsx
-import { ErrorBoundary } from '@/components/ErrorBoundary';
-
-<ErrorBoundary>
-  <YourComponent />
-</ErrorBoundary>
-```
-
-### Performance Targets
-
-**Core Web Vitals:**
-- LCP (Largest Contentful Paint): ≤ 2.5s
-- INP (Interaction to Next Paint): ≤ 200ms
-- CLS (Cumulative Layout Shift): ≤ 0.1
-
-**Optimizations:**
-- Image optimization (AVIF/WebP) via Next.js Image component
-- Code splitting (automatic route-based)
-- CSS optimization (design tokens, Tailwind purging)
-- Compression (Brotli/Gzip enabled)
-- `poweredByHeader: false` to remove X-Powered-By
-
-**Monitor Performance:**
-```bash
-# Lighthouse audit
-npx lighthouse https://securityplusai.com --view
-
-# Check bundle size
-npm run build
-# Review output in .next/
-```
-
-### Development Workflow
+## Development Workflow
 
 1. **Install dependencies:**
 ```bash
@@ -433,13 +447,22 @@ npm install
 
 2. **Set up environment variables** (`.env.local`):
 ```env
+# Firebase
 NEXT_PUBLIC_FIREBASE_API_KEY=your_key
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_domain
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_bucket
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
-NEXT_PUBLIC_GOOGLE_AI_API_KEY=your_google_ai_key
+
+# AI APIs
+XAI_API_KEY=your_xai_api_key
+OPENAI_API_KEY=your_openai_api_key
+
+# Firebase Admin (for API routes)
+FIREBASE_ADMIN_PROJECT_ID=your_project_id
+FIREBASE_ADMIN_CLIENT_EMAIL=your_client_email
+FIREBASE_ADMIN_PRIVATE_KEY=your_private_key
 ```
 
 3. **Run development server:**
@@ -458,86 +481,90 @@ npm run start
 npm run lint
 ```
 
-### Deployment Checklist
+## Security & Authentication
 
-**Pre-Deployment:**
-- [ ] Environment variables configured in Vercel/hosting platform
-- [ ] Security headers verified
-- [ ] Lighthouse score ≥ 90 (Performance, Accessibility, Best Practices, SEO)
-- [ ] Core Web Vitals meet targets
-- [ ] Error boundary tested
-- [ ] Authentication flow tested
-- [ ] Data export/import tested
+**Firebase Rules:**
+- Quiz data: User can only read/write their own data
+- Flashcards: User can only read/write their own flashcards
+- AI Chats: User can only read/write their own chat history
+- Images: User can only upload to their own storage path
 
-**Post-Deployment:**
-- [ ] Verify HTTPS and HSTS headers
-- [ ] Test structured data with Google Rich Results Test
-- [ ] Submit sitemap to Google Search Console
-- [ ] Monitor Core Web Vitals in Vercel Analytics
-- [ ] Check error logs in Vercel deployment logs
-- [ ] Verify CSP not blocking required resources
+**API Authentication:**
+- All API routes use Firebase Admin SDK for authentication
+- `authenticateRequest` middleware validates Firebase ID tokens
+- `authenticatedPost` client helper automatically includes auth tokens
 
-### Production Environment Variables
+**Environment Security:**
+- All API keys stored in `.env.local` (gitignored)
+- Firebase Admin credentials never exposed to client
+- CORS configured for Firebase Storage
 
-Required for deployment:
+## Deployment
 
-```bash
-# Firebase
-NEXT_PUBLIC_FIREBASE_API_KEY=
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
-NEXT_PUBLIC_FIREBASE_APP_ID=
+**Vercel Deployment:**
+1. Connect GitHub repository to Vercel
+2. Configure environment variables in Vercel dashboard
+3. Automatic deployments on push to main branch
+4. Preview deployments for pull requests
 
-# AI APIs
-NEXT_PUBLIC_GOOGLE_AI_API_KEY=
-# Optional:
-OPENAI_API_KEY=
-```
+**Environment Variables (Vercel):**
+- Add all `.env.local` variables to Vercel project settings
+- Ensure `XAI_API_KEY` is set for AI Chat
+- Ensure `OPENAI_API_KEY` is set for embeddings
+- Set Firebase Admin credentials for API authentication
 
-### Monitoring & Observability
+## API Costs & Usage
 
-**Error Tracking** (to be implemented):
-- Integrate Sentry or similar service
-- Uncomment error tracking in `ErrorBoundary.tsx`
-- Add error tracking to API routes
+**xAI Grok Pricing:**
+- grok-4-fast-reasoning: $5/1M input, $15/1M output
+- grok-4-fast-non-reasoning: $0.20/1M input, $0.50/1M output
 
-**Analytics** (privacy-first):
-- Consider Vercel Analytics (built-in)
-- Or privacy-focused alternatives (Plausible, Fathom)
+**Cost Management:**
+- Pause/Resume button for question generation
+- Chat history stored locally to minimize re-fetching
+- Efficient prompts with token limits (2048 max)
+- Question caching to avoid regeneration
 
-**Performance Monitoring:**
-- Vercel Speed Insights
-- Real User Monitoring (RUM) via Core Web Vitals API
+**OpenAI Embeddings:**
+- text-embedding-3-small: $0.02/1M tokens
+- Used only for question deduplication
 
-### Security Best Practices
+## Progressive Web App (PWA)
 
-1. **Never commit secrets**: Use `.env.local` (gitignored)
-2. **Validate all inputs**: Client and server-side
-3. **Use secure cookies**: HttpOnly, Secure, SameSite
-4. **Keep dependencies updated**:
-```bash
-npm audit
-npm audit fix
-```
-5. **Review CSP violations**: Check browser console
-6. **Regular security audits**: Use tools like Snyk, npm audit
+**Features:**
+- Installable on mobile devices
+- Offline support with service workers
+- App manifest for native-like experience
+- Responsive touch-friendly UI
+- Mobile-optimized navigation
 
-### Contributing Guidelines
+**Installation:**
+1. Visit site on mobile browser
+2. Tap "Add to Home Screen"
+3. App opens in standalone mode
+4. Works offline for cached content
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Follow existing code style (TypeScript strict mode, ESLint/Prettier)
-4. Add tests for new features (when testing framework is set up)
-5. Ensure accessibility standards are met
-6. Update documentation as needed
-7. Commit with clear messages
-8. Push to your branch
-9. Open a Pull Request
+## Performance
 
----
+**Optimizations:**
+- Server-side rendering with Next.js App Router
+- Automatic code splitting
+- Image optimization with Next.js Image
+- Lazy loading for charts and heavy components
+- Efficient Firestore queries with indexes
+- Client-side caching for performance data
+
+**Core Web Vitals Targets:**
+- LCP (Largest Contentful Paint): ≤ 2.5s
+- INP (Interaction to Next Paint): ≤ 200ms
+- CLS (Cumulative Layout Shift): ≤ 0.1
 
 ## License
 
 MIT
+
+---
+
+**Built with ❤️ for Security+ exam preparation**
+
+*Note: This is an independent study tool and is not affiliated with or endorsed by CompTIA.*
