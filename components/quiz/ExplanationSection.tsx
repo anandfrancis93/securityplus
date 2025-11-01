@@ -113,11 +113,15 @@ export default function ExplanationSection({
   };
 
   // Helper function to clean explanation text
-  // Removes prefixes like "Correct:", "Incorrect:", "This option is correct", etc.
+  // Removes letter references and prefixes
   const cleanExplanation = (text: string): string => {
     if (!text) return text;
 
     return text
+      // Replace letter references: "A is correct" → "This is correct"
+      .replace(/^[A-D]\s+is\s+(correct|incorrect|wrong|right)/i, 'This is $1')
+      // Replace mid-sentence letter references: "because A provides" → "because this provides"
+      .replace(/\b([A-D])\s+(is|provides|represents|involves|addresses|ensures|requires|includes|excludes|limits|fails|lacks|doesn't|does not)\b/gi, 'this $2')
       // Remove "Correct:" or "Incorrect:" at the start
       .replace(/^(Correct|Incorrect):\s*/i, '')
       // Remove "This option is correct/incorrect" patterns
@@ -275,13 +279,12 @@ export default function ExplanationSection({
                         marginBottom: '8px',
                       }}
                     >
-                      {String.fromCharCode(65 + index)}. {stripLetterPrefix(question.options[index])}
+                      {stripLetterPrefix(question.options[index])}
                     </div>
                     <div
                       style={{
                         color: '#a8a8a8',
                         lineHeight: '1.6',
-                        paddingLeft: '24px',
                       }}
                     >
                       {cleanExplanation(explanation)}
@@ -310,13 +313,12 @@ export default function ExplanationSection({
                         marginBottom: '8px',
                       }}
                     >
-                      {String.fromCharCode(65 + index)}. {stripLetterPrefix(question.options[index])}
+                      {stripLetterPrefix(question.options[index])}
                     </div>
                     <div
                       style={{
                         color: '#a8a8a8',
                         lineHeight: '1.6',
-                        paddingLeft: '24px',
                       }}
                     >
                       {cleanExplanation(explanation)}
