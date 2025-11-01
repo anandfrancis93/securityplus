@@ -271,6 +271,7 @@ export default function ExplanationSection({
                 if (!isValidExplanation(explanation)) return null;
 
                 const wasSelectedByUser = userSelectedAnswers.includes(index);
+                const isMultipleResponse = question.questionType === 'multiple';
 
                 return (
                   <div key={`correct-${index}`} style={{ fontSize: '16px' }}>
@@ -282,7 +283,7 @@ export default function ExplanationSection({
                       }}
                     >
                       {stripLetterPrefix(question.options[index])}
-                      {!wasSelectedByUser && (
+                      {isMultipleResponse && !wasSelectedByUser && (
                         <span style={{ color: '#f59e0b', fontWeight: 600, marginLeft: '8px' }}>
                           (not selected)
                         </span>
