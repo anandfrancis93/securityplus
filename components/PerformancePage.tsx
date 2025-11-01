@@ -1223,7 +1223,49 @@ export default function QuizPerformance() {
                                 transition: 'opacity 0.3s ease, transform 0.3s ease',
                                 border: '1px solid rgba(139, 92, 246, 0.2)'
                               }}>
-                                <p style={{ fontSize: '0.875rem', color: '#a8a8a8', lineHeight: '1.5' }}>Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.875rem', color: '#a8a8a8' }}>
+                                  <div style={{
+                                    marginBottom: '0.5rem',
+                                    paddingBottom: '0.5rem',
+                                    borderBottom: '1px solid #333333'
+                                  }}>
+                                    <div style={{
+                                      color: '#e5e5e5',
+                                      fontWeight: '600',
+                                      marginBottom: '0.25rem'
+                                    }}>Ability Level (θ)</div>
+                                    <div style={{
+                                      fontSize: '0.75rem',
+                                      color: '#666666'
+                                    }}>IRT measure adjusted for question difficulty</div>
+                                  </div>
+                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                    <div style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'space-between'
+                                    }}>
+                                      <span style={{ color: '#10b981', fontWeight: '600' }}>≥1.54</span>
+                                      <span style={{ color: '#a8a8a8' }}>Passing (≥750)</span>
+                                    </div>
+                                    <div style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'space-between'
+                                    }}>
+                                      <span style={{ color: '#f59e0b', fontWeight: '600' }}>0.38 to 1.54</span>
+                                      <span style={{ color: '#a8a8a8' }}>Close (600-749)</span>
+                                    </div>
+                                    <div style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'space-between'
+                                    }}>
+                                      <span style={{ color: '#f43f5e', fontWeight: '600' }}>&lt;0.38</span>
+                                      <span style={{ color: '#a8a8a8' }}>Needs Work (&lt;600)</span>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
                             </>
                           ) : (
@@ -1255,7 +1297,49 @@ export default function QuizPerformance() {
                                 transition: 'opacity 0.3s ease, transform 0.3s ease',
                                 border: '1px solid rgba(139, 92, 246, 0.2)'
                               }}>
-                                <p style={{ fontSize: '0.875rem', color: '#a8a8a8', lineHeight: '1.5' }}>Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.875rem', color: '#a8a8a8' }}>
+                                  <div style={{
+                                    marginBottom: '0.5rem',
+                                    paddingBottom: '0.5rem',
+                                    borderBottom: '1px solid #333333'
+                                  }}>
+                                    <div style={{
+                                      color: '#e5e5e5',
+                                      fontWeight: '600',
+                                      marginBottom: '0.25rem'
+                                    }}>Ability Level (θ)</div>
+                                    <div style={{
+                                      fontSize: '0.75rem',
+                                      color: '#666666'
+                                    }}>IRT measure adjusted for question difficulty</div>
+                                  </div>
+                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                    <div style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'space-between'
+                                    }}>
+                                      <span style={{ color: '#10b981', fontWeight: '600' }}>≥1.54</span>
+                                      <span style={{ color: '#a8a8a8' }}>Passing (≥750)</span>
+                                    </div>
+                                    <div style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'space-between'
+                                    }}>
+                                      <span style={{ color: '#f59e0b', fontWeight: '600' }}>0.38 to 1.54</span>
+                                      <span style={{ color: '#a8a8a8' }}>Close (600-749)</span>
+                                    </div>
+                                    <div style={{
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'space-between'
+                                    }}>
+                                      <span style={{ color: '#f43f5e', fontWeight: '600' }}>&lt;0.38</span>
+                                      <span style={{ color: '#a8a8a8' }}>Needs Work (&lt;600)</span>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
                             </>
                           )}
