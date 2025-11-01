@@ -649,13 +649,29 @@ export default function QuizPerformance() {
           transition: 'all 0.3s ease'
         }}>
           <div style={{ position: 'relative', textAlign: 'center', marginBottom: '2.5rem' }}>
-            <h2 style={{
-              fontSize: 'clamp(2rem, 5vw, 2.5rem)',
-              color: '#e5e5e5',
-              marginBottom: '0.5rem',
-              letterSpacing: '-0.025em',
-              fontWeight: 'bold'
-            }}>Predicted Exam Score</h2>
+            <div className="group relative inline-block cursor-help">
+              <h2 style={{
+                fontSize: 'clamp(2rem, 5vw, 2.5rem)',
+                color: '#e5e5e5',
+                marginBottom: '0.5rem',
+                letterSpacing: '-0.025em',
+                fontWeight: 'bold'
+              }}>Predicted Exam Score</h2>
+              {/* Hover tooltip */}
+              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 bg-slate-900/95 backdrop-blur-xl border border-violet-500/30 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_0.6s_ease-in-out_forwards]">
+                <div className="space-y-1 text-sm text-slate-300">
+                  <div>
+                    <span className="text-green-400 font-medium">Green:</span> 750 - 900
+                  </div>
+                  <div>
+                    <span className="text-yellow-400 font-medium">Yellow:</span> 600 - 749
+                  </div>
+                  <div>
+                    <span className="text-red-400 font-medium">Red:</span> 100 - 599
+                  </div>
+                </div>
+              </div>
+            </div>
             {totalAnswered >= MIN_QUESTIONS_FOR_PREDICTION && (
               <p style={{
                 fontSize: 'clamp(0.875rem, 2vw, 1rem)',
@@ -1121,12 +1137,18 @@ export default function QuizPerformance() {
                         flexWrap: 'wrap',
                         gap: '1rem'
                       }}>
-                        <h4 style={{
-                          fontSize: 'clamp(1.5rem, 4vw, 2rem)',
-                          fontWeight: 'bold',
-                          color: '#e5e5e5',
-                          letterSpacing: '-0.025em'
-                        }}>Ability Level</h4>
+                        <div className="group relative cursor-help">
+                          <h4 style={{
+                            fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+                            fontWeight: 'bold',
+                            color: '#e5e5e5',
+                            letterSpacing: '-0.025em'
+                          }}>Ability Level</h4>
+                          {/* Hover tooltip */}
+                          <div className="absolute bottom-full left-0 mb-2 w-64 bg-slate-900/95 backdrop-blur-xl border border-violet-500/30 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_0.6s_ease-in-out_forwards]">
+                            <p className="text-sm text-slate-300 leading-relaxed">Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
+                          </div>
+                        </div>
                         <div className="ability-display">
                           {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
                             <div style={{
@@ -1488,6 +1510,17 @@ export default function QuizPerformance() {
       </div>
 
       <style jsx>{`
+        @keyframes tooltipFade {
+          0% {
+            opacity: 0;
+            transform: translateY(5px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
         .score-display:hover .tooltip,
         .accuracy-display:hover .tooltip,
         .ability-display:hover .tooltip {
