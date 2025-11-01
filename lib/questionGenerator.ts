@@ -263,7 +263,10 @@ function analyzeQuestionForTopics_LEGACY(
 
 /**
  * Validate that explanations are consistent with their options
- * Detects when AI generates contradictory explanations
+ * Now that options include letters (A. B. C. D.), validation is simpler:
+ * - Extract the letter from each option
+ * - Check that explanation references that same letter
+ * - Check that explanation sentiment matches option correctness
  *
  * Returns validation result with issues found
  */
@@ -274,66 +277,56 @@ function validateExplanations(
 ): { isValid: boolean; issues: string[] } {
   const issues: string[] = [];
   const correctIndices = Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer];
+  const expectedLetters = ['A', 'B', 'C', 'D'];
 
   for (let i = 0; i < options.length; i++) {
-    const option = options[i]?.toLowerCase() || '';
-    const explanation = incorrectExplanations[i]?.toLowerCase() || '';
+    const option = options[i] || '';
+    const explanation = incorrectExplanations[i] || '';
     const isCorrectOption = correctIndices.includes(i);
 
     // Skip empty explanations
     if (!explanation.trim()) continue;
 
-    // Check for explicit contradiction phrases
-    const contradictionPatterns = [
-      // Explanation says it's wrong but it's the correct answer
-      {
-        pattern: /\b(incorrect|wrong|not (correct|right|appropriate|suitable))\b/,
-        shouldMatch: !isCorrectOption,
-        issue: `Option ${i} is ${isCorrectOption ? 'CORRECT' : 'INCORRECT'} but explanation says it's ${isCorrectOption ? 'wrong' : 'correct'}`
-      },
-      // Explanation says it's correct but it's a wrong answer
-      {
-        pattern: /\b(correct|right|appropriate|suitable|best (option|answer|choice))\b/,
-        shouldMatch: isCorrectOption,
-        issue: `Option ${i} is ${isCorrectOption ? 'CORRECT' : 'INCORRECT'} but explanation says it's ${isCorrectOption ? 'correct' : 'wrong'}`
-      },
-      // Explanation criticizes with negative phrases (for correct answers)
-      {
-        pattern: /\b(fails? to|lacks?|doesn't (address|provide|meet|include|ensure)|does not (address|provide|meet|include|ensure)|unable to|cannot|insufficient|inadequate)\b/,
-        shouldMatch: !isCorrectOption,
-        issue: `Option ${i} is ${isCorrectOption ? 'CORRECT' : 'INCORRECT'} but explanation uses negative criticism like "${explanation.match(/\b(fails? to|lacks?|doesn't (address|provide|meet|include|ensure)|does not (address|provide|meet|include|ensure)|unable to|cannot|insufficient|inadequate)\b/)?.[0]}"`
-      }
-    ];
-
-    for (const { pattern, shouldMatch, issue } of contradictionPatterns) {
-      const matches = pattern.test(explanation);
-
-      // If pattern matches when it shouldn't, or doesn't match when it should
-      if (matches && !shouldMatch) {
-        issues.push(`⚠️ ${issue} - explanation mentions "${explanation.match(pattern)?.[0]}"`);
-      }
+    // Extract letter from option (should be "A. ", "B. ", etc.)
+    const letterMatch = option.match(/^([A-D])\.\s/);
+    if (!letterMatch) {
+      issues.push(`⚠️ Option ${i} is missing required letter prefix (should start with "${expectedLetters[i]}. ")`);
+      continue;
     }
 
-    // Check if explanation discusses a completely different option
-    // Look for other option text being discussed in this explanation
-    for (let j = 0; j < options.length; j++) {
-      if (i === j) continue; // Skip self
+    const optionLetter = letterMatch[1];
+    const expectedLetter = expectedLetters[i];
 
-      const otherOption = options[j]?.toLowerCase() || '';
-
-      // If other option text appears prominently in this explanation
-      if (otherOption.length > 10 && explanation.includes(otherOption)) {
-        issues.push(`⚠️ Explanation for option ${i} extensively discusses option ${j} instead`);
-      }
+    // Verify option has correct letter for its position
+    if (optionLetter !== expectedLetter) {
+      issues.push(`⚠️ Option ${i} has letter "${optionLetter}" but should have "${expectedLetter}"`);
     }
 
-    // Check for contradictory logic phrases
-    if (isCorrectOption && explanation.includes('limits scope by excluding')) {
-      issues.push(`⚠️ Correct option ${i} explanation incorrectly criticizes it for limitations`);
+    // Check if explanation references the correct letter
+    const explanationLower = explanation.toLowerCase();
+    const letterReferencePattern = new RegExp(`\\b${optionLetter.toLowerCase()}\\b`);
+
+    if (!letterReferencePattern.test(explanationLower)) {
+      issues.push(`⚠️ Explanation for option ${i} (${optionLetter}) doesn't reference letter "${optionLetter}"`);
     }
 
-    if (!isCorrectOption && explanation.includes('making this the correct')) {
-      issues.push(`⚠️ Incorrect option ${i} explanation incorrectly claims it's correct`);
+    // Check for sentiment contradictions
+    const negativePatterns = /\b(incorrect|wrong|fails? to|lacks?|doesn't|does not|unable to|cannot|insufficient|inadequate|not (correct|right|appropriate|suitable))\b/i;
+    const positivePatterns = /\b(correct|right|appropriate|suitable|best (option|answer|choice))\b/i;
+
+    const hasNegative = negativePatterns.test(explanationLower);
+    const hasPositive = positivePatterns.test(explanationLower);
+
+    // Correct option should have positive sentiment (or at least not primarily negative)
+    if (isCorrectOption && hasNegative && !hasPositive) {
+      const matchedPhrase = explanationLower.match(negativePatterns)?.[0];
+      issues.push(`⚠️ ${optionLetter} is CORRECT but explanation uses negative criticism: "${matchedPhrase}"`);
+    }
+
+    // Incorrect option should have negative sentiment (or at least not claim to be correct)
+    if (!isCorrectOption && hasPositive && !hasNegative) {
+      const matchedPhrase = explanationLower.match(positivePatterns)?.[0];
+      issues.push(`⚠️ ${optionLetter} is INCORRECT but explanation uses positive language: "${matchedPhrase}"`);
     }
   }
 
@@ -748,20 +741,23 @@ CRITICAL - FOLLOW THESE EXACT PATTERNS FROM SECURITY+ EXAM QUESTIONS:
 Security+ Topics Reference (for context only):
 ${SECURITY_PLUS_TOPICS}
 
-CRITICAL - DO NOT INCLUDE LETTER PREFIXES IN OPTIONS:
-- DO NOT put "A)", "B)", "C)", "D)" in the option text
-- DO NOT put "A.", "B.", "C.", "D." in the option text
-- The UI will add the letters automatically
-- WRONG: "A) CISO" or "B) Deploy Layer 7 firewalls"
-- CORRECT: "CISO" or "Deploy Layer 7 firewalls"
+CRITICAL - INCLUDE LETTER PREFIXES IN OPTIONS AND EXPLANATIONS:
+- You MUST put "A. ", "B. ", "C. ", "D. " at the start of each option text
+- These letters stay permanently bound to the content through shuffling
+- In explanations, you MUST reference the letter (e.g., "A is correct because..." or "B is incorrect because...")
+- This creates explicit binding between options and explanations, preventing contradictions
+- CORRECT EXAMPLES:
+  * options: ["A. CISO", "B. CTO", "C. CIO", "D. CEO"]
+  * explanations: ["A is correct because the CISO...", "B is incorrect because the CTO...", ...]
+- Format: Use "A. " with a period and space (not "A)" or "A:")
 
 Return ONLY a valid JSON object in this exact format (no markdown, no extra text):
 {
   "question": "the question text",
-  "options": ["first option text WITHOUT letter prefix", "second option text WITHOUT letter prefix", "third option text WITHOUT letter prefix", "fourth option text WITHOUT letter prefix"],
+  "options": ["A. first option text", "B. second option text", "C. third option text", "D. fourth option text"],
   "correctAnswer": ${questionType === 'single' ? '0' : '[0, 2]'},
-  "explanation": "why the correct answer(s) are right",
-  "incorrectExplanations": ["why option 0 is wrong/right", "why option 1 is wrong/right", "why option 2 is wrong/right", "why option 3 is wrong/right"],
+  "explanation": "why the correct answer(s) are right (reference letter: 'A is correct because...')",
+  "incorrectExplanations": ["explanation referencing A (e.g., 'A is correct because...' or 'A is incorrect because...')", "explanation referencing B", "explanation referencing C", "explanation referencing D"],
   "topics": ${JSON.stringify(topicStrings)},
   "difficulty": "${difficulty}",
   "metadata": {
@@ -786,6 +782,15 @@ CRITICAL QUALITY RULES:
 9. All options should have similar technical depth and specificity
 10. Use realistic business/technical scenarios like the examples show
 
+CRITICAL - LETTER BINDING (PREVENTS CONTRADICTIONS):
+11. Each option MUST start with its letter (A. B. C. or D. with period and space)
+12. Each explanation MUST reference that same letter (e.g., "A is correct because...")
+13. This binding prevents explanation contradictions - the letter travels with the content
+14. After shuffling, "A. CISO" might appear in position 3, but it's still labeled "A. CISO"
+15. NEVER write "A is incorrect" if A is the correct answer
+16. NEVER write "B is correct" if B is an incorrect answer
+17. The letter creates an explicit binding that makes contradictions impossible
+
 Return only valid JSON, no markdown formatting.`;
 
     const fullPrompt = `${systemPrompt}
@@ -804,17 +809,8 @@ ${prompt}`;
 
     const questionData = JSON.parse(jsonContent);
 
-    // CRITICAL FIX: Strip any letter prefixes that AI may have accidentally included
-    // This prevents "A. B) Deploy..." bug where option shows both UI letter and AI letter
-    if (Array.isArray(questionData.options)) {
-      questionData.options = questionData.options.map((opt: string) => {
-        if (typeof opt === 'string') {
-          // Remove patterns like "A) ", "B. ", "C.) ", "D: " from the start
-          return opt.replace(/^[A-D][\.\)\:\]]\s*/i, '').trim();
-        }
-        return opt;
-      });
-    }
+    // Letter prefixes (A. B. C. D.) are now intentionally kept in options
+    // They bind the option content to explanations and prevent contradictions
 
     // Validate and fix incorrectExplanations array
     if (!Array.isArray(questionData.incorrectExplanations)) {
