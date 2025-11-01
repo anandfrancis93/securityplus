@@ -270,6 +270,8 @@ export default function ExplanationSection({
                 const explanation = orderedExplanations[index];
                 if (!isValidExplanation(explanation)) return null;
 
+                const wasSelectedByUser = userSelectedAnswers.includes(index);
+
                 return (
                   <div key={`correct-${index}`} style={{ fontSize: '16px' }}>
                     <div
@@ -280,6 +282,11 @@ export default function ExplanationSection({
                       }}
                     >
                       {stripLetterPrefix(question.options[index])}
+                      {!wasSelectedByUser && (
+                        <span style={{ color: '#f59e0b', fontWeight: 600, marginLeft: '8px' }}>
+                          (not selected)
+                        </span>
+                      )}
                     </div>
                     <div
                       style={{
