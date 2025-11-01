@@ -106,6 +106,12 @@ export default function ExplanationSection({
     ? reorderExplanations(question.incorrectExplanations)
     : [];
 
+  // Helper function to strip letter prefix (A. B. C. D.) from option text
+  // Letters are kept internally for AI generation but hidden in UI
+  const stripLetterPrefix = (option: string): string => {
+    return option.replace(/^[A-D]\.\s*/, '');
+  };
+
   // Helper function to clean explanation text
   // Removes prefixes like "Correct:", "Incorrect:", "This option is correct", etc.
   const cleanExplanation = (text: string): string => {
@@ -269,7 +275,7 @@ export default function ExplanationSection({
                         marginBottom: '8px',
                       }}
                     >
-                      {String.fromCharCode(65 + index)}. {question.options[index]}
+                      {String.fromCharCode(65 + index)}. {stripLetterPrefix(question.options[index])}
                     </div>
                     <div
                       style={{
@@ -304,7 +310,7 @@ export default function ExplanationSection({
                         marginBottom: '8px',
                       }}
                     >
-                      {String.fromCharCode(65 + index)}. {question.options[index]}
+                      {String.fromCharCode(65 + index)}. {stripLetterPrefix(question.options[index])}
                     </div>
                     <div
                       style={{
