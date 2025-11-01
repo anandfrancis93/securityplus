@@ -641,7 +641,7 @@ Your question should follow these patterns: complex scenario, integrates concept
 
   const typeGuidance = questionType === 'single'
     ? 'This is a SINGLE-CHOICE question. Provide exactly ONE correct answer (index 0-3).'
-    : 'This is a MULTIPLE-RESPONSE question (select all that apply). Provide 2-3 correct answers as an array of indices (e.g., [0, 2] or [1, 2, 3]). The question should ask "Which of the following are..." or "Select all that apply".';
+    : 'This is a MULTIPLE-RESPONSE question (select all that apply). Provide 2-3 correct answers as an array of indices (e.g., [0, 2] or [1, 2, 3]). The question should ask "Which of the following are..." and end with "(Select all that apply)" - note: no period inside the parentheses.';
 
   const prompt = `Generate a single CompTIA Security+ SY0-701 exam question.
 
