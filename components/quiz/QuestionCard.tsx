@@ -57,19 +57,6 @@ export default function QuestionCard({
         {question.question}
       </h2>
 
-      {/* Multiple-response instruction */}
-      {question.questionType === 'multiple' && !showExplanation && (
-        <div className="multiple-instruction" style={{
-          color: '#e5e5e5',
-          backgroundColor: '#0f0f0f',
-          borderRadius: 'clamp(16px, 2vw, 24px)',
-          boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
-          border: '1px solid rgba(139, 92, 246, 0.3)',
-        }}>
-          <strong style={{ fontWeight: 'bold' }}>Select all that apply</strong> <span>- This question has multiple correct answers</span>
-        </div>
-      )}
-
       {/* Answer Options */}
       <div style={{
         display: 'flex',
