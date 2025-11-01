@@ -128,13 +128,15 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(16px, 2vw, 24px)' }}>
         {/* Domain(s) */}
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-          <span style={{
-            fontSize: '1.25rem',
-            fontWeight: 600,
-            color: '#a8a8a8',
-            minWidth: '120px',
-            flexShrink: 0,
-          }}>
+          <span
+            className="metadata-label"
+            style={{
+              fontWeight: 600,
+              color: '#a8a8a8',
+              minWidth: '120px',
+              flexShrink: 0,
+            }}
+          >
             {domains.length > 1 ? 'Domain(s):' : 'Domain:'}
           </span>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -143,8 +145,8 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
               return (
                 <span
                   key={index}
+                  className="metadata-value"
                   style={{
-                    fontSize: '1.25rem',
                     fontWeight: 600,
                     color: color,
                     transition: 'color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -160,13 +162,15 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
         {/* Topics grouped by domain - ordered to match domains display */}
         {question.topics && question.topics.length > 0 && (
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-            <span style={{
-              fontSize: '1.25rem',
-              fontWeight: 600,
-              color: '#a8a8a8',
-              minWidth: '120px',
-              flexShrink: 0,
-            }}>
+            <span
+              className="metadata-label"
+              style={{
+                fontWeight: 600,
+                color: '#a8a8a8',
+                minWidth: '120px',
+                flexShrink: 0,
+              }}
+            >
               {question.topics.length > 1 ? 'Topic(s):' : 'Topic:'}
             </span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -175,8 +179,8 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
                 return (
                   <span
                     key={index}
+                    className="metadata-value"
                     style={{
-                      fontSize: '1.25rem',
                       fontWeight: 600,
                       color: color,
                       transition: 'color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -193,19 +197,23 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
         {/* Question Type */}
         {question.questionCategory && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-            <span style={{
-              fontSize: '1.25rem',
-              fontWeight: 600,
-              color: '#a8a8a8',
-              minWidth: '120px',
-            }}>
+            <span
+              className="metadata-label"
+              style={{
+                fontWeight: 600,
+                color: '#a8a8a8',
+                minWidth: '120px',
+              }}
+            >
               Type:
             </span>
-            <span style={{
-              fontSize: '1.25rem',
-              fontWeight: 600,
-              color: '#e5e5e5',
-            }}>
+            <span
+              className="metadata-value"
+              style={{
+                fontWeight: 600,
+                color: '#e5e5e5',
+              }}
+            >
               {question.questionCategory === 'single-domain-single-topic' ? 'Single Domain, Single Topic' :
                question.questionCategory === 'single-domain-multiple-topics' ? 'Single Domain, Multiple Topics' :
                'Multiple Domains, Multiple Topics'}
@@ -215,22 +223,26 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
 
         {/* Difficulty */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-          <span style={{
-            fontSize: '1.25rem',
-            fontWeight: 600,
-            color: '#a8a8a8',
-            minWidth: '120px',
-          }}>
+          <span
+            className="metadata-label"
+            style={{
+              fontWeight: 600,
+              color: '#a8a8a8',
+              minWidth: '120px',
+            }}
+          >
             Difficulty:
           </span>
-          <span style={{
-            fontSize: '1.25rem',
-            fontWeight: 600,
-            color: question.difficulty === 'easy' ? '#4ade80' :
-                   question.difficulty === 'medium' ? '#facc15' :
-                   '#f87171',
-            transition: 'color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          }}>
+          <span
+            className="metadata-value"
+            style={{
+              fontWeight: 600,
+              color: question.difficulty === 'easy' ? '#4ade80' :
+                     question.difficulty === 'medium' ? '#facc15' :
+                     '#f87171',
+              transition: 'color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            }}
+          >
             {question.difficulty.charAt(0).toUpperCase() + question.difficulty.slice(1)}
           </span>
         </div>
@@ -238,19 +250,23 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
         {/* Points */}
         {pointsEarned !== undefined && maxPoints !== undefined && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-            <span style={{
-              fontSize: '1.25rem',
-              fontWeight: 600,
-              color: '#a8a8a8',
-              minWidth: '120px',
-            }}>
+            <span
+              className="metadata-label"
+              style={{
+                fontWeight: 600,
+                color: '#a8a8a8',
+                minWidth: '120px',
+              }}
+            >
               Points:
             </span>
-            <span style={{
-              fontSize: '1.25rem',
-              fontWeight: 600,
-              color: '#e5e5e5',
-            }}>
+            <span
+              className="metadata-value"
+              style={{
+                fontWeight: 600,
+                color: '#e5e5e5',
+              }}
+            >
               {pointsEarned}/{maxPoints}
             </span>
           </div>
@@ -265,12 +281,14 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
 
         {/* Cost - Compact with Tooltip */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-          <span style={{
-            fontSize: '1.25rem',
-            fontWeight: 600,
-            color: '#a8a8a8',
-            minWidth: '120px',
-          }}>
+          <span
+            className="metadata-label"
+            style={{
+              fontWeight: 600,
+              color: '#a8a8a8',
+              minWidth: '120px',
+            }}
+          >
             Cost:
           </span>
           <div
@@ -280,9 +298,8 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
             onMouseLeave={() => setShowTooltip(false)}
           >
             <span
-              className="cost-value"
+              className="cost-value metadata-value"
               style={{
-                fontSize: '1.25rem',
                 fontWeight: 700,
                 color: '#10b981',
                 cursor: 'help',
@@ -398,11 +415,21 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
           margin-top: clamp(24px, 4vw, 48px);
         }
 
+        .metadata-label,
+        .metadata-value {
+          font-size: clamp(14px, 2.5vw, 18px);
+        }
+
         /* Tablet (768px+) */
         @media (min-width: 768px) {
           .metadata-card {
             padding: clamp(32px, 4vw, 48px);
             margin-top: clamp(32px, 4vw, 48px);
+          }
+
+          .metadata-label,
+          .metadata-value {
+            font-size: clamp(16px, 2vw, 18px);
           }
         }
 
@@ -410,6 +437,11 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
         @media (min-width: 1024px) {
           .metadata-card {
             padding: clamp(40px, 3.5vw, 56px);
+          }
+
+          .metadata-label,
+          .metadata-value {
+            font-size: clamp(17px, 1.8vw, 20px);
           }
         }
 
@@ -425,6 +457,11 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
           .metadata-card {
             padding: 64px;
             margin-top: 48px;
+          }
+
+          .metadata-label,
+          .metadata-value {
+            font-size: 20px;
           }
         }
       `}</style>

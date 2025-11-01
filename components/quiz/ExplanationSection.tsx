@@ -274,8 +274,9 @@ export default function ExplanationSection({
                 const isMultipleResponse = question.questionType === 'multiple';
 
                 return (
-                  <div key={`correct-${index}`} style={{ fontSize: '16px' }}>
+                  <div key={`correct-${index}`} className="explanation-item">
                     <div
+                      className="explanation-option-title"
                       style={{
                         fontWeight: 700,
                         color: '#10b981',
@@ -290,6 +291,7 @@ export default function ExplanationSection({
                       )}
                     </div>
                     <div
+                      className="explanation-text"
                       style={{
                         color: '#a8a8a8',
                         lineHeight: '1.6',
@@ -313,8 +315,9 @@ export default function ExplanationSection({
                 }
 
                 return (
-                  <div key={`incorrect-${index}`} style={{ fontSize: '16px' }}>
+                  <div key={`incorrect-${index}`} className="explanation-item">
                     <div
+                      className="explanation-option-title"
                       style={{
                         fontWeight: 700,
                         color: isWrongSelection ? '#f43f5e' : '#a8a8a8',
@@ -324,6 +327,7 @@ export default function ExplanationSection({
                       {stripLetterPrefix(question.options[index])}
                     </div>
                     <div
+                      className="explanation-text"
                       style={{
                         color: '#a8a8a8',
                         lineHeight: '1.6',
@@ -382,6 +386,14 @@ export default function ExplanationSection({
           margin-bottom: clamp(16px, 2.5vw, 24px);
         }
 
+        .explanation-option-title {
+          font-size: clamp(14px, 2.5vw, 18px);
+        }
+
+        .explanation-text {
+          font-size: clamp(14px, 2.5vw, 16px);
+        }
+
         /* Tablet (768px+) */
         @media (min-width: 768px) {
           .explanation-card {
@@ -403,6 +415,14 @@ export default function ExplanationSection({
           .explanation-label {
             font-size: clamp(17px, 2.5vw, 20px);
           }
+
+          .explanation-option-title {
+            font-size: clamp(16px, 2vw, 18px);
+          }
+
+          .explanation-text {
+            font-size: clamp(16px, 2vw, 18px);
+          }
         }
 
         /* Desktop (1024px+) */
@@ -413,6 +433,14 @@ export default function ExplanationSection({
 
           .explanation-title {
             font-size: clamp(26px, 2.5vw, 32px);
+          }
+
+          .explanation-option-title {
+            font-size: clamp(17px, 1.8vw, 20px);
+          }
+
+          .explanation-text {
+            font-size: clamp(17px, 1.8vw, 20px);
           }
         }
 
@@ -446,6 +474,14 @@ export default function ExplanationSection({
           .explanation-label {
             font-size: 20px;
             margin-bottom: 24px;
+          }
+
+          .explanation-option-title {
+            font-size: 18px;
+          }
+
+          .explanation-text {
+            font-size: 18px;
           }
         }
       `}</style>

@@ -210,14 +210,16 @@ export default function QuestionCard({
                   </div>
                 )}
                 {/* Display option text with letter prefix stripped - letters are internal only */}
-                <span style={{
-                  color: '#e5e5e5',
-                  fontSize: showExplanation ? '18px' : '16px',
-                  lineHeight: '1.6',
-                  flex: 1,
-                  minWidth: 0,
-                  wordBreak: 'break-word',
-                }}>
+                <span
+                  className="option-text"
+                  style={{
+                    color: '#e5e5e5',
+                    lineHeight: '1.6',
+                    flex: 1,
+                    minWidth: 0,
+                    wordBreak: 'break-word',
+                  }}
+                >
                   {stripLetterPrefix(option)}
                 </span>
               </div>
@@ -253,6 +255,10 @@ export default function QuestionCard({
           padding: clamp(20px, 3.5vw, 32px) !important;
         }
 
+        .option-text {
+          font-size: clamp(14px, 2.5vw, 16px);
+        }
+
         /* Tablet (768px+) */
         @media (min-width: 768px) {
           .question-card-container {
@@ -271,6 +277,10 @@ export default function QuestionCard({
           .answer-option-button {
             padding: clamp(24px, 3vw, 36px) !important;
           }
+
+          .option-text {
+            font-size: clamp(16px, 2vw, 18px);
+          }
         }
 
         /* Desktop (1024px+) */
@@ -286,6 +296,10 @@ export default function QuestionCard({
 
           .answer-option-button {
             padding: clamp(28px, 2.5vw, 40px) !important;
+          }
+
+          .option-text {
+            font-size: clamp(17px, 1.8vw, 20px);
           }
         }
 
@@ -315,6 +329,10 @@ export default function QuestionCard({
 
           .answer-option-button {
             padding: 40px !important;
+          }
+
+          .option-text {
+            font-size: 18px;
           }
         }
       `}</style>
