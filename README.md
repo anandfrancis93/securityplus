@@ -1,13 +1,15 @@
-# Security+ SY0-701 Learning Platform
+# AI-Powered Learning Platform
 
-An AI-powered Progressive Web App (PWA) for CompTIA Security+ SY0-701 certification exam preparation featuring intelligent adaptive testing with FSRS-based topic scheduling, comprehensive performance analytics with confidence intervals, AI-powered chat assistant, and flashcard study system with spaced repetition.
+An adaptive learning Progressive Web App (PWA) featuring AI-generated questions, intelligent topic scheduling with FSRS-based spaced repetition, comprehensive performance analytics with confidence intervals, AI-powered chat assistant, and flashcard study system.
+
+**Currently Available:** CompTIA Security+ SY0-701 certification preparation (expandable to other subjects)
 
 ## Features
 
-### AI Chat Assistant (NEW)
+### AI Chat Assistant
 
 - **Grok 4 Fast Integration**: Powered by xAI's Grok-4-Fast-Non-Reasoning model for fast, accurate responses
-- **Official SY0-701 Syllabus**: Complete CompTIA Security+ exam structure with all 5 domains and objectives
+- **Subject-Specific Knowledge**: Pre-configured with official syllabi and learning objectives
 - **Structured Responses**: Formatted answers with numbered points, bullet lists, and markdown support
 - **Chat History Management**:
   - Auto-save conversations to Firestore
@@ -21,9 +23,9 @@ An AI-powered Progressive Web App (PWA) for CompTIA Security+ SY0-701 certificat
 - **Mobile-First**: Responsive design from 320px to 4K displays
 - **Real-Time Streaming**: Instant responses with loading indicators
 
-### Quiz Mode with Adaptive Testing & FSRS Scheduling
+### Adaptive Quiz Mode with FSRS Scheduling
 
-- **AI-Generated Synthesis Questions**: Creates complex questions combining multiple security concepts using xAI Grok (grok-4-fast-reasoning for generation, grok-4-fast-non-reasoning for topic identification)
+- **AI-Generated Synthesis Questions**: Creates complex questions combining multiple concepts using xAI Grok (grok-4-fast-reasoning for generation, grok-4-fast-non-reasoning for topic identification)
 - **FSRS-Powered Topic Selection**: Uses Free Spaced Repetition Scheduler algorithm to determine which topics appear in your quiz based on:
   - Topic stability and difficulty
   - Time since last review
@@ -46,7 +48,7 @@ An AI-powered Progressive Web App (PWA) for CompTIA Security+ SY0-701 certificat
 - **Item Response Theory (IRT) Scoring**: Advanced psychometric scoring system that weighs questions by difficulty
 - **Confidence Intervals**: Statistical confidence intervals shown for ability estimates and predicted scores
 - **Partial Credit System**: Earn proportional points for partially correct answers on multiple-response questions
-- **Intelligent Score Prediction**: IRT-based ability estimation predicts your exam score (100-900 scale)
+- **Intelligent Score Prediction**: IRT-based ability estimation predicts your performance on standardized scoring scales
 - **Cross-Device Resume**: Quiz state saved to cloud, resume on any device
 - **Local Storage Backup**: Quiz auto-saved to localStorage for reliability
 - **Pause/Resume Question Generation**: Control over background question generation to manage API costs and battery usage
@@ -55,9 +57,9 @@ An AI-powered Progressive Web App (PWA) for CompTIA Security+ SY0-701 certificat
 
 - **6 Interactive Performance Graphs**:
   1. **Ability Level Over Time**: Track your IRT ability (θ) progression with confidence intervals
-  2. **Predicted Score Over Time**: Monitor your exam readiness with 750 passing threshold and confidence bands
+  2. **Predicted Score Over Time**: Monitor your exam readiness with passing threshold and confidence bands
   3. **Accuracy by Difficulty**: See performance breakdown across easy/medium/hard questions
-  4. **Performance by Domain**: Track coverage and accuracy across all 5 SY0-701 domains
+  4. **Performance by Domain**: Track coverage and accuracy across all subject domains
   5. **Individual Domain Performance**: Collapsible detailed view for each domain
   6. **Topic Coverage by Domain**: Shows all topics organized by their domains
 - **IRT Performance Insights**: Dynamic, specific insights generated from your IRT performance data considering:
@@ -78,7 +80,7 @@ An AI-powered Progressive Web App (PWA) for CompTIA Security+ SY0-701 certificat
   - Import with merge or replace options
   - Automatic recalculation of all metrics after import
 - **Confidence Intervals**: Wilson score intervals and IRT standard errors for statistical accuracy
-- **Cross-Session Topic Tracking**: Comprehensive tracking of performance across all SY0-701 topics with FSRS scheduling
+- **Cross-Session Topic Tracking**: Comprehensive tracking of performance across all topics with FSRS scheduling
 - **Recalculate Progress**: Recompute all performance metrics from quiz history
 
 ### Flashcard Mode with Spaced Repetition
@@ -102,7 +104,7 @@ An AI-powered Progressive Web App (PWA) for CompTIA Security+ SY0-701 certificat
 - **Google Sign-In**: Secure authentication via Google OAuth
 - **Anonymous Mode**: Try the app without signing in (data not persisted)
 - **Cloud Sync**: All progress, flashcards, and chat history automatically saved to Firebase (Firestore + Storage)
-- **Comprehensive Progress Tracking**: Track answered questions, points earned, ability estimate, predicted exam score, and topic mastery
+- **Comprehensive Progress Tracking**: Track answered questions, points earned, ability estimate, predicted scores, and topic mastery
 - **Neomorphic Dark UI**: Modern dark theme (#0f0f0f) with soft inset/outset shadows and purple accents (#8b5cf6)
 - **Responsive Design**: Mobile-first design with fluid typography using clamp() from 320px to 4K (3840px)
 - **Progressive Web App**: Installable on mobile devices with offline support
@@ -135,7 +137,7 @@ An AI-powered Progressive Web App (PWA) for CompTIA Security+ SY0-701 certificat
 ### AI Chat Assistant
 
 1. **Access**: Click "AI Chat" from hamburger menu
-2. **Ask Questions**: Type any Security+ or general question
+2. **Ask Questions**: Type any subject-related or general question
 3. **Structured Responses**: AI provides formatted answers with:
    - Clear introductory statement
    - Numbered main points (1, 2, 3...)
@@ -143,7 +145,7 @@ An AI-powered Progressive Web App (PWA) for CompTIA Security+ SY0-701 certificat
    - Practical examples
    - Concluding statement
    - Proper markdown formatting (headings, code blocks, lists)
-4. **Official Syllabus Context**: AI references specific exam objectives (e.g., "This relates to objective 2.4 - Analyzing indicators of malicious activity")
+4. **Official Syllabus Context**: AI references specific learning objectives from the subject syllabus
 5. **Chat History**: All conversations auto-saved to Firestore
    - Click chat history icon to view all past chats
    - Click any chat to continue the conversation
@@ -167,12 +169,12 @@ An AI-powered Progressive Web App (PWA) for CompTIA Security+ SY0-701 certificat
    - Each new question triggers generation of the next one
    - Zero wait time between questions for seamless experience
    - Pause/Resume button to control background generation
-4. **AI Question Generation**: xAI Grok creates unique synthesis questions from comprehensive SY0-701 exam objectives
+4. **AI Question Generation**: xAI Grok creates unique synthesis questions from comprehensive learning objectives
 5. **AI-Based Topic Identification**:
    - After generation, Grok Vision analyzes the question to identify which topics it actually tests
    - Uses semantic understanding with vision capabilities for consistency
    - Considers only what's required to answer correctly (ignores distractors)
-   - Provides exact topic strings from the Security+ SY0-701 topic inventory
+   - Provides exact topic strings from the subject's topic inventory
 6. **Deterministic Difficulty Classification**:
    - System counts topics and domains from AI-identified topics
    - Classification logic:
@@ -182,7 +184,7 @@ An AI-powered Progressive Web App (PWA) for CompTIA Security+ SY0-701 certificat
 7. **Partial Credit**: Multiple-response questions award proportional credit
 8. **IRT Analysis**: System estimates your ability level (theta) using Maximum Likelihood Estimation
 9. **Confidence Intervals**: Statistical confidence bands shown for predictions
-10. **Score Prediction**: Maps your ability estimate to the 100-900 exam score scale
+10. **Score Prediction**: Maps your ability estimate to standardized scoring scales
 11. **FSRS Update**: After each quiz, FSRS algorithm updates topic schedules based on performance
 12. **Cloud Sync**: All progress stored in Firestore and synced across devices
 13. **Local Backup**: Quiz state saved to localStorage for reliability
@@ -190,9 +192,9 @@ An AI-powered Progressive Web App (PWA) for CompTIA Security+ SY0-701 certificat
 ### Performance Analytics System
 
 1. **Ability Level Over Time**: Line chart showing θ progression with confidence intervals
-2. **Predicted Score Over Time**: Line chart tracking score estimates with confidence bands and passing threshold (750)
+2. **Predicted Score Over Time**: Line chart tracking score estimates with confidence bands and passing threshold
 3. **Accuracy by Difficulty**: Bar chart showing percentage correct for easy/medium/hard questions
-4. **Domain Performance**: Horizontal bar chart showing accuracy across all 5 SY0-701 domains
+4. **Domain Performance**: Horizontal bar chart showing accuracy across all subject domains
 5. **Individual Domain Tables**: Collapsible tables showing detailed stats for each domain
 6. **Topic Coverage**: Tables showing all topics with coverage count and accuracy
 7. **IRT Performance Insights**: AI-generated insights analyzing your performance patterns
@@ -230,15 +232,13 @@ An AI-powered Progressive Web App (PWA) for CompTIA Security+ SY0-701 certificat
 - Accounts for question difficulty and discrimination parameters
 - Statistical confidence intervals provided
 
-**Score Prediction Mapping:**
+**Score Prediction Mapping (Example: 100-900 scale):**
 - θ = -3: ~160 (very low ability)
 - θ = -1: ~420 (below average)
 - θ = 0: ~550 (average ability)
 - θ = +1: ~680 (above average)
 - θ = +2: ~810 (high ability)
 - θ = +3: ~900 (expert ability)
-
-**Passing Score**: 750/900 (requires θ ≈ +1.5)
 
 **Performance Metrics:**
 - Total questions answered
@@ -292,9 +292,17 @@ An AI-powered Progressive Web App (PWA) for CompTIA Security+ SY0-701 certificat
 - Recover from accidental resets
 - Archive historical progress
 
-## AI Chat System Prompt Structure
+## Subject Configuration
 
-The AI Chat assistant is configured with the complete **Official CompTIA Security+ SY0-701 Exam Syllabus** including:
+The platform is designed to support multiple subjects. Each subject includes:
+
+**Required Components:**
+1. **Domain Structure**: Hierarchical organization of learning areas
+2. **Topic Inventory**: Complete list of learning objectives
+3. **AI System Prompt**: Subject-specific knowledge base for chat assistant
+4. **Scoring Scale**: Standardized scoring system (if applicable)
+
+**Current Subject: CompTIA Security+ SY0-701**
 
 **5 Domains:**
 1. General Security Concepts (1.1-1.4)
@@ -303,13 +311,7 @@ The AI Chat assistant is configured with the complete **Official CompTIA Securit
 4. Security Operations (4.1-4.9)
 5. Security Program Management and Oversight (5.1-5.6)
 
-**Response Format Instructions:**
-- Clear introductory statement
-- Numbered main points with bullet sub-points
-- Practical examples
-- Concluding statements
-- Reference specific exam objectives
-- Markdown formatting with proper spacing
+**Scoring:** 100-900 scale (passing: 750)
 
 ## Technology Details
 
@@ -565,6 +567,7 @@ MIT
 
 ---
 
-**Built with ❤️ for Security+ exam preparation**
+**Built with ❤️ for adaptive learning and mastery**
 
-*Note: This is an independent study tool and is not affiliated with or endorsed by CompTIA.*
+*Current Subject: CompTIA Security+ SY0-701 (expandable to other subjects)*
+*Note: This is an independent learning tool and is not affiliated with or endorsed by CompTIA.*
