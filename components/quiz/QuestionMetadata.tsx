@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { Question } from '@/lib/types';
 import { getDomainsFromTopics } from '@/lib/domainDetection';
 import { ALL_SECURITY_PLUS_TOPICS } from '@/lib/topicData';
@@ -93,6 +94,7 @@ function getTopicDomain(topic: string): string {
 }
 
 export default function QuestionMetadata({ question, pointsEarned, maxPoints }: QuestionMetadataProps) {
+  const [showTooltip, setShowTooltip] = React.useState(false);
   const domains = getDomainsFromTopics(question.topics);
 
   // Group topics by domain, maintaining the same order as domains array
@@ -271,7 +273,12 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
           }}>
             Cost:
           </span>
-          <div className="cost-container" style={{ position: 'relative', display: 'inline-block' }}>
+          <div
+            className="cost-container"
+            style={{ position: 'relative', display: 'inline-block' }}
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+          >
             <span
               className="cost-value"
               style={{
@@ -279,7 +286,6 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
                 fontWeight: 700,
                 color: '#10b981',
                 cursor: 'help',
-                borderBottom: '1px dotted #10b981',
               }}
             >
               ${costData.totalCost.toFixed(6)}
@@ -295,12 +301,12 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
               border: '1px solid #333',
               borderRadius: '12px',
               boxShadow: '0 8px 16px rgba(0, 0, 0, 0.6)',
-              opacity: 0,
-              visibility: 'hidden',
-              transition: 'opacity 0.2s, visibility 0.2s',
-              pointerEvents: 'none',
+              opacity: showTooltip ? 1 : 0,
+              visibility: showTooltip ? 'visible' : 'hidden',
+              transition: 'opacity 0.2s ease, visibility 0.2s ease',
               minWidth: '280px',
               zIndex: 1000,
+              whiteSpace: 'nowrap',
             }}>
               {/* Tooltip Arrow */}
               <div style={{
@@ -390,12 +396,6 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
         .metadata-card {
           padding: clamp(20px, 4vw, 32px);
           margin-top: clamp(24px, 4vw, 48px);
-        }
-
-        /* Cost tooltip hover effect */
-        .cost-container:hover .cost-tooltip {
-          opacity: 1;
-          visibility: visible;
         }
 
         /* Tablet (768px+) */
