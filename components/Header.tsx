@@ -67,16 +67,16 @@ export default function Header({
         >
           {/* Logo Icon */}
           <div className="header-logo-icon">
-            S+
+            AI
           </div>
 
           {/* Logo Text */}
           <div className="header-logo-text">
             <div className="header-logo-title">
-              SecurityPlus AI
+              AI Learning
             </div>
             <div className="header-logo-subtitle">
-              Master Your Skills
+              Adaptive Platform
             </div>
           </div>
         </button>

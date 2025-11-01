@@ -1,4 +1,24 @@
-<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
-  <rect width="512" height="512" fill="#8b5cf6" rx="128"/>
-  <text x="256" y="350" font-family="Arial, sans-serif" font-size="200" font-weight="bold" fill="#ffffff" text-anchor="middle">S+</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Dark background matching app theme -->
+  <rect width="512" height="512" rx="102" fill="#0f0f0f"/>
+
+  <!-- Purple accent gradient -->
+  <defs>
+    <linearGradient id="purpleGradient512" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a78bfa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- AI Text with modern styling -->
+  <text x="256" y="358" font-family="system-ui, -apple-system, sans-serif" font-size="245" font-weight="800" fill="url(#purpleGradient512)" text-anchor="middle" letter-spacing="-10">AI</text>
+
+  <!-- Small neural network dots above -->
+  <circle cx="178" cy="128" r="16" fill="#8b5cf6" opacity="0.6"/>
+  <circle cx="256" cy="102" r="16" fill="#8b5cf6"/>
+  <circle cx="334" cy="128" r="16" fill="#8b5cf6" opacity="0.6"/>
+
+  <!-- Connection lines -->
+  <line x1="178" y1="128" x2="256" y2="102" stroke="#8b5cf6" stroke-width="8" opacity="0.4"/>
+  <line x1="256" y1="102" x2="334" y2="128" stroke="#8b5cf6" stroke-width="8" opacity="0.4"/>
 </svg>

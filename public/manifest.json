@@ -1,7 +1,7 @@
 {
-  "name": "SecurityPlus AI - Master Your Skills",
-  "short_name": "SecurityPlus",
-  "description": "Master CompTIA Security+ SY0-701 with AI-powered adaptive quizzes, performance tracking, and personalized learning",
+  "name": "AI Learning Platform - Adaptive Education",
+  "short_name": "AI Learning",
+  "description": "Adaptive learning platform powered by AI with intelligent quizzes, performance tracking, and personalized study paths. Currently featuring Cybersecurity (CompTIA Security+ SY0-701)",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f0f0f",
@@ -24,9 +24,9 @@
   "categories": ["education", "productivity"],
   "shortcuts": [
     {
-      "name": "Start Quiz",
-      "short_name": "Quiz",
-      "description": "Start a new practice quiz",
+      "name": "Start Learning",
+      "short_name": "Learn",
+      "description": "Start a new practice session",
       "url": "/cybersecurity",
       "icons": [{ "src": "/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }]
     },
