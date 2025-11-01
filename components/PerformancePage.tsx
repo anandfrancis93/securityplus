@@ -649,29 +649,13 @@ export default function QuizPerformance() {
           transition: 'all 0.3s ease'
         }}>
           <div style={{ position: 'relative', textAlign: 'center', marginBottom: '2.5rem' }}>
-            <div className="group relative inline-block cursor-help">
-              <h2 style={{
-                fontSize: 'clamp(2rem, 5vw, 2.5rem)',
-                color: '#e5e5e5',
-                marginBottom: '0.5rem',
-                letterSpacing: '-0.025em',
-                fontWeight: 'bold'
-              }}>Predicted Exam Score</h2>
-              {/* Hover tooltip */}
-              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 bg-slate-900/95 backdrop-blur-xl border border-violet-500/30 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_0.6s_ease-in-out_forwards]">
-                <div className="space-y-1 text-sm text-slate-300">
-                  <div>
-                    <span className="text-green-400 font-medium">Green:</span> 750 - 900
-                  </div>
-                  <div>
-                    <span className="text-yellow-400 font-medium">Yellow:</span> 600 - 749
-                  </div>
-                  <div>
-                    <span className="text-red-400 font-medium">Red:</span> 100 - 599
-                  </div>
-                </div>
-              </div>
-            </div>
+            <h2 style={{
+              fontSize: 'clamp(2rem, 5vw, 2.5rem)',
+              color: '#e5e5e5',
+              marginBottom: '0.5rem',
+              letterSpacing: '-0.025em',
+              fontWeight: 'bold'
+            }}>Predicted Exam Score</h2>
             {totalAnswered >= MIN_QUESTIONS_FOR_PREDICTION && (
               <p style={{
                 fontSize: 'clamp(0.875rem, 2vw, 1rem)',
@@ -684,7 +668,7 @@ export default function QuizPerformance() {
 
             {hasEnoughQuestions ? (
               <>
-                <div className="score-display">
+                <div className="score-display group relative cursor-help">
                   {/* Score Range Display */}
                   {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
                     <>
@@ -714,6 +698,20 @@ export default function QuizPerformance() {
                           {scoreCI.upper}
                         </span>
                       </div>
+                      {/* Hover tooltip */}
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 bg-slate-900/95 backdrop-blur-xl border border-violet-500/30 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_0.6s_ease-in-out_forwards]">
+                        <div className="space-y-1 text-sm text-slate-300">
+                          <div>
+                            <span className="text-green-400 font-medium">Green:</span> 750 - 900
+                          </div>
+                          <div>
+                            <span className="text-yellow-400 font-medium">Yellow:</span> 600 - 749
+                          </div>
+                          <div>
+                            <span className="text-red-400 font-medium">Red:</span> 100 - 599
+                          </div>
+                        </div>
+                      </div>
                     </>
                   ) : (
                     <>
@@ -736,35 +734,22 @@ export default function QuizPerformance() {
                       }}>
                         Point Estimate (need more data for CI)
                       </div>
+                      {/* Hover tooltip */}
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 bg-slate-900/95 backdrop-blur-xl border border-violet-500/30 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_0.6s_ease-in-out_forwards]">
+                        <div className="space-y-1 text-sm text-slate-300">
+                          <div>
+                            <span className="text-green-400 font-medium">Green:</span> 750 - 900
+                          </div>
+                          <div>
+                            <span className="text-yellow-400 font-medium">Yellow:</span> 600 - 749
+                          </div>
+                          <div>
+                            <span className="text-red-400 font-medium">Red:</span> 100 - 599
+                          </div>
+                        </div>
+                      </div>
                     </>
                   )}
-                  {/* Hover tooltip */}
-                  <div className="tooltip" style={{
-                    position: 'absolute',
-                    bottom: '100%',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    marginBottom: '0.75rem',
-                    width: '20rem',
-                    maxWidth: '90vw',
-                    background: '#0f0f0f',
-                    borderRadius: '1.5rem',
-                    boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
-                    padding: '1.25rem',
-                    zIndex: '50',
-                    pointerEvents: 'none',
-                    opacity: '0',
-                    transition: 'opacity 0.3s ease'
-                  }}>
-                    <div style={{ position: 'relative' }}>
-                      <p style={{
-                        fontSize: '0.875rem',
-                        lineHeight: '1.6',
-                        color: '#a8a8a8'
-                      }}>
-                        We are 95% confident your exam score will fall between <strong style={{ color: '#e5e5e5' }}>{scoreCI.lower}</strong> and <strong style={{ color: '#e5e5e5' }}>{scoreCI.upper}</strong>.
-                      </p>
-                    </div>
                   </div>
                 </div>
                 <div style={{
@@ -1137,117 +1122,63 @@ export default function QuizPerformance() {
                         flexWrap: 'wrap',
                         gap: '1rem'
                       }}>
-                        <div className="group relative cursor-help">
-                          <h4 style={{
-                            fontSize: 'clamp(1.5rem, 4vw, 2rem)',
-                            fontWeight: 'bold',
-                            color: '#e5e5e5',
-                            letterSpacing: '-0.025em'
-                          }}>Ability Level</h4>
-                          {/* Hover tooltip */}
-                          <div className="absolute bottom-full left-0 mb-2 w-64 bg-slate-900/95 backdrop-blur-xl border border-violet-500/30 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_0.6s_ease-in-out_forwards]">
-                            <p className="text-sm text-slate-300 leading-relaxed">Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
-                          </div>
-                        </div>
-                        <div className="ability-display">
+                        <h4 style={{
+                          fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+                          fontWeight: 'bold',
+                          color: '#e5e5e5',
+                          letterSpacing: '-0.025em'
+                        }}>Ability Level</h4>
+                        <div className="ability-display group relative cursor-help">
                           {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
-                            <div style={{
-                              fontSize: 'clamp(1.5rem, 6vw, 3rem)',
-                              fontWeight: 'bold',
-                              transition: 'all 0.3s ease',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              gap: '0.5rem'
-                            }}>
-                              <span style={{
-                                color: lowerAbilityColor === 'emerald' ? '#10b981' :
-                                       lowerAbilityColor === 'yellow' ? '#f59e0b' :
-                                       '#f43f5e'
-                              }}>
-                                {abilityCI.lower.toFixed(2)}
-                              </span>
-                              <span style={{ color: '#666666' }}>-</span>
-                              <span style={{
-                                color: upperAbilityColor === 'emerald' ? '#10b981' :
-                                       upperAbilityColor === 'yellow' ? '#f59e0b' :
-                                       '#f43f5e'
-                              }}>
-                                {abilityCI.upper.toFixed(2)}
-                              </span>
-                            </div>
-                          ) : (
-                            <div style={{
-                              fontSize: 'clamp(1.5rem, 6vw, 3rem)',
-                              fontWeight: 'bold',
-                              transition: 'all 0.3s ease',
-                              color: estimatedAbility >= 1.54 ? '#10b981' :
-                                     estimatedAbility >= 0.38 ? '#f59e0b' :
-                                     '#f43f5e'
-                            }}>
-                              {estimatedAbility.toFixed(2)}
-                            </div>
-                          )}
-                          {/* Tooltip */}
-                          <div className="tooltip" style={{
-                            position: 'absolute',
-                            bottom: '100%',
-                            right: '0',
-                            marginBottom: '0.5rem',
-                            width: '20rem',
-                            transition: 'opacity 0.3s ease',
-                            background: '#0f0f0f',
-                            borderRadius: '1.5rem',
-                            boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
-                            padding: '1.5rem',
-                            zIndex: '50',
-                            pointerEvents: 'none',
-                            opacity: '0'
-                          }}>
-                            <div style={{ fontSize: '0.875rem' }}>
+                            <>
                               <div style={{
-                                marginBottom: '0.75rem',
-                                paddingBottom: '0.75rem',
-                                borderBottom: '1px solid #333333'
+                                fontSize: 'clamp(1.5rem, 6vw, 3rem)',
+                                fontWeight: 'bold',
+                                transition: 'all 0.3s ease',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.5rem'
                               }}>
-                                <div style={{
-                                  color: '#a8a8a8',
-                                  fontWeight: '600',
-                                  marginBottom: '0.25rem'
-                                }}>Ability Level (θ)</div>
-                                <div style={{
-                                  fontSize: '0.75rem',
-                                  color: '#666666'
-                                }}>IRT measure adjusted for question difficulty</div>
+                                <span style={{
+                                  color: lowerAbilityColor === 'emerald' ? '#10b981' :
+                                         lowerAbilityColor === 'yellow' ? '#f59e0b' :
+                                         '#f43f5e'
+                                }}>
+                                  {abilityCI.lower.toFixed(2)}
+                                </span>
+                                <span style={{ color: '#666666' }}>-</span>
+                                <span style={{
+                                  color: upperAbilityColor === 'emerald' ? '#10b981' :
+                                         upperAbilityColor === 'yellow' ? '#f59e0b' :
+                                         '#f43f5e'
+                                }}>
+                                  {abilityCI.upper.toFixed(2)}
+                                </span>
                               </div>
-                              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                                <div style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'space-between'
-                                }}>
-                                  <span style={{ color: '#10b981', fontWeight: '600' }}>≥1.54</span>
-                                  <span style={{ color: '#a8a8a8' }}>Passing (≥750)</span>
-                                </div>
-                                <div style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'space-between'
-                                }}>
-                                  <span style={{ color: '#f59e0b', fontWeight: '600' }}>0.38 to 1.54</span>
-                                  <span style={{ color: '#a8a8a8' }}>Close (600-749)</span>
-                                </div>
-                                <div style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'space-between'
-                                }}>
-                                  <span style={{ color: '#f43f5e', fontWeight: '600' }}>&lt;0.38</span>
-                                  <span style={{ color: '#a8a8a8' }}>Needs Work (&lt;600)</span>
-                                </div>
+                              {/* Hover tooltip */}
+                              <div className="absolute bottom-full left-0 mb-2 w-64 bg-slate-900/95 backdrop-blur-xl border border-violet-500/30 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_0.6s_ease-in-out_forwards]">
+                                <p className="text-sm text-slate-300 leading-relaxed">Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
                               </div>
-                            </div>
-                          </div>
+                            </>
+                          ) : (
+                            <>
+                              <div style={{
+                                fontSize: 'clamp(1.5rem, 6vw, 3rem)',
+                                fontWeight: 'bold',
+                                transition: 'all 0.3s ease',
+                                color: estimatedAbility >= 1.54 ? '#10b981' :
+                                       estimatedAbility >= 0.38 ? '#f59e0b' :
+                                       '#f43f5e'
+                              }}>
+                                {estimatedAbility.toFixed(2)}
+                              </div>
+                              {/* Hover tooltip */}
+                              <div className="absolute bottom-full left-0 mb-2 w-64 bg-slate-900/95 backdrop-blur-xl border border-violet-500/30 rounded-3xl p-3 shadow-2xl z-50 pointer-events-none opacity-0 group-hover:animate-[tooltipFade_0.6s_ease-in-out_forwards]">
+                                <p className="text-sm text-slate-300 leading-relaxed">Your skill level adjusted for question difficulty. Higher scores mean you answered harder questions correctly. Range: -3 (beginner) to +3 (expert).</p>
+                              </div>
+                            </>
+                          )}
                         </div>
                       </div>
                       <div style={{ position: 'relative', marginTop: '1.5rem' }}>
