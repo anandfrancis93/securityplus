@@ -448,15 +448,6 @@ export default function ExplanationSection({
             margin-bottom: 24px;
           }
         }
-
-        /* 4K (1920px+) - Cap maximum sizes */
-        @media (min-width: 1920px) {
-          .explanation-card {
-            max-width: 1600px;
-            margin-left: auto;
-            margin-right: auto;
-          }
-        }
       `}</style>
     </div>
   );

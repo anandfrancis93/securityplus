@@ -317,15 +317,6 @@ export default function QuestionCard({
             padding: 40px !important;
           }
         }
-
-        /* 4K (1920px+) - Cap maximum sizes */
-        @media (min-width: 1920px) {
-          .question-card-container {
-            max-width: 1600px;
-            margin-left: auto;
-            margin-right: auto;
-          }
-        }
       `}</style>
     </div>
   );

@@ -401,7 +401,7 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
         /* Tablet (768px+) */
         @media (min-width: 768px) {
           .metadata-card {
-            padding: clamp(32px, 4vw, 40px);
+            padding: clamp(32px, 4vw, 48px);
             margin-top: clamp(32px, 4vw, 48px);
           }
         }
@@ -409,14 +409,21 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
         /* Desktop (1024px+) */
         @media (min-width: 1024px) {
           .metadata-card {
-            padding: clamp(36px, 3vw, 48px);
+            padding: clamp(40px, 3.5vw, 56px);
+          }
+        }
+
+        /* Large Desktop (1280px+) */
+        @media (min-width: 1280px) {
+          .metadata-card {
+            padding: clamp(48px, 3vw, 64px);
           }
         }
 
         /* XL Desktop (1440px+) */
         @media (min-width: 1440px) {
           .metadata-card {
-            padding: 48px;
+            padding: 64px;
             margin-top: 48px;
           }
         }
