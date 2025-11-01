@@ -750,7 +750,6 @@ export default function QuizPerformance() {
                       </div>
                     </>
                   )}
-                  </div>
                 </div>
                 <div style={{
                   fontSize: 'clamp(1.25rem, 3vw, 1.5rem)',
