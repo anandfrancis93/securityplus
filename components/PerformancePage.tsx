@@ -1000,7 +1000,7 @@ export default function QuizPerformance() {
                 marginBottom: '1rem',
                 letterSpacing: '-0.025em'
               }}>Accuracy</div>
-              <div className="accuracy-display">
+              <div className="accuracy-display group relative cursor-help">
                 <div style={{
                   fontSize: 'clamp(3rem, 8vw, 4rem)',
                   fontWeight: 'bold',
@@ -1010,31 +1010,32 @@ export default function QuizPerformance() {
                          parseFloat(accuracy.toString()) >= 62.5 ? '#f59e0b' :
                          '#f43f5e'
                 }}>{accuracy}%</div>
-                {/* Tooltip */}
-                <div className="tooltip" style={{
+                {/* Hover tooltip */}
+                <div className="accuracy-tooltip" style={{
                   position: 'absolute',
                   bottom: '100%',
                   left: '50%',
                   transform: 'translateX(-50%)',
                   marginBottom: '0.5rem',
-                  width: '20rem',
-                  transition: 'opacity 0.3s ease',
+                  width: '16rem',
                   background: '#0f0f0f',
                   borderRadius: '1.5rem',
-                  boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
-                  padding: '1.5rem',
-                  zIndex: '50',
+                  boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+                  padding: '1rem',
+                  zIndex: 50,
                   pointerEvents: 'none',
-                  opacity: '0'
+                  opacity: 0,
+                  transition: 'opacity 0.3s ease, transform 0.3s ease',
+                  border: '1px solid rgba(139, 92, 246, 0.2)'
                 }}>
-                  <div style={{ fontSize: '0.875rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.875rem', color: '#a8a8a8' }}>
                     <div style={{
-                      marginBottom: '0.75rem',
-                      paddingBottom: '0.75rem',
+                      marginBottom: '0.5rem',
+                      paddingBottom: '0.5rem',
                       borderBottom: '1px solid #333333'
                     }}>
                       <div style={{
-                        color: '#a8a8a8',
+                        color: '#e5e5e5',
                         fontWeight: '600',
                         marginBottom: '0.25rem'
                       }}>Accuracy Levels</div>
@@ -1515,7 +1516,7 @@ export default function QuizPerformance() {
 
         .score-display:hover .score-tooltip,
         .ability-display:hover .ability-tooltip,
-        .accuracy-display:hover .tooltip {
+        .accuracy-display:hover .accuracy-tooltip {
           opacity: 1;
         }
 
@@ -1532,7 +1533,7 @@ export default function QuizPerformance() {
         @media (max-width: 768px) {
           .score-tooltip,
           .ability-tooltip,
-          .tooltip {
+          .accuracy-tooltip {
             left: 50%;
             right: auto;
             transform: translateX(-50%);
