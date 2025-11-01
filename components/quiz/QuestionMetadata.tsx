@@ -420,15 +420,6 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
             margin-top: 48px;
           }
         }
-
-        /* 4K (1920px+) - Cap maximum sizes */
-        @media (min-width: 1920px) {
-          .metadata-card {
-            max-width: 1600px;
-            margin-left: auto;
-            margin-right: auto;
-          }
-        }
       `}</style>
     </div>
   );
