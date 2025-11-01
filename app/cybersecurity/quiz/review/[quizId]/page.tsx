@@ -267,22 +267,6 @@ export default function QuizReviewPage() {
             );
           })}
         </div>
-
-        {/* Back to Performance Button */}
-        <div className="back-button-container">
-          <button
-            onClick={() => router.push('/cybersecurity/performance')}
-            className="back-button"
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = '6px 6px 12px #050505, -6px -6px 12px #191919';
-            }}
-          >
-            ← Back to Performance
-          </button>
-        </div>
       </div>
 
       <style jsx>{`
@@ -378,25 +362,6 @@ export default function QuizReviewPage() {
           font-size: clamp(24px, 4.5vw, 40px);
           font-weight: bold;
           color: #e5e5e5;
-        }
-
-        .back-button-container {
-          margin-top: clamp(48px, 8vw, 80px);
-          margin-bottom: clamp(48px, 8vw, 80px);
-          text-align: center;
-        }
-
-        .back-button {
-          padding: clamp(16px, 2.5vw, 24px) clamp(32px, 5vw, 64px);
-          font-size: clamp(16px, 2vw, 20px);
-          font-weight: bold;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          background: #0f0f0f;
-          border-radius: 16px;
-          border: none;
-          color: #e5e5e5;
-          cursor: pointer;
-          box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
         }
 
         /* Tablet (768px+) */
