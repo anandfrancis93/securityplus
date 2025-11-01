@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useApp } from '@/components/AppProvider';
 import Header from '@/components/Header';
+import { authenticatedPost } from '@/lib/apiClient';
 
 interface Message {
   id: string;
@@ -56,26 +57,14 @@ export default function AIChatPage() {
     setIsLoading(true);
 
     try {
-      // Call AI chat API with full conversation history
-      const response = await fetch('/api/ai-chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          messages: [...messages, userMessage].map(msg => ({
-            role: msg.role,
-            content: msg.content
-          })),
-          userId: user?.uid
-        }),
+      // Call AI chat API with full conversation history using authenticated request
+      const data = await authenticatedPost('/api/ai-chat', {
+        messages: [...messages, userMessage].map(msg => ({
+          role: msg.role,
+          content: msg.content
+        })),
+        userId: user?.uid
       });
-
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-
-      const data = await response.json();
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
