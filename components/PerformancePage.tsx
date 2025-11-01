@@ -187,6 +187,9 @@ export default function QuizPerformance() {
   const { user, userProgress, predictedScore, loading, resetProgress } = useApp();
   const router = useRouter();
   const [irtExpanded, setIrtExpanded] = useState(false);
+  const [showScoreTooltip, setShowScoreTooltip] = useState(false);
+  const [showAccuracyTooltip, setShowAccuracyTooltip] = useState(false);
+  const [showAbilityTooltip, setShowAbilityTooltip] = useState(false);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -668,7 +671,12 @@ export default function QuizPerformance() {
 
             {hasEnoughQuestions ? (
               <>
-                <div className="score-display" style={{ position: 'relative', cursor: 'help' }}>
+                <div
+                  className="score-display"
+                  style={{ position: 'relative', cursor: 'help' }}
+                  onMouseEnter={() => setShowScoreTooltip(true)}
+                  onMouseLeave={() => setShowScoreTooltip(false)}
+                >
                   {/* Score Range Display */}
                   {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
                     <>
@@ -712,7 +720,7 @@ export default function QuizPerformance() {
                         padding: '1rem',
                         zIndex: 50,
                         pointerEvents: 'none',
-                        opacity: 0,
+                        opacity: showScoreTooltip ? 1 : 0,
                         transition: 'opacity 0.3s ease, transform 0.3s ease',
                         border: '1px solid rgba(139, 92, 246, 0.2)'
                       }}>
@@ -764,7 +772,7 @@ export default function QuizPerformance() {
                         padding: '1rem',
                         zIndex: 50,
                         pointerEvents: 'none',
-                        opacity: 0,
+                        opacity: showScoreTooltip ? 1 : 0,
                         transition: 'opacity 0.3s ease, transform 0.3s ease',
                         border: '1px solid rgba(139, 92, 246, 0.2)'
                       }}>
@@ -1000,7 +1008,12 @@ export default function QuizPerformance() {
                 marginBottom: '1rem',
                 letterSpacing: '-0.025em'
               }}>Accuracy</div>
-              <div className="accuracy-display" style={{ position: 'relative', cursor: 'help' }}>
+              <div
+                className="accuracy-display"
+                style={{ position: 'relative', cursor: 'help' }}
+                onMouseEnter={() => setShowAccuracyTooltip(true)}
+                onMouseLeave={() => setShowAccuracyTooltip(false)}
+              >
                 <div style={{
                   fontSize: 'clamp(3rem, 8vw, 4rem)',
                   fontWeight: 'bold',
@@ -1024,7 +1037,7 @@ export default function QuizPerformance() {
                   padding: '1rem',
                   zIndex: 50,
                   pointerEvents: 'none',
-                  opacity: 0,
+                  opacity: showAccuracyTooltip ? 1 : 0,
                   transition: 'opacity 0.3s ease, transform 0.3s ease',
                   border: '1px solid rgba(139, 92, 246, 0.2)'
                 }}>
@@ -1160,7 +1173,12 @@ export default function QuizPerformance() {
                           color: '#e5e5e5',
                           letterSpacing: '-0.025em'
                         }}>Ability Level</h4>
-                        <div className="ability-display" style={{ position: 'relative', cursor: 'help' }}>
+                        <div
+                          className="ability-display"
+                          style={{ position: 'relative', cursor: 'help' }}
+                          onMouseEnter={() => setShowAbilityTooltip(true)}
+                          onMouseLeave={() => setShowAbilityTooltip(false)}
+                        >
                           {isFinite(abilityStandardError) && totalAnswered >= 1 ? (
                             <>
                               <div style={{
@@ -1201,7 +1219,7 @@ export default function QuizPerformance() {
                                 padding: '1rem',
                                 zIndex: 50,
                                 pointerEvents: 'none',
-                                opacity: 0,
+                                opacity: showAbilityTooltip ? 1 : 0,
                                 transition: 'opacity 0.3s ease, transform 0.3s ease',
                                 border: '1px solid rgba(139, 92, 246, 0.2)'
                               }}>
@@ -1233,7 +1251,7 @@ export default function QuizPerformance() {
                                 padding: '1rem',
                                 zIndex: 50,
                                 pointerEvents: 'none',
-                                opacity: 0,
+                                opacity: showAbilityTooltip ? 1 : 0,
                                 transition: 'opacity 0.3s ease, transform 0.3s ease',
                                 border: '1px solid rgba(139, 92, 246, 0.2)'
                               }}>
