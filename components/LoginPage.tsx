@@ -62,8 +62,8 @@ export default function Login() {
               </svg>
             </div>
             <div className="neu-logo-text">
-              <h1>Security<span>Plus</span></h1>
-              <p>AI Learning</p>
+              <h1>AI <span>Learning</span></h1>
+              <p>Platform</p>
             </div>
           </div>
         </header>
@@ -73,18 +73,18 @@ export default function Login() {
           {/* Status Badge */}
           <div className="neu-badge">
             <div className="neu-badge-dot"></div>
-            <span>CompTIA SY0-701</span>
+            <span>Now Available: Cybersecurity</span>
           </div>
 
           {/* Title */}
           <h2 className="neu-title">
-            Master Your
+            Master Any
             <br />
-            Certification Journey
+            Subject You Choose
           </h2>
 
           <p className="neu-subtitle">
-            Intelligent adaptive learning powered by advanced analytics
+            Intelligent adaptive learning powered by AI, advanced analytics,
             and spaced repetition algorithms
           </p>
 
@@ -133,7 +133,7 @@ export default function Login() {
                     <polyline points="20 6 9 17 4 12"/>
                   </svg>
                 </div>
-                <span>400+ Topics</span>
+                <span>Unlimited Questions</span>
               </div>
             </div>
 
@@ -159,26 +159,26 @@ export default function Login() {
           <div className="neu-stats">
             <div className="neu-stat">
               <div className="neu-stat-card">
-                <div className="neu-stat-value">400+</div>
-                <div className="neu-stat-label">Topics</div>
+                <div className="neu-stat-value">∞</div>
+                <div className="neu-stat-label">Questions</div>
               </div>
             </div>
             <div className="neu-stat">
               <div className="neu-stat-card">
                 <div className="neu-stat-value">AI</div>
-                <div className="neu-stat-label">Powered</div>
+                <div className="neu-stat-label">Generated</div>
               </div>
             </div>
             <div className="neu-stat">
               <div className="neu-stat-card">
                 <div className="neu-stat-value">IRT</div>
-                <div className="neu-stat-label">Analytics</div>
+                <div className="neu-stat-label">Scoring</div>
               </div>
             </div>
             <div className="neu-stat">
               <div className="neu-stat-card">
                 <div className="neu-stat-value">FSRS</div>
-                <div className="neu-stat-label">Algorithm</div>
+                <div className="neu-stat-label">Spaced Rep</div>
               </div>
             </div>
           </div>
@@ -198,7 +198,7 @@ export default function Login() {
                 </svg>
               </div>
               <h3 className="neu-feature-card-title">AI Question Engine</h3>
-              <p className="neu-feature-card-desc">Unlimited adaptive questions generated across all Security+ topics with intelligent difficulty calibration</p>
+              <p className="neu-feature-card-desc">Unlimited adaptive questions generated across all subject topics with intelligent difficulty calibration</p>
             </div>
 
             <div className="neu-feature-card">
@@ -232,8 +232,8 @@ export default function Login() {
                   <polyline points="22 4 12 14.01 9 11.01"/>
                 </svg>
               </div>
-              <h3 className="neu-feature-card-title">Exam Aligned</h3>
-              <p className="neu-feature-card-desc">Questions mirror actual CompTIA exam structure with validated difficulty distribution</p>
+              <h3 className="neu-feature-card-title">Subject Aligned</h3>
+              <p className="neu-feature-card-desc">Questions aligned with official learning objectives and validated difficulty distribution</p>
             </div>
 
             <div className="neu-feature-card">
@@ -245,7 +245,7 @@ export default function Login() {
                 </svg>
               </div>
               <h3 className="neu-feature-card-title">Full Coverage</h3>
-              <p className="neu-feature-card-desc">Complete mastery across all 5 Security+ domains with comprehensive topic mapping</p>
+              <p className="neu-feature-card-desc">Complete mastery across all subject domains with comprehensive topic mapping and tracking</p>
             </div>
 
             <div className="neu-feature-card">
@@ -265,8 +265,8 @@ export default function Login() {
         <footer className="neu-footer">
           <div className="neu-footer-content">
             <div className="neu-footer-brand">
-              <h4>SecurityPlus AI</h4>
-              <p>AI-powered learning for CompTIA Security+ SY0-701</p>
+              <h4>AI Learning Platform</h4>
+              <p>Adaptive learning platform with AI-generated content and advanced analytics. Currently featuring Cybersecurity (CompTIA Security+ SY0-701).</p>
             </div>
 
             <div className="neu-footer-links">
@@ -287,7 +287,7 @@ export default function Login() {
           </div>
 
           <div className="neu-footer-bottom">
-            <p>© 2024 SecurityPlus AI • All rights reserved</p>
+            <p>© 2024 AI Learning Platform • All rights reserved</p>
           </div>
         </footer>
       </div>
@@ -299,7 +299,7 @@ export default function Login() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebApplication",
-            "name": "SecurityPlus AI",
+            "name": "AI Learning Platform",
             "applicationCategory": "EducationalApplication",
             "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
           })
