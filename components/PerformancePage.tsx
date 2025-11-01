@@ -1514,9 +1514,9 @@ export default function QuizPerformance() {
           }
         }
 
-        .score-display:hover .score-tooltip,
-        .ability-display:hover .ability-tooltip,
-        .accuracy-display:hover .accuracy-tooltip {
+        :global(.score-display:hover .score-tooltip),
+        :global(.ability-display:hover .ability-tooltip),
+        :global(.accuracy-display:hover .accuracy-tooltip) {
           opacity: 1;
         }
 
@@ -1531,9 +1531,9 @@ export default function QuizPerformance() {
         }
 
         @media (max-width: 768px) {
-          .score-tooltip,
-          .ability-tooltip,
-          .accuracy-tooltip {
+          :global(.score-tooltip),
+          :global(.ability-tooltip),
+          :global(.accuracy-tooltip) {
             left: 50%;
             right: auto;
             transform: translateX(-50%);
