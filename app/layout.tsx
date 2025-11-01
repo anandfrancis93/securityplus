@@ -9,36 +9,36 @@ import "../styles/design-tokens.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "SecurityPlus AI | Master CompTIA Security+ SY0-701 with AI-Powered Learning",
-    template: "%s | SecurityPlus AI"
+    default: "AI Learning Platform | Adaptive Education with AI-Powered Content",
+    template: "%s | AI Learning Platform"
   },
-  description: "AI-powered adaptive learning platform for CompTIA Security+ SY0-701 certification. Unlimited AI-generated questions, IRT analytics, FSRS spaced repetition, and comprehensive coverage of all 5 domains. Free forever.",
+  description: "Adaptive learning platform powered by AI with intelligent quizzes, IRT analytics, FSRS spaced repetition, and personalized study paths. Currently featuring Cybersecurity (CompTIA Security+ SY0-701). Free forever.",
   manifest: '/manifest.json',
   themeColor: '#0f0f0f',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'SecurityPlus AI',
+    title: 'AI Learning',
   },
-  applicationName: 'SecurityPlus AI',
+  applicationName: 'AI Learning Platform',
   keywords: [
-    "CompTIA Security+",
-    "SY0-701",
-    "Security+ exam",
-    "cybersecurity certification",
-    "AI-powered learning",
+    "AI learning platform",
     "adaptive learning",
+    "AI-powered education",
     "spaced repetition",
     "IRT analytics",
-    "exam preparation",
-    "cybersecurity training",
+    "personalized learning",
     "FSRS algorithm",
-    "Security+ practice questions",
-    "CompTIA certification"
+    "CompTIA Security+",
+    "SY0-701",
+    "cybersecurity certification",
+    "exam preparation",
+    "AI-generated questions",
+    "intelligent tutoring"
   ],
-  authors: [{ name: "SecurityPlus AI" }],
-  creator: "SecurityPlus AI",
-  publisher: "SecurityPlus AI",
+  authors: [{ name: "AI Learning Platform" }],
+  creator: "AI Learning Platform",
+  publisher: "AI Learning Platform",
   robots: {
     index: true,
     follow: true,
@@ -54,24 +54,24 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://securityplusai.com",
-    title: "SecurityPlus AI | Master CompTIA Security+ SY0-701",
-    description: "Master CompTIA Security+ SY0-701 with AI-powered adaptive learning. Unlimited questions, IRT analytics, and FSRS spaced repetition. Free forever.",
-    siteName: "SecurityPlus AI",
+    title: "AI Learning Platform | Adaptive Education",
+    description: "Adaptive learning platform powered by AI with intelligent quizzes, IRT analytics, and FSRS spaced repetition. Currently featuring Cybersecurity. Free forever.",
+    siteName: "AI Learning Platform",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "SecurityPlus AI - AI-Powered Security+ Learning Platform",
+        alt: "AI Learning Platform - Adaptive Education Powered by AI",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "SecurityPlus AI | Master CompTIA Security+ SY0-701",
-    description: "AI-powered adaptive learning for CompTIA Security+ certification. Free forever.",
+    title: "AI Learning Platform | Adaptive Education",
+    description: "AI-powered adaptive learning with intelligent quizzes and personalized study paths. Free forever.",
     images: ["/og-image.png"],
-    creator: "@SecurityPlusAI",
+    creator: "@AILearningApp",
   },
   viewport: {
     width: 'device-width',
@@ -87,6 +87,10 @@ export const metadata: Metadata = {
   category: 'education',
   alternates: {
     canonical: "https://securityplusai.com",
+  },
+  icons: {
+    icon: '/icon.svg',
+    apple: '/apple-touch-icon.svg',
   },
 };
 
