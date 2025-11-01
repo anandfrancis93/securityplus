@@ -325,103 +325,133 @@ export default function AIChatPage() {
 
         .message-content {
           color: #e5e5e5;
+          line-height: 1.8;
         }
 
         .user-message-text {
           color: #e5e5e5;
           white-space: pre-wrap;
-        }
-
-        /* Markdown styling for AI messages */
-        .message-assistant .message-content h1,
-        .message-assistant .message-content h2,
-        .message-assistant .message-content h3,
-        .message-assistant .message-content h4 {
-          color: #8b5cf6;
-          font-weight: bold;
-          margin-top: clamp(16px, 2vw, 24px);
-          margin-bottom: clamp(8px, 1.5vw, 12px);
-        }
-
-        .message-assistant .message-content h1 {
-          font-size: clamp(20px, 3vw, 28px);
-        }
-
-        .message-assistant .message-content h2 {
-          font-size: clamp(18px, 2.5vw, 24px);
-        }
-
-        .message-assistant .message-content h3 {
-          font-size: clamp(16px, 2.5vw, 20px);
-        }
-
-        .message-assistant .message-content h4 {
-          font-size: clamp(14px, 2vw, 18px);
-        }
-
-        .message-assistant .message-content p {
-          margin-bottom: clamp(12px, 2vw, 16px);
           line-height: 1.6;
         }
 
-        .message-assistant .message-content p:last-child {
-          margin-bottom: 0;
+        /* Markdown styling for AI messages - using :global to ensure styles apply */
+        .message-assistant .message-content :global(h1),
+        .message-assistant .message-content :global(h2),
+        .message-assistant .message-content :global(h3),
+        .message-assistant .message-content :global(h4) {
+          color: #8b5cf6 !important;
+          font-weight: 700 !important;
+          margin-top: clamp(20px, 3vw, 28px) !important;
+          margin-bottom: clamp(12px, 2vw, 16px) !important;
+          line-height: 1.3 !important;
         }
 
-        .message-assistant .message-content strong {
-          color: #e5e5e5;
-          font-weight: 700;
+        .message-assistant .message-content :global(h1) {
+          font-size: clamp(22px, 3.5vw, 32px) !important;
         }
 
-        .message-assistant .message-content ul,
-        .message-assistant .message-content ol {
-          margin-left: clamp(16px, 3vw, 24px);
-          margin-bottom: clamp(12px, 2vw, 16px);
+        .message-assistant .message-content :global(h2) {
+          font-size: clamp(20px, 3vw, 28px) !important;
         }
 
-        .message-assistant .message-content li {
-          margin-bottom: clamp(4px, 1vw, 8px);
-          line-height: 1.6;
+        .message-assistant .message-content :global(h3) {
+          font-size: clamp(18px, 2.5vw, 24px) !important;
         }
 
-        .message-assistant .message-content code {
-          background: #1a1a1a;
-          padding: 2px 6px;
-          border-radius: 4px;
-          font-family: 'Courier New', monospace;
-          font-size: 0.9em;
-          color: #10b981;
+        .message-assistant .message-content :global(h4) {
+          font-size: clamp(16px, 2vw, 20px) !important;
         }
 
-        .message-assistant .message-content pre {
-          background: #1a1a1a;
-          padding: clamp(12px, 2vw, 16px);
-          border-radius: clamp(8px, 1.5vw, 12px);
-          overflow-x: auto;
-          margin-bottom: clamp(12px, 2vw, 16px);
-          box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #242424;
+        .message-assistant .message-content :global(p) {
+          margin-top: 0 !important;
+          margin-bottom: clamp(16px, 2.5vw, 20px) !important;
+          line-height: 1.8 !important;
+          color: #e5e5e5 !important;
         }
 
-        .message-assistant .message-content pre code {
-          background: transparent;
-          padding: 0;
+        .message-assistant .message-content :global(p:last-child) {
+          margin-bottom: 0 !important;
         }
 
-        .message-assistant .message-content a {
-          color: #8b5cf6;
-          text-decoration: underline;
+        .message-assistant .message-content :global(strong) {
+          color: #e5e5e5 !important;
+          font-weight: 700 !important;
         }
 
-        .message-assistant .message-content a:hover {
-          color: #a78bfa;
+        .message-assistant .message-content :global(em) {
+          font-style: italic !important;
+          color: #e5e5e5 !important;
         }
 
-        .message-assistant .message-content blockquote {
-          border-left: 4px solid #8b5cf6;
-          padding-left: clamp(12px, 2vw, 16px);
-          margin-left: 0;
-          margin-bottom: clamp(12px, 2vw, 16px);
-          color: #a8a8a8;
+        .message-assistant .message-content :global(ul),
+        .message-assistant .message-content :global(ol) {
+          margin-left: clamp(20px, 3vw, 28px) !important;
+          margin-top: clamp(12px, 2vw, 16px) !important;
+          margin-bottom: clamp(16px, 2.5vw, 20px) !important;
+          padding-left: 0 !important;
+        }
+
+        .message-assistant .message-content :global(li) {
+          margin-bottom: clamp(8px, 1.5vw, 12px) !important;
+          line-height: 1.8 !important;
+          color: #e5e5e5 !important;
+        }
+
+        .message-assistant .message-content :global(li:last-child) {
+          margin-bottom: 0 !important;
+        }
+
+        .message-assistant .message-content :global(code) {
+          background: #1a1a1a !important;
+          padding: 3px 8px !important;
+          border-radius: 6px !important;
+          font-family: 'Courier New', monospace !important;
+          font-size: 0.9em !important;
+          color: #10b981 !important;
+          box-shadow: inset 2px 2px 4px #050505, inset -2px -2px 4px #242424 !important;
+        }
+
+        .message-assistant .message-content :global(pre) {
+          background: #1a1a1a !important;
+          padding: clamp(16px, 2.5vw, 20px) !important;
+          border-radius: clamp(10px, 2vw, 14px) !important;
+          overflow-x: auto !important;
+          margin-top: clamp(12px, 2vw, 16px) !important;
+          margin-bottom: clamp(16px, 2.5vw, 20px) !important;
+          box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #242424 !important;
+        }
+
+        .message-assistant .message-content :global(pre code) {
+          background: transparent !important;
+          padding: 0 !important;
+          box-shadow: none !important;
+        }
+
+        .message-assistant .message-content :global(a) {
+          color: #8b5cf6 !important;
+          text-decoration: underline !important;
+          transition: color 0.2s ease !important;
+        }
+
+        .message-assistant .message-content :global(a:hover) {
+          color: #a78bfa !important;
+        }
+
+        .message-assistant .message-content :global(blockquote) {
+          border-left: 4px solid #8b5cf6 !important;
+          padding-left: clamp(16px, 2.5vw, 20px) !important;
+          margin-left: 0 !important;
+          margin-top: clamp(12px, 2vw, 16px) !important;
+          margin-bottom: clamp(16px, 2.5vw, 20px) !important;
+          color: #a8a8a8 !important;
+          font-style: italic !important;
+        }
+
+        .message-assistant .message-content :global(hr) {
+          border: none !important;
+          height: 1px !important;
+          background: #333 !important;
+          margin: clamp(20px, 3vw, 28px) 0 !important;
         }
 
         .message-loading {
