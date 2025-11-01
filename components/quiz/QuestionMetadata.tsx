@@ -4,6 +4,64 @@ import { Question } from '@/lib/types';
 import { getDomainsFromTopics } from '@/lib/domainDetection';
 import { ALL_SECURITY_PLUS_TOPICS } from '@/lib/topicData';
 
+// Token estimation and cost calculation
+function estimateTokens(text: string): number {
+  // Rough approximation: ~4 characters per token
+  return Math.ceil(text.length / 4);
+}
+
+function getProviderPricing(): { provider: string; inputPrice: number; outputPrice: number } {
+  const provider = process.env.NEXT_PUBLIC_AI_PROVIDER || 'claude';
+
+  switch (provider) {
+    case 'gemini':
+      return { provider: 'Google Gemini 2.5 Flash-Lite', inputPrice: 0.10, outputPrice: 0.40 };
+    case 'grok':
+      return { provider: 'xAI Grok 4 Fast', inputPrice: 0.20, outputPrice: 0.50 };
+    case 'claude':
+      return { provider: 'Claude Sonnet 4.5', inputPrice: 3.00, outputPrice: 15.00 };
+    default:
+      return { provider: 'Unknown', inputPrice: 0, outputPrice: 0 };
+  }
+}
+
+function calculateQuestionCost(question: Question): {
+  inputTokens: number;
+  outputTokens: number;
+  inputCost: number;
+  outputCost: number;
+  totalCost: number;
+} {
+  // Estimate input tokens (system prompt + topics reference + generation prompt)
+  // Based on actual measurements: ~5,950 tokens average per question
+  const estimatedInputTokens = 5950;
+
+  // Estimate output tokens from generated content
+  const questionText = question.question;
+  const optionsText = question.options.join(' ');
+  const explanationsText = question.incorrectExplanations?.join(' ') || question.explanation;
+  const metadataText = JSON.stringify(question.metadata || {});
+
+  const outputText = questionText + optionsText + explanationsText + metadataText;
+  const estimatedOutputTokens = estimateTokens(outputText);
+
+  // Get pricing
+  const { inputPrice, outputPrice } = getProviderPricing();
+
+  // Calculate costs (prices are per 1M tokens)
+  const inputCost = (estimatedInputTokens / 1_000_000) * inputPrice;
+  const outputCost = (estimatedOutputTokens / 1_000_000) * outputPrice;
+  const totalCost = inputCost + outputCost;
+
+  return {
+    inputTokens: estimatedInputTokens,
+    outputTokens: estimatedOutputTokens,
+    inputCost,
+    outputCost,
+    totalCost
+  };
+}
+
 interface QuestionMetadataProps {
   question: Question;
   pointsEarned?: number;
@@ -52,6 +110,10 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
     domain,
     topics: topicsByDomain[domain] || []
   }));
+
+  // Calculate token usage and cost
+  const costData = calculateQuestionCost(question);
+  const { provider } = getProviderPricing();
 
   return (
     <div className="metadata-card" style={{
@@ -191,6 +253,142 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
             </span>
           </div>
         )}
+
+        {/* Divider */}
+        <div style={{
+          height: '1px',
+          background: 'linear-gradient(to right, transparent, #333, transparent)',
+          margin: '8px 0',
+        }} />
+
+        {/* AI Provider */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+          <span style={{
+            fontSize: '1.25rem',
+            fontWeight: 600,
+            color: '#a8a8a8',
+            minWidth: '120px',
+          }}>
+            AI Provider:
+          </span>
+          <span style={{
+            fontSize: '1.25rem',
+            fontWeight: 600,
+            color: '#8b5cf6',
+          }}>
+            {provider}
+          </span>
+        </div>
+
+        {/* Token Usage */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+          <span style={{
+            fontSize: '1.25rem',
+            fontWeight: 600,
+            color: '#a8a8a8',
+            minWidth: '120px',
+            flexShrink: 0,
+          }}>
+            Tokens:
+          </span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <span style={{
+                fontSize: '1.25rem',
+                fontWeight: 600,
+                color: '#06b6d4',
+              }}>
+                Input:
+              </span>
+              <span style={{
+                fontSize: '1.25rem',
+                fontWeight: 600,
+                color: '#e5e5e5',
+              }}>
+                {costData.inputTokens.toLocaleString()} tokens
+              </span>
+            </div>
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <span style={{
+                fontSize: '1.25rem',
+                fontWeight: 600,
+                color: '#f59e0b',
+              }}>
+                Output:
+              </span>
+              <span style={{
+                fontSize: '1.25rem',
+                fontWeight: 600,
+                color: '#e5e5e5',
+              }}>
+                {costData.outputTokens.toLocaleString()} tokens
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Cost Breakdown */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+          <span style={{
+            fontSize: '1.25rem',
+            fontWeight: 600,
+            color: '#a8a8a8',
+            minWidth: '120px',
+            flexShrink: 0,
+          }}>
+            Cost:
+          </span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <span style={{
+                fontSize: '1.25rem',
+                fontWeight: 600,
+                color: '#06b6d4',
+              }}>
+                Input:
+              </span>
+              <span style={{
+                fontSize: '1.25rem',
+                fontWeight: 600,
+                color: '#e5e5e5',
+              }}>
+                ${costData.inputCost.toFixed(6)}
+              </span>
+            </div>
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <span style={{
+                fontSize: '1.25rem',
+                fontWeight: 600,
+                color: '#f59e0b',
+              }}>
+                Output:
+              </span>
+              <span style={{
+                fontSize: '1.25rem',
+                fontWeight: 600,
+                color: '#e5e5e5',
+              }}>
+                ${costData.outputCost.toFixed(6)}
+              </span>
+            </div>
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', paddingTop: '0.25rem', borderTop: '1px solid #333' }}>
+              <span style={{
+                fontSize: '1.25rem',
+                fontWeight: 700,
+                color: '#10b981',
+              }}>
+                Total:
+              </span>
+              <span style={{
+                fontSize: '1.25rem',
+                fontWeight: 700,
+                color: '#10b981',
+              }}>
+                ${costData.totalCost.toFixed(6)}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <style jsx>{`
