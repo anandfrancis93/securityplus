@@ -67,6 +67,8 @@ interface QuestionMetadataProps {
   question: Question;
   pointsEarned?: number;
   maxPoints?: number;
+  confidence?: number;
+  reflection?: 'knew' | 'recognized' | 'narrowed' | 'guessed';
 }
 
 // Domain color mapping - More vibrant and distinct colors
@@ -93,7 +95,35 @@ function getTopicDomain(topic: string): string {
   return '1.0 General Security Concepts';
 }
 
-export default function QuestionMetadata({ question, pointsEarned, maxPoints }: QuestionMetadataProps) {
+// Helper function to get confidence label and color
+function getConfidenceDisplay(confidence: number): { label: string; color: string } {
+  switch (confidence) {
+    case 20:
+      return { label: 'Low confidence (0-39%)', color: '#f87171' };
+    case 55:
+      return { label: 'Medium confidence (40-69%)', color: '#facc15' };
+    case 85:
+      return { label: 'High confidence (70-100%)', color: '#4ade80' };
+    default:
+      return { label: `${confidence}% confident`, color: '#e5e5e5' };
+  }
+}
+
+// Helper function to get reflection label and color
+function getReflectionDisplay(reflection: 'knew' | 'recognized' | 'narrowed' | 'guessed'): { label: string; color: string } {
+  switch (reflection) {
+    case 'knew':
+      return { label: 'Recall memory', color: '#10b981' };
+    case 'narrowed':
+      return { label: 'Educated guess', color: '#f59e0b' };
+    case 'recognized':
+      return { label: 'Recognition memory', color: '#f59e0b' };
+    case 'guessed':
+      return { label: 'Random guess', color: '#ef4444' };
+  }
+}
+
+export default function QuestionMetadata({ question, pointsEarned, maxPoints, confidence, reflection }: QuestionMetadataProps) {
   const [showTooltip, setShowTooltip] = React.useState(false);
   const domains = getDomainsFromTopics(question.topics);
 
@@ -246,6 +276,58 @@ export default function QuestionMetadata({ question, pointsEarned, maxPoints }: 
             {question.difficulty.charAt(0).toUpperCase() + question.difficulty.slice(1)}
           </span>
         </div>
+
+        {/* Confidence Level */}
+        {confidence !== undefined && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <span
+              className="metadata-label"
+              style={{
+                fontWeight: 600,
+                color: '#a8a8a8',
+                minWidth: '120px',
+              }}
+            >
+              Confidence:
+            </span>
+            <span
+              className="metadata-value"
+              style={{
+                fontWeight: 600,
+                color: getConfidenceDisplay(confidence).color,
+                transition: 'color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
+            >
+              {getConfidenceDisplay(confidence).label}
+            </span>
+          </div>
+        )}
+
+        {/* Reflection */}
+        {reflection !== undefined && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <span
+              className="metadata-label"
+              style={{
+                fontWeight: 600,
+                color: '#a8a8a8',
+                minWidth: '120px',
+              }}
+            >
+              Reflection:
+            </span>
+            <span
+              className="metadata-value"
+              style={{
+                fontWeight: 600,
+                color: getReflectionDisplay(reflection).color,
+                transition: 'color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
+            >
+              {getReflectionDisplay(reflection).label}
+            </span>
+          </div>
+        )}
 
         {/* Points */}
         {pointsEarned !== undefined && maxPoints !== undefined && (

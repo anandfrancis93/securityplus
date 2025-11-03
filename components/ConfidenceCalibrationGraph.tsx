@@ -69,9 +69,36 @@ function aggregateCalibrationData(attempts: QuestionAttempt[]): CalibrationDataP
     const total = levelAttempts.length;
 
     // Calculate actual accuracy including partial credit
-    const totalPointsEarned = levelAttempts.reduce((sum, a) => sum + a.pointsEarned, 0);
-    const totalPointsPossible = levelAttempts.reduce((sum, a) => sum + a.maxPoints, 0);
+    // Fallback for old attempts: if pointsEarned/maxPoints are missing, use isCorrect
+    const totalPointsEarned = levelAttempts.reduce((sum, a) => {
+      if (a.pointsEarned !== undefined && a.maxPoints !== undefined) {
+        return sum + a.pointsEarned;
+      }
+      // Fallback for old data: treat as binary (1 point if correct, 0 if wrong)
+      return sum + (a.isCorrect ? 1 : 0);
+    }, 0);
+    const totalPointsPossible = levelAttempts.reduce((sum, a) => {
+      if (a.pointsEarned !== undefined && a.maxPoints !== undefined) {
+        return sum + a.maxPoints;
+      }
+      // Fallback for old data: 1 point per question
+      return sum + 1;
+    }, 0);
     const actualAccuracy = totalPointsPossible > 0 ? (totalPointsEarned / totalPointsPossible) * 100 : 0;
+
+    // Debug logging
+    if (levelAttempts.length > 0) {
+      console.log(`Confidence ${confidenceLevel}%:`, {
+        attempts: levelAttempts.length,
+        totalPointsEarned,
+        totalPointsPossible,
+        actualAccuracy: actualAccuracy.toFixed(1) + '%',
+        sampleAttempt: levelAttempts[0] ? {
+          pointsEarned: levelAttempts[0].pointsEarned,
+          maxPoints: levelAttempts[0].maxPoints
+        } : null
+      });
+    }
 
     // Breakdown by reflection
     const reflection = {

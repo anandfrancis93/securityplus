@@ -262,6 +262,8 @@ export default function QuizReviewPage() {
                   question={question}
                   pointsEarned={attempt.pointsEarned}
                   maxPoints={attempt.maxPoints}
+                  confidence={attempt.confidence}
+                  reflection={attempt.reflection}
                 />
               </div>
             );
