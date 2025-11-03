@@ -157,23 +157,33 @@ async function validateTopicTagsWithAI(
     ? correctAnswer.map(i => options[i]).join(', ')
     : options[correctAnswer];
 
+  // Mark which options are correct for clarity
+  const correctIndices = Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer];
+  const optionsWithMarkers = options.map((opt, i) => {
+    const marker = correctIndices.includes(i) ? '✅ CORRECT' : '❌ INCORRECT';
+    return `${String.fromCharCode(65 + i)}) ${opt} [${marker}]`;
+  });
+
   const prompt = `You are a CompTIA Security+ topic tagging validator. You will review topic tags for a question and apply strict editorial tests to REJECT tags that are contextual mentions, not core intent.
 
 QUESTION:
 ${questionText}
 
-OPTIONS:
-${options.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`).join('\n')}
+ALL OPTIONS (with correct/incorrect markers):
+${optionsWithMarkers.join('\n')}
 
-CORRECT ANSWER: ${correctAnswerText}
-
-EXPLANATION:
+EXPLANATION OF CORRECT ANSWER:
 ${explanation}
 
 INITIALLY TAGGED TOPICS:
 ${initialTopics.map((t, i) => `${i + 1}. "${t}"`).join('\n')}
 
 YOUR TASK: Review each topic and apply these three tests. If ANY test fails, REJECT the tag.
+
+CRITICAL: If the CORRECT ANSWER explicitly mentions or requires a concept, that topic MUST be kept.
+- Example: If correct answer says "verify against asset inventory," then "Inventory" is CORE INTENT, not context
+- Example: If correct answer says "implement baseline enforcement," then "Baselines" is CORE INTENT, not context
+- The actions/concepts in the correct answer ARE what's being tested
 
 ✅ KEEP TAG if ALL THREE pass:
 1. **Removal Test**: If you removed this concept from the question, would the answer change or become unclear?
@@ -185,68 +195,105 @@ YOUR TASK: Review each topic and apply these three tests. If ANY test fails, REJ
 2. **Substitution Test**: You could replace it with something else and the question still works the same way
 3. **Industry Context**: It's mentioned to set the scene but not tested
 
-EXAMPLES OF REJECTING TAGS:
+EXAMPLES OF APPLYING TESTS:
 
 Example 1: Question mentions "procurement of wireless access points" and asks about automation benefits for baseline enforcement
+Correct answer: "Ensures consistent security configurations across all devices automatically"
 Initial tags: ["Enforcing baselines (automation benefit)", "Acquisition/procurement process (asset management)"]
 
 Analysis:
 - "Enforcing baselines (automation benefit)":
-  ✅ Removal test: Remove "enforcing baselines" → question has no answer
-  ✅ Knowledge test: Must understand baseline enforcement to answer
-  ✅ Causal test: This IS why automation is the answer
+  ✅ Correct answer explicitly mentions "security configurations" (baselines)
+  ✅ Removal test: Remove "baselines" → question has no answer
+  ✅ Knowledge test: Must understand baseline enforcement to select correct answer
   → KEEP
 
 - "Acquisition/procurement process (asset management)":
+  ❌ Correct answer does NOT mention procurement - it mentions automation benefits
   ❌ Substitution test: Replace "procurement" with "deploying" or "managing" → question works identically
-  ❌ Knowledge test: Question isn't testing procurement knowledge, it's testing automation benefits
   ❌ Scenario flavor: Procurement just tells you WHEN this happens, not what's being tested
   → REJECT
 
 Final tags: ["Enforcing baselines (automation benefit)"]
 
+Example 1b: Same question, but correct answer: "Streamlines vendor evaluation and security requirements during procurement"
+- In THIS case, "Acquisition/procurement process" WOULD be kept because the correct answer explicitly tests procurement knowledge
+- The correct answer determines what's tested!
+
 Example 2: Question about legacy ICS with vulnerabilities that can't be patched, asks for remediation strategy
+Correct answer: "Purchase cyber insurance to transfer financial risk associated with potential breaches"
 Initial tags: ["Legacy applications (technical implication)", "Insurance (remediation)", "Transfer (risk strategy)", "One-time (risk assessment)", "Industrial control systems (ICS) (architecture model)"]
 
 Analysis:
 - "Legacy applications (technical implication)":
+  ✅ Correct answer is BECAUSE of legacy system limitations (can't patch)
   ✅ Removal test: Remove "legacy" → patching difficulty no longer makes sense
-  ✅ Causal test: Legacy nature is WHY risk transfer is needed
   → KEEP
 
 - "Insurance (remediation)", "Transfer (risk strategy)", "One-time (risk assessment)":
-  ✅ All are directly being tested by the question
+  ✅ Correct answer explicitly says "Purchase cyber insurance to transfer risk"
+  ✅ All three concepts directly mentioned or required to select this answer
   → KEEP ALL
 
 - "Industrial control systems (ICS) (architecture model)":
-  ❌ Substitution test: Replace "ICS" with "database server" → question works the same
-  ❌ Knowledge test: Not testing ICS-specific knowledge
-  ❌ Scenario flavor: Just makes question realistic
+  ❌ Correct answer does NOT require ICS-specific knowledge
+  ❌ Substitution test: Replace "ICS" with "database server" or "legacy SCADA" → question works the same
+  ❌ Scenario flavor: Just makes question realistic, not testing ICS concepts
   → REJECT
 
 Final tags: ["Legacy applications (technical implication)", "Insurance (remediation)", "Transfer (risk strategy)", "One-time (risk assessment)"]
 
 Example 3: Question about hospital compliance with patient data encryption regulations
+Correct answer: "Implement AES-256 encryption for all patient records to meet regulatory requirements"
 Initial tags: ["Encryption (data protection method)", "Regulated (data type)", "Legal implications (privacy)", "Healthcare"]
 
 Analysis:
-- "Encryption (data protection method)", "Regulated (data type)", "Legal implications (privacy)":
-  ✅ All testing core security concepts
+- "Encryption (data protection method)":
+  ✅ Correct answer explicitly says "Implement AES-256 encryption"
+  ✅ Must know encryption is required for compliance
+  → KEEP
+
+- "Regulated (data type)", "Legal implications (privacy)":
+  ✅ Correct answer mentions "regulatory requirements" - testing compliance knowledge
   → KEEP ALL
 
 - "Healthcare":
-  ❌ Substitution test: Replace "hospital" with "bank" or "law firm" → question works the same
-  ❌ Industry context: Just scene-setting
+  ❌ Correct answer does NOT require healthcare-specific knowledge
+  ❌ Substitution test: Replace "hospital/patient" with "bank/customer" → question works identically
+  ❌ Industry context: Just scene-setting, not testing healthcare security
   → REJECT
 
 Final tags: ["Encryption (data protection method)", "Regulated (data type)", "Legal implications (privacy)"]
 
+Example 4: SIEM alert about unidentified device, asks for initial analysis step
+Correct answer: "Verify the device's details against the organization's asset inventory to confirm its legitimacy"
+Initial tags: ["Confirmation (analysis)", "Inventory (asset management)"]
+
+Analysis:
+- "Confirmation (analysis)":
+  ✅ Question explicitly asks about "analysis process" initial step
+  ✅ Correct answer is performing confirmation through verification
+  → KEEP
+
+- "Inventory (asset management)":
+  ✅ Correct answer explicitly says "against the organization's asset inventory"
+  ✅ Knowledge test: Must know to use inventory for device verification (NOT logs, NOT scanning, NOT isolation)
+  ✅ The specific ACTION in the answer is checking inventory
+  → KEEP
+
+- Without seeing the correct answer, you might think "unidentified device" is just context
+- But the correct answer REQUIRES knowing to use asset inventory specifically
+- The answer IS NOT just "confirm it" (generic) - it IS "check inventory" (specific)
+
+Final tags: ["Confirmation (analysis)", "Inventory (asset management)"]
+
 CRITICAL RULES:
-1. Be STRICT - when in doubt, REJECT the tag
-2. Ask yourself: "Is the question testing knowledge of this topic, or just mentioning it?"
-3. Background technologies, industries, timing contexts → usually REJECT
-4. Core security concepts that are WHY an answer is correct → KEEP
-5. If you could swap the mention with something else and the question still works → REJECT
+1. ALWAYS check if the CORRECT ANSWER explicitly mentions or requires the concept
+2. If correct answer says "check inventory" → Inventory is CORE, not context
+3. If correct answer says "enforce baselines" → Baselines is CORE, not context
+4. Ask: "Can I select the correct answer without understanding this topic?" If NO → KEEP
+5. Background industries, timing contexts that DON'T appear in correct answer → usually REJECT
+6. Specific actions/tools in the correct answer → ALWAYS KEEP
 
 Return ONLY a valid JSON object with two arrays:
 {
