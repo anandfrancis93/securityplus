@@ -49,9 +49,13 @@ export function formatQuizSummary(quiz: QuizSession): FormattedQuizSummary {
     : `${timeTakenSeconds}s`;
 
   // Calculate accuracy based on points (accounts for partial credit)
-  const accuracy = quiz.maxPoints > 0
-    ? ((quiz.totalPoints / quiz.maxPoints) * 100).toFixed(1)
-    : '0.0';
+  // Smart decimal formatting: hide .00 for whole numbers, show up to 2 decimals otherwise
+  const accuracyValue = quiz.maxPoints > 0
+    ? (quiz.totalPoints / quiz.maxPoints) * 100
+    : 0;
+  const accuracy = accuracyValue % 1 === 0
+    ? accuracyValue.toFixed(0)
+    : accuracyValue.toFixed(2);
 
   // Determine color based on accuracy percentage
   // 81.25% or higher (passing) = green
@@ -89,4 +93,15 @@ export function formatQuizDateShort(quiz: QuizSession): string {
     day: 'numeric',
     year: 'numeric'
   });
+}
+
+/**
+ * Format quiz score fraction (e.g., "650/800")
+ * Uses totalPoints/maxPoints to account for partial credit
+ *
+ * @param quiz - Quiz session
+ * @returns Formatted score fraction
+ */
+export function formatQuizScore(quiz: QuizSession): string {
+  return `${quiz.totalPoints}/${quiz.maxPoints}`;
 }

@@ -5,6 +5,7 @@ import { useApp } from './AppProvider';
 import { useRouter } from 'next/navigation';
 import Header from './Header';
 import { authenticatedPost } from '@/lib/apiClient';
+import { formatQuizScore } from '@/lib/quizFormatting';
 
 export default function QuizHistoryPage() {
   const { user, userProgress, loading, refreshProgress } = useApp();
@@ -275,10 +276,17 @@ export default function QuizHistoryPage() {
                       </div>
                       <div className="quiz-score-section">
                         <div className="quiz-score">
-                          {quiz.score}/{quiz.questions.length}
+                          {formatQuizScore(quiz)}
                         </div>
                         <div className="quiz-percentage">
-                          {((quiz.score / quiz.questions.length) * 100).toFixed(0)}%
+                          {(() => {
+                            const accuracyValue = quiz.maxPoints > 0
+                              ? (quiz.totalPoints / quiz.maxPoints) * 100
+                              : 0;
+                            return (accuracyValue % 1 === 0
+                              ? accuracyValue.toFixed(0)
+                              : accuracyValue.toFixed(2)) + '%';
+                          })()}
                         </div>
                       </div>
                     </div>
