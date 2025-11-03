@@ -195,10 +195,10 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
               return (
                 <div key={reflection.type} className={`calibration-strategy-item ${reflection.quality}`}>
                   <div className="calibration-strategy-bar" style={{ width: `${percentage}%` }}>
-                    <span className="calibration-strategy-percentage">{reflection.count}</span>
+                    <span className="calibration-strategy-percentage">{percentage.toFixed(0)}%</span>
                   </div>
                   <div className="calibration-strategy-label">
-                    {reflection.label} ({percentage.toFixed(0)}%)
+                    {reflection.label} ({reflection.count} questions)
                   </div>
                 </div>
               );
