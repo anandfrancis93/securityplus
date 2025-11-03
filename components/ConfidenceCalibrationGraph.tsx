@@ -91,7 +91,8 @@ function aggregateCalibrationData(attempts: QuestionAttempt[]): CalibrationDataP
 
 export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalibrationGraphProps) {
   const calibrationData = aggregateCalibrationData(attempts);
-  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [isCardExpanded, setIsCardExpanded] = React.useState(false);
+  const [isDetailsExpanded, setIsDetailsExpanded] = React.useState(false);
 
   if (calibrationData.length === 0) {
     return null; // Don't show anything if there's no data
@@ -116,11 +117,21 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
 
   return (
     <div className="calibration-container">
-      {/* Header */}
-      <div className="calibration-header">
-        <h2 className="calibration-title">Dunning–Kruger Effect Tracking</h2>
-      </div>
+      {/* Collapsible Header */}
+      <button
+        className="calibration-header-button"
+        onClick={() => setIsCardExpanded(!isCardExpanded)}
+      >
+        <div className="calibration-header-content">
+          <h2 className="calibration-title">Dunning–Kruger Effect Tracking</h2>
+          <div className="calibration-expand-icon">
+            {isCardExpanded ? '▼' : '▶'}
+          </div>
+        </div>
+      </button>
 
+      {isCardExpanded && (
+        <div className="calibration-expanded-content">
       {/* Memory Strategy Breakdown */}
       {totalCorrect > 0 && (
         <div className="calibration-strategy-breakdown">
@@ -179,15 +190,15 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
       {/* Visual Comparison - Bar Chart (Collapsible) */}
       <button
         className="calibration-toggle-details"
-        onClick={() => setIsExpanded(!isExpanded)}
+        onClick={() => setIsDetailsExpanded(!isDetailsExpanded)}
       >
-        <span className="calibration-toggle-icon">{isExpanded ? '▼' : '▶'}</span>
+        <span className="calibration-toggle-icon">{isDetailsExpanded ? '▼' : '▶'}</span>
         <span className="calibration-toggle-text">
           Your Confidence vs Actual Performance
         </span>
       </button>
 
-      {isExpanded && (
+      {isDetailsExpanded && (
         <div className="calibration-bars">
           {calibrationData.map(d => (
             <div key={d.confidence} className="calibration-bar-row">
@@ -209,6 +220,8 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           ))}
         </div>
       )}
+        </div>
+      )}
 
       <style jsx>{`
         .calibration-container {
@@ -216,10 +229,27 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           border-radius: 24px;
           box-shadow: 12px 12px 24px #050505, -12px -12px 24px #191919;
           margin-bottom: 48px;
+          overflow: hidden;
         }
 
-        .calibration-header {
-          padding: 40px 40px 20px;
+        .calibration-header-button {
+          width: 100%;
+          padding: 40px;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          text-align: left;
+        }
+
+        .calibration-header-button:hover {
+          background: rgba(139, 92, 246, 0.05);
+        }
+
+        .calibration-header-content {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
         }
 
         .calibration-title {
@@ -228,6 +258,16 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           color: #e5e5e5;
           margin: 0;
           letter-spacing: -0.025em;
+        }
+
+        .calibration-expand-icon {
+          font-size: 24px;
+          color: #8b5cf6;
+          transition: transform 0.3s ease;
+        }
+
+        .calibration-expanded-content {
+          padding-bottom: 20px;
         }
 
         /* Memory Strategy Breakdown */
