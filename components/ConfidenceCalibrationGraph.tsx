@@ -97,17 +97,6 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
     return null; // Don't show anything if there's no data
   }
 
-  // Calculate reliance on non-recall methods (correct answers only)
-  const correctAttempts = attempts.filter(a => a.confidence !== undefined && a.isCorrect);
-  const totalCorrect = correctAttempts.length;
-
-  const correctReflectionCounts = {
-    knew: correctAttempts.filter(a => a.reflection === 'knew').length,
-    recognized: correctAttempts.filter(a => a.reflection === 'recognized').length,
-    narrowed: correctAttempts.filter(a => a.reflection === 'narrowed').length,
-    guessed: correctAttempts.filter(a => a.reflection === 'guessed').length,
-  };
-
   // Calculate confidence level distribution (all attempts)
   const attemptsWithConfidence = attempts.filter(a => a.confidence !== undefined);
   const totalWithConfidence = attemptsWithConfidence.length;
@@ -214,61 +203,6 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
                 </div>
               );
             });
-          })()}
-        </div>
-      )}
-
-      {/* Memory Strategy Breakdown */}
-      {totalCorrect > 0 && (
-        <div className="calibration-strategy-breakdown">
-          <div className="calibration-strategy-title">How you got correct answers:</div>
-          {(() => {
-            const strategies = [
-              {
-                type: 'recall',
-                label: 'by recalling from memory',
-                percentage: (correctReflectionCounts.knew / totalCorrect) * 100,
-                count: correctReflectionCounts.knew,
-                quality: 'best' // green
-              },
-              {
-                type: 'narrowed',
-                label: 'by educated guess',
-                percentage: (correctReflectionCounts.narrowed / totalCorrect) * 100,
-                count: correctReflectionCounts.narrowed,
-                quality: 'good' // yellow
-              },
-              {
-                type: 'recognized',
-                label: 'by recognizing from options',
-                percentage: (correctReflectionCounts.recognized / totalCorrect) * 100,
-                count: correctReflectionCounts.recognized,
-                quality: 'okay' // yellow
-              },
-              {
-                type: 'guessed',
-                label: 'by random guess',
-                percentage: (correctReflectionCounts.guessed / totalCorrect) * 100,
-                count: correctReflectionCounts.guessed,
-                quality: 'worst' // red
-              }
-            ];
-
-            // Sort by percentage descending
-            const sortedStrategies = strategies
-              .filter(s => s.count > 0)
-              .sort((a, b) => b.percentage - a.percentage);
-
-            return sortedStrategies.map(strategy => (
-              <div key={strategy.type} className={`calibration-strategy-item ${strategy.quality}`}>
-                <div className="calibration-strategy-bar" style={{ width: `${strategy.percentage}%` }}>
-                  <span className="calibration-strategy-percentage">{strategy.percentage.toFixed(0)}%</span>
-                </div>
-                <div className="calibration-strategy-label">
-                  You got {strategy.percentage.toFixed(0)}% ({strategy.count} questions) correct {strategy.label}
-                </div>
-              </div>
-            ));
           })()}
         </div>
       )}
