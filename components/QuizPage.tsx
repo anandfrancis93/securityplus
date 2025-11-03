@@ -424,8 +424,21 @@ export default function Quiz() {
     // Update the question with the returned answer data
     // CRITICAL: answerData now includes optionItems, options, and validationLogs from API response
     if (answerData) {
+      console.log('[DEBUG] answerData received:', {
+        hasOptionItems: !!answerData.optionItems,
+        optionItemsLength: answerData.optionItems?.length,
+        hasOptions: !!answerData.options,
+        optionsLength: answerData.options?.length,
+        hasValidationLogs: !!answerData.validationLogs,
+      });
+
       setQuestions(prev => {
         const updated = [...prev];
+        const beforeUpdate = {
+          hasOptionItems: !!updated[currentQuestionIndex].optionItems,
+          hasOptions: !!updated[currentQuestionIndex].options,
+        };
+
         updated[currentQuestionIndex] = {
           ...updated[currentQuestionIndex],
           correctAnswer: answerData.correctAnswer,
@@ -435,8 +448,21 @@ export default function Quiz() {
           options: answerData.options, // Legacy field
           validationLogs: answerData.validationLogs, // For Topic Analysis
         };
+
+        console.log('[DEBUG] Question after update:', {
+          before: beforeUpdate,
+          after: {
+            hasOptionItems: !!updated[currentQuestionIndex].optionItems,
+            optionItemsLength: updated[currentQuestionIndex].optionItems?.length,
+            hasOptions: !!updated[currentQuestionIndex].options,
+            optionsLength: updated[currentQuestionIndex].options?.length,
+          }
+        });
+
         return updated;
       });
+    } else {
+      console.log('[DEBUG] No answerData received!');
     }
 
     setShowExplanation(true);
