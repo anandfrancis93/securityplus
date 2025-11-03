@@ -249,10 +249,10 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
               };
             });
 
-            // Sort by accuracy descending
+            // Sort by question count descending (most used strategy first)
             const sortedReflections = reflectionsWithAccuracy
               .filter(r => r.count > 0)
-              .sort((a, b) => b.accuracy - a.accuracy);
+              .sort((a, b) => b.count - a.count);
 
             return sortedReflections.map(reflection => {
               return (
