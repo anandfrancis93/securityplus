@@ -28,6 +28,11 @@ export default function Quiz() {
   const [quizSessionId, setQuizSessionId] = useState<string | null>(null);
   const [quizEnding, setQuizEnding] = useState(false); // Flag to stop generation when ending quiz
 
+  // Multi-step workflow states
+  const [showConfidenceSelection, setShowConfidenceSelection] = useState(true);
+  const [confidence, setConfidence] = useState<number | null>(null);
+  const [reflection, setReflection] = useState<string | null>(null);
+
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!authLoading && !user) {
@@ -365,6 +370,12 @@ export default function Quiz() {
     }
   };
 
+  const handleConfidenceSelect = (confidenceLevel: number) => {
+    setConfidence(confidenceLevel);
+    // Automatically show options after confidence is selected
+    setShowConfidenceSelection(false);
+  };
+
   const handleAnswerSelect = (answerIndex: number) => {
     if (showExplanation) return;
 
@@ -381,6 +392,13 @@ export default function Quiz() {
       // Single selection for single-choice questions
       setSelectedAnswer(answerIndex);
     }
+  };
+
+  const handleReflectionSelect = (reflectionChoice: string) => {
+    setReflection(reflectionChoice);
+
+    // TODO: Save confidence and reflection data to database for Dunning-Kruger tracking
+    console.log('Confidence:', confidence, 'Reflection:', reflectionChoice);
   };
 
   const handleSubmitAnswer = async () => {
@@ -432,6 +450,10 @@ export default function Quiz() {
       setSelectedAnswer(null);
       setSelectedAnswers([]);
       setShowExplanation(false);
+      // Reset multi-step workflow for next question
+      setShowConfidenceSelection(true);
+      setConfidence(null);
+      setReflection(null);
       // Scroll to top of page
       window.scrollTo({ top: 0, behavior: 'smooth' });
       // The useEffect will automatically generate the question after next
@@ -1136,33 +1158,95 @@ export default function Quiz() {
 
         {/* Question Card */}
         <div className="question-section">
-          <QuestionCard
-            question={currentQuestion}
-            questionNumber={currentQuestionIndex + 1}
-            showExplanation={showExplanation}
-            selectedAnswer={currentQuestion.questionType === 'single' ? selectedAnswer : null}
-            selectedAnswers={currentQuestion.questionType === 'multiple' ? selectedAnswers : []}
-            onAnswerSelect={handleAnswerSelect}
-          />
+          {/* Always show the question text */}
+          <div className="question-text-container">
+            <h2 className="question-text-title">
+              {currentQuestion.question}
+            </h2>
+          </div>
 
-          {/* Submit Button */}
-          {!showExplanation && (
-            <button
-              id="submit-answer"
-              onClick={handleSubmitAnswer}
-              disabled={
-                currentQuestion.questionType === 'multiple'
-                  ? selectedAnswers.length === 0
-                  : selectedAnswer === null
-              }
-              className={`submit-button ${
-                (currentQuestion.questionType === 'multiple' ? selectedAnswers.length === 0 : selectedAnswer === null)
-                  ? 'submit-button-disabled'
-                  : 'submit-button-enabled'
-              }`}
-            >
-              Submit Answer
-            </button>
+          {/* Step 1: Confidence Selection (shown first, before options) */}
+          {showConfidenceSelection && !showExplanation && (
+            <div className="confidence-selection-container">
+              <div className="confidence-card">
+                <h3 className="confidence-title">How confident are you?</h3>
+                <p className="confidence-subtitle">Select your confidence level before seeing the options</p>
+
+                <div className="confidence-options">
+                  <button
+                    onClick={() => handleConfidenceSelect(20)}
+                    className="confidence-option"
+                  >
+                    <div className="confidence-option-label">Not confident (guessing)</div>
+                    <div className="confidence-option-percentage">~20% chance I'm right</div>
+                  </button>
+
+                  <button
+                    onClick={() => handleConfidenceSelect(40)}
+                    className="confidence-option"
+                  >
+                    <div className="confidence-option-label">Slightly confident</div>
+                    <div className="confidence-option-percentage">~40% chance I'm right</div>
+                  </button>
+
+                  <button
+                    onClick={() => handleConfidenceSelect(60)}
+                    className="confidence-option"
+                  >
+                    <div className="confidence-option-label">Moderately confident</div>
+                    <div className="confidence-option-percentage">~60% chance I'm right</div>
+                  </button>
+
+                  <button
+                    onClick={() => handleConfidenceSelect(80)}
+                    className="confidence-option"
+                  >
+                    <div className="confidence-option-label">Confident</div>
+                    <div className="confidence-option-percentage">~80% chance I'm right</div>
+                  </button>
+
+                  <button
+                    onClick={() => handleConfidenceSelect(95)}
+                    className="confidence-option"
+                  >
+                    <div className="confidence-option-label">Very confident (almost certain)</div>
+                    <div className="confidence-option-percentage">~95% chance I'm right</div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Step 2: Answer Options (shown after confidence selected) */}
+          {!showConfidenceSelection && !showExplanation && (
+            <>
+              <QuestionCard
+                question={currentQuestion}
+                questionNumber={currentQuestionIndex + 1}
+                showExplanation={showExplanation}
+                selectedAnswer={currentQuestion.questionType === 'single' ? selectedAnswer : null}
+                selectedAnswers={currentQuestion.questionType === 'multiple' ? selectedAnswers : []}
+                onAnswerSelect={handleAnswerSelect}
+              />
+
+              {/* Submit Button */}
+              <button
+                id="submit-answer"
+                onClick={handleSubmitAnswer}
+                disabled={
+                  currentQuestion.questionType === 'multiple'
+                    ? selectedAnswers.length === 0
+                    : selectedAnswer === null
+                }
+                className={`submit-button ${
+                  (currentQuestion.questionType === 'multiple' ? selectedAnswers.length === 0 : selectedAnswer === null)
+                    ? 'submit-button-disabled'
+                    : 'submit-button-enabled'
+                }`}
+              >
+                Submit Answer
+              </button>
+            </>
           )}
         </div>
 
@@ -1191,23 +1275,63 @@ export default function Quiz() {
               maxPoints={currentQuiz?.questions[currentQuestionIndex]?.maxPoints}
             />
 
-            {/* Next Button */}
-            <button
-              id="next"
-              onClick={handleNextQuestion}
-              disabled={currentQuestionIndex >= questions.length - 1 && currentQuestionIndex < totalQuestions - 1}
-              className={`next-button ${
-                currentQuestionIndex >= questions.length - 1 && currentQuestionIndex < totalQuestions - 1
-                  ? 'next-button-disabled'
-                  : 'next-button-enabled'
-              }`}
-            >
-              {currentQuestionIndex >= questions.length - 1 && currentQuestionIndex < totalQuestions - 1
-                ? 'Generating next question...'
-                : currentQuestionIndex < totalQuestions - 1
-                ? 'Next Question'
-                : 'Finish Quiz'}
-            </button>
+            {/* Step 3: Reflection (shown after explanation) */}
+            {reflection === null && (
+              <div className="reflection-card">
+                <h3 className="reflection-title">How did you arrive at your answer?</h3>
+                <p className="reflection-subtitle">Select one option, then click Next</p>
+
+                <div className="reflection-options">
+                  <button
+                    onClick={() => handleReflectionSelect('knew')}
+                    className="reflection-option"
+                  >
+                    I knew the answer from memory before seeing the options
+                  </button>
+
+                  <button
+                    onClick={() => handleReflectionSelect('recognized')}
+                    className="reflection-option"
+                  >
+                    I wasn't sure, but recognized the right answer in the options
+                  </button>
+
+                  <button
+                    onClick={() => handleReflectionSelect('narrowed')}
+                    className="reflection-option"
+                  >
+                    I narrowed it down and made an educated guess
+                  </button>
+
+                  <button
+                    onClick={() => handleReflectionSelect('guessed')}
+                    className="reflection-option"
+                  >
+                    I guessed randomly
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Next Button - shown after reflection is selected */}
+            {reflection !== null && (
+              <button
+                id="next"
+                onClick={handleNextQuestion}
+                disabled={currentQuestionIndex >= questions.length - 1 && currentQuestionIndex < totalQuestions - 1}
+                className={`next-button ${
+                  currentQuestionIndex >= questions.length - 1 && currentQuestionIndex < totalQuestions - 1
+                    ? 'next-button-disabled'
+                    : 'next-button-enabled'
+                }`}
+              >
+                {currentQuestionIndex >= questions.length - 1 && currentQuestionIndex < totalQuestions - 1
+                  ? 'Generating next question...'
+                  : currentQuestionIndex < totalQuestions - 1
+                  ? 'Next Question'
+                  : 'Finish Quiz'}
+              </button>
+            )}
           </div>
         )}
 
@@ -1712,6 +1836,201 @@ export default function Quiz() {
         /* Question Section */
         .question-section {
           margin-bottom: 64px;
+        }
+
+        /* Question Text Container (always visible) */
+        .question-text-container {
+          background: #0f0f0f;
+          padding: 48px;
+          border-radius: 24px;
+          box-shadow: 12px 12px 24px #050505, -12px -12px 24px #191919;
+          margin-bottom: 48px;
+        }
+
+        @media (min-width: 768px) {
+          .question-text-container {
+            padding: 64px;
+          }
+        }
+
+        .question-text-title {
+          font-size: 24px;
+          font-weight: 700;
+          color: #e5e5e5;
+          margin: 0;
+          line-height: 1.4;
+        }
+
+        @media (min-width: 768px) {
+          .question-text-title {
+            font-size: 28px;
+          }
+        }
+
+        /* Confidence Selection Styles */
+        .confidence-selection-container {
+          margin-bottom: 48px;
+        }
+
+        .confidence-card {
+          background: #0f0f0f;
+          padding: 48px;
+          border-radius: 24px;
+          box-shadow: 12px 12px 24px #050505, -12px -12px 24px #191919;
+        }
+
+        @media (min-width: 768px) {
+          .confidence-card {
+            padding: 64px;
+          }
+        }
+
+        .confidence-title {
+          font-size: 24px;
+          font-weight: 700;
+          color: #e5e5e5;
+          margin: 0 0 16px;
+          text-align: center;
+        }
+
+        @media (min-width: 768px) {
+          .confidence-title {
+            font-size: 28px;
+          }
+        }
+
+        .confidence-subtitle {
+          font-size: 16px;
+          color: #a8a8a8;
+          margin: 0 0 32px;
+          text-align: center;
+        }
+
+        @media (min-width: 768px) {
+          .confidence-subtitle {
+            font-size: 18px;
+          }
+        }
+
+        .confidence-options {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .confidence-option {
+          width: 100%;
+          padding: 24px;
+          background: #0f0f0f;
+          border: none;
+          border-radius: 16px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          text-align: left;
+          box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+        }
+
+        .confidence-option:hover {
+          box-shadow: 4px 4px 8px #050505, -4px -4px 8px #191919;
+          transform: translateY(1px);
+        }
+
+        .confidence-option-label {
+          font-size: 18px;
+          font-weight: 600;
+          color: #e5e5e5;
+          margin-bottom: 8px;
+        }
+
+        @media (min-width: 768px) {
+          .confidence-option-label {
+            font-size: 20px;
+          }
+        }
+
+        .confidence-option-percentage {
+          font-size: 16px;
+          color: #a8a8a8;
+        }
+
+        @media (min-width: 768px) {
+          .confidence-option-percentage {
+            font-size: 18px;
+          }
+        }
+
+        /* Reflection Styles (shown within explanation container) */
+        .reflection-card {
+          background: #0f0f0f;
+          padding: 48px;
+          border-radius: 24px;
+          box-shadow: 12px 12px 24px #050505, -12px -12px 24px #191919;
+          margin-top: 64px;
+        }
+
+        @media (min-width: 768px) {
+          .reflection-card {
+            padding: 64px;
+          }
+        }
+
+        .reflection-title {
+          font-size: 24px;
+          font-weight: 700;
+          color: #e5e5e5;
+          margin: 0 0 16px;
+          text-align: center;
+        }
+
+        @media (min-width: 768px) {
+          .reflection-title {
+            font-size: 28px;
+          }
+        }
+
+        .reflection-subtitle {
+          font-size: 16px;
+          color: #a8a8a8;
+          margin: 0 0 32px;
+          text-align: center;
+        }
+
+        @media (min-width: 768px) {
+          .reflection-subtitle {
+            font-size: 18px;
+          }
+        }
+
+        .reflection-options {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .reflection-option {
+          width: 100%;
+          padding: 24px;
+          background: #0f0f0f;
+          border: none;
+          border-radius: 16px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          text-align: left;
+          box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
+          font-size: 18px;
+          color: #e5e5e5;
+          line-height: 1.6;
+        }
+
+        @media (min-width: 768px) {
+          .reflection-option {
+            font-size: 20px;
+          }
+        }
+
+        .reflection-option:hover {
+          box-shadow: 4px 4px 8px #050505, -4px -4px 8px #191919;
+          transform: translateY(1px);
         }
 
         .submit-button {
