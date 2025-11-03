@@ -207,7 +207,7 @@ No explanation, just the JSON array.`;
     const textContent = await aiProvider.generateContent(prompt, {
       maxOutputTokens: 1024,
       temperature: 0, // Deterministic for consistency
-      useReasoning: false // Use non-reasoning model for faster topic identification
+      useReasoning: true // Use reasoning model for accurate topic identification
     });
     const jsonContent = textContent.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
 
