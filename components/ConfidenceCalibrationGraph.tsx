@@ -201,38 +201,40 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
       )}
 
       {/* Visual Comparison - Bar Chart (Collapsible) */}
-      <button
-        className="calibration-toggle-details"
-        onClick={() => setIsDetailsExpanded(!isDetailsExpanded)}
-      >
-        <span className="calibration-toggle-icon">{isDetailsExpanded ? '▼' : '▶'}</span>
-        <span className="calibration-toggle-text">
-          Your Confidence vs Actual Performance
-        </span>
-      </button>
+      <div className="calibration-details-section">
+        <button
+          className="calibration-toggle-details"
+          onClick={() => setIsDetailsExpanded(!isDetailsExpanded)}
+        >
+          <span className="calibration-toggle-icon">{isDetailsExpanded ? '▼' : '▶'}</span>
+          <span className="calibration-toggle-text">
+            Your Confidence vs Actual Performance
+          </span>
+        </button>
 
-      {isDetailsExpanded && (
-        <div className="calibration-bars">
-          {calibrationData.map(d => (
-            <div key={d.confidence} className="calibration-bar-row">
-              <div className="calibration-bar-label">{getConfidenceLabel(d.confidence)}</div>
-              <div className="calibration-bar-container">
-                <div className="calibration-bar-group">
-                  <div className="calibration-bar confidence" style={{ width: `${d.confidence}%` }}>
-                    {d.confidence}%
-                  </div>
-                  <div
-                    className={`calibration-bar actual ${d.actualAccuracy < d.confidence - 5 ? 'lower' : d.actualAccuracy > d.confidence + 5 ? 'higher' : 'matched'}`}
-                    style={{ width: `${d.actualAccuracy}%` }}
-                  >
-                    {d.actualAccuracy.toFixed(0)}%
+        {isDetailsExpanded && (
+          <div className="calibration-bars">
+            {calibrationData.map(d => (
+              <div key={d.confidence} className="calibration-bar-row">
+                <div className="calibration-bar-label">{getConfidenceLabel(d.confidence)}</div>
+                <div className="calibration-bar-container">
+                  <div className="calibration-bar-group">
+                    <div className="calibration-bar confidence" style={{ width: `${d.confidence}%` }}>
+                      {d.confidence}%
+                    </div>
+                    <div
+                      className={`calibration-bar actual ${d.actualAccuracy < d.confidence - 5 ? 'lower' : d.actualAccuracy > d.confidence + 5 ? 'higher' : 'matched'}`}
+                      style={{ width: `${d.actualAccuracy}%` }}
+                    >
+                      {d.actualAccuracy.toFixed(0)}%
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
         </div>
       )}
 
@@ -355,14 +357,20 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           padding-left: 4px;
         }
 
+        /* Details Section Container */
+        .calibration-details-section {
+          margin: 0 40px 32px;
+          background: #0a0a0a;
+          border-radius: 16px;
+          overflow: hidden;
+        }
+
         /* Toggle Details Button */
         .calibration-toggle-details {
-          width: calc(100% - 80px);
-          margin: 0 40px 32px;
+          width: 100%;
           padding: 20px 24px;
-          background: #0a0a0a;
+          background: transparent;
           border: none;
-          border-radius: 16px;
           cursor: pointer;
           transition: all 0.3s ease;
           display: flex;
@@ -371,7 +379,7 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
         }
 
         .calibration-toggle-details:hover {
-          background: #121212;
+          background: rgba(18, 18, 18, 0.5);
         }
 
         .calibration-toggle-icon {
@@ -387,10 +395,8 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
 
         /* Bar Chart Section */
         .calibration-bars {
-          margin: 0 40px 32px;
-          padding: 24px;
-          background: #0a0a0a;
-          border-radius: 16px;
+          padding: 0 24px 24px 24px;
+          background: transparent;
         }
 
         .calibration-bar-row {
