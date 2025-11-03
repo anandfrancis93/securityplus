@@ -669,7 +669,7 @@ export default function ExplanationSection({
                         <strong style={{ color: '#aaa' }}>What this means:</strong>
                       </div>
                       <div>
-                        This topic appears in the question to set the scene or provide background, but you don't actually need to understand it to answer correctly. The question could use a different scenario (replace this with something similar) and still test the same core concepts. Focus your study on the <span style={{ color: '#10b981', fontWeight: 600 }}>Core Intent</span> topics above - those are what you must know.
+                        This topic appears in the question to set the scene or provide background, but you don&apos;t actually need to understand it to answer correctly. The question could use a different scenario (replace this with something similar) and still test the same core concepts. Focus your study on the <span style={{ color: '#10b981', fontWeight: 600 }}>Core Intent</span> topics above - those are what you must know.
                       </div>
                     </div>
                   </div>
