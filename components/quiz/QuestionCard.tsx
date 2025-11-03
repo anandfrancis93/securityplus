@@ -20,9 +20,34 @@ export default function QuestionCard({
   selectedAnswers = [],
   onAnswerSelect,
 }: QuestionCardProps) {
-  const correctAnswers = Array.isArray(question.correctAnswer)
-    ? question.correctAnswer
-    : [question.correctAnswer];
+  // SCHEMA ADAPTER: Normalize data whether using new or old schema
+  const useNewSchema = question.optionItems && question.optionItems.length > 0;
+
+  // If using NEW SCHEMA, convert to format expected by rest of component
+  let normalizedOptions: string[];
+  let normalizedCorrectAnswers: number[];
+
+  if (useNewSchema && question.optionItems) {
+    // NEW SCHEMA: Extract from OptionItems (no drift!)
+    normalizedOptions = question.optionItems.map((item, idx) => {
+      const letter = String.fromCharCode(65 + idx); // A, B, C, D
+      return `${letter}. ${item.text}`;
+    });
+    normalizedCorrectAnswers = question.optionItems
+      .map((item, idx) => item.isCorrect ? idx : -1)
+      .filter(idx => idx !== -1);
+  } else {
+    // OLD SCHEMA: Use legacy fields
+    normalizedOptions = question.options || [];
+    normalizedCorrectAnswers = question.correctAnswer === undefined || question.correctAnswer === null
+      ? []
+      : Array.isArray(question.correctAnswer)
+      ? question.correctAnswer
+      : [question.correctAnswer];
+  }
+
+  // For backward compatibility, keep this variable name
+  const correctAnswers = normalizedCorrectAnswers;
 
   // Log validation info when new question loads (development only)
   useEffect(() => {
@@ -94,7 +119,7 @@ export default function QuestionCard({
         flexDirection: 'column',
         gap: showExplanation ? '16px' : '24px',
       }}>
-        {(question.options || []).map((option, index) => {
+        {normalizedOptions.map((option, index) => {
           const isSelected = isAnswerSelected(index);
           const isCorrectAnswer = correctAnswers.includes(index);
           const showCorrect = showExplanation && isCorrectAnswer;
