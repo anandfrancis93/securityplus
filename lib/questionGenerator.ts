@@ -321,15 +321,21 @@ No explanation outside the JSON, just the JSON object.`;
       throw new Error('AI did not return valid keep/reject arrays');
     }
 
-    // Log rejections
+    // Log rejections with more detail
     if (result.reject.length > 0) {
-      console.log(`[PASS 2 VALIDATION] 🔍 Rejected ${result.reject.length} contextual tags:`);
-      result.reject.forEach(r => {
-        console.log(`  ❌ "${r.topic}" - ${r.reason}`);
+      console.log(`\n[PASS 2 VALIDATION] 🔍 Rejected ${result.reject.length} contextual tag(s):`);
+      result.reject.forEach((r, i) => {
+        console.log(`  ${i + 1}. ❌ "${r.topic}"`);
+        console.log(`     Reason: ${r.reason}`);
       });
+    } else {
+      console.log(`\n[PASS 2 VALIDATION] ✅ All tags passed editorial tests - no rejections`);
     }
 
-    console.log(`[PASS 2 VALIDATION] ✅ Kept ${result.keep.length} core intent tags: ${result.keep.join(', ')}`);
+    console.log(`\n[PASS 2 VALIDATION] ✅ Kept ${result.keep.length} core intent tag(s):`);
+    result.keep.forEach((topic, i) => {
+      console.log(`  ${i + 1}. "${topic}"`);
+    });
 
     return result.keep;
 
@@ -525,7 +531,10 @@ No explanation, just the JSON array.`;
 
     // 🔧 PASS 2: Apply editorial judgment to filter out contextual mentions
     // This separates string matching (Pass 1) from editorial judgment (Pass 2)
-    console.log(`[PASS 2 VALIDATION] 🔍 Applying editorial tests (Removal/Knowledge/Causal)...`);
+    console.log(`\n========== PASS 2 VALIDATION START ==========`);
+    console.log(`[PASS 2 VALIDATION] Input topics from Pass 1: ${validation.matched.join(', ')}`);
+    console.log(`[PASS 2 VALIDATION] Applying editorial tests (Removal/Knowledge/Causal)...`);
+
     const finalTopics = await validateTopicTagsWithAI(
       questionText,
       options,
@@ -533,6 +542,10 @@ No explanation, just the JSON array.`;
       explanation,
       validation.matched
     );
+
+    console.log(`[PASS 2 VALIDATION] Final topics after filtering: ${finalTopics.join(', ')}`);
+    console.log(`[PASS 2 VALIDATION] Removed ${validation.matched.length - finalTopics.length} contextual tags`);
+    console.log(`========== PASS 2 VALIDATION END ==========\n`);
 
     // Return final validated topics after both passes
     return finalTopics;
