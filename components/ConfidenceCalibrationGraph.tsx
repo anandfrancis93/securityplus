@@ -194,11 +194,11 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
               const percentage = (reflection.count / totalWithReflection) * 100;
               return (
                 <div key={reflection.type} className={`calibration-strategy-item ${reflection.quality}`}>
-                  <div className="calibration-strategy-bar" style={{ width: `${percentage}%` }}>
-                    <span className="calibration-strategy-percentage">{percentage.toFixed(0)}%</span>
-                  </div>
                   <div className="calibration-strategy-label">
                     {reflection.label} ({reflection.count} questions)
+                  </div>
+                  <div className="calibration-strategy-bar" style={{ width: `${percentage}%` }}>
+                    <span className="calibration-strategy-percentage">{percentage.toFixed(0)}%</span>
                   </div>
                 </div>
               );
@@ -337,7 +337,6 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           align-items: center;
           justify-content: flex-end;
           padding-right: 16px;
-          margin-bottom: 8px;
           min-width: 80px;
           transition: all 0.3s ease;
         }
@@ -367,7 +366,7 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
         .calibration-strategy-label {
           font-size: 15px;
           color: #e5e5e5;
-          padding-left: 4px;
+          margin-bottom: 8px;
         }
 
         /* Details Section Container */
