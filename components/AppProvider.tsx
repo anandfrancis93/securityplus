@@ -290,14 +290,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
         questionNumber: currentQuiz.questions.length + 1,
       });
 
-      const { isCorrect, pointsEarned, maxPoints, correctAnswer, explanation, incorrectExplanations } = verificationResult;
+      const { isCorrect, pointsEarned, maxPoints, correctAnswer, explanation, incorrectExplanations, optionItems, options, questionData } = verificationResult;
 
       // Merge verification result with question data for display
+      // CRITICAL: Must include optionItems from API response for new schema questions!
       const questionWithAnswer = {
         ...question,
         correctAnswer: correctAnswer !== undefined ? correctAnswer : question.correctAnswer,
         explanation: explanation || question.explanation,
         incorrectExplanations: incorrectExplanations || question.incorrectExplanations,
+        optionItems: optionItems || question.optionItems, // NEW SCHEMA: Include from API response
+        options: options || question.options, // Legacy field
+        validationLogs: questionData?.validationLogs || question.validationLogs, // For Topic Analysis
       };
 
       const attempt: QuestionAttempt = {
