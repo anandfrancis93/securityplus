@@ -982,7 +982,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                     <div style={{
                       borderTop: '1px solid #191919'
                     }}>
-                    <div style={{ maxHeight: '384px', overflowY: 'auto' }}>
+                    <div className="topic-table-scroll" style={{ maxHeight: '384px', overflowY: 'auto' }}>
                       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                         <thead style={{
                           backgroundColor: '#0f0f0f',
