@@ -265,7 +265,7 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
                   <span className="calibration-strategy-percentage">{strategy.percentage.toFixed(0)}%</span>
                 </div>
                 <div className="calibration-strategy-label">
-                  You got {strategy.percentage.toFixed(0)}% correct {strategy.label}
+                  You got {strategy.percentage.toFixed(0)}% ({strategy.count} questions) correct {strategy.label}
                 </div>
               </div>
             ));
