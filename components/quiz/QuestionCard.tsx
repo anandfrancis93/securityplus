@@ -49,14 +49,6 @@ export default function QuestionCard({
       borderRadius: 'clamp(16px, 2vw, 24px)',
       boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
     }}>
-      <h2 className="question-card-title" style={{
-        fontWeight: 'bold',
-        lineHeight: '1.3',
-        color: '#e5e5e5',
-      }}>
-        {question.question}
-      </h2>
-
       {/* Answer Options */}
       <div style={{
         display: 'flex',
@@ -227,11 +219,6 @@ export default function QuestionCard({
           padding: clamp(20px, 4vw, 32px);
         }
 
-        .question-card-title {
-          font-size: clamp(18px, 3.5vw, 28px);
-          margin-bottom: clamp(24px, 4vw, 48px);
-        }
-
         .multiple-instruction {
           margin-bottom: clamp(24px, 3.5vw, 48px);
           padding: clamp(16px, 3vw, 24px);
@@ -252,11 +239,6 @@ export default function QuestionCard({
             padding: clamp(32px, 4vw, 48px);
           }
 
-          .question-card-title {
-            font-size: clamp(22px, 2.5vw, 28px);
-            margin-bottom: clamp(32px, 4vw, 56px);
-          }
-
           .multiple-instruction {
             fontSize: clamp(16px, 2vw, 18px);
           }
@@ -274,11 +256,6 @@ export default function QuestionCard({
         @media (min-width: 1024px) {
           .question-card-container {
             padding: clamp(40px, 3.5vw, 64px);
-          }
-
-          .question-card-title {
-            font-size: clamp(24px, 2vw, 28px);
-            margin-bottom: clamp(40px, 3.5vw, 64px);
           }
 
           .answer-option-button {
@@ -301,11 +278,6 @@ export default function QuestionCard({
         @media (min-width: 1440px) {
           .question-card-container {
             padding: 64px;
-          }
-
-          .question-card-title {
-            font-size: 28px;
-            margin-bottom: 64px;
           }
 
           .multiple-instruction {
