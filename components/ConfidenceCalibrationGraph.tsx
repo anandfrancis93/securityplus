@@ -395,7 +395,7 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
 
         /* Bar Chart Section */
         .calibration-bars {
-          padding: 0 24px 24px 24px;
+          padding: 24px 24px 24px 24px;
           background: transparent;
         }
 
