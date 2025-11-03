@@ -92,6 +92,23 @@ export async function getUserProgress(userId: string): Promise<UserProgress | nu
       // Load quiz history from subcollection instead of storing in main document
       data.quizHistory = await loadQuizHistory(userId);
 
+      // Load cached quiz from subcollection if it exists
+      if (data.hasCachedQuiz) {
+        try {
+          const cachedQuizRef = doc(db, USERS_COLLECTION, userId, 'cached_quiz', 'current');
+          const cachedQuizDoc = await getDoc(cachedQuizRef);
+          if (cachedQuizDoc.exists()) {
+            data.cachedQuiz = cachedQuizDoc.data() as CachedQuiz;
+            console.log('[getUserProgress] Loaded cached quiz from subcollection:', {
+              questionsCount: data.cachedQuiz?.questions?.length || 0
+            });
+          }
+        } catch (error) {
+          console.error('[getUserProgress] Error loading cached quiz:', error);
+          // Don't fail the whole function if cached quiz fails to load
+        }
+      }
+
       // Ensure abilityStandardError exists (for backwards compatibility with existing users)
       if (data.abilityStandardError === undefined && data.quizHistory && data.quizHistory.length > 0) {
         console.log('[getUserProgress] abilityStandardError undefined, recalculating from quiz history');
@@ -187,11 +204,19 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
     await setDoc(quizRef, cleanedSession);
     console.log('Quiz session saved to subcollection:', session.id);
 
-    // Update answered questions
+    // Update answered questions with size limit to prevent "too many index entries" error
     const answeredQuestions = new Set(userData.answeredQuestions || []);
     session.questions.forEach(q => {
       answeredQuestions.add(q.questionId);
     });
+
+    // Limit to most recent 5000 questions to avoid Firebase limits
+    const answeredQuestionsArray = Array.from(answeredQuestions);
+    const limitedAnsweredQuestions = answeredQuestionsArray.slice(-5000);
+
+    if (answeredQuestionsArray.length > 5000) {
+      console.log(`[saveQuizSession] Trimmed answeredQuestions from ${answeredQuestionsArray.length} to 5000`);
+    }
 
     // Calculate correct answers and points from this session
     const sessionCorrectAnswers = session.questions.filter(q => q.isCorrect).length;
@@ -228,7 +253,7 @@ export async function saveQuizSession(userId: string, session: QuizSession): Pro
     // Use updateDoc to only update specific fields, not the entire document
     // This avoids hitting the index limit on existing large documents
     const updates: any = {
-      answeredQuestions: Array.from(answeredQuestions),
+      answeredQuestions: limitedAnsweredQuestions,
       correctAnswers: (userData.correctAnswers || 0) + sessionCorrectAnswers,
       totalQuestions: (userData.totalQuestions || 0) + session.questions.length,
       totalPoints: (userData.totalPoints || 0) + sessionPoints,
@@ -433,6 +458,7 @@ export async function resetUserProgress(userId: string): Promise<void> {
 /**
  * Save unused pre-generated questions to cache for next quiz
  * This prevents wasting questions when quiz is ended early
+ * FIXED: Store in subcollection to avoid "too many index entries" error
  */
 export async function saveUnusedQuestionsToCache(userId: string, cachedQuiz: CachedQuiz): Promise<void> {
   try {
@@ -443,13 +469,27 @@ export async function saveUnusedQuestionsToCache(userId: string, cachedQuiz: Cac
       generatedAfterQuiz: cachedQuiz.generatedAfterQuiz
     });
 
-    const userRef = doc(db, USERS_COLLECTION, userId);
-    await updateDoc(userRef, {
-      cachedQuiz,
+    // Store cached quiz in a subcollection instead of main document
+    // This avoids the "too many index entries" error
+    const cachedQuizRef = doc(db, USERS_COLLECTION, userId, 'cached_quiz', 'current');
+
+    // Clean the data to remove undefined values
+    const cleanedCachedQuiz = removeUndefinedValues(cachedQuiz);
+
+    await setDoc(cachedQuizRef, {
+      ...cleanedCachedQuiz,
       lastUpdated: Date.now(),
     });
 
-    console.log('Unused questions cached successfully');
+    // Update user document with just a flag indicating cache exists
+    const userRef = doc(db, USERS_COLLECTION, userId);
+    await updateDoc(userRef, {
+      hasCachedQuiz: true,
+      cachedQuizUpdatedAt: Date.now(),
+      lastUpdated: Date.now(),
+    });
+
+    console.log('Unused questions cached successfully in subcollection');
   } catch (error) {
     console.error('Error saving unused questions to cache:', error);
     throw error;

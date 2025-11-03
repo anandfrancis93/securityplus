@@ -76,11 +76,17 @@ export async function POST(request: NextRequest) {
       quizSessionId, // Reference to server-side quiz session
     };
 
-    // Save cached quiz and quiz metadata
-    // Note: topicPerformance is already stored in quizMetadata.topicPerformance
-    // We don't save it as a flat field to avoid Firestore field path issues with topic names containing special characters
+    // Save cached quiz to subcollection to avoid "too many index entries" error
+    const cachedQuizRef = adminDb.collection('users').doc(userId).collection('cached_quiz').doc('current');
+    await cachedQuizRef.set({
+      ...secureCache,
+      lastUpdated: Date.now(),
+    });
+
+    // Update user document with metadata and flag
     await userRef.update({
-      cachedQuiz: secureCache,
+      hasCachedQuiz: true,
+      cachedQuizUpdatedAt: Date.now(),
       quizMetadata: userProgress.quizMetadata,
     });
 

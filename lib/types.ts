@@ -90,7 +90,9 @@ export interface UserProgress {
   abilityStandardError?: number; // Standard error of ability estimate (for confidence intervals)
   notificationsEnabled?: boolean; // Whether flashcard notifications are enabled
   topicPerformance?: { [topicName: string]: TopicPerformance }; // Cross-session topic tracking
-  cachedQuiz?: CachedQuiz | null; // Pre-generated quiz ready to use
+  cachedQuiz?: CachedQuiz | null; // Pre-generated quiz ready to use (loaded from subcollection)
+  hasCachedQuiz?: boolean; // Flag indicating if cached quiz exists in subcollection
+  cachedQuizUpdatedAt?: number | null; // Timestamp when cached quiz was last updated
   quizMetadata?: QuizGenerationMetadata; // Metadata for question generation and tracking
   inProgressQuiz?: InProgressQuiz | null; // Saved quiz for cross-device resume
 }

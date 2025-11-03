@@ -25,10 +25,15 @@ export async function POST(request: NextRequest) {
       return authResult; // Return error response
     }
 
-    // Clear cached quiz from Firebase
+    // Clear cached quiz from subcollection
+    const cachedQuizRef = adminDb.collection('users').doc(userId).collection('cached_quiz').doc('current');
+    await cachedQuizRef.delete();
+
+    // Update user document to indicate no cached quiz
     const userRef = adminDb.collection('users').doc(userId);
     await userRef.update({
-      cachedQuiz: null,
+      hasCachedQuiz: false,
+      cachedQuizUpdatedAt: null,
     });
 
     return NextResponse.json({ success: true });
