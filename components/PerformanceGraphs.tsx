@@ -421,10 +421,11 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           padding: '40px',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          gap: '16px'
         }}>
           <h3 style={{
-            fontSize: '36px',
+            fontSize: 'clamp(24px, 5vw, 36px)',
             fontWeight: 'bold',
             color: '#e5e5e5',
             margin: 0,
@@ -544,10 +545,11 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           padding: '40px',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          gap: '16px'
         }}>
           <h3 style={{
-            fontSize: '36px',
+            fontSize: 'clamp(24px, 5vw, 36px)',
             fontWeight: 'bold',
             color: '#e5e5e5',
             margin: 0,
@@ -669,10 +671,11 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           padding: '40px',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          gap: '16px'
         }}>
           <h3 style={{
-            fontSize: '36px',
+            fontSize: 'clamp(24px, 5vw, 36px)',
             fontWeight: 'bold',
             color: '#e5e5e5',
             margin: 0,
@@ -762,10 +765,11 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             padding: '40px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            gap: '16px'
           }}>
             <h3 style={{
-              fontSize: '36px',
+              fontSize: 'clamp(24px, 5vw, 36px)',
               fontWeight: 'bold',
               color: '#e5e5e5',
               margin: 0,
@@ -853,10 +857,11 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           padding: '40px',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          gap: '16px'
         }}>
           <h3 style={{
-            fontSize: '36px',
+            fontSize: 'clamp(24px, 5vw, 36px)',
             fontWeight: 'bold',
             color: '#e5e5e5',
             margin: 0,

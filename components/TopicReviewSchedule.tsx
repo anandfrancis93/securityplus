@@ -137,7 +137,7 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
   };
 
   const titleStyle: React.CSSProperties = {
-    fontSize: '36px',
+    fontSize: 'clamp(24px, 5vw, 36px)',
     fontWeight: 'bold',
     color: '#e5e5e5',
     marginBottom: '8px',
@@ -375,7 +375,7 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
     <div style={containerStyle}>
       {/* Header */}
       <div style={headerStyle}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '24px' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '24px', gap: '16px' }}>
           <div style={{ flex: 1 }}>
             <h3 style={titleStyle}>
               Topic Review Schedule

@@ -1106,10 +1106,11 @@ export default function QuizPerformance() {
               position: 'relative',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between'
+              justifyContent: 'space-between',
+              gap: '16px'
             }}>
               <h3 style={{
-                fontSize: 'clamp(1.875rem, 5vw, 2.5rem)',
+                fontSize: 'clamp(24px, 5vw, 36px)',
                 fontWeight: 'bold',
                 color: '#e5e5e5',
                 letterSpacing: '-0.025em'
