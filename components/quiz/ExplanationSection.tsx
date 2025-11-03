@@ -189,8 +189,8 @@ export default function ExplanationSection({
     );
 
     // Extract key terms from topic (remove parenthetical context)
-    const topicKeyTerms = topic.split('(')[0].trim().toLowerCase();
-    const keywords = topicKeyTerms.split(/\s+/).filter(w => w.length > 3);
+    const topicKeyTerms = topic.split('(')[0].trim();
+    const keywords = topicKeyTerms.toLowerCase().split(/\s+/).filter(w => w.length > 3);
 
     // Check if topic keywords appear in correct answer
     for (const answer of correctAnswers) {
@@ -207,24 +207,37 @@ export default function ExplanationSection({
           if (keywords.some(k => sentenceLower.includes(k))) {
             const trimmed = sentence.trim();
             if (trimmed.length > 0) {
-              return `The correct answer explicitly requires: "${trimmed.length > 120 ? trimmed.substring(0, 120) + '...' : trimmed}"`;
+              const quote = trimmed.length > 100 ? trimmed.substring(0, 100) + '...' : trimmed;
+              return `The correct answer says: "${quote}"\n\nYou must understand ${topicKeyTerms} to know why this is the right answer. Without knowledge of this concept, you cannot distinguish between correct and incorrect options.`;
             }
           }
         }
 
         // Fallback: just show it mentions the concept
-        return `The correct answer explicitly mentions ${topicKeyTerms}, which is essential to selecting the right response.`;
+        return `The correct answer explicitly mentions "${topicKeyTerms}". This is the specific action or concept required to solve the problem. If you don't understand ${topicKeyTerms}, you cannot identify why this answer is correct over the alternatives.`;
       }
     }
 
     // Also check the main explanation
     const explanationLower = question.explanation.toLowerCase();
     if (keywords.some(k => explanationLower.includes(k))) {
-      return `Understanding ${topicKeyTerms} is essential because the explanation states this concept is why the answer is correct.`;
+      // Try to extract relevant sentence from explanation
+      const expSentences = question.explanation.split(/[.!?]+/);
+      for (const sentence of expSentences) {
+        const sentLower = sentence.toLowerCase();
+        if (keywords.some(k => sentLower.includes(k))) {
+          const trimmed = sentence.trim();
+          if (trimmed.length > 20) {
+            const quote = trimmed.length > 100 ? trimmed.substring(0, 100) + '...' : trimmed;
+            return `The explanation states: "${quote}"\n\nThis shows that understanding ${topicKeyTerms} is crucial because it's the reason why the answer is correct. The question tests whether you can apply this concept to select the right solution.`;
+          }
+        }
+      }
+      return `Understanding ${topicKeyTerms} is essential because the correct answer depends on knowing this concept. The explanation confirms this is the key principle being tested.`;
     }
 
     // Generic fallback
-    return `This concept is directly tested - you cannot select the correct answer without understanding ${topicKeyTerms}.`;
+    return `This concept (${topicKeyTerms}) is directly tested. You must understand this topic to answer correctly - it's not just mentioned in passing, but is the core knowledge required to distinguish the correct answer from wrong ones.`;
   };
 
   // Helper function to check if explanation is valid (not a placeholder or too short)
@@ -516,40 +529,49 @@ export default function ExplanationSection({
                 gap: 'clamp(12px, 2vw, 16px)',
               }}
             >
-              {question.validationLogs.pass2Kept.map((topic, index) => (
-                <div
-                  key={`core-${index}`}
-                  className="core-intent-item"
-                  style={{
-                    padding: 'clamp(12px, 2vw, 16px)',
-                    background: '#0f0f0f',
-                    border: '2px solid #10b981',
-                    borderRadius: 'clamp(8px, 1.5vw, 12px)',
-                    boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  }}
-                >
+              {question.validationLogs.pass2Kept.map((topic, index) => {
+                const explanation = findTopicMentionInAnswer(topic);
+                const parts = explanation.split('\n\n');
+
+                return (
                   <div
+                    key={`core-${index}`}
+                    className="core-intent-item"
                     style={{
-                      color: '#10b981',
-                      fontSize: 'clamp(14px, 2.2vw, 16px)',
-                      fontWeight: 600,
-                      marginBottom: '8px',
+                      padding: 'clamp(12px, 2vw, 16px)',
+                      background: '#0f0f0f',
+                      border: '2px solid #10b981',
+                      borderRadius: 'clamp(8px, 1.5vw, 12px)',
+                      boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     }}
                   >
-                    {topic}
+                    <div
+                      style={{
+                        color: '#10b981',
+                        fontSize: 'clamp(14px, 2.2vw, 16px)',
+                        fontWeight: 600,
+                        marginBottom: '8px',
+                      }}
+                    >
+                      {topic}
+                    </div>
+                    <div
+                      style={{
+                        color: '#7dd3a8',
+                        fontSize: 'clamp(13px, 2vw, 14px)',
+                        lineHeight: '1.6',
+                      }}
+                    >
+                      {parts.map((part, i) => (
+                        <div key={i} style={{ marginBottom: i < parts.length - 1 ? '8px' : '0' }}>
+                          {i === 0 ? '✓ ' : ''}{part}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div
-                    style={{
-                      color: '#7dd3a8',
-                      fontSize: 'clamp(13px, 2vw, 14px)',
-                      lineHeight: '1.5',
-                    }}
-                  >
-                    ✓ {findTopicMentionInAnswer(topic)}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
@@ -616,12 +638,39 @@ export default function ExplanationSection({
                     </div>
                     <div
                       style={{
+                        color: '#888',
+                        fontSize: 'clamp(13px, 2vw, 14px)',
+                        lineHeight: '1.6',
+                        marginBottom: '8px',
+                      }}
+                    >
+                      <strong style={{ color: '#f59e0b' }}>Why this is context, not core intent:</strong>
+                    </div>
+                    <div
+                      style={{
                         color: '#d4a574',
                         fontSize: 'clamp(13px, 2vw, 14px)',
-                        lineHeight: '1.5',
+                        lineHeight: '1.6',
+                        marginBottom: '12px',
                       }}
                     >
                       {rejected.reason}
+                    </div>
+                    <div
+                      style={{
+                        paddingTop: '12px',
+                        borderTop: '1px solid #333',
+                        color: '#999',
+                        fontSize: 'clamp(12px, 1.8vw, 13px)',
+                        lineHeight: '1.5',
+                      }}
+                    >
+                      <div style={{ marginBottom: '8px' }}>
+                        <strong style={{ color: '#aaa' }}>What this means:</strong>
+                      </div>
+                      <div>
+                        This topic appears in the question to set the scene or provide background, but you don't actually need to understand it to answer correctly. The question could use a different scenario (replace this with something similar) and still test the same core concepts. Focus your study on the <span style={{ color: '#10b981', fontWeight: 600 }}>Core Intent</span> topics above - those are what you must know.
+                      </div>
                     </div>
                   </div>
                 ))}
