@@ -154,7 +154,7 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
     padding: '16px',
     background: '#0f0f0f',
     borderRadius: '16px',
-    boxShadow: hoveredButton === 'expand'
+    boxShadow: isExpanded
       ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
       : '8px 8px 16px #050505, -8px -8px 16px #191919',
     border: 'none',
@@ -409,8 +409,6 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
           </div>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            onMouseEnter={() => setHoveredButton('expand')}
-            onMouseLeave={() => setHoveredButton(null)}
             style={expandButtonStyle}
             aria-label="Toggle Topic Review Schedule"
           >
