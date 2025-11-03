@@ -177,7 +177,7 @@ export default function ExplanationSection({
       .trim();
   };
 
-  // Helper to find how a topic is mentioned in the correct answer
+  // Helper to find how a topic is mentioned in the correct answer and explain its role
   const findTopicMentionInAnswer = (topic: string): string => {
     const correctAnswerIndices = Array.isArray(question.correctAnswer)
       ? question.correctAnswer
@@ -190,54 +190,102 @@ export default function ExplanationSection({
 
     // Extract key terms from topic (remove parenthetical context)
     const topicKeyTerms = topic.split('(')[0].trim();
+    const topicContext = topic.includes('(') ? topic.match(/\((.*?)\)/)?.[1] || '' : '';
     const keywords = topicKeyTerms.toLowerCase().split(/\s+/).filter(w => w.length > 3);
+
+    // Get question text for context
+    const questionText = question.question;
+
+    // Try to find WHERE in the question this requirement appears
+    const questionLower = questionText.toLowerCase();
+    let questionContext = '';
+
+    // Look for requirement phrases in the question
+    const requirementPatterns = [
+      /ensure(?:s?)?\s+that\s+([^.]+)/gi,
+      /require(?:s?)?\s+([^.]+)/gi,
+      /must\s+([^.]+)/gi,
+      /need(?:s?)?\s+to\s+([^.]+)/gi,
+      /objective(?:s?)?\s+(?:is|are|include)?\s*:?\s*([^.]+)/gi,
+    ];
+
+    for (const pattern of requirementPatterns) {
+      const matches = [...questionText.matchAll(pattern)];
+      for (const match of matches) {
+        if (match[1] && keywords.some(k => match[1].toLowerCase().includes(k))) {
+          questionContext = match[1].trim();
+          break;
+        }
+      }
+      if (questionContext) break;
+    }
 
     // Check if topic keywords appear in correct answer
     for (const answer of correctAnswers) {
       const answerLower = answer.toLowerCase();
-
-      // Find matches
       const matches = keywords.filter(keyword => answerLower.includes(keyword));
 
       if (matches.length > 0) {
-        // Find a sentence or phrase containing these keywords
-        const sentences = answer.split(/[.!?]+/);
-        for (const sentence of sentences) {
-          const sentenceLower = sentence.toLowerCase();
-          if (keywords.some(k => sentenceLower.includes(k))) {
-            const trimmed = sentence.trim();
-            if (trimmed.length > 0) {
-              const quote = trimmed.length > 100 ? trimmed.substring(0, 100) + '...' : trimmed;
-              return `The correct answer says: "${quote}"\n\nYou must understand ${topicKeyTerms} to know why this is the right answer. Without knowledge of this concept, you cannot distinguish between correct and incorrect options.`;
-            }
+        // Find the specific part of the answer mentioning this topic
+        const sentences = answer.split(/[,;]|(?:\sand\s)/);
+        let relevantPart = '';
+
+        for (const part of sentences) {
+          const partLower = part.toLowerCase();
+          if (keywords.some(k => partLower.includes(k))) {
+            relevantPart = part.trim();
+            break;
           }
         }
 
-        // Fallback: just show it mentions the concept
-        return `The correct answer explicitly mentions "${topicKeyTerms}". This is the specific action or concept required to solve the problem. If you don't understand ${topicKeyTerms}, you cannot identify why this answer is correct over the alternatives.`;
+        if (!relevantPart) {
+          relevantPart = answer.length > 80 ? answer.substring(0, 80) + '...' : answer;
+        }
+
+        // Build specific explanation
+        let explanation = `The correct answer requires: "${relevantPart}"\n\n`;
+
+        if (questionContext) {
+          explanation += `This directly addresses the question's requirement: "${questionContext}". `;
+        }
+
+        explanation += `Without understanding ${topicKeyTerms}${topicContext ? ` (${topicContext})` : ''}, you cannot identify that this is the correct solution to the security problem. `;
+
+        // Add specific reason why this topic matters
+        if (topicContext.includes('access control')) {
+          explanation += `You need to know how ${topicKeyTerms} works to understand why this approach properly restricts permissions.`;
+        } else if (topicContext.includes('protocol') || topicContext.includes('communication')) {
+          explanation += `You need to understand ${topicKeyTerms} to know why this provides the necessary security for data in transit.`;
+        } else if (topicContext.includes('mitigation') || topicContext.includes('control')) {
+          explanation += `You need to know ${topicKeyTerms} to recognize this as the appropriate security measure.`;
+        } else if (topicContext.includes('analysis') || topicContext.includes('assessment')) {
+          explanation += `You need to understand ${topicKeyTerms} to evaluate and prioritize security decisions correctly.`;
+        } else {
+          explanation += `This is the specific concept tested - the correct answer depends on knowing ${topicKeyTerms}.`;
+        }
+
+        return explanation;
       }
     }
 
-    // Also check the main explanation
+    // Check explanation if not found in answer
     const explanationLower = question.explanation.toLowerCase();
     if (keywords.some(k => explanationLower.includes(k))) {
-      // Try to extract relevant sentence from explanation
       const expSentences = question.explanation.split(/[.!?]+/);
       for (const sentence of expSentences) {
         const sentLower = sentence.toLowerCase();
         if (keywords.some(k => sentLower.includes(k))) {
           const trimmed = sentence.trim();
           if (trimmed.length > 20) {
-            const quote = trimmed.length > 100 ? trimmed.substring(0, 100) + '...' : trimmed;
-            return `The explanation states: "${quote}"\n\nThis shows that understanding ${topicKeyTerms} is crucial because it's the reason why the answer is correct. The question tests whether you can apply this concept to select the right solution.`;
+            const quote = trimmed.length > 80 ? trimmed.substring(0, 80) + '...' : trimmed;
+            return `The explanation confirms: "${quote}"\n\nThis shows ${topicKeyTerms} is the key concept - the correct answer is correct because of this principle. You must understand this concept to distinguish correct from incorrect options.`;
           }
         }
       }
-      return `Understanding ${topicKeyTerms} is essential because the correct answer depends on knowing this concept. The explanation confirms this is the key principle being tested.`;
     }
 
-    // Generic fallback
-    return `This concept (${topicKeyTerms}) is directly tested. You must understand this topic to answer correctly - it's not just mentioned in passing, but is the core knowledge required to distinguish the correct answer from wrong ones.`;
+    // Generic fallback with more specificity
+    return `The correct answer tests your knowledge of ${topicKeyTerms}${topicContext ? ` (${topicContext})` : ''}. This is a core concept you must understand - not just recognize the term, but know how and when to apply it to solve security problems.`;
   };
 
   // Helper function to check if explanation is valid (not a placeholder or too short)
