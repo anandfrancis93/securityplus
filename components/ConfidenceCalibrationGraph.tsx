@@ -31,6 +31,102 @@ interface CalibrationDataPoint {
 }
 
 /**
+ * Get confidence level label
+ */
+function getConfidenceLabel(confidence: number): string {
+  switch (confidence) {
+    case 20: return 'Not confident (guessing)';
+    case 40: return 'Somewhat unsure';
+    case 60: return 'Moderately confident';
+    case 80: return 'Very confident';
+    case 95: return 'Extremely confident';
+    default: return `${confidence}% confident`;
+  }
+}
+
+/**
+ * Generate insights for a confidence level
+ */
+function generateInsights(data: CalibrationDataPoint): Array<{ text: string; correct: boolean }> {
+  const insights: Array<{ text: string; correct: boolean }> = [];
+
+  // Analyze each reflection type
+  if (data.reflection.knew > 0) {
+    const knewCorrect = Math.round((data.reflection.knew / data.count) * data.actualAccuracy / 100 * data.count);
+    const knewIncorrect = data.reflection.knew - knewCorrect;
+
+    if (knewCorrect > 0) {
+      insights.push({
+        text: `Recalled from memory and got ${knewCorrect} correct`,
+        correct: true
+      });
+    }
+    if (knewIncorrect > 0) {
+      insights.push({
+        text: `Thought you recalled ${knewIncorrect} but they were wrong - possible false memory`,
+        correct: false
+      });
+    }
+  }
+
+  if (data.reflection.recognized > 0) {
+    const recognizedCorrect = Math.round((data.reflection.recognized / data.count) * data.actualAccuracy / 100 * data.count);
+    const recognizedIncorrect = data.reflection.recognized - recognizedCorrect;
+
+    if (recognizedCorrect > 0) {
+      insights.push({
+        text: `Recognized the answer after seeing options - ${recognizedCorrect} correct`,
+        correct: true
+      });
+    }
+    if (recognizedIncorrect > 0) {
+      insights.push({
+        text: `Recognized ${recognizedIncorrect} answers but they were wrong - misleading familiarity`,
+        correct: false
+      });
+    }
+  }
+
+  if (data.reflection.narrowed > 0) {
+    const narrowedCorrect = Math.round((data.reflection.narrowed / data.count) * data.actualAccuracy / 100 * data.count);
+    const narrowedIncorrect = data.reflection.narrowed - narrowedCorrect;
+
+    if (narrowedCorrect > 0) {
+      insights.push({
+        text: `Used logic to narrow down and got ${narrowedCorrect} correct - good reasoning`,
+        correct: true
+      });
+    }
+    if (narrowedIncorrect > 0) {
+      insights.push({
+        text: `Narrowed down ${narrowedIncorrect} but chose wrong - review elimination strategies`,
+        correct: false
+      });
+    }
+  }
+
+  if (data.reflection.guessed > 0) {
+    const guessedCorrect = Math.round((data.reflection.guessed / data.count) * data.actualAccuracy / 100 * data.count);
+    const guessedIncorrect = data.reflection.guessed - guessedCorrect;
+
+    if (guessedCorrect > 0) {
+      insights.push({
+        text: `Random guessed ${guessedCorrect} and got lucky`,
+        correct: true
+      });
+    }
+    if (guessedIncorrect > 0) {
+      insights.push({
+        text: `Random guessed ${guessedIncorrect} incorrectly - need to study this area`,
+        correct: false
+      });
+    }
+  }
+
+  return insights;
+}
+
+/**
  * Aggregates question attempts by confidence level
  * Calculates actual accuracy for each confidence level
  * Includes breakdown by reflection type
@@ -115,54 +211,22 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
       {isExpanded && (
         <div className="calibration-content">
 
-      <div className="calibration-simple-cards">
+      <div className="calibration-insights">
         {calibrationData.map(d => {
-          const diff = d.actualAccuracy - d.confidence;
-          const isOverconfident = diff < -5;
-          const isUnderconfident = diff > 5;
+          const insights = generateInsights(d);
 
           return (
-            <div key={d.confidence} className="calibration-simple-card">
-              <div className="calibration-simple-header">
-                When you felt <strong>{d.confidence}% confident</strong>
+            <div key={d.confidence} className="calibration-insight-card">
+              <div className="calibration-insight-header">
+                {getConfidenceLabel(d.confidence)}
               </div>
-              <div className="calibration-simple-result">
-                You got <strong className={`calibration-simple-accuracy ${isOverconfident ? 'overconfident' : isUnderconfident ? 'underconfident' : 'calibrated'}`}>
-                  {d.actualAccuracy.toFixed(0)}%
-                </strong> correct
-              </div>
-              <div className="calibration-simple-count">
-                ({d.count} question{d.count !== 1 ? 's' : ''})
-              </div>
-
-              <div className="calibration-reflection-breakdown">
-                <div className="calibration-reflection-title">How you answered:</div>
-                <div className="calibration-reflection-grid">
-                  {d.reflection.knew > 0 && (
-                    <div className="calibration-reflection-item">
-                      <span className="calibration-reflection-label">Recalled:</span>
-                      <span className="calibration-reflection-value">{d.reflection.knew}</span>
-                    </div>
-                  )}
-                  {d.reflection.recognized > 0 && (
-                    <div className="calibration-reflection-item">
-                      <span className="calibration-reflection-label">Recognized:</span>
-                      <span className="calibration-reflection-value">{d.reflection.recognized}</span>
-                    </div>
-                  )}
-                  {d.reflection.narrowed > 0 && (
-                    <div className="calibration-reflection-item">
-                      <span className="calibration-reflection-label">Educated guess:</span>
-                      <span className="calibration-reflection-value">{d.reflection.narrowed}</span>
-                    </div>
-                  )}
-                  {d.reflection.guessed > 0 && (
-                    <div className="calibration-reflection-item">
-                      <span className="calibration-reflection-label">Random guess:</span>
-                      <span className="calibration-reflection-value">{d.reflection.guessed}</span>
-                    </div>
-                  )}
-                </div>
+              <div className="calibration-insight-content">
+                {insights.map((insight, idx) => (
+                  <div key={idx} className={`calibration-insight-item ${insight.correct ? 'correct' : 'incorrect'}`}>
+                    <span className="calibration-insight-icon">{insight.correct ? '✓' : '✗'}</span>
+                    <span className="calibration-insight-text">{insight.text}</span>
+                  </div>
+                ))}
               </div>
             </div>
           );
@@ -238,114 +302,69 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           }
         }
 
-        .calibration-simple-cards {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 16px;
+        .calibration-insights {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
         }
 
-        @media (min-width: 768px) {
-          .calibration-simple-cards {
-            grid-template-columns: repeat(2, 1fr);
-          }
-        }
-
-        @media (min-width: 1200px) {
-          .calibration-simple-cards {
-            grid-template-columns: repeat(3, 1fr);
-          }
-        }
-
-        .calibration-simple-card {
+        .calibration-insight-card {
           padding: 24px;
           background: #0f0f0f;
           border-radius: 16px;
           box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
-          text-align: center;
         }
 
-        .calibration-simple-header {
-          font-size: 16px;
-          color: #a8a8a8;
-          margin-bottom: 16px;
-          line-height: 1.5;
-        }
-
-        .calibration-simple-header strong {
-          color: #8b5cf6;
-          font-weight: 600;
-        }
-
-        .calibration-simple-result {
+        .calibration-insight-header {
           font-size: 18px;
-          color: #e5e5e5;
-          margin-bottom: 8px;
-          line-height: 1.5;
-        }
-
-        .calibration-simple-accuracy {
-          font-size: 32px;
           font-weight: 700;
-          display: block;
-          margin: 8px 0;
+          color: #8b5cf6;
+          margin-bottom: 16px;
+          padding-bottom: 12px;
+          border-bottom: 2px solid #1a1a1a;
         }
 
-        .calibration-simple-accuracy.calibrated {
+        .calibration-insight-content {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .calibration-insight-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          padding: 12px 16px;
+          border-radius: 12px;
+          background: #0a0a0a;
+          line-height: 1.6;
+        }
+
+        .calibration-insight-item.correct {
+          border-left: 3px solid #10b981;
+        }
+
+        .calibration-insight-item.incorrect {
+          border-left: 3px solid #ef4444;
+        }
+
+        .calibration-insight-icon {
+          font-size: 18px;
+          font-weight: 700;
+          flex-shrink: 0;
+          margin-top: 2px;
+        }
+
+        .calibration-insight-item.correct .calibration-insight-icon {
           color: #10b981;
         }
 
-        .calibration-simple-accuracy.overconfident {
-          color: #f59e0b;
+        .calibration-insight-item.incorrect .calibration-insight-icon {
+          color: #ef4444;
         }
 
-        .calibration-simple-accuracy.underconfident {
-          color: #3b82f6;
-        }
-
-        .calibration-simple-count {
-          font-size: 12px;
-          color: #666;
-          margin-bottom: 20px;
-          padding-bottom: 16px;
-          border-bottom: 1px solid #1a1a1a;
-        }
-
-        .calibration-reflection-breakdown {
-          margin-top: 16px;
-        }
-
-        .calibration-reflection-title {
-          font-size: 13px;
-          color: #8b5cf6;
-          font-weight: 600;
-          margin-bottom: 12px;
-          text-align: left;
-        }
-
-        .calibration-reflection-grid {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-
-        .calibration-reflection-item {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 8px 12px;
-          background: #0a0a0a;
-          border-radius: 8px;
-          box-shadow: inset 2px 2px 4px #050505, inset -2px -2px 4px #151515;
-        }
-
-        .calibration-reflection-label {
-          font-size: 13px;
-          color: #a8a8a8;
-        }
-
-        .calibration-reflection-value {
-          font-size: 14px;
-          font-weight: 600;
+        .calibration-insight-text {
+          font-size: 15px;
           color: #e5e5e5;
         }
       `}</style>
