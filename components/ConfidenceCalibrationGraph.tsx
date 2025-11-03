@@ -309,17 +309,58 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
         </div>
       </div>
 
-      {/* Memory Strategy Warnings */}
-      {warnings.length > 0 && (
-        <div className="calibration-warnings">
-          {warnings.map((warning, idx) => (
-            <div
-              key={idx}
-              className={`calibration-warning-item ${warning.startsWith('✓') ? 'positive' : 'warning'}`}
-            >
-              {warning}
-            </div>
-          ))}
+      {/* Memory Strategy Breakdown */}
+      {totalCorrect > 0 && (
+        <div className="calibration-strategy-breakdown">
+          <div className="calibration-strategy-title">How you got correct answers:</div>
+          {(() => {
+            const strategies = [
+              {
+                type: 'recall',
+                label: 'by recalling from memory',
+                percentage: (correctReflectionCounts.knew / totalCorrect) * 100,
+                count: correctReflectionCounts.knew,
+                quality: 'best' // green
+              },
+              {
+                type: 'narrowed',
+                label: 'by educated guess',
+                percentage: (correctReflectionCounts.narrowed / totalCorrect) * 100,
+                count: correctReflectionCounts.narrowed,
+                quality: 'good' // yellow
+              },
+              {
+                type: 'recognized',
+                label: 'by recognizing from options',
+                percentage: (correctReflectionCounts.recognized / totalCorrect) * 100,
+                count: correctReflectionCounts.recognized,
+                quality: 'okay' // yellow
+              },
+              {
+                type: 'guessed',
+                label: 'by random guess',
+                percentage: (correctReflectionCounts.guessed / totalCorrect) * 100,
+                count: correctReflectionCounts.guessed,
+                quality: 'worst' // red
+              }
+            ];
+
+            // Sort by percentage descending
+            const sortedStrategies = strategies
+              .filter(s => s.count > 0)
+              .sort((a, b) => b.percentage - a.percentage);
+
+            return sortedStrategies.map(strategy => (
+              <div key={strategy.type} className={`calibration-strategy-item ${strategy.quality}`}>
+                <div className="calibration-strategy-bar" style={{ width: `${strategy.percentage}%` }}>
+                  <span className="calibration-strategy-percentage">{strategy.percentage.toFixed(0)}%</span>
+                </div>
+                <div className="calibration-strategy-label">
+                  You got {strategy.percentage.toFixed(0)}% correct {strategy.label}
+                </div>
+              </div>
+            ));
+          })()}
         </div>
       )}
 
@@ -470,34 +511,67 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Memory Strategy Warnings */
-        .calibration-warnings {
+        /* Memory Strategy Breakdown */
+        .calibration-strategy-breakdown {
           margin: 0 40px 32px;
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
+          padding: 24px;
+          background: #0a0a0a;
+          border-radius: 16px;
         }
 
-        .calibration-warning-item {
-          padding: 16px 20px;
-          border-radius: 12px;
-          font-size: 15px;
-          line-height: 1.6;
+        .calibration-strategy-title {
+          font-size: 18px;
+          font-weight: 600;
+          color: #8b5cf6;
+          margin-bottom: 20px;
+        }
+
+        .calibration-strategy-item {
+          margin-bottom: 16px;
+        }
+
+        .calibration-strategy-item:last-child {
+          margin-bottom: 0;
+        }
+
+        .calibration-strategy-bar {
+          height: 40px;
+          border-radius: 8px;
           display: flex;
           align-items: center;
-          gap: 8px;
+          justify-content: flex-end;
+          padding-right: 16px;
+          margin-bottom: 8px;
+          min-width: 80px;
+          transition: all 0.3s ease;
         }
 
-        .calibration-warning-item.warning {
-          background: rgba(245, 158, 11, 0.1);
-          border: 2px solid rgba(245, 158, 11, 0.3);
-          color: #f59e0b;
+        .calibration-strategy-percentage {
+          font-size: 18px;
+          font-weight: 700;
+          color: #fff;
         }
 
-        .calibration-warning-item.positive {
-          background: rgba(16, 185, 129, 0.1);
-          border: 2px solid rgba(16, 185, 129, 0.3);
-          color: #10b981;
+        .calibration-strategy-item.best .calibration-strategy-bar {
+          background: #10b981;
+        }
+
+        .calibration-strategy-item.good .calibration-strategy-bar {
+          background: #f59e0b;
+        }
+
+        .calibration-strategy-item.okay .calibration-strategy-bar {
+          background: #f59e0b;
+        }
+
+        .calibration-strategy-item.worst .calibration-strategy-bar {
+          background: #ef4444;
+        }
+
+        .calibration-strategy-label {
+          font-size: 15px;
+          color: #e5e5e5;
+          padding-left: 4px;
         }
 
         /* Bar Chart Section */
