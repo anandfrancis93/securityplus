@@ -23,7 +23,7 @@ interface AppContextType {
   saveQuizToServer: (quizState: any) => Promise<boolean>; // Save quiz to Firebase for cross-device
   loadQuizFromServer: () => Promise<any | null>; // Load quiz from Firebase
   deleteSavedQuiz: () => Promise<boolean>; // Delete saved quiz from Firebase
-  answerQuestion: (question: Question, answer: number | number[], quizSessionId?: string, confidence?: number, reflection?: 'knew' | 'recognized' | 'narrowed' | 'guessed') => Promise<{ correctAnswer: number | number[], explanation: string, incorrectExplanations: string[] } | undefined>;
+  answerQuestion: (question: Question, answer: number | number[], quizSessionId?: string, confidence?: number, reflection?: 'knew' | 'recognized' | 'narrowed' | 'guessed') => Promise<{ correctAnswer: number | number[], explanation: string, incorrectExplanations: string[], optionItems?: any, options?: string[], validationLogs?: any } | undefined>;
   updateReflection: (questionIndex: number, reflection: 'knew' | 'recognized' | 'narrowed' | 'guessed') => void;
   endQuiz: (unusedQuestions?: Question[]) => Promise<void>;
   refreshProgress: () => Promise<void>;
@@ -262,7 +262,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     quizSessionId?: string,
     confidence?: number,
     reflection?: 'knew' | 'recognized' | 'narrowed' | 'guessed'
-  ): Promise<{ correctAnswer: number | number[], explanation: string, incorrectExplanations: string[] } | undefined> => {
+  ): Promise<{ correctAnswer: number | number[], explanation: string, incorrectExplanations: string[], optionItems?: any, options?: string[], validationLogs?: any } | undefined> => {
     if (!currentQuiz || !userId) {
       console.error('Cannot answer question: missing currentQuiz or userId');
       alert('Error: Quiz session not initialized. Please refresh the page and try again.');
@@ -336,10 +336,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
       });
 
       // Return the answer data so QuizPage can update its local state
+      // CRITICAL: Must return optionItems and options so QuizPage can update the question completely
       return {
         correctAnswer: correctAnswer !== undefined ? correctAnswer : question.correctAnswer,
         explanation: explanation || question.explanation,
         incorrectExplanations: incorrectExplanations || question.incorrectExplanations,
+        optionItems: optionItems || question.optionItems, // NEW SCHEMA
+        options: options || question.options, // Legacy field
+        validationLogs: questionData?.validationLogs || question.validationLogs, // For Topic Analysis
       };
     } catch (error) {
       console.error('Error verifying answer:', error);

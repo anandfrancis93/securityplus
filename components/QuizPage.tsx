@@ -412,7 +412,7 @@ export default function Quiz() {
 
     const currentQuestion = questions[currentQuestionIndex];
 
-    let answerData: { correctAnswer: number | number[], explanation: string, incorrectExplanations: string[] } | undefined;
+    let answerData: { correctAnswer: number | number[], explanation: string, incorrectExplanations: string[], optionItems?: any, options?: string[], validationLogs?: any } | undefined;
     if (currentQuestion.questionType === 'multiple') {
       if (selectedAnswers.length === 0) return;
       answerData = await answerQuestion(currentQuestion, selectedAnswers, quizSessionId || undefined, confidence || undefined);
@@ -422,7 +422,8 @@ export default function Quiz() {
     }
 
     // Update the question with the returned answer data
-    if (answerData && answerData.correctAnswer !== undefined) {
+    // CRITICAL: answerData now includes optionItems, options, and validationLogs from API response
+    if (answerData) {
       setQuestions(prev => {
         const updated = [...prev];
         updated[currentQuestionIndex] = {
@@ -430,6 +431,9 @@ export default function Quiz() {
           correctAnswer: answerData.correctAnswer,
           explanation: answerData.explanation,
           incorrectExplanations: answerData.incorrectExplanations,
+          optionItems: answerData.optionItems, // NEW SCHEMA
+          options: answerData.options, // Legacy field
+          validationLogs: answerData.validationLogs, // For Topic Analysis
         };
         return updated;
       });
