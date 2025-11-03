@@ -233,6 +233,47 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
     }
   }
 
+  // Calculate reliance on non-recall methods (correct answers only)
+  const correctAttempts = attempts.filter(a => a.confidence !== undefined && a.isCorrect);
+  const totalCorrect = correctAttempts.length;
+
+  const correctReflectionCounts = {
+    knew: correctAttempts.filter(a => a.reflection === 'knew').length,
+    recognized: correctAttempts.filter(a => a.reflection === 'recognized').length,
+    narrowed: correctAttempts.filter(a => a.reflection === 'narrowed').length,
+    guessed: correctAttempts.filter(a => a.reflection === 'guessed').length,
+  };
+
+  // Generate warnings for reliance on weaker memory strategies
+  const warnings: string[] = [];
+
+  if (totalCorrect > 0) {
+    const recallPercentage = (correctReflectionCounts.knew / totalCorrect) * 100;
+    const recognitionPercentage = (correctReflectionCounts.recognized / totalCorrect) * 100;
+    const narrowedPercentage = (correctReflectionCounts.narrowed / totalCorrect) * 100;
+    const guessedPercentage = (correctReflectionCounts.guessed / totalCorrect) * 100;
+
+    // Warning if too much recognition memory (should be recall for mastery)
+    if (recognitionPercentage > 40 && correctReflectionCounts.recognized >= 3) {
+      warnings.push(`⚠️ ${recognitionPercentage.toFixed(0)}% of correct answers relied on recognition after seeing options - work on pure recall`);
+    }
+
+    // Warning if too many educated guesses
+    if (narrowedPercentage > 30 && correctReflectionCounts.narrowed >= 3) {
+      warnings.push(`⚠️ ${narrowedPercentage.toFixed(0)}% of correct answers were educated guesses - strengthen foundational knowledge`);
+    }
+
+    // Warning if any random guesses succeeded
+    if (guessedPercentage > 15 && correctReflectionCounts.guessed >= 2) {
+      warnings.push(`⚠️ ${guessedPercentage.toFixed(0)}% of correct answers were random guesses - got lucky, not mastery`);
+    }
+
+    // Positive reinforcement if high recall
+    if (recallPercentage >= 60 && correctReflectionCounts.knew >= 5) {
+      warnings.push(`✓ ${recallPercentage.toFixed(0)}% of correct answers from pure recall - strong memory foundation!`);
+    }
+  }
+
   // Add perfect calibration line data
   const perfectCalibrationLine = [
     { confidence: 0, actualAccuracy: 0 },
@@ -267,6 +308,20 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           )}
         </div>
       </div>
+
+      {/* Memory Strategy Warnings */}
+      {warnings.length > 0 && (
+        <div className="calibration-warnings">
+          {warnings.map((warning, idx) => (
+            <div
+              key={idx}
+              className={`calibration-warning-item ${warning.startsWith('✓') ? 'positive' : 'warning'}`}
+            >
+              {warning}
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Visual Comparison - Bar Chart */}
       <div className="calibration-bars">
@@ -413,6 +468,36 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           margin-top: 12px;
           padding-top: 12px;
           border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Memory Strategy Warnings */
+        .calibration-warnings {
+          margin: 0 40px 32px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .calibration-warning-item {
+          padding: 16px 20px;
+          border-radius: 12px;
+          font-size: 15px;
+          line-height: 1.6;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .calibration-warning-item.warning {
+          background: rgba(245, 158, 11, 0.1);
+          border: 2px solid rgba(245, 158, 11, 0.3);
+          color: #f59e0b;
+        }
+
+        .calibration-warning-item.positive {
+          background: rgba(16, 185, 129, 0.1);
+          border: 2px solid rgba(16, 185, 129, 0.3);
+          color: #10b981;
         }
 
         /* Bar Chart Section */
