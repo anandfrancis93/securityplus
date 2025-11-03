@@ -271,7 +271,7 @@ export async function POST(request: NextRequest) {
 - **Minimize paragraph text** - convert information into bullet points when possible
 - Add a blank line between sections for readability
 - Use **bold text** to emphasize key terms and important concepts
-- Use `code formatting` for technical terms, commands, or acronyms
+- Use \`code formatting\` for technical terms, commands, or acronyms
 
 **Content Requirements:**
 - When answering Security+ questions, reference the specific exam objective numbers (e.g., "This relates to objective 2.4 - Analyzing indicators of malicious activity")
