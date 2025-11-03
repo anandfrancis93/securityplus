@@ -22,17 +22,43 @@ export default function ExplanationSection({
   selectedAnswer = null,
   selectedAnswers = [],
 }: ExplanationSectionProps) {
-  // Ensure correctAnswers is always an array of numbers, handle undefined/null
-  const correctAnswers: number[] = question.correctAnswer === undefined || question.correctAnswer === null
-    ? []
-    : Array.isArray(question.correctAnswer)
-    ? question.correctAnswer
-    : [question.correctAnswer];
+  // SCHEMA ADAPTER: Normalize data whether using new or old schema
+  const useNewSchema = question.optionItems && question.optionItems.length > 0;
+
+  // If using NEW SCHEMA, convert to format expected by rest of component
+  // This allows the component to work with both schemas without rewriting everything
+  let normalizedOptions: string[];
+  let normalizedExplanations: string[];
+  let normalizedCorrectAnswers: number[];
+
+  if (useNewSchema && question.optionItems) {
+    // NEW SCHEMA: Extract from OptionItems (no drift, no reordering needed!)
+    normalizedOptions = question.optionItems.map((item, idx) => {
+      const letter = String.fromCharCode(65 + idx); // A, B, C, D
+      return `${letter}. ${item.text}`;
+    });
+    normalizedExplanations = question.optionItems.map(item => item.explanation);
+    normalizedCorrectAnswers = question.optionItems
+      .map((item, idx) => item.isCorrect ? idx : -1)
+      .filter(idx => idx !== -1);
+  } else {
+    // OLD SCHEMA: Use legacy fields
+    normalizedOptions = question.options || [];
+    normalizedExplanations = question.incorrectExplanations || [];
+    normalizedCorrectAnswers = question.correctAnswer === undefined || question.correctAnswer === null
+      ? []
+      : Array.isArray(question.correctAnswer)
+      ? question.correctAnswer
+      : [question.correctAnswer];
+  }
 
   // Determine user's selected answers as an array
   const userSelectedAnswers: number[] = question.questionType === 'multiple'
     ? selectedAnswers
     : selectedAnswer !== null ? [selectedAnswer] : [];
+
+  // For backward compatibility, keep this variable name
+  const correctAnswers = normalizedCorrectAnswers;
 
   // Auto-correct misaligned explanations by matching them to the right options
   const reorderExplanations = (explanations: string[]): string[] => {
@@ -68,11 +94,11 @@ export default function ExplanationSection({
 
     // For each option, find the explanation that best matches it
     for (let optionIdx = 0; optionIdx < 4; optionIdx++) {
-      const option = question.options[optionIdx]?.toLowerCase() || '';
+      const option = normalizedOptions[optionIdx]?.toLowerCase() || '';
       const optionKeywords = option.split(/\s+/).filter(word => word.length > 4);
       const isCorrect = isCorrectOption(optionIdx);
 
-      console.log(`[ExplanationSection] Matching option ${optionIdx}: "${question.options[optionIdx]}" (correct: ${isCorrect}, keywords: ${optionKeywords.join(', ')})`);
+      console.log(`[ExplanationSection] Matching option ${optionIdx}: "${normalizedOptions[optionIdx]}" (correct: ${isCorrect}, keywords: ${optionKeywords.join(', ')})`);
 
       let bestMatchIdx = -1;
       let bestMatchScore = -1;
@@ -150,9 +176,11 @@ export default function ExplanationSection({
   };
 
   // Get properly ordered explanations
-  const orderedExplanations = question.incorrectExplanations
-    ? reorderExplanations(question.incorrectExplanations)
-    : [];
+  // NEW SCHEMA: No reordering needed! Explanations are bundled with options
+  // OLD SCHEMA: Reorder explanations to fix any drift issues
+  const orderedExplanations = useNewSchema
+    ? normalizedExplanations
+    : (question.incorrectExplanations ? reorderExplanations(question.incorrectExplanations) : []);
 
   // Helper function to strip letter prefix (A. B. C. D.) from option text
   // Letters are kept internally for AI generation but hidden in UI
@@ -239,13 +267,10 @@ export default function ExplanationSection({
 
     // 3. FAST ELIMINATION PLAYBOOK: Option-by-option strategy
     let playbook = '';
-    const correctIndices = Array.isArray(question.correctAnswer)
-      ? question.correctAnswer
-      : [question.correctAnswer];
 
-    question.options.forEach((option, idx) => {
+    normalizedOptions.forEach((option, idx) => {
       const stripped = stripPrefix(option);
-      const isCorrect = correctIndices.includes(idx);
+      const isCorrect = normalizedCorrectAnswers.includes(idx);
 
       // Get shortened option text (first 60 chars)
       const shortOption = stripped.length > 60 ? stripped.substring(0, 60) + '...' : stripped;
@@ -255,9 +280,9 @@ export default function ExplanationSection({
 
     // 4. COMMON TRAPS: Extract from incorrect explanations
     let traps = '';
-    const incorrectIndices = question.options
+    const incorrectIndices = normalizedOptions
       .map((_, idx) => idx)
-      .filter(idx => !correctIndices.includes(idx));
+      .filter(idx => !normalizedCorrectAnswers.includes(idx));
 
     const trapsList: string[] = [];
 
@@ -266,7 +291,7 @@ export default function ExplanationSection({
       if (!explanation) return;
 
       // Get the option name (stripped of letter prefix)
-      const optionName = stripPrefix(question.options[idx]);
+      const optionName = stripPrefix(normalizedOptions[idx]);
 
       // Extract the core misconception
       const cleaned = cleanExplanation(explanation);
@@ -506,7 +531,7 @@ export default function ExplanationSection({
                         marginBottom: '8px',
                       }}
                     >
-                      {stripLetterPrefix(question.options[index])}
+                      {stripLetterPrefix(normalizedOptions[index])}
                       {isMultipleResponse && !wasSelectedByUser && (
                         <span style={{ color: '#f59e0b', fontWeight: 600, marginLeft: '8px' }}>
                           (not selected)
@@ -547,7 +572,7 @@ export default function ExplanationSection({
                         marginBottom: '8px',
                       }}
                     >
-                      {stripLetterPrefix(question.options[index])}
+                      {stripLetterPrefix(normalizedOptions[index])}
                     </div>
                     <div
                       className="explanation-text"

@@ -23,7 +23,7 @@ export async function generateQuestionEmbedding(question: Question): Promise<num
   const client = getOpenAIClient();
 
   // Combine question text and options for comprehensive embedding
-  const textToEmbed = `${question.question} ${question.options.join(' ')}`;
+  const textToEmbed = `${question.question} ${(question.options || []).join(' ')}`;
 
   try {
     const response = await client.embeddings.create({

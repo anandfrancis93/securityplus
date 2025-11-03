@@ -1,4 +1,4 @@
-import { Question } from './types';
+import { Question, OptionItem } from './types';
 import { calculateIRTParameters, categoryToDifficulty } from './irt';
 import { ALL_SECURITY_PLUS_TOPICS, TOPIC_INDEX, validateAITopics, findBestTopicMatch } from './topicData';
 import { getDomainsFromTopics } from './domainDetection';
@@ -648,31 +648,29 @@ function validateExplanations(
       issues.push(`⚠️ Option ${i} has letter "${optionLetter}" but should have "${expectedLetter}"`);
     }
 
-    // Check if explanation references the correct letter
-    const explanationLower = explanation.toLowerCase();
-    const letterReferencePattern = new RegExp(`\\b${optionLetter.toLowerCase()}\\b`);
+    // STRICT letter reference check (prevents false positives like the article "a")
+    // Don't lowercase - we need to match the actual letter "A", not the article "a"
+    const hasTerseRef = new RegExp(`\\b${optionLetter}\\b`, 'i').test(explanation); // any mention of the letter
+    const hasStructuredRef = new RegExp(`^(\\s*Option\\s+)?${optionLetter}\\s*(?:\\.|:|\\s+is)`, 'i').test(explanation);
 
-    if (!letterReferencePattern.test(explanationLower)) {
-      issues.push(`⚠️ Explanation for option ${i} (${optionLetter}) doesn't reference letter "${optionLetter}"`);
+    // Require a structured reference (e.g., "A is correct", "Option A:", "A. This...")
+    // Fall back to terse reference if prompts vary, but prefer structured
+    if (!hasStructuredRef && !hasTerseRef) {
+      issues.push(`⚠️ Explanation for option ${i} must reference "${optionLetter}" (e.g., "${optionLetter} is correct because...")`);
     }
 
-    // Check for sentiment contradictions
-    const negativePatterns = /\b(incorrect|wrong|fails? to|lacks?|doesn't|does not|unable to|cannot|insufficient|inadequate|not (correct|right|appropriate|suitable))\b/i;
-    const positivePatterns = /\b(correct|right|appropriate|suitable|best (option|answer|choice))\b/i;
+    // Check for sentiment contradictions with strict letter anchoring
+    const saysCorrect = new RegExp(`\\b${optionLetter}\\s+is\\s+correct\\b`, 'i').test(explanation);
+    const saysIncorrect = new RegExp(`\\b${optionLetter}\\s+is\\s+incorrect\\b`, 'i').test(explanation);
 
-    const hasNegative = negativePatterns.test(explanationLower);
-    const hasPositive = positivePatterns.test(explanationLower);
-
-    // Correct option should have positive sentiment (or at least not primarily negative)
-    if (isCorrectOption && hasNegative && !hasPositive) {
-      const matchedPhrase = explanationLower.match(negativePatterns)?.[0];
-      issues.push(`⚠️ ${optionLetter} is CORRECT but explanation uses negative criticism: "${matchedPhrase}"`);
+    // Correct option should say "is correct", not "is incorrect"
+    if (isCorrectOption && saysIncorrect) {
+      issues.push(`⚠️ ${optionLetter} is CORRECT but explanation says "${optionLetter} is incorrect"`);
     }
 
-    // Incorrect option should have negative sentiment (or at least not claim to be correct)
-    if (!isCorrectOption && hasPositive && !hasNegative) {
-      const matchedPhrase = explanationLower.match(positivePatterns)?.[0];
-      issues.push(`⚠️ ${optionLetter} is INCORRECT but explanation uses positive language: "${matchedPhrase}"`);
+    // Incorrect option should say "is incorrect", not "is correct"
+    if (!isCorrectOption && saysCorrect) {
+      issues.push(`⚠️ ${optionLetter} is INCORRECT but explanation says "${optionLetter} is correct"`);
     }
   }
 
@@ -682,7 +680,61 @@ function validateExplanations(
   };
 }
 
-// Shuffle question options to randomize correct answer position
+/**
+ * Convert AI-generated parallel arrays to OptionItem[]
+ * This bundles option text + explanation + correctness together
+ * Prevents drift when shuffling or reordering
+ */
+function convertToOptionItems(
+  options: string[],
+  correctAnswer: number | number[],
+  incorrectExplanations: string[]
+): OptionItem[] {
+  const correctIndices = Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer];
+
+  return options.map((option, idx) => {
+    // Generate stable UUID for this option
+    const id = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}-${idx}`;
+
+    // Strip letter prefix (A. B. C. D.) from option text
+    // Letters were kept for AI generation and validation, but not needed in final storage
+    const text = option.replace(/^[A-D]\.\s*/, '');
+
+    // Get explanation for this option (with fallback)
+    const explanation = incorrectExplanations[idx] ||
+      `This option is ${correctIndices.includes(idx) ? 'correct' : 'incorrect'} based on the question requirements.`;
+
+    // Determine if this option is correct
+    const isCorrect = correctIndices.includes(idx);
+
+    return {
+      id,
+      text,
+      explanation,
+      isCorrect
+    };
+  });
+}
+
+/**
+ * Shuffle OptionItem[] array
+ * This is safe because each option carries its own explanation and correctness
+ * No parallel arrays to desync!
+ */
+function shuffleOptionItems(items: OptionItem[]): OptionItem[] {
+  const shuffled = [...items];
+
+  // Fisher-Yates shuffle
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled;
+}
+
+// DEPRECATED: Old shuffle function for backward compatibility
+// New questions should use convertToOptionItems() + shuffleOptionItems()
 function shuffleQuestionOptions(questionData: any): any {
   // Create array of indices [0, 1, 2, 3]
   const indices = [0, 1, 2, 3];
@@ -1191,26 +1243,37 @@ ${prompt}`;
 
     console.log('✅ Explanation validation passed');
 
-    // Shuffle the answer options to randomize correct answer position
-    // Only shuffle for single-choice questions
-    const shuffledData = questionType === 'single' ? shuffleQuestionOptions(questionData) : questionData;
+    // NEW SCHEMA: Convert parallel arrays to OptionItem[] (shuffle-safe, drift-proof)
+    const optionItems = convertToOptionItems(
+      questionData.options,
+      questionData.correctAnswer,
+      questionData.incorrectExplanations
+    );
 
-    // For multiple-response questions, also ensure incorrectExplanations are valid
-    if (questionType === 'multiple' && shuffledData.incorrectExplanations) {
-      shuffledData.incorrectExplanations = shuffledData.incorrectExplanations.map((exp: any, i: number) => {
-        return (exp && typeof exp === 'string' && exp.trim() !== '')
-          ? exp
-          : `This option is ${Array.isArray(shuffledData.correctAnswer) && shuffledData.correctAnswer.includes(i) ? 'correct' : 'incorrect'} based on the question requirements.`;
-      });
-    }
+    // Shuffle the OptionItems to randomize correct answer position
+    // Only shuffle for single-choice questions
+    const shuffledOptionItems = questionType === 'single' ? shuffleOptionItems(optionItems) : optionItems;
+
+    // Keep a reference to the original data for backward compatibility
+    const shuffledData = questionData;
 
     // AI-BASED TOPIC IDENTIFICATION
     // Use AI to identify which topics the question actually tests
     // This is more accurate than keyword matching as AI understands context and semantics
+    // Convert OptionItems back to format expected by identifyTopicsWithAI
+    const optionsForValidation = shuffledOptionItems.map((item, idx) => {
+      // Add letter prefix back for validation (A. B. C. D.)
+      const letter = String.fromCharCode(65 + idx); // 65 is 'A'
+      return `${letter}. ${item.text}`;
+    });
+    const correctAnswerForValidation = shuffledOptionItems
+      .map((item, idx) => item.isCorrect ? idx : -1)
+      .filter(idx => idx !== -1);
+
     const { topics: extractedTopics, validationLogs } = await identifyTopicsWithAI(
       shuffledData.question,
-      shuffledData.options,
-      shuffledData.correctAnswer,
+      optionsForValidation,
+      questionType === 'single' ? correctAnswerForValidation[0] : correctAnswerForValidation,
       shuffledData.explanation
     );
 
@@ -1274,35 +1337,26 @@ ${prompt}`;
 
     console.log(`✅ Question generated: Category=${actualCategory}, Type=${questionType}, Difficulty=${actualDifficulty}, Correct=${correctAnswerDisplay}, IRT(b=${irtParams.irtDifficulty}, a=${irtParams.irtDiscrimination}), Points=${irtParams.maxPoints}`);
 
-    // Final validation to ensure clean data
-    const cleanedIncorrectExplanations = (shuffledData.incorrectExplanations || [])
-      .map((exp: any) => {
-        return (exp && typeof exp === 'string' && exp.trim() !== '')
-          ? exp
-          : 'This option is based on the question requirements.';
-      });
-
-    // Ensure exactly 4 explanations
-    while (cleanedIncorrectExplanations.length < 4) {
-      cleanedIncorrectExplanations.push('This option is based on the question requirements.');
-    }
-
-    // Ensure exactly 4 options
-    const cleanedOptions = (shuffledData.options || [])
-      .filter((opt: any) => opt != null && typeof opt === 'string' && opt.trim() !== '')
-      .slice(0, 4);
-
-    while (cleanedOptions.length < 4) {
-      cleanedOptions.push(`Option ${cleanedOptions.length + 1}`);
-    }
-
+    // Return question with NEW SCHEMA (optionItems) and legacy fields for backward compatibility
     return {
       id: `q_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       question: shuffledData.question || 'Question text not available',
-      options: cleanedOptions,
-      correctAnswer: shuffledData.correctAnswer,
+
+      // NEW SCHEMA (preferred): Bundled OptionItems (shuffle-safe, drift-proof)
+      optionItems: shuffledOptionItems,
+
+      // OLD SCHEMA (deprecated, for backward compatibility)
+      // These are kept for existing components that haven't been migrated yet
+      options: shuffledOptionItems.map((item, idx) => {
+        const letter = String.fromCharCode(65 + idx);
+        return `${letter}. ${item.text}`;
+      }),
+      correctAnswer: questionType === 'single'
+        ? shuffledOptionItems.findIndex(item => item.isCorrect)
+        : shuffledOptionItems.map((item, idx) => item.isCorrect ? idx : -1).filter(idx => idx !== -1),
       explanation: shuffledData.explanation || 'Explanation not available',
-      incorrectExplanations: cleanedIncorrectExplanations,
+      incorrectExplanations: shuffledOptionItems.map(item => item.explanation),
+
       topics: finalTopics, // Use extracted topics, not requested topics
       difficulty: actualDifficulty, // Use derived difficulty from actual category
       questionType: questionType,

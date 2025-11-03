@@ -94,7 +94,7 @@ export default function QuestionCard({
         flexDirection: 'column',
         gap: showExplanation ? '16px' : '24px',
       }}>
-        {question.options.map((option, index) => {
+        {(question.options || []).map((option, index) => {
           const isSelected = isAnswerSelected(index);
           const isCorrectAnswer = correctAnswers.includes(index);
           const showCorrect = showExplanation && isCorrectAnswer;

@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
         pointsEarned = calculatePartialCredit(
           userAnswers,
           correctAnswers,
-          question.options.length, // Total number of options
+          (question.options || []).length, // Total number of options
           question.maxPoints || 10
         );
       }

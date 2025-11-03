@@ -39,7 +39,7 @@ function calculateQuestionCost(question: Question): {
 
   // Estimate output tokens from generated content
   const questionText = question.question;
-  const optionsText = question.options.join(' ');
+  const optionsText = (question.options || []).join(' ');
   const explanationsText = question.incorrectExplanations?.join(' ') || question.explanation;
   const metadataText = JSON.stringify(question.metadata || {});
 

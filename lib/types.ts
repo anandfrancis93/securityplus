@@ -1,10 +1,25 @@
+// Option item bundles text + explanation + correctness together
+// This prevents drift when shuffling or reordering
+export interface OptionItem {
+  id: string; // Stable UUID that persists through shuffles
+  text: string; // Display text WITHOUT letter prefix (e.g., "CISO", not "A. CISO")
+  explanation: string; // Explanation for THIS specific option
+  isCorrect: boolean; // Whether this option is correct
+}
+
 export interface Question {
   id: string;
   question: string;
-  options: string[];
-  correctAnswer: number | number[]; // Single number for MCQ, array for multiple-response
-  explanation: string;
-  incorrectExplanations: string[];
+
+  // NEW SCHEMA (preferred): Bundled options with explanations
+  optionItems?: OptionItem[]; // Array of option objects (shuffle-safe, drift-proof)
+
+  // OLD SCHEMA (deprecated, for backward compatibility): Parallel arrays
+  options?: string[]; // Legacy: separate options array
+  correctAnswer?: number | number[]; // Legacy: separate correctness tracking
+  explanation?: string; // Legacy: overall explanation (now redundant)
+  incorrectExplanations?: string[]; // Legacy: parallel explanations array
+
   topics: string[]; // Exact topic strings from cleaned topic list
   difficulty: 'easy' | 'medium' | 'hard';
   createdAt: number;
