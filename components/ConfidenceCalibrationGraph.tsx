@@ -424,7 +424,7 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
 
         .calibration-bar-label {
           font-size: 14px;
-          color: #a8a8a8;
+          color: #e5e5e5;
           margin-bottom: 8px;
         }
 
