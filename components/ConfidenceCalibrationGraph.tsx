@@ -78,45 +78,10 @@ function aggregateCalibrationData(attempts: QuestionAttempt[]): CalibrationDataP
 export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalibrationGraphProps) {
   const calibrationData = aggregateCalibrationData(attempts);
 
+  const [isExpanded, setIsExpanded] = React.useState(false);
+
   if (calibrationData.length === 0) {
-    return (
-      <div className="calibration-empty-state">
-        <div className="calibration-empty-icon">📊</div>
-        <h3 className="calibration-empty-title">No Confidence Data Yet</h3>
-        <p className="calibration-empty-text">
-          Complete quizzes with the new confidence tracking feature to see your calibration graph here.
-        </p>
-
-        <style jsx>{`
-          .calibration-empty-state {
-            background: #0f0f0f;
-            padding: 64px 48px;
-            border-radius: 24px;
-            box-shadow: 12px 12px 24px #050505, -12px -12px 24px #191919;
-            text-align: center;
-          }
-
-          .calibration-empty-icon {
-            font-size: 64px;
-            margin-bottom: 24px;
-          }
-
-          .calibration-empty-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #e5e5e5;
-            margin: 0 0 16px;
-          }
-
-          .calibration-empty-text {
-            font-size: 18px;
-            color: #a8a8a8;
-            margin: 0;
-            line-height: 1.6;
-          }
-        `}</style>
-      </div>
-    );
+    return null; // Don't show anything if there's no data
   }
 
   // Calculate calibration score (how well confidence matches performance)
@@ -135,16 +100,27 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
 
   return (
     <div className="calibration-container">
-      <div className="calibration-header">
-        <h2 className="calibration-title">Confidence Calibration</h2>
-        <div className={`calibration-score ${isWellCalibrated ? 'calibration-score-good' : 'calibration-score-poor'}`}>
-          <span className="calibration-score-label">Calibration Score:</span>
-          <span className="calibration-score-value">{calibrationScore.toFixed(1)}%</span>
-          <span className="calibration-score-status">
-            {isWellCalibrated ? ' (Well Calibrated)' : ' (Needs Improvement)'}
-          </span>
+      <button
+        className="calibration-toggle"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <div className="calibration-toggle-content">
+          <div className="calibration-toggle-left">
+            <span className="calibration-toggle-icon">{isExpanded ? '▼' : '▶'}</span>
+            <h2 className="calibration-title">Confidence Calibration</h2>
+          </div>
+          <div className={`calibration-score ${isWellCalibrated ? 'calibration-score-good' : 'calibration-score-poor'}`}>
+            <span className="calibration-score-label">Score:</span>
+            <span className="calibration-score-value">{calibrationScore.toFixed(1)}%</span>
+            <span className="calibration-score-status">
+              {isWellCalibrated ? ' (Well Calibrated)' : ' (Needs Improvement)'}
+            </span>
+          </div>
         </div>
-      </div>
+      </button>
+
+      {isExpanded && (
+        <div className="calibration-content">
 
       <div className="calibration-description">
         <p>
@@ -240,9 +216,9 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
                   </span>
                 </div>
                 <div className="calibration-detail-status">
-                  {isOverconfident && '⚠️ Overconfident'}
-                  {isUnderconfident && '📉 Underconfident'}
-                  {isCalibrated && '✓ Well Calibrated'}
+                  {isOverconfident && 'Overconfident'}
+                  {isUnderconfident && 'Underconfident'}
+                  {isCalibrated && 'Well Calibrated'}
                 </div>
                 <div className="calibration-detail-reflection">
                   <div className="calibration-detail-reflection-item">Knew: {d.reflection.knew}</div>
@@ -255,33 +231,58 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           })}
         </div>
       </div>
+        </div>
+      )}
 
       <style jsx>{`
         .calibration-container {
           background: #0f0f0f;
-          padding: 48px;
           border-radius: 24px;
           box-shadow: 12px 12px 24px #050505, -12px -12px 24px #191919;
           margin-bottom: 48px;
         }
 
+        .calibration-toggle {
+          width: 100%;
+          padding: 32px 48px;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          text-align: left;
+        }
+
+        .calibration-toggle:hover {
+          background: rgba(139, 92, 246, 0.05);
+        }
+
         @media (min-width: 768px) {
-          .calibration-container {
-            padding: 64px;
+          .calibration-toggle {
+            padding: 40px 64px;
           }
         }
 
-        .calibration-header {
+        .calibration-toggle-content {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 24px;
           flex-wrap: wrap;
           gap: 16px;
         }
 
+        .calibration-toggle-left {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+
+        .calibration-toggle-icon {
+          font-size: 20px;
+          color: #8b5cf6;
+        }
+
         .calibration-title {
-          font-size: 28px;
+          font-size: 24px;
           font-weight: 700;
           color: #e5e5e5;
           margin: 0;
@@ -289,7 +290,17 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
 
         @media (min-width: 768px) {
           .calibration-title {
-            font-size: 36px;
+            font-size: 32px;
+          }
+        }
+
+        .calibration-content {
+          padding: 0 48px 48px;
+        }
+
+        @media (min-width: 768px) {
+          .calibration-content {
+            padding: 0 64px 64px;
           }
         }
 
