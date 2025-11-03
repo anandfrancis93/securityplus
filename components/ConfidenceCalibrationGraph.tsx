@@ -121,13 +121,13 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
       {/* Collapsible Header */}
       <div className="calibration-header">
         <div className="calibration-header-content">
-          <h2 className="calibration-title">Dunning–Kruger Effect Tracking</h2>
+          <h2 className="calibration-title">Metacognition</h2>
           <button
             className="calibration-expand-button"
             onClick={() => setIsCardExpanded(!isCardExpanded)}
             onMouseEnter={() => setHoveredButton(true)}
             onMouseLeave={() => setHoveredButton(false)}
-            aria-label="Toggle Dunning-Kruger Effect Tracking"
+            aria-label="Toggle Metacognition"
           >
             <svg
               className="calibration-expand-icon"
