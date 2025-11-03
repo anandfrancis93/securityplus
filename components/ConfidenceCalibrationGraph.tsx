@@ -31,14 +31,14 @@ interface CalibrationDataPoint {
 }
 
 /**
- * Get confidence level label
+ * Get confidence level label with question count
  */
-function getConfidenceLabel(confidence: number): string {
+function getConfidenceLabel(confidence: number, count: number): string {
   switch (confidence) {
-    case 20: return 'Low confidence (0-39%)';
-    case 55: return 'Medium confidence (40-69%)';
-    case 85: return 'High confidence (70-100%)';
-    default: return `${confidence}% confident`;
+    case 20: return `Low confidence (0-39%, ${count} questions)`;
+    case 55: return `Medium confidence (40-69%, ${count} questions)`;
+    case 85: return `High confidence (70-100%, ${count} questions)`;
+    default: return `${confidence}% confident (${count} questions)`;
   }
 }
 
@@ -106,6 +106,27 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
     recognized: correctAttempts.filter(a => a.reflection === 'recognized').length,
     narrowed: correctAttempts.filter(a => a.reflection === 'narrowed').length,
     guessed: correctAttempts.filter(a => a.reflection === 'guessed').length,
+  };
+
+  // Calculate confidence level distribution (all attempts)
+  const attemptsWithConfidence = attempts.filter(a => a.confidence !== undefined);
+  const totalWithConfidence = attemptsWithConfidence.length;
+
+  const confidenceCounts = {
+    low: attemptsWithConfidence.filter(a => a.confidence === 20).length,
+    medium: attemptsWithConfidence.filter(a => a.confidence === 55).length,
+    high: attemptsWithConfidence.filter(a => a.confidence === 85).length,
+  };
+
+  // Calculate reflection type distribution (all attempts)
+  const attemptsWithReflection = attempts.filter(a => a.reflection !== undefined);
+  const totalWithReflection = attemptsWithReflection.length;
+
+  const reflectionCounts = {
+    knew: attemptsWithReflection.filter(a => a.reflection === 'knew').length,
+    recognized: attemptsWithReflection.filter(a => a.reflection === 'recognized').length,
+    narrowed: attemptsWithReflection.filter(a => a.reflection === 'narrowed').length,
+    guessed: attemptsWithReflection.filter(a => a.reflection === 'guessed').length,
   };
 
   // Add perfect calibration line data
@@ -223,7 +244,7 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           <div className="calibration-bars">
             {calibrationData.map(d => (
               <div key={d.confidence} className="calibration-bar-row">
-                <div className="calibration-bar-label">{getConfidenceLabel(d.confidence)}</div>
+                <div className="calibration-bar-label">{getConfidenceLabel(d.confidence, d.count)}</div>
                 <div className="calibration-bar-container">
                   <div className="calibration-bar-group">
                     <div className="calibration-bar confidence" style={{ width: `${d.confidence}%` }}>
