@@ -421,6 +421,7 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
         </div>
 
         {/* Statistics Summary */}
+        {isExpanded && (
         <div style={statsGridStyle}>
           {/* Quizzes Completed Card */}
           <div
@@ -546,6 +547,7 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
             )}
           </div>
         </div>
+        )}
       </div>
 
       {/* Expanded Content */}
