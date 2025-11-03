@@ -188,6 +188,51 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
 
   const isWellCalibrated = calibrationScore < 15; // Within 15% is considered well-calibrated
 
+  // Find the biggest issue (largest confidence-accuracy gap)
+  const biggestIssue = calibrationData.reduce((max, d) => {
+    const diff = d.confidence - d.actualAccuracy;
+    const absDiff = Math.abs(diff);
+    const maxAbsDiff = Math.abs(max.confidence - max.actualAccuracy);
+    return absDiff > maxAbsDiff ? d : max;
+  });
+
+  const isOverconfident = biggestIssue.confidence > biggestIssue.actualAccuracy + 5;
+  const isUnderconfident = biggestIssue.actualAccuracy > biggestIssue.confidence + 5;
+
+  // Find main problem (most common wrong reflection type)
+  let mainProblem = '';
+  const allAttempts = attempts.filter(a => a.confidence !== undefined && !a.isCorrect);
+
+  if (allAttempts.length > 0) {
+    const wrongReflectionCounts = {
+      knew: allAttempts.filter(a => a.reflection === 'knew').length,
+      recognized: allAttempts.filter(a => a.reflection === 'recognized').length,
+      narrowed: allAttempts.filter(a => a.reflection === 'narrowed').length,
+      guessed: allAttempts.filter(a => a.reflection === 'guessed').length,
+    };
+
+    const maxWrongType = Object.entries(wrongReflectionCounts).reduce((max, [type, count]) =>
+      count > max.count ? { type, count } : max
+    , { type: 'guessed', count: 0 });
+
+    if (maxWrongType.count > 0) {
+      switch (maxWrongType.type) {
+        case 'knew':
+          mainProblem = `False memory (recalled ${maxWrongType.count} wrong ${maxWrongType.count === 1 ? 'answer' : 'answers'})`;
+          break;
+        case 'recognized':
+          mainProblem = `Misleading familiarity (${maxWrongType.count} wrong ${maxWrongType.count === 1 ? 'recognition' : 'recognitions'})`;
+          break;
+        case 'narrowed':
+          mainProblem = `Faulty logic (${maxWrongType.count} wrong ${maxWrongType.count === 1 ? 'elimination' : 'eliminations'})`;
+          break;
+        case 'guessed':
+          mainProblem = `Need more study (${maxWrongType.count} wrong ${maxWrongType.count === 1 ? 'guess' : 'guesses'})`;
+          break;
+      }
+    }
+  }
+
   // Add perfect calibration line data
   const perfectCalibrationLine = [
     { confidence: 0, actualAccuracy: 0 },
@@ -196,16 +241,65 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
 
   return (
     <div className="calibration-container">
+      {/* Header */}
+      <div className="calibration-header">
+        <h2 className="calibration-title">How accurate is your confidence?</h2>
+      </div>
+
+      {/* Hero Insight */}
+      <div className={`calibration-hero ${isOverconfident ? 'overconfident' : isUnderconfident ? 'underconfident' : 'calibrated'}`}>
+        <div className="calibration-hero-icon">
+          {isOverconfident ? '⚠️' : isUnderconfident ? 'ℹ️' : '✓'}
+        </div>
+        <div className="calibration-hero-content">
+          <div className="calibration-hero-status">
+            {isOverconfident && `You're overconfident by ${(biggestIssue.confidence - biggestIssue.actualAccuracy).toFixed(0)}%`}
+            {isUnderconfident && `You're underconfident by ${(biggestIssue.actualAccuracy - biggestIssue.confidence).toFixed(0)}%`}
+            {!isOverconfident && !isUnderconfident && 'Well calibrated!'}
+          </div>
+          <div className="calibration-hero-detail">
+            When you felt {biggestIssue.confidence}% confident → You got {biggestIssue.actualAccuracy.toFixed(0)}% correct
+          </div>
+          {mainProblem && (
+            <div className="calibration-hero-problem">
+              Main problem: {mainProblem}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Visual Comparison - Bar Chart */}
+      <div className="calibration-bars">
+        <div className="calibration-bars-title">Your Confidence vs Actual Performance</div>
+        {calibrationData.map(d => (
+          <div key={d.confidence} className="calibration-bar-row">
+            <div className="calibration-bar-label">{getConfidenceLabel(d.confidence)}</div>
+            <div className="calibration-bar-container">
+              <div className="calibration-bar-group">
+                <div className="calibration-bar confidence" style={{ width: `${d.confidence}%` }}>
+                  {d.confidence}%
+                </div>
+                <div
+                  className={`calibration-bar actual ${d.actualAccuracy < d.confidence - 5 ? 'lower' : d.actualAccuracy > d.confidence + 5 ? 'higher' : 'matched'}`}
+                  style={{ width: `${d.actualAccuracy}%` }}
+                >
+                  {d.actualAccuracy.toFixed(0)}%
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Detailed Breakdown - Collapsible */}
       <button
-        className="calibration-toggle"
+        className="calibration-toggle-details"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <div className="calibration-toggle-content">
-          <div className="calibration-toggle-left">
-            <span className="calibration-toggle-icon">{isExpanded ? '▼' : '▶'}</span>
-            <h2 className="calibration-title">How accurate is your confidence?</h2>
-          </div>
-        </div>
+        <span className="calibration-toggle-icon">{isExpanded ? '▼' : '▶'}</span>
+        <span className="calibration-toggle-text">
+          {isExpanded ? 'Hide' : 'Show'} detailed breakdown
+        </span>
       </button>
 
       {isExpanded && (
@@ -243,34 +337,8 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           margin-bottom: 48px;
         }
 
-        .calibration-toggle {
-          width: 100%;
-          padding: 40px;
-          background: transparent;
-          border: none;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          text-align: left;
-        }
-
-        .calibration-toggle:hover {
-          background: rgba(139, 92, 246, 0.05);
-        }
-
-        .calibration-toggle-content {
-          display: flex;
-          align-items: center;
-        }
-
-        .calibration-toggle-left {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-        }
-
-        .calibration-toggle-icon {
-          font-size: 20px;
-          color: #8b5cf6;
+        .calibration-header {
+          padding: 40px 40px 20px;
         }
 
         .calibration-title {
@@ -281,8 +349,179 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           letter-spacing: -0.025em;
         }
 
+        /* Hero Insight Section */
+        .calibration-hero {
+          margin: 0 40px 32px;
+          padding: 32px;
+          border-radius: 16px;
+          display: flex;
+          gap: 24px;
+          align-items: flex-start;
+        }
+
+        .calibration-hero.overconfident {
+          background: rgba(239, 68, 68, 0.1);
+          border: 2px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .calibration-hero.underconfident {
+          background: rgba(59, 130, 246, 0.1);
+          border: 2px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .calibration-hero.calibrated {
+          background: rgba(16, 185, 129, 0.1);
+          border: 2px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .calibration-hero-icon {
+          font-size: 48px;
+          flex-shrink: 0;
+        }
+
+        .calibration-hero-content {
+          flex: 1;
+        }
+
+        .calibration-hero-status {
+          font-size: 28px;
+          font-weight: 700;
+          margin-bottom: 12px;
+        }
+
+        .calibration-hero.overconfident .calibration-hero-status {
+          color: #ef4444;
+        }
+
+        .calibration-hero.underconfident .calibration-hero-status {
+          color: #3b82f6;
+        }
+
+        .calibration-hero.calibrated .calibration-hero-status {
+          color: #10b981;
+        }
+
+        .calibration-hero-detail {
+          font-size: 18px;
+          color: #e5e5e5;
+          margin-bottom: 8px;
+        }
+
+        .calibration-hero-problem {
+          font-size: 16px;
+          color: #a8a8a8;
+          margin-top: 12px;
+          padding-top: 12px;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Bar Chart Section */
+        .calibration-bars {
+          margin: 0 40px 32px;
+          padding: 24px;
+          background: #0a0a0a;
+          border-radius: 16px;
+        }
+
+        .calibration-bars-title {
+          font-size: 18px;
+          font-weight: 600;
+          color: #8b5cf6;
+          margin-bottom: 24px;
+        }
+
+        .calibration-bar-row {
+          margin-bottom: 24px;
+        }
+
+        .calibration-bar-row:last-child {
+          margin-bottom: 0;
+        }
+
+        .calibration-bar-label {
+          font-size: 14px;
+          color: #a8a8a8;
+          margin-bottom: 8px;
+        }
+
+        .calibration-bar-container {
+          position: relative;
+        }
+
+        .calibration-bar-group {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .calibration-bar {
+          height: 32px;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          padding-right: 12px;
+          font-size: 14px;
+          font-weight: 600;
+          transition: all 0.3s ease;
+          min-width: 60px;
+        }
+
+        .calibration-bar.confidence {
+          background: rgba(139, 92, 246, 0.3);
+          color: #8b5cf6;
+        }
+
+        .calibration-bar.actual {
+          color: #fff;
+        }
+
+        .calibration-bar.actual.lower {
+          background: #ef4444;
+        }
+
+        .calibration-bar.actual.higher {
+          background: #3b82f6;
+        }
+
+        .calibration-bar.actual.matched {
+          background: #10b981;
+        }
+
+        /* Toggle Details Button */
+        .calibration-toggle-details {
+          width: 100%;
+          padding: 20px 40px;
+          background: transparent;
+          border: none;
+          border-top: 1px solid #1a1a1a;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+        }
+
+        .calibration-toggle-details:hover {
+          background: rgba(139, 92, 246, 0.05);
+        }
+
+        .calibration-toggle-icon {
+          font-size: 14px;
+          color: #8b5cf6;
+        }
+
+        .calibration-toggle-text {
+          font-size: 16px;
+          color: #8b5cf6;
+          font-weight: 600;
+        }
+
         .calibration-content {
           padding: 0 40px 40px;
+          border-top: 1px solid #1a1a1a;
+          padding-top: 32px;
         }
 
         .calibration-insights {
