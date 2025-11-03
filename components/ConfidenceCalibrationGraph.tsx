@@ -66,9 +66,12 @@ function aggregateCalibrationData(attempts: QuestionAttempt[]): CalibrationDataP
   // Calculate calibration data for each confidence level
   return confidenceLevels.map(confidenceLevel => {
     const levelAttempts = grouped[confidenceLevel];
-    const correct = levelAttempts.filter(a => a.isCorrect).length;
     const total = levelAttempts.length;
-    const actualAccuracy = total > 0 ? (correct / total) * 100 : 0;
+
+    // Calculate actual accuracy including partial credit
+    const totalPointsEarned = levelAttempts.reduce((sum, a) => sum + a.pointsEarned, 0);
+    const totalPointsPossible = levelAttempts.reduce((sum, a) => sum + a.maxPoints, 0);
+    const actualAccuracy = totalPointsPossible > 0 ? (totalPointsEarned / totalPointsPossible) * 100 : 0;
 
     // Breakdown by reflection
     const reflection = {
