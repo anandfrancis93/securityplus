@@ -261,7 +261,9 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
                     {reflection.label} ({reflection.count} questions)
                   </div>
                   <div className="calibration-strategy-bar" style={{ width: `${reflection.accuracy}%` }}>
-                    <span className="calibration-strategy-percentage">{reflection.accuracy.toFixed(2)}%</span>
+                    <span className="calibration-strategy-percentage">
+                      {reflection.accuracy % 1 === 0 ? reflection.accuracy.toFixed(0) : reflection.accuracy.toFixed(2)}%
+                    </span>
                   </div>
                 </div>
               );
@@ -302,7 +304,7 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
                       className={`calibration-bar actual ${d.actualAccuracy < d.confidence - 5 ? 'lower' : d.actualAccuracy > d.confidence + 5 ? 'higher' : 'matched'}`}
                       style={{ width: `${d.actualAccuracy}%` }}
                     >
-                      {d.actualAccuracy.toFixed(2)}%
+                      {d.actualAccuracy % 1 === 0 ? d.actualAccuracy.toFixed(0) : d.actualAccuracy.toFixed(2)}%
                     </div>
                   </div>
                 </div>
