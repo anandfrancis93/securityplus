@@ -134,6 +134,36 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
               <div className="calibration-simple-count">
                 ({d.count} question{d.count !== 1 ? 's' : ''})
               </div>
+
+              <div className="calibration-reflection-breakdown">
+                <div className="calibration-reflection-title">How you answered:</div>
+                <div className="calibration-reflection-grid">
+                  {d.reflection.knew > 0 && (
+                    <div className="calibration-reflection-item">
+                      <span className="calibration-reflection-label">Recalled:</span>
+                      <span className="calibration-reflection-value">{d.reflection.knew}</span>
+                    </div>
+                  )}
+                  {d.reflection.recognized > 0 && (
+                    <div className="calibration-reflection-item">
+                      <span className="calibration-reflection-label">Recognized:</span>
+                      <span className="calibration-reflection-value">{d.reflection.recognized}</span>
+                    </div>
+                  )}
+                  {d.reflection.narrowed > 0 && (
+                    <div className="calibration-reflection-item">
+                      <span className="calibration-reflection-label">Educated guess:</span>
+                      <span className="calibration-reflection-value">{d.reflection.narrowed}</span>
+                    </div>
+                  )}
+                  {d.reflection.guessed > 0 && (
+                    <div className="calibration-reflection-item">
+                      <span className="calibration-reflection-label">Random guess:</span>
+                      <span className="calibration-reflection-value">{d.reflection.guessed}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           );
         })}
@@ -275,6 +305,48 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
         .calibration-simple-count {
           font-size: 12px;
           color: #666;
+          margin-bottom: 20px;
+          padding-bottom: 16px;
+          border-bottom: 1px solid #1a1a1a;
+        }
+
+        .calibration-reflection-breakdown {
+          margin-top: 16px;
+        }
+
+        .calibration-reflection-title {
+          font-size: 13px;
+          color: #8b5cf6;
+          font-weight: 600;
+          margin-bottom: 12px;
+          text-align: left;
+        }
+
+        .calibration-reflection-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .calibration-reflection-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 8px 12px;
+          background: #0a0a0a;
+          border-radius: 8px;
+          box-shadow: inset 2px 2px 4px #050505, inset -2px -2px 4px #151515;
+        }
+
+        .calibration-reflection-label {
+          font-size: 13px;
+          color: #a8a8a8;
+        }
+
+        .calibration-reflection-value {
+          font-size: 14px;
+          font-weight: 600;
+          color: #e5e5e5;
         }
       `}</style>
     </div>
