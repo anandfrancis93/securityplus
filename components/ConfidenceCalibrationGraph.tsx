@@ -269,10 +269,11 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           display: flex;
           justify-content: space-between;
           align-items: center;
+          gap: 16px;
         }
 
         .calibration-title {
-          font-size: 36px;
+          font-size: clamp(24px, 5vw, 36px);
           font-weight: 700;
           color: #e5e5e5;
           margin: 0;
