@@ -91,6 +91,7 @@ function aggregateCalibrationData(attempts: QuestionAttempt[]): CalibrationDataP
 
 export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalibrationGraphProps) {
   const calibrationData = aggregateCalibrationData(attempts);
+  const [isExpanded, setIsExpanded] = React.useState(false);
 
   if (calibrationData.length === 0) {
     return null; // Don't show anything if there's no data
@@ -175,28 +176,39 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
         </div>
       )}
 
-      {/* Visual Comparison - Bar Chart */}
-      <div className="calibration-bars">
-        <div className="calibration-bars-title">Your Confidence vs Actual Performance</div>
-        {calibrationData.map(d => (
-          <div key={d.confidence} className="calibration-bar-row">
-            <div className="calibration-bar-label">{getConfidenceLabel(d.confidence)}</div>
-            <div className="calibration-bar-container">
-              <div className="calibration-bar-group">
-                <div className="calibration-bar confidence" style={{ width: `${d.confidence}%` }}>
-                  {d.confidence}%
-                </div>
-                <div
-                  className={`calibration-bar actual ${d.actualAccuracy < d.confidence - 5 ? 'lower' : d.actualAccuracy > d.confidence + 5 ? 'higher' : 'matched'}`}
-                  style={{ width: `${d.actualAccuracy}%` }}
-                >
-                  {d.actualAccuracy.toFixed(0)}%
+      {/* Visual Comparison - Bar Chart (Collapsible) */}
+      <button
+        className="calibration-toggle-details"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <span className="calibration-toggle-icon">{isExpanded ? '▼' : '▶'}</span>
+        <span className="calibration-toggle-text">
+          Your Confidence vs Actual Performance
+        </span>
+      </button>
+
+      {isExpanded && (
+        <div className="calibration-bars">
+          {calibrationData.map(d => (
+            <div key={d.confidence} className="calibration-bar-row">
+              <div className="calibration-bar-label">{getConfidenceLabel(d.confidence)}</div>
+              <div className="calibration-bar-container">
+                <div className="calibration-bar-group">
+                  <div className="calibration-bar confidence" style={{ width: `${d.confidence}%` }}>
+                    {d.confidence}%
+                  </div>
+                  <div
+                    className={`calibration-bar actual ${d.actualAccuracy < d.confidence - 5 ? 'lower' : d.actualAccuracy > d.confidence + 5 ? 'higher' : 'matched'}`}
+                    style={{ width: `${d.actualAccuracy}%` }}
+                  >
+                    {d.actualAccuracy.toFixed(0)}%
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       <style jsx>{`
         .calibration-container {
@@ -281,19 +293,42 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           padding-left: 4px;
         }
 
+        /* Toggle Details Button */
+        .calibration-toggle-details {
+          width: calc(100% - 80px);
+          margin: 0 40px 32px;
+          padding: 20px 24px;
+          background: #0a0a0a;
+          border: none;
+          border-radius: 16px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .calibration-toggle-details:hover {
+          background: #121212;
+        }
+
+        .calibration-toggle-icon {
+          font-size: 14px;
+          color: #8b5cf6;
+        }
+
+        .calibration-toggle-text {
+          font-size: 18px;
+          color: #8b5cf6;
+          font-weight: 600;
+        }
+
         /* Bar Chart Section */
         .calibration-bars {
           margin: 0 40px 32px;
           padding: 24px;
           background: #0a0a0a;
           border-radius: 16px;
-        }
-
-        .calibration-bars-title {
-          font-size: 18px;
-          font-weight: 600;
-          color: #8b5cf6;
-          margin-bottom: 24px;
         }
 
         .calibration-bar-row {
