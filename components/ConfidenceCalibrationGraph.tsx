@@ -317,7 +317,7 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
         }
 
         .calibration-strategy-title {
-          font-size: 18px;
+          font-size: clamp(16px, 3vw, 20px);
           font-weight: 600;
           color: #e5e5e5;
           margin-bottom: 20px;
@@ -343,9 +343,9 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
         }
 
         .calibration-strategy-percentage {
-          font-size: 18px;
+          font-size: clamp(14px, 2.5vw, 18px);
           font-weight: 700;
-          color: #fff;
+          color: #ffffff;
         }
 
         .calibration-strategy-item.best .calibration-strategy-bar {
@@ -365,7 +365,7 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
         }
 
         .calibration-strategy-label {
-          font-size: 15px;
+          font-size: clamp(14px, 2.5vw, 16px);
           color: #e5e5e5;
           margin-bottom: 8px;
         }
@@ -403,7 +403,7 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
         }
 
         .calibration-toggle-text {
-          font-size: 18px;
+          font-size: clamp(16px, 3vw, 20px);
           color: #e5e5e5;
           font-weight: 600;
         }
@@ -423,7 +423,7 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
         }
 
         .calibration-bar-label {
-          font-size: 14px;
+          font-size: clamp(14px, 2.5vw, 16px);
           color: #e5e5e5;
           margin-bottom: 8px;
         }
@@ -445,7 +445,7 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           align-items: center;
           justify-content: flex-end;
           padding-right: 12px;
-          font-size: 14px;
+          font-size: clamp(12px, 2.5vw, 14px);
           font-weight: 600;
           transition: all 0.3s ease;
           min-width: 60px;
@@ -458,7 +458,7 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
 
         .calibration-bar.actual {
           background: rgba(139, 92, 246, 0.6);
-          color: #fff;
+          color: #ffffff;
         }
 
         .calibration-bar.actual.lower {
