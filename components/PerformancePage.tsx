@@ -5,6 +5,7 @@ import { useApp } from './AppProvider';
 import { useRouter } from 'next/navigation';
 import PerformanceGraphs from './PerformanceGraphs';
 import TopicReviewSchedule from './TopicReviewSchedule';
+import ConfidenceCalibrationGraph from './ConfidenceCalibrationGraph';
 import { UserProgress } from '@/lib/types';
 import { formatQuizSummary, formatQuizDateShort } from '@/lib/quizFormatting';
 import Header from './Header';
@@ -1576,6 +1577,15 @@ export default function QuizPerformance() {
               letterSpacing: '-0.025em'
             }}>Progress Charts</h2>
             <PerformanceGraphs userProgress={userProgress} />
+          </div>
+        )}
+
+        {/* Confidence Calibration Graph */}
+        {userProgress && userProgress.quizHistory && userProgress.quizHistory.length > 0 && (
+          <div>
+            <ConfidenceCalibrationGraph
+              attempts={userProgress.quizHistory.flatMap(quiz => quiz.questions)}
+            />
           </div>
         )}
 

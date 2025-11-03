@@ -94,6 +94,9 @@ export interface QuestionAttempt {
   pointsEarned: number; // Actual points earned (supports partial credit)
   maxPoints: number; // Maximum points possible for this question
   answeredAt: number;
+  // Dunning-Kruger tracking
+  confidence?: number; // Pre-answer confidence level (20, 40, 60, 80, 95)
+  reflection?: 'knew' | 'recognized' | 'narrowed' | 'guessed'; // Post-answer reflection
 }
 
 export interface AppState {

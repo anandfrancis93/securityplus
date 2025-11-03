@@ -13,7 +13,7 @@ import { LoadingScreen } from '@/components/ui/LoadingScreen';
 import { AdaptiveBackground } from '@/components/ui/LiquidGlassBackground';
 
 export default function Quiz() {
-  const { currentQuiz, userProgress, answerQuestion, endQuiz, startNewQuiz, restoreQuiz, saveQuizToServer, loadQuizFromServer, deleteSavedQuiz, user, loading: authLoading, liquidGlass, handleSignOut, refreshProgress } = useApp();
+  const { currentQuiz, userProgress, answerQuestion, updateReflection, endQuiz, startNewQuiz, restoreQuiz, saveQuizToServer, loadQuizFromServer, deleteSavedQuiz, user, loading: authLoading, liquidGlass, handleSignOut, refreshProgress } = useApp();
   const router = useRouter();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -394,10 +394,12 @@ export default function Quiz() {
     }
   };
 
-  const handleReflectionSelect = (reflectionChoice: string) => {
+  const handleReflectionSelect = (reflectionChoice: 'knew' | 'recognized' | 'narrowed' | 'guessed') => {
     setReflection(reflectionChoice);
 
-    // TODO: Save confidence and reflection data to database for Dunning-Kruger tracking
+    // Update the current question attempt with reflection data
+    updateReflection(currentQuestionIndex, reflectionChoice);
+
     console.log('Confidence:', confidence, 'Reflection:', reflectionChoice);
   };
 
@@ -413,10 +415,10 @@ export default function Quiz() {
     let answerData: { correctAnswer: number | number[], explanation: string, incorrectExplanations: string[] } | undefined;
     if (currentQuestion.questionType === 'multiple') {
       if (selectedAnswers.length === 0) return;
-      answerData = await answerQuestion(currentQuestion, selectedAnswers, quizSessionId || undefined);
+      answerData = await answerQuestion(currentQuestion, selectedAnswers, quizSessionId || undefined, confidence || undefined);
     } else {
       if (selectedAnswer === null) return;
-      answerData = await answerQuestion(currentQuestion, selectedAnswer, quizSessionId || undefined);
+      answerData = await answerQuestion(currentQuestion, selectedAnswer, quizSessionId || undefined, confidence || undefined);
     }
 
     // Update the question with the returned answer data

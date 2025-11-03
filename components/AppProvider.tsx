@@ -23,7 +23,8 @@ interface AppContextType {
   saveQuizToServer: (quizState: any) => Promise<boolean>; // Save quiz to Firebase for cross-device
   loadQuizFromServer: () => Promise<any | null>; // Load quiz from Firebase
   deleteSavedQuiz: () => Promise<boolean>; // Delete saved quiz from Firebase
-  answerQuestion: (question: Question, answer: number | number[], quizSessionId?: string) => Promise<{ correctAnswer: number | number[], explanation: string, incorrectExplanations: string[] } | undefined>;
+  answerQuestion: (question: Question, answer: number | number[], quizSessionId?: string, confidence?: number, reflection?: 'knew' | 'recognized' | 'narrowed' | 'guessed') => Promise<{ correctAnswer: number | number[], explanation: string, incorrectExplanations: string[] } | undefined>;
+  updateReflection: (questionIndex: number, reflection: 'knew' | 'recognized' | 'narrowed' | 'guessed') => void;
   endQuiz: (unusedQuestions?: Question[]) => Promise<void>;
   refreshProgress: () => Promise<void>;
   resetProgress: () => Promise<void>;
@@ -255,7 +256,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const answerQuestion = async (question: Question, answer: number | number[], quizSessionId?: string): Promise<{ correctAnswer: number | number[], explanation: string, incorrectExplanations: string[] } | undefined> => {
+  const answerQuestion = async (
+    question: Question,
+    answer: number | number[],
+    quizSessionId?: string,
+    confidence?: number,
+    reflection?: 'knew' | 'recognized' | 'narrowed' | 'guessed'
+  ): Promise<{ correctAnswer: number | number[], explanation: string, incorrectExplanations: string[] } | undefined> => {
     if (!currentQuiz || !userId) {
       console.error('Cannot answer question: missing currentQuiz or userId');
       alert('Error: Quiz session not initialized. Please refresh the page and try again.');
@@ -301,6 +308,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         pointsEarned,
         maxPoints,
         answeredAt: Date.now(),
+        confidence,
+        reflection,
       };
 
       const updatedQuiz = {
@@ -333,6 +342,28 @@ export function AppProvider({ children }: { children: ReactNode }) {
       // Handle error - show user feedback
       alert('Failed to submit answer. Please try again.');
       return undefined;
+    }
+  };
+
+  const updateReflection = (questionIndex: number, reflection: 'knew' | 'recognized' | 'narrowed' | 'guessed') => {
+    if (!currentQuiz) {
+      console.error('Cannot update reflection: missing currentQuiz');
+      return;
+    }
+
+    const updatedQuestions = [...currentQuiz.questions];
+    if (questionIndex >= 0 && questionIndex < updatedQuestions.length) {
+      updatedQuestions[questionIndex] = {
+        ...updatedQuestions[questionIndex],
+        reflection,
+      };
+
+      setCurrentQuiz({
+        ...currentQuiz,
+        questions: updatedQuestions,
+      });
+
+      console.log('Reflection updated:', { questionIndex, reflection });
     }
   };
 
@@ -574,6 +605,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     loadQuizFromServer,
     deleteSavedQuiz,
     answerQuestion,
+    updateReflection,
     endQuiz,
     refreshProgress,
     resetProgress,
