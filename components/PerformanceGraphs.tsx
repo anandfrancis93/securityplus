@@ -23,7 +23,7 @@ import {
 import { UserProgress } from '@/lib/types';
 import { ALL_SECURITY_PLUS_TOPICS } from '@/lib/topicData';
 import { estimateAbilityWithError } from '@/lib/irt';
-import { calculateIRTConfidenceInterval, wilsonScoreInterval } from '@/lib/confidenceIntervals';
+import { calculateIRTConfidenceInterval } from '@/lib/confidenceIntervals';
 
 interface PerformanceGraphsProps {
   userProgress: UserProgress | null;
@@ -256,22 +256,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         ? Math.round((difficultyStats.easy.points / difficultyStats.easy.maxPoints) * 100)
         : 0,
       questions: difficultyStats.easy.total,
-      ...(() => {
-        if (difficultyStats.easy.total > 0) {
-          // Still use Wilson interval for binomial confidence (correct vs incorrect questions)
-          const ci = wilsonScoreInterval(difficultyStats.easy.correct, difficultyStats.easy.total);
-          const accuracy = difficultyStats.easy.maxPoints > 0
-            ? Math.round((difficultyStats.easy.points / difficultyStats.easy.maxPoints) * 100)
-            : 0;
-          return {
-            ciLower: ci.lower,
-            ciUpper: ci.upper,
-            errorLower: accuracy - ci.lower,
-            errorUpper: ci.upper - accuracy,
-          };
-        }
-        return { ciLower: 0, ciUpper: 0, errorLower: 0, errorUpper: 0 };
-      })(),
     },
     {
       difficulty: 'Medium',
@@ -279,21 +263,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         ? Math.round((difficultyStats.medium.points / difficultyStats.medium.maxPoints) * 100)
         : 0,
       questions: difficultyStats.medium.total,
-      ...(() => {
-        if (difficultyStats.medium.total > 0) {
-          const ci = wilsonScoreInterval(difficultyStats.medium.correct, difficultyStats.medium.total);
-          const accuracy = difficultyStats.medium.maxPoints > 0
-            ? Math.round((difficultyStats.medium.points / difficultyStats.medium.maxPoints) * 100)
-            : 0;
-          return {
-            ciLower: ci.lower,
-            ciUpper: ci.upper,
-            errorLower: accuracy - ci.lower,
-            errorUpper: ci.upper - accuracy,
-          };
-        }
-        return { ciLower: 0, ciUpper: 0, errorLower: 0, errorUpper: 0 };
-      })(),
     },
     {
       difficulty: 'Hard',
@@ -301,21 +270,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         ? Math.round((difficultyStats.hard.points / difficultyStats.hard.maxPoints) * 100)
         : 0,
       questions: difficultyStats.hard.total,
-      ...(() => {
-        if (difficultyStats.hard.total > 0) {
-          const ci = wilsonScoreInterval(difficultyStats.hard.correct, difficultyStats.hard.total);
-          const accuracy = difficultyStats.hard.maxPoints > 0
-            ? Math.round((difficultyStats.hard.points / difficultyStats.hard.maxPoints) * 100)
-            : 0;
-          return {
-            ciLower: ci.lower,
-            ciUpper: ci.upper,
-            errorLower: accuracy - ci.lower,
-            errorUpper: ci.upper - accuracy,
-          };
-        }
-        return { ciLower: 0, ciUpper: 0, errorLower: 0, errorUpper: 0 };
-      })(),
     },
   ];
 
@@ -743,8 +697,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                     else if (accuracy >= 70) fill = '#f59e0b'; // Amber for good
                     return <Cell key={`cell-${index}`} fill={fill} />;
                   })}
-                  <ErrorBar dataKey="errorLower" direction="y" stroke="#666666" strokeWidth={2} />
-                  <ErrorBar dataKey="errorUpper" direction="y" stroke="#666666" strokeWidth={2} />
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
