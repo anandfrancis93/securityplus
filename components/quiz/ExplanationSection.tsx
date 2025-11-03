@@ -177,6 +177,56 @@ export default function ExplanationSection({
       .trim();
   };
 
+  // Helper to find how a topic is mentioned in the correct answer
+  const findTopicMentionInAnswer = (topic: string): string => {
+    const correctAnswerIndices = Array.isArray(question.correctAnswer)
+      ? question.correctAnswer
+      : [question.correctAnswer];
+
+    // Get correct answer text(s)
+    const correctAnswers = correctAnswerIndices.map(idx =>
+      stripLetterPrefix(question.options[idx] || '')
+    );
+
+    // Extract key terms from topic (remove parenthetical context)
+    const topicKeyTerms = topic.split('(')[0].trim().toLowerCase();
+    const keywords = topicKeyTerms.split(/\s+/).filter(w => w.length > 3);
+
+    // Check if topic keywords appear in correct answer
+    for (const answer of correctAnswers) {
+      const answerLower = answer.toLowerCase();
+
+      // Find matches
+      const matches = keywords.filter(keyword => answerLower.includes(keyword));
+
+      if (matches.length > 0) {
+        // Find a sentence or phrase containing these keywords
+        const sentences = answer.split(/[.!?]+/);
+        for (const sentence of sentences) {
+          const sentenceLower = sentence.toLowerCase();
+          if (keywords.some(k => sentenceLower.includes(k))) {
+            const trimmed = sentence.trim();
+            if (trimmed.length > 0) {
+              return `The correct answer explicitly requires: "${trimmed.length > 120 ? trimmed.substring(0, 120) + '...' : trimmed}"`;
+            }
+          }
+        }
+
+        // Fallback: just show it mentions the concept
+        return `The correct answer explicitly mentions ${topicKeyTerms}, which is essential to selecting the right response.`;
+      }
+    }
+
+    // Also check the main explanation
+    const explanationLower = question.explanation.toLowerCase();
+    if (keywords.some(k => explanationLower.includes(k))) {
+      return `Understanding ${topicKeyTerms} is essential because the explanation states this concept is why the answer is correct.`;
+    }
+
+    // Generic fallback
+    return `This concept is directly tested - you cannot select the correct answer without understanding ${topicKeyTerms}.`;
+  };
+
   // Helper function to check if explanation is valid (not a placeholder or too short)
   const isValidExplanation = (text: string): boolean => {
     if (!text || text.trim() === '') return false;
@@ -494,10 +544,9 @@ export default function ExplanationSection({
                       color: '#7dd3a8',
                       fontSize: 'clamp(13px, 2vw, 14px)',
                       lineHeight: '1.5',
-                      fontStyle: 'italic',
                     }}
                   >
-                    ✓ This topic is required to select the correct answer. The question tests your understanding of this concept directly.
+                    ✓ {findTopicMentionInAnswer(topic)}
                   </div>
                 </div>
               ))}
@@ -567,35 +616,12 @@ export default function ExplanationSection({
                     </div>
                     <div
                       style={{
-                        color: '#888',
+                        color: '#d4a574',
                         fontSize: 'clamp(13px, 2vw, 14px)',
                         lineHeight: '1.5',
-                        marginBottom: '8px',
                       }}
                     >
-                      <strong style={{ color: '#a8a8a8' }}>Why this was rejected:</strong>
-                    </div>
-                    <div
-                      style={{
-                        color: '#999',
-                        fontSize: 'clamp(13px, 2vw, 14px)',
-                        lineHeight: '1.5',
-                        fontStyle: 'italic',
-                      }}
-                    >
-                      ✗ {rejected.reason}
-                    </div>
-                    <div
-                      style={{
-                        marginTop: '8px',
-                        paddingTop: '8px',
-                        borderTop: '1px solid #222',
-                        color: '#777',
-                        fontSize: 'clamp(12px, 1.8vw, 13px)',
-                        lineHeight: '1.4',
-                      }}
-                    >
-                      This topic appears in the question but you don't need to understand it to select the correct answer. It's background context or scenario-setting.
+                      {rejected.reason}
                     </div>
                   </div>
                 ))}
