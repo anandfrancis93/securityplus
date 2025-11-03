@@ -377,8 +377,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const endQuiz = async (unusedQuestions?: Question[]) => {
     if (!currentQuiz || !userId) {
-      console.error('Cannot end quiz: missing currentQuiz or userId', { currentQuiz, userId });
-      return;
+      console.error('Cannot end quiz: missing currentQuiz or userId', {
+        currentQuiz: !!currentQuiz,
+        userId: !!userId,
+        currentQuizId: currentQuiz?.id,
+        questionsLength: currentQuiz?.questions?.length
+      });
+      throw new Error('Cannot end quiz: missing required data');
     }
 
     // Check if no questions were answered
@@ -430,6 +435,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
     };
 
     try {
+      console.log('Attempting to save quiz session with data:', {
+        userId,
+        quizId: finalQuiz.id,
+        questionsLength: finalQuiz.questions?.length,
+        hasQuestions: !!finalQuiz.questions,
+        firstQuestion: finalQuiz.questions?.[0] ? {
+          questionId: finalQuiz.questions[0].questionId,
+          hasQuestion: !!finalQuiz.questions[0].question,
+          hasOptions: !!finalQuiz.questions[0].options
+        } : 'No questions'
+      });
       await saveQuizSession(userId, finalQuiz);
       console.log('Quiz session saved successfully');
 
