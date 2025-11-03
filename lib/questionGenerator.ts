@@ -142,7 +142,160 @@ function isTopicPresent(
 }
 
 /**
- * Use AI to identify which topics a generated question actually tests
+ * PASS 2: Validate topic tags using AI editorial judgment
+ * Takes initial topic tags and applies Removal/Knowledge/Causal tests
+ * to filter out contextual mentions that shouldn't be tagged
+ */
+async function validateTopicTagsWithAI(
+  questionText: string,
+  options: string[],
+  correctAnswer: number | number[],
+  explanation: string,
+  initialTopics: string[]
+): Promise<string[]> {
+  const correctAnswerText = Array.isArray(correctAnswer)
+    ? correctAnswer.map(i => options[i]).join(', ')
+    : options[correctAnswer];
+
+  const prompt = `You are a CompTIA Security+ topic tagging validator. You will review topic tags for a question and apply strict editorial tests to REJECT tags that are contextual mentions, not core intent.
+
+QUESTION:
+${questionText}
+
+OPTIONS:
+${options.map((opt, i) => `${String.fromCharCode(65 + i)}) ${opt}`).join('\n')}
+
+CORRECT ANSWER: ${correctAnswerText}
+
+EXPLANATION:
+${explanation}
+
+INITIALLY TAGGED TOPICS:
+${initialTopics.map((t, i) => `${i + 1}. "${t}"`).join('\n')}
+
+YOUR TASK: Review each topic and apply these three tests. If ANY test fails, REJECT the tag.
+
+✅ KEEP TAG if ALL THREE pass:
+1. **Removal Test**: If you removed this concept from the question, would the answer change or become unclear?
+2. **Knowledge Test**: Must the test-taker understand this concept to select the correct answer?
+3. **Causal Test**: Is this concept WHY a particular answer is correct?
+
+❌ REJECT TAG if ANY of these apply:
+1. **Scenario Flavor**: It's just background context to make the question realistic
+2. **Substitution Test**: You could replace it with something else and the question still works the same way
+3. **Industry Context**: It's mentioned to set the scene but not tested
+
+EXAMPLES OF REJECTING TAGS:
+
+Example 1: Question mentions "procurement of wireless access points" and asks about automation benefits for baseline enforcement
+Initial tags: ["Enforcing baselines (automation benefit)", "Acquisition/procurement process (asset management)"]
+
+Analysis:
+- "Enforcing baselines (automation benefit)":
+  ✅ Removal test: Remove "enforcing baselines" → question has no answer
+  ✅ Knowledge test: Must understand baseline enforcement to answer
+  ✅ Causal test: This IS why automation is the answer
+  → KEEP
+
+- "Acquisition/procurement process (asset management)":
+  ❌ Substitution test: Replace "procurement" with "deploying" or "managing" → question works identically
+  ❌ Knowledge test: Question isn't testing procurement knowledge, it's testing automation benefits
+  ❌ Scenario flavor: Procurement just tells you WHEN this happens, not what's being tested
+  → REJECT
+
+Final tags: ["Enforcing baselines (automation benefit)"]
+
+Example 2: Question about legacy ICS with vulnerabilities that can't be patched, asks for remediation strategy
+Initial tags: ["Legacy applications (technical implication)", "Insurance (remediation)", "Transfer (risk strategy)", "One-time (risk assessment)", "Industrial control systems (ICS) (architecture model)"]
+
+Analysis:
+- "Legacy applications (technical implication)":
+  ✅ Removal test: Remove "legacy" → patching difficulty no longer makes sense
+  ✅ Causal test: Legacy nature is WHY risk transfer is needed
+  → KEEP
+
+- "Insurance (remediation)", "Transfer (risk strategy)", "One-time (risk assessment)":
+  ✅ All are directly being tested by the question
+  → KEEP ALL
+
+- "Industrial control systems (ICS) (architecture model)":
+  ❌ Substitution test: Replace "ICS" with "database server" → question works the same
+  ❌ Knowledge test: Not testing ICS-specific knowledge
+  ❌ Scenario flavor: Just makes question realistic
+  → REJECT
+
+Final tags: ["Legacy applications (technical implication)", "Insurance (remediation)", "Transfer (risk strategy)", "One-time (risk assessment)"]
+
+Example 3: Question about hospital compliance with patient data encryption regulations
+Initial tags: ["Encryption (data protection method)", "Regulated (data type)", "Legal implications (privacy)", "Healthcare"]
+
+Analysis:
+- "Encryption (data protection method)", "Regulated (data type)", "Legal implications (privacy)":
+  ✅ All testing core security concepts
+  → KEEP ALL
+
+- "Healthcare":
+  ❌ Substitution test: Replace "hospital" with "bank" or "law firm" → question works the same
+  ❌ Industry context: Just scene-setting
+  → REJECT
+
+Final tags: ["Encryption (data protection method)", "Regulated (data type)", "Legal implications (privacy)"]
+
+CRITICAL RULES:
+1. Be STRICT - when in doubt, REJECT the tag
+2. Ask yourself: "Is the question testing knowledge of this topic, or just mentioning it?"
+3. Background technologies, industries, timing contexts → usually REJECT
+4. Core security concepts that are WHY an answer is correct → KEEP
+5. If you could swap the mention with something else and the question still works → REJECT
+
+Return ONLY a valid JSON object with two arrays:
+{
+  "keep": ["exact topic string 1", "exact topic string 2", ...],
+  "reject": [
+    {"topic": "exact topic string", "reason": "brief reason (e.g., 'Substitution test fails - could replace with any industry')"},
+    ...
+  ]
+}
+
+No explanation outside the JSON, just the JSON object.`;
+
+  try {
+    const textContent = await aiProvider.generateContent(prompt, {
+      maxOutputTokens: 1024,
+      temperature: 0, // Deterministic for consistency
+      useReasoning: true // Use reasoning model for editorial judgment
+    });
+    const jsonContent = textContent.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+    const result: { keep: string[], reject: Array<{ topic: string, reason: string }> } = JSON.parse(jsonContent);
+
+    // Validation
+    if (!Array.isArray(result.keep) || !Array.isArray(result.reject)) {
+      throw new Error('AI did not return valid keep/reject arrays');
+    }
+
+    // Log rejections
+    if (result.reject.length > 0) {
+      console.log(`[PASS 2 VALIDATION] 🔍 Rejected ${result.reject.length} contextual tags:`);
+      result.reject.forEach(r => {
+        console.log(`  ❌ "${r.topic}" - ${r.reason}`);
+      });
+    }
+
+    console.log(`[PASS 2 VALIDATION] ✅ Kept ${result.keep.length} core intent tags: ${result.keep.join(', ')}`);
+
+    return result.keep;
+
+  } catch (error) {
+    console.error('[PASS 2 VALIDATION] Error validating topic tags with AI:', error);
+    // Fallback: return original topics if validation fails
+    console.warn('[PASS 2 VALIDATION] ⚠️ Validation failed, keeping all initial topics');
+    return initialTopics;
+  }
+}
+
+/**
+ * PASS 1: Use AI to identify which topics a generated question actually tests
  * This is more accurate than keyword matching as it understands context and semantics
  */
 async function identifyTopicsWithAI(
@@ -321,10 +474,21 @@ No explanation, just the JSON array.`;
       });
     }
 
-    console.log(`[TOPIC VALIDATION] ✅ Validated topics (${validation.matched.length}): ${validation.matched.join(', ')}`);
+    console.log(`[PASS 1 VALIDATION] ✅ Validated topics (${validation.matched.length}): ${validation.matched.join(', ')}`);
 
-    // Return validated (corrected) topics
-    return validation.matched;
+    // 🔧 PASS 2: Apply editorial judgment to filter out contextual mentions
+    // This separates string matching (Pass 1) from editorial judgment (Pass 2)
+    console.log(`[PASS 2 VALIDATION] 🔍 Applying editorial tests (Removal/Knowledge/Causal)...`);
+    const finalTopics = await validateTopicTagsWithAI(
+      questionText,
+      options,
+      correctAnswer,
+      explanation,
+      validation.matched
+    );
+
+    // Return final validated topics after both passes
+    return finalTopics;
 
   } catch (error) {
     console.error('Error identifying topics with AI:', error);
