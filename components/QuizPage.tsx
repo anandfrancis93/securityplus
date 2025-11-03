@@ -1178,7 +1178,7 @@ export default function Quiz() {
                     className="confidence-option"
                   >
                     <div className="confidence-option-label">Not confident (guessing)</div>
-                    <div className="confidence-option-percentage">~20% chance I'm right</div>
+                    <div className="confidence-option-percentage">~20% chance I&apos;m right</div>
                   </button>
 
                   <button
@@ -1186,7 +1186,7 @@ export default function Quiz() {
                     className="confidence-option"
                   >
                     <div className="confidence-option-label">Slightly confident</div>
-                    <div className="confidence-option-percentage">~40% chance I'm right</div>
+                    <div className="confidence-option-percentage">~40% chance I&apos;m right</div>
                   </button>
 
                   <button
@@ -1194,7 +1194,7 @@ export default function Quiz() {
                     className="confidence-option"
                   >
                     <div className="confidence-option-label">Moderately confident</div>
-                    <div className="confidence-option-percentage">~60% chance I'm right</div>
+                    <div className="confidence-option-percentage">~60% chance I&apos;m right</div>
                   </button>
 
                   <button
@@ -1202,7 +1202,7 @@ export default function Quiz() {
                     className="confidence-option"
                   >
                     <div className="confidence-option-label">Confident</div>
-                    <div className="confidence-option-percentage">~80% chance I'm right</div>
+                    <div className="confidence-option-percentage">~80% chance I&apos;m right</div>
                   </button>
 
                   <button
@@ -1210,7 +1210,7 @@ export default function Quiz() {
                     className="confidence-option"
                   >
                     <div className="confidence-option-label">Very confident (almost certain)</div>
-                    <div className="confidence-option-percentage">~95% chance I'm right</div>
+                    <div className="confidence-option-percentage">~95% chance I&apos;m right</div>
                   </button>
                 </div>
               </div>
@@ -1293,7 +1293,7 @@ export default function Quiz() {
                     onClick={() => handleReflectionSelect('recognized')}
                     className="reflection-option"
                   >
-                    I wasn't sure, but recognized the right answer in the options
+                    I wasn&apos;t sure, but recognized the right answer in the options
                   </button>
 
                   <button
