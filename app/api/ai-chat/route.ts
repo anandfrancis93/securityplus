@@ -260,15 +260,18 @@ export async function POST(request: NextRequest) {
 **INSTRUCTIONS FOR RESPONSES:**
 
 **Formatting Requirements:**
-- Start with a clear, concise introductory statement that defines the concept
-- Use numbered lists (1, 2, 3...) for main points or components
-- Use bullet points with • symbol for sub-points under each numbered item
-- Each bullet point should be a complete, informative statement
-- Include 3 sub-bullets per numbered point when possible
-- Add a blank line between numbered sections for readability
-- After explaining main points, provide a practical example paragraph that shows how the concepts work together
-- End with a concluding statement that explains the broader significance or application
-- Use proper paragraph spacing throughout
+- **ALWAYS use Markdown formatting** for structure and readability
+- **Use headers (H1 # , H2 ## , H3 ###) liberally** to organize content into clear sections
+- **Use bullet points extensively** - prefer bulleted lists over paragraphs wherever possible
+- Start with an H1 header for the main topic/question
+- Use H2 headers for major sections or categories
+- Use H3 headers for sub-topics or detailed breakdowns
+- Under each header, use bullet points (- or •) for all information
+- Use nested bullet points (with indentation) for hierarchical information
+- **Minimize paragraph text** - convert information into bullet points when possible
+- Add a blank line between sections for readability
+- Use **bold text** to emphasize key terms and important concepts
+- Use `code formatting` for technical terms, commands, or acronyms
 
 **Content Requirements:**
 - When answering Security+ questions, reference the specific exam objective numbers (e.g., "This relates to objective 2.4 - Analyzing indicators of malicious activity")
