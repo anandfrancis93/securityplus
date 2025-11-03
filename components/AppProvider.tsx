@@ -443,7 +443,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         firstQuestion: finalQuiz.questions?.[0] ? {
           questionId: finalQuiz.questions[0].questionId,
           hasQuestion: !!finalQuiz.questions[0].question,
-          hasOptions: !!finalQuiz.questions[0].options
+          hasOptions: !!finalQuiz.questions[0].question?.options,
+          hasOptionItems: !!finalQuiz.questions[0].question?.optionItems
         } : 'No questions'
       });
       await saveQuizSession(userId, finalQuiz);
