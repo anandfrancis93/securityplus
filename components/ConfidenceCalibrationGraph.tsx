@@ -215,20 +215,50 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
               }
             ];
 
-            // Sort by count descending
-            const sortedReflections = reflectionTypes
+            // Calculate accuracy for each reflection type (using partial credit)
+            const reflectionsWithAccuracy = reflectionTypes.map(reflection => {
+              const typeAttempts = attemptsWithReflection.filter(a => a.reflection === reflection.type);
+
+              // Calculate points earned and points possible with fallback for old data
+              const pointsEarned = typeAttempts.reduce((sum, a) => {
+                if (a.pointsEarned !== undefined && a.maxPoints !== undefined) {
+                  return sum + a.pointsEarned;
+                }
+                // Fallback for old data: treat as binary (1 point if correct, 0 if wrong)
+                return sum + (a.isCorrect ? 1 : 0);
+              }, 0);
+
+              const pointsPossible = typeAttempts.reduce((sum, a) => {
+                if (a.pointsEarned !== undefined && a.maxPoints !== undefined) {
+                  return sum + a.maxPoints;
+                }
+                // Fallback for old data: 1 point per question
+                return sum + 1;
+              }, 0);
+
+              const accuracy = pointsPossible > 0 ? (pointsEarned / pointsPossible) * 100 : 0;
+
+              return {
+                ...reflection,
+                accuracy,
+                pointsEarned,
+                pointsPossible
+              };
+            });
+
+            // Sort by accuracy descending
+            const sortedReflections = reflectionsWithAccuracy
               .filter(r => r.count > 0)
-              .sort((a, b) => b.count - a.count);
+              .sort((a, b) => b.accuracy - a.accuracy);
 
             return sortedReflections.map(reflection => {
-              const percentage = (reflection.count / totalWithReflection) * 100;
               return (
                 <div key={reflection.type} className={`calibration-strategy-item ${reflection.quality}`}>
                   <div className="calibration-strategy-label">
                     {reflection.label} ({reflection.count} questions)
                   </div>
-                  <div className="calibration-strategy-bar" style={{ width: `${percentage}%` }}>
-                    <span className="calibration-strategy-percentage">{percentage.toFixed(0)}%</span>
+                  <div className="calibration-strategy-bar" style={{ width: `${reflection.accuracy}%` }}>
+                    <span className="calibration-strategy-percentage">{reflection.accuracy.toFixed(0)}%</span>
                   </div>
                 </div>
               );
