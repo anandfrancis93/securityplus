@@ -92,21 +92,22 @@ export async function getUserProgress(userId: string): Promise<UserProgress | nu
       // Load quiz history from subcollection instead of storing in main document
       data.quizHistory = await loadQuizHistory(userId);
 
-      // Load cached quiz from subcollection if it exists
-      if (data.hasCachedQuiz) {
-        try {
-          const cachedQuizRef = doc(db, USERS_COLLECTION, userId, 'cached_quiz', 'current');
-          const cachedQuizDoc = await getDoc(cachedQuizRef);
-          if (cachedQuizDoc.exists()) {
-            data.cachedQuiz = cachedQuizDoc.data() as CachedQuiz;
-            console.log('[getUserProgress] Loaded cached quiz from subcollection:', {
-              questionsCount: data.cachedQuiz?.questions?.length || 0
-            });
-          }
-        } catch (error) {
-          console.error('[getUserProgress] Error loading cached quiz:', error);
-          // Don't fail the whole function if cached quiz fails to load
+      // Always try to load cached quiz from subcollection
+      // Don't rely on hasCachedQuiz flag since updating it might fail if document is too large
+      try {
+        const cachedQuizRef = doc(db, USERS_COLLECTION, userId, 'cached_quiz', 'current');
+        const cachedQuizDoc = await getDoc(cachedQuizRef);
+        if (cachedQuizDoc.exists()) {
+          data.cachedQuiz = cachedQuizDoc.data() as CachedQuiz;
+          console.log('[getUserProgress] Loaded cached quiz from subcollection:', {
+            questionsCount: data.cachedQuiz?.questions?.length || 0
+          });
+        } else {
+          console.log('[getUserProgress] No cached quiz found in subcollection');
         }
+      } catch (error) {
+        console.error('[getUserProgress] Error loading cached quiz:', error);
+        // Don't fail the whole function if cached quiz fails to load
       }
 
       // Ensure abilityStandardError exists (for backwards compatibility with existing users)
@@ -481,13 +482,19 @@ export async function saveUnusedQuestionsToCache(userId: string, cachedQuiz: Cac
       lastUpdated: Date.now(),
     });
 
-    // Update user document with just a flag indicating cache exists
-    const userRef = doc(db, USERS_COLLECTION, userId);
-    await updateDoc(userRef, {
-      hasCachedQuiz: true,
-      cachedQuizUpdatedAt: Date.now(),
-      lastUpdated: Date.now(),
-    });
+    // Try to update user document with flag, but don't fail if document is too large
+    try {
+      const userRef = doc(db, USERS_COLLECTION, userId);
+      await updateDoc(userRef, {
+        hasCachedQuiz: true,
+        cachedQuizUpdatedAt: Date.now(),
+        lastUpdated: Date.now(),
+      });
+    } catch (flagError: any) {
+      // If user document is too large to update, that's OK - we'll check subcollection directly
+      console.warn('Could not update hasCachedQuiz flag (document may be too large):', flagError.message);
+      console.log('Cached quiz is still saved in subcollection and will be loaded on next getUserProgress call');
+    }
 
     console.log('Unused questions cached successfully in subcollection');
   } catch (error) {
