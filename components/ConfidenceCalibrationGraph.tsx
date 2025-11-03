@@ -96,59 +96,6 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
     return null; // Don't show anything if there's no data
   }
 
-  // Calculate calibration score (how well confidence matches performance)
-  const calibrationScore = calibrationData.reduce((sum, d) => {
-    const diff = Math.abs(d.confidence - d.actualAccuracy);
-    return sum + diff * d.count;
-  }, 0) / calibrationData.reduce((sum, d) => sum + d.count, 0);
-
-  const isWellCalibrated = calibrationScore < 15; // Within 15% is considered well-calibrated
-
-  // Find the biggest issue (largest confidence-accuracy gap)
-  const biggestIssue = calibrationData.reduce((max, d) => {
-    const diff = d.confidence - d.actualAccuracy;
-    const absDiff = Math.abs(diff);
-    const maxAbsDiff = Math.abs(max.confidence - max.actualAccuracy);
-    return absDiff > maxAbsDiff ? d : max;
-  });
-
-  const isOverconfident = biggestIssue.confidence > biggestIssue.actualAccuracy + 5;
-  const isUnderconfident = biggestIssue.actualAccuracy > biggestIssue.confidence + 5;
-
-  // Find main problem (most common wrong reflection type)
-  let mainProblem = '';
-  const allAttempts = attempts.filter(a => a.confidence !== undefined && !a.isCorrect);
-
-  if (allAttempts.length > 0) {
-    const wrongReflectionCounts = {
-      knew: allAttempts.filter(a => a.reflection === 'knew').length,
-      recognized: allAttempts.filter(a => a.reflection === 'recognized').length,
-      narrowed: allAttempts.filter(a => a.reflection === 'narrowed').length,
-      guessed: allAttempts.filter(a => a.reflection === 'guessed').length,
-    };
-
-    const maxWrongType = Object.entries(wrongReflectionCounts).reduce((max, [type, count]) =>
-      count > max.count ? { type, count } : max
-    , { type: 'guessed', count: 0 });
-
-    if (maxWrongType.count > 0) {
-      switch (maxWrongType.type) {
-        case 'knew':
-          mainProblem = `False memory (recalled ${maxWrongType.count} wrong ${maxWrongType.count === 1 ? 'answer' : 'answers'})`;
-          break;
-        case 'recognized':
-          mainProblem = `Misleading familiarity (${maxWrongType.count} wrong ${maxWrongType.count === 1 ? 'recognition' : 'recognitions'})`;
-          break;
-        case 'narrowed':
-          mainProblem = `Faulty logic (${maxWrongType.count} wrong ${maxWrongType.count === 1 ? 'elimination' : 'eliminations'})`;
-          break;
-        case 'guessed':
-          mainProblem = `Need more study (${maxWrongType.count} wrong ${maxWrongType.count === 1 ? 'guess' : 'guesses'})`;
-          break;
-      }
-    }
-  }
-
   // Calculate reliance on non-recall methods (correct answers only)
   const correctAttempts = attempts.filter(a => a.confidence !== undefined && a.isCorrect);
   const totalCorrect = correctAttempts.length;
@@ -159,36 +106,6 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
     narrowed: correctAttempts.filter(a => a.reflection === 'narrowed').length,
     guessed: correctAttempts.filter(a => a.reflection === 'guessed').length,
   };
-
-  // Generate warnings for reliance on weaker memory strategies
-  const warnings: string[] = [];
-
-  if (totalCorrect > 0) {
-    const recallPercentage = (correctReflectionCounts.knew / totalCorrect) * 100;
-    const recognitionPercentage = (correctReflectionCounts.recognized / totalCorrect) * 100;
-    const narrowedPercentage = (correctReflectionCounts.narrowed / totalCorrect) * 100;
-    const guessedPercentage = (correctReflectionCounts.guessed / totalCorrect) * 100;
-
-    // Warning if too much recognition memory (should be recall for mastery)
-    if (recognitionPercentage > 40 && correctReflectionCounts.recognized >= 3) {
-      warnings.push(`⚠️ ${recognitionPercentage.toFixed(0)}% of correct answers relied on recognition after seeing options - work on pure recall`);
-    }
-
-    // Warning if too many educated guesses
-    if (narrowedPercentage > 30 && correctReflectionCounts.narrowed >= 3) {
-      warnings.push(`⚠️ ${narrowedPercentage.toFixed(0)}% of correct answers were educated guesses - strengthen foundational knowledge`);
-    }
-
-    // Warning if any random guesses succeeded
-    if (guessedPercentage > 15 && correctReflectionCounts.guessed >= 2) {
-      warnings.push(`⚠️ ${guessedPercentage.toFixed(0)}% of correct answers were random guesses - got lucky, not mastery`);
-    }
-
-    // Positive reinforcement if high recall
-    if (recallPercentage >= 60 && correctReflectionCounts.knew >= 5) {
-      warnings.push(`✓ ${recallPercentage.toFixed(0)}% of correct answers from pure recall - strong memory foundation!`);
-    }
-  }
 
   // Add perfect calibration line data
   const perfectCalibrationLine = [
@@ -201,28 +118,6 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
       {/* Header */}
       <div className="calibration-header">
         <h2 className="calibration-title">How accurate is your confidence?</h2>
-      </div>
-
-      {/* Hero Insight */}
-      <div className={`calibration-hero ${isOverconfident ? 'overconfident' : isUnderconfident ? 'underconfident' : 'calibrated'}`}>
-        <div className="calibration-hero-icon">
-          {isOverconfident ? '⚠️' : isUnderconfident ? 'ℹ️' : '✓'}
-        </div>
-        <div className="calibration-hero-content">
-          <div className="calibration-hero-status">
-            {isOverconfident && `You're overconfident by ${(biggestIssue.confidence - biggestIssue.actualAccuracy).toFixed(0)}%`}
-            {isUnderconfident && `You're underconfident by ${(biggestIssue.actualAccuracy - biggestIssue.confidence).toFixed(0)}%`}
-            {!isOverconfident && !isUnderconfident && 'Well calibrated!'}
-          </div>
-          <div className="calibration-hero-detail">
-            When you felt {biggestIssue.confidence}% confident → You got {biggestIssue.actualAccuracy.toFixed(0)}% correct
-          </div>
-          {mainProblem && (
-            <div className="calibration-hero-problem">
-              Main problem: {mainProblem}
-            </div>
-          )}
-        </div>
       </div>
 
       {/* Memory Strategy Breakdown */}
@@ -321,72 +216,6 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           color: #e5e5e5;
           margin: 0;
           letter-spacing: -0.025em;
-        }
-
-        /* Hero Insight Section */
-        .calibration-hero {
-          margin: 0 40px 32px;
-          padding: 32px;
-          border-radius: 16px;
-          display: flex;
-          gap: 24px;
-          align-items: flex-start;
-        }
-
-        .calibration-hero.overconfident {
-          background: rgba(239, 68, 68, 0.1);
-          border: 2px solid rgba(239, 68, 68, 0.3);
-        }
-
-        .calibration-hero.underconfident {
-          background: rgba(59, 130, 246, 0.1);
-          border: 2px solid rgba(59, 130, 246, 0.3);
-        }
-
-        .calibration-hero.calibrated {
-          background: rgba(16, 185, 129, 0.1);
-          border: 2px solid rgba(16, 185, 129, 0.3);
-        }
-
-        .calibration-hero-icon {
-          font-size: 48px;
-          flex-shrink: 0;
-        }
-
-        .calibration-hero-content {
-          flex: 1;
-        }
-
-        .calibration-hero-status {
-          font-size: 28px;
-          font-weight: 700;
-          margin-bottom: 12px;
-        }
-
-        .calibration-hero.overconfident .calibration-hero-status {
-          color: #ef4444;
-        }
-
-        .calibration-hero.underconfident .calibration-hero-status {
-          color: #3b82f6;
-        }
-
-        .calibration-hero.calibrated .calibration-hero-status {
-          color: #10b981;
-        }
-
-        .calibration-hero-detail {
-          font-size: 18px;
-          color: #e5e5e5;
-          margin-bottom: 8px;
-        }
-
-        .calibration-hero-problem {
-          font-size: 16px;
-          color: #a8a8a8;
-          margin-top: 12px;
-          padding-top: 12px;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* Memory Strategy Breakdown */
