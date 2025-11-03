@@ -150,29 +150,6 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
     lineHeight: '1.5',
   };
 
-  const expandButtonStyle: React.CSSProperties = {
-    padding: '16px',
-    background: '#0f0f0f',
-    borderRadius: '16px',
-    boxShadow: isExpanded
-      ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
-      : '8px 8px 16px #050505, -8px -8px 16px #191919',
-    border: 'none',
-    cursor: 'pointer',
-    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  };
-
-  const expandIconStyle: React.CSSProperties = {
-    width: '32px',
-    height: '32px',
-    color: '#a8a8a8',
-    transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-    transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-  };
-
   const statsGridStyle: React.CSSProperties = {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
@@ -409,11 +386,30 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
           </div>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            style={expandButtonStyle}
+            style={{
+              padding: '16px',
+              background: '#0f0f0f',
+              borderRadius: '16px',
+              boxShadow: isExpanded
+                ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+                : '8px 8px 16px #050505, -8px -8px 16px #191919',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
             aria-label="Toggle Topic Review Schedule"
           >
             <svg
-              style={expandIconStyle}
+              style={{
+                width: '32px',
+                height: '32px',
+                color: '#a8a8a8',
+                transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
+              }}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
