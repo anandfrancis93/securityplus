@@ -1,13 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git commit -m \"$(cat <<''EOF''\nAdd pause/resume button for question generation control\n\nAdded user control over background question generation with pause/resume functionality.\n\nFeatures:\n- Pause/Resume button in question header (only shows when questions remaining)\n- Visual indicators:\n  * Play icon for Resume (when paused)\n  * Pause icon for Pause (when generating)\n  * Yellow \"Question generation paused\" indicator\n  * Existing \"Generating next question...\" indicator respects pause state\n- Modified auto-generation logic to respect pause state\n- Neumorphic button design matching app theme\n- Responsive layout with flexbox\n\nUser Benefits:\n- Control over API costs (pause when not needed)\n- Battery/data savings on mobile devices\n- Pause during review of current questions\n- Resume when ready for more questions\n\nTechnical Implementation:\n- Added `generationPaused` state variable\n- Modified auto-generation useEffect to check pause state\n- Pause/Resume button toggles state with onClick\n- Generation indicators conditionally rendered based on pause state\n- CSS with neumorphic shadows and hover/active states\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(git commit:*)",
-      "Bash(git add:*)",
-      "Bash(git push:*)",
-      "Bash(foundational knowledge\"\n- User is reasoning through elimination, not knowing directly\n- Suggests gaps in foundational understanding\n\n⚠️ Random guessing success (>15% of correct answers)\n- \"20% of correct answers were random guesses - got lucky,)",
-      "Bash(not mastery\"\n- User got right answers by chance, not knowledge\n- False sense of progress\n\n✓ Positive reinforcement (≥60% pure recall)\n- \"65% of correct answers from pure recall - strong memory)",
-      "Bash(foundation!\"\n- Encourages and validates solid learning approach\n\nWarnings appear between hero insight and bar chart, color-coded:\n- Orange background/border for warnings (⚠️)\n- Green background/border for positive (✓)\n\nMinimum thresholds prevent noise (need 3+ questions to trigger).\n\nThis helps users understand not just confidence calibration, but\nalso the quality of their learning (recall > recognition > guess).\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+      "Bash(npx tsc:*)"
     ],
     "deny": [],
     "ask": []

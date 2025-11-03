@@ -1118,21 +1118,27 @@ export default function QuizPerformance() {
                 id="toggle-irt"
                 onClick={() => setIrtExpanded(!irtExpanded)}
                 style={{
-                  padding: '1rem',
-                  background: 'transparent',
+                  padding: '16px',
+                  background: '#0f0f0f',
                   border: 'none',
-                  borderRadius: '1.5rem',
-                  transition: 'all 0.2s ease',
-                  cursor: 'pointer'
+                  borderRadius: '16px',
+                  boxShadow: irtExpanded
+                    ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+                    : '8px 8px 16px #050505, -8px -8px 16px #191919',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
                 }}
                 aria-label="Toggle Performance Analysis"
               >
                 <svg
                   style={{
-                    width: '2rem',
-                    height: '2rem',
+                    width: '32px',
+                    height: '32px',
                     color: '#a8a8a8',
-                    transition: 'transform 0.3s ease',
+                    transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     transform: irtExpanded ? 'rotate(180deg)' : 'rotate(0deg)'
                   }}
                   fill="none"

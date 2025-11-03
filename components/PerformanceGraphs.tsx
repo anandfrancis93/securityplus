@@ -415,29 +415,16 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         backgroundColor: '#0f0f0f',
         borderRadius: '24px',
         boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
-        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+        overflow: 'hidden'
       }}>
-        <button
-          onClick={() => setIsAbilityGraphOpen(!isAbilityGraphOpen)}
-          style={{
-            width: '100%',
-            padding: '48px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            textAlign: 'left',
-            background: '#0f0f0f',
-            border: 'none',
-            borderRadius: '24px',
-            boxShadow: isAbilityGraphOpen
-              ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
-              : '6px 6px 12px #050505, -6px -6px 12px #191919',
-            cursor: 'pointer',
-            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-          }}
-        >
+        <div style={{
+          padding: '40px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
           <h3 style={{
-            fontSize: '32px',
+            fontSize: '36px',
             fontWeight: 'bold',
             color: '#e5e5e5',
             margin: 0,
@@ -445,21 +432,41 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           }}>
             Ability Level Over Time
           </h3>
-          <svg
+          <button
+            onClick={() => setIsAbilityGraphOpen(!isAbilityGraphOpen)}
             style={{
-              width: '32px',
-              height: '32px',
-              color: '#a8a8a8',
-              transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              transform: isAbilityGraphOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+              padding: '16px',
+              background: '#0f0f0f',
+              borderRadius: '16px',
+              boxShadow: isAbilityGraphOpen
+                ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+                : '8px 8px 16px #050505, -8px -8px 16px #191919',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+            aria-label="Toggle Ability Level Over Time"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
+            <svg
+              style={{
+                width: '32px',
+                height: '32px',
+                color: '#a8a8a8',
+                transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                transform: isAbilityGraphOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+              }}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
         {isAbilityGraphOpen && (
           <div style={{ padding: '0 48px 48px 48px' }}>
             <ResponsiveContainer width="100%" height={400}>
@@ -531,29 +538,16 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         backgroundColor: '#0f0f0f',
         borderRadius: '24px',
         boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
-        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+        overflow: 'hidden'
       }}>
-        <button
-          onClick={() => setIsPredictedScoreGraphOpen(!isPredictedScoreGraphOpen)}
-          style={{
-            width: '100%',
-            padding: '48px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            textAlign: 'left',
-            background: '#0f0f0f',
-            border: 'none',
-            borderRadius: '24px',
-            boxShadow: isPredictedScoreGraphOpen
-              ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
-              : '6px 6px 12px #050505, -6px -6px 12px #191919',
-            cursor: 'pointer',
-            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-          }}
-        >
+        <div style={{
+          padding: '40px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
           <h3 style={{
-            fontSize: '32px',
+            fontSize: '36px',
             fontWeight: 'bold',
             color: '#e5e5e5',
             margin: 0,
@@ -561,21 +555,41 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           }}>
             Predicted Score Over Time
           </h3>
-          <svg
+          <button
+            onClick={() => setIsPredictedScoreGraphOpen(!isPredictedScoreGraphOpen)}
             style={{
-              width: '32px',
-              height: '32px',
-              color: '#a8a8a8',
-              transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              transform: isPredictedScoreGraphOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+              padding: '16px',
+              background: '#0f0f0f',
+              borderRadius: '16px',
+              boxShadow: isPredictedScoreGraphOpen
+                ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+                : '8px 8px 16px #050505, -8px -8px 16px #191919',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+            aria-label="Toggle Predicted Score Over Time"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
+            <svg
+              style={{
+                width: '32px',
+                height: '32px',
+                color: '#a8a8a8',
+                transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                transform: isPredictedScoreGraphOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+              }}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
         {isPredictedScoreGraphOpen && (
           <div style={{ padding: '0 48px 48px 48px' }}>
             <ResponsiveContainer width="100%" height={400}>
@@ -649,29 +663,16 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         backgroundColor: '#0f0f0f',
         borderRadius: '24px',
         boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
-        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+        overflow: 'hidden'
       }}>
-        <button
-          onClick={() => setIsAccuracyByDifficultyOpen(!isAccuracyByDifficultyOpen)}
-          style={{
-            width: '100%',
-            padding: '48px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            textAlign: 'left',
-            background: '#0f0f0f',
-            border: 'none',
-            borderRadius: '24px',
-            boxShadow: isAccuracyByDifficultyOpen
-              ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
-              : '6px 6px 12px #050505, -6px -6px 12px #191919',
-            cursor: 'pointer',
-            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-          }}
-        >
+        <div style={{
+          padding: '40px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
           <h3 style={{
-            fontSize: '32px',
+            fontSize: '36px',
             fontWeight: 'bold',
             color: '#e5e5e5',
             margin: 0,
@@ -679,21 +680,41 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           }}>
             Accuracy by Difficulty Level
           </h3>
-          <svg
+          <button
+            onClick={() => setIsAccuracyByDifficultyOpen(!isAccuracyByDifficultyOpen)}
             style={{
-              width: '32px',
-              height: '32px',
-              color: '#a8a8a8',
-              transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              transform: isAccuracyByDifficultyOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+              padding: '16px',
+              background: '#0f0f0f',
+              borderRadius: '16px',
+              boxShadow: isAccuracyByDifficultyOpen
+                ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+                : '8px 8px 16px #050505, -8px -8px 16px #191919',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+            aria-label="Toggle Accuracy by Difficulty Level"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
+            <svg
+              style={{
+                width: '32px',
+                height: '32px',
+                color: '#a8a8a8',
+                transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                transform: isAccuracyByDifficultyOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+              }}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
         {isAccuracyByDifficultyOpen && (
           <div style={{ padding: '0 48px 48px 48px' }}>
             <ResponsiveContainer width="100%" height={350}>
@@ -735,29 +756,16 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           backgroundColor: '#0f0f0f',
           borderRadius: '24px',
           boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+          overflow: 'hidden'
         }}>
-          <button
-            onClick={() => setIsPerformanceByDomainOpen(!isPerformanceByDomainOpen)}
-            style={{
-              width: '100%',
-              padding: '48px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              textAlign: 'left',
-              background: '#0f0f0f',
-              border: 'none',
-              borderRadius: '24px',
-              boxShadow: isPerformanceByDomainOpen
-                ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
-                : '6px 6px 12px #050505, -6px -6px 12px #191919',
-              cursor: 'pointer',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-            }}
-          >
+          <div style={{
+            padding: '40px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}>
             <h3 style={{
-              fontSize: '32px',
+              fontSize: '36px',
               fontWeight: 'bold',
               color: '#e5e5e5',
               margin: 0,
@@ -765,21 +773,41 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             }}>
               Performance by SY0-701 Domain
             </h3>
-            <svg
+            <button
+              onClick={() => setIsPerformanceByDomainOpen(!isPerformanceByDomainOpen)}
               style={{
-                width: '32px',
-                height: '32px',
-                color: '#a8a8a8',
-                transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                transform: isPerformanceByDomainOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+                padding: '16px',
+                background: '#0f0f0f',
+                borderRadius: '16px',
+                boxShadow: isPerformanceByDomainOpen
+                  ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+                  : '8px 8px 16px #050505, -8px -8px 16px #191919',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+              aria-label="Toggle Performance by SY0-701 Domain"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
+              <svg
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  color: '#a8a8a8',
+                  transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  transform: isPerformanceByDomainOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+                }}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
           {isPerformanceByDomainOpen && (
             <div style={{ padding: '0 48px 48px 48px' }}>
               <ResponsiveContainer width="100%" height={400}>
