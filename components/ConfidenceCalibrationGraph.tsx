@@ -249,10 +249,25 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
               };
             });
 
-            // Sort by question count descending (most used strategy first)
+            // Define quality order for tie-breaking (worst to best)
+            const qualityOrder: { [key: string]: number } = {
+              'guessed': 0,    // Random guess - worst
+              'narrowed': 1,   // Educated guess
+              'recognized': 2, // Recognition memory
+              'knew': 3        // Recall memory - best
+            };
+
+            // Sort by question count descending, then by quality order (worst to best)
             const sortedReflections = reflectionsWithAccuracy
               .filter(r => r.count > 0)
-              .sort((a, b) => b.count - a.count);
+              .sort((a, b) => {
+                // Primary sort: By count descending
+                if (b.count !== a.count) {
+                  return b.count - a.count;
+                }
+                // Secondary sort: By quality order (worst to best)
+                return qualityOrder[a.type] - qualityOrder[b.type];
+              });
 
             return sortedReflections.map(reflection => {
               return (
