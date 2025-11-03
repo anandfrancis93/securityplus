@@ -431,24 +431,25 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
         }
 
         .calibration-bar.confidence {
-          background: rgba(139, 92, 246, 0.3);
+          background: rgba(139, 92, 246, 0.2);
           color: #8b5cf6;
         }
 
         .calibration-bar.actual {
+          background: rgba(139, 92, 246, 0.6);
           color: #fff;
         }
 
         .calibration-bar.actual.lower {
-          background: #ef4444;
+          background: rgba(139, 92, 246, 0.6);
         }
 
         .calibration-bar.actual.higher {
-          background: #3b82f6;
+          background: rgba(139, 92, 246, 0.6);
         }
 
         .calibration-bar.actual.matched {
-          background: #10b981;
+          background: rgba(139, 92, 246, 0.6);
         }
 
       `}</style>
