@@ -20,6 +20,7 @@ export default function Quiz() {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [currentAnswerData, setCurrentAnswerData] = useState<{ correctAnswer: number | number[], explanation: string, incorrectExplanations: string[], optionItems?: any, options?: string[], validationLogs?: any } | null>(null);
   const [loading, setLoading] = useState(true);
   const [generatingNext, setGeneratingNext] = useState(false);
   const [totalQuestions] = useState(10);
@@ -421,48 +422,25 @@ export default function Quiz() {
       answerData = await answerQuestion(currentQuestion, selectedAnswer, quizSessionId || undefined, confidence || undefined);
     }
 
-    // Update the question with the returned answer data
-    // CRITICAL: answerData now includes optionItems, options, and validationLogs from API response
+    // Store answer data in separate state for immediate use by ExplanationSection
+    // This avoids timing issues with the asynchronous setQuestions update
     if (answerData) {
-      console.log('[DEBUG] answerData received:', {
-        hasOptionItems: !!answerData.optionItems,
-        optionItemsLength: answerData.optionItems?.length,
-        hasOptions: !!answerData.options,
-        optionsLength: answerData.options?.length,
-        hasValidationLogs: !!answerData.validationLogs,
-      });
+      setCurrentAnswerData(answerData);
 
+      // Also update the questions array for future reference
       setQuestions(prev => {
         const updated = [...prev];
-        const beforeUpdate = {
-          hasOptionItems: !!updated[currentQuestionIndex].optionItems,
-          hasOptions: !!updated[currentQuestionIndex].options,
-        };
-
         updated[currentQuestionIndex] = {
           ...updated[currentQuestionIndex],
           correctAnswer: answerData.correctAnswer,
           explanation: answerData.explanation,
           incorrectExplanations: answerData.incorrectExplanations,
-          optionItems: answerData.optionItems, // NEW SCHEMA
-          options: answerData.options, // Legacy field
-          validationLogs: answerData.validationLogs, // For Topic Analysis
+          optionItems: answerData.optionItems,
+          options: answerData.options,
+          validationLogs: answerData.validationLogs,
         };
-
-        console.log('[DEBUG] Question after update:', {
-          before: beforeUpdate,
-          after: {
-            hasOptionItems: !!updated[currentQuestionIndex].optionItems,
-            optionItemsLength: updated[currentQuestionIndex].optionItems?.length,
-            hasOptions: !!updated[currentQuestionIndex].options,
-            optionsLength: updated[currentQuestionIndex].options?.length,
-          }
-        });
-
         return updated;
       });
-    } else {
-      console.log('[DEBUG] No answerData received!');
     }
 
     setShowExplanation(true);
@@ -1234,10 +1212,10 @@ export default function Quiz() {
           )}
 
           {/* Step 2: Answer Options (shown after confidence selected) */}
-          {!showConfidenceSelection && !showExplanation && (
+          {!showConfidenceSelection && (
             <>
               <QuestionCard
-                question={currentQuestion}
+                question={currentAnswerData ? {...currentQuestion, ...currentAnswerData} : currentQuestion}
                 questionNumber={currentQuestionIndex + 1}
                 showExplanation={showExplanation}
                 selectedAnswer={currentQuestion.questionType === 'single' ? selectedAnswer : null}
@@ -1245,23 +1223,25 @@ export default function Quiz() {
                 onAnswerSelect={handleAnswerSelect}
               />
 
-              {/* Submit Button */}
-              <button
-                id="submit-answer"
-                onClick={handleSubmitAnswer}
-                disabled={
-                  currentQuestion.questionType === 'multiple'
-                    ? selectedAnswers.length === 0
-                    : selectedAnswer === null
-                }
-                className={`submit-button ${
-                  (currentQuestion.questionType === 'multiple' ? selectedAnswers.length === 0 : selectedAnswer === null)
-                    ? 'submit-button-disabled'
-                    : 'submit-button-enabled'
-                }`}
-              >
-                Submit Answer
-              </button>
+              {/* Submit Button - only show before explanation */}
+              {!showExplanation && (
+                <button
+                  id="submit-answer"
+                  onClick={handleSubmitAnswer}
+                  disabled={
+                    currentQuestion.questionType === 'multiple'
+                      ? selectedAnswers.length === 0
+                      : selectedAnswer === null
+                  }
+                  className={`submit-button ${
+                    (currentQuestion.questionType === 'multiple' ? selectedAnswers.length === 0 : selectedAnswer === null)
+                      ? 'submit-button-disabled'
+                      : 'submit-button-enabled'
+                  }`}
+                >
+                  Submit Answer
+                </button>
+              )}
             </>
           )}
         </div>
