@@ -161,7 +161,7 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
             const reflectionTypes = [
               {
                 type: 'knew',
-                label: 'Recall from memory',
+                label: 'Recall memory',
                 count: reflectionCounts.knew,
                 quality: 'best'
               },
