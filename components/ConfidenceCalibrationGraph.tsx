@@ -510,8 +510,8 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           align-items: center;
           justify-content: flex-end;
           padding-right: 12px;
-          font-size: clamp(12px, 2.5vw, 14px);
-          font-weight: 600;
+          font-size: clamp(14px, 2.5vw, 18px);
+          font-weight: 700;
           transition: all 0.3s ease;
           min-width: 60px;
         }
