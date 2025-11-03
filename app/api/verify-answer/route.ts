@@ -123,7 +123,8 @@ export async function POST(request: NextRequest) {
       incorrectExplanations: question.incorrectExplanations,
       // Return question text and options for display
       question: question.question,
-      options: question.options,
+      options: question.options, // Legacy field
+      optionItems: question.optionItems, // NEW SCHEMA: Must include for new questions!
       // Return sanitized question data for display
       questionData: {
         id: question.id,
@@ -133,6 +134,7 @@ export async function POST(request: NextRequest) {
         irtDifficulty: question.irtDifficulty,
         irtDiscrimination: question.irtDiscrimination,
         questionCategory: question.questionCategory,
+        validationLogs: question.validationLogs, // Include for Topic Analysis section
       },
     });
   } catch (error: any) {
