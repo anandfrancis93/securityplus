@@ -164,6 +164,60 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
 
       {isCardExpanded && (
         <div className="calibration-expanded-content">
+      {/* Reflection Type Distribution */}
+      {totalWithReflection > 0 && (
+        <div className="calibration-strategy-breakdown">
+          <div className="calibration-strategy-title">How you approached all questions ({totalWithReflection} total):</div>
+          {(() => {
+            const reflectionTypes = [
+              {
+                type: 'knew',
+                label: 'Recall from memory',
+                count: reflectionCounts.knew,
+                quality: 'best'
+              },
+              {
+                type: 'narrowed',
+                label: 'Educated guess',
+                count: reflectionCounts.narrowed,
+                quality: 'good'
+              },
+              {
+                type: 'recognized',
+                label: 'Recognition memory',
+                count: reflectionCounts.recognized,
+                quality: 'okay'
+              },
+              {
+                type: 'guessed',
+                label: 'Random guess',
+                count: reflectionCounts.guessed,
+                quality: 'worst'
+              }
+            ];
+
+            // Sort by count descending
+            const sortedReflections = reflectionTypes
+              .filter(r => r.count > 0)
+              .sort((a, b) => b.count - a.count);
+
+            return sortedReflections.map(reflection => {
+              const percentage = (reflection.count / totalWithReflection) * 100;
+              return (
+                <div key={reflection.type} className={`calibration-strategy-item ${reflection.quality}`}>
+                  <div className="calibration-strategy-bar" style={{ width: `${percentage}%` }}>
+                    <span className="calibration-strategy-percentage">{reflection.count}</span>
+                  </div>
+                  <div className="calibration-strategy-label">
+                    {reflection.label} ({percentage.toFixed(0)}%)
+                  </div>
+                </div>
+              );
+            });
+          })()}
+        </div>
+      )}
+
       {/* Memory Strategy Breakdown */}
       {totalCorrect > 0 && (
         <div className="calibration-strategy-breakdown">
