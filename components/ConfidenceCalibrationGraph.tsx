@@ -118,7 +118,7 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
     <div className="calibration-container">
       {/* Header */}
       <div className="calibration-header">
-        <h2 className="calibration-title">How accurate is your confidence?</h2>
+        <h2 className="calibration-title">Dunning–Kruger Effect Tracking</h2>
       </div>
 
       {/* Memory Strategy Breakdown */}
