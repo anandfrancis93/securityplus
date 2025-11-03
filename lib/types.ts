@@ -18,6 +18,12 @@ export interface Question {
     scenario: string; // Scenario type (e.g., 'certificate_validation')
     keyConcept: string; // Specific concept tested (e.g., 'CRL_vs_OCSP')
   };
+  // Debug info: Two-pass topic validation logs (only in development)
+  validationLogs?: {
+    pass1Topics: string[]; // Topics from Pass 1 (string matching)
+    pass2Rejected: Array<{ topic: string; reason: string }>; // Topics rejected by Pass 2
+    pass2Kept: string[]; // Final topics after Pass 2
+  };
 }
 
 export interface TopicPerformance {

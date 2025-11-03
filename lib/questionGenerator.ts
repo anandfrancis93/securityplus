@@ -145,6 +145,8 @@ function isTopicPresent(
  * PASS 2: Validate topic tags using AI editorial judgment
  * Takes initial topic tags and applies Removal/Knowledge/Causal tests
  * to filter out contextual mentions that shouldn't be tagged
+ *
+ * Returns both kept topics and rejected topics with reasons
  */
 async function validateTopicTagsWithAI(
   questionText: string,
@@ -152,7 +154,7 @@ async function validateTopicTagsWithAI(
   correctAnswer: number | number[],
   explanation: string,
   initialTopics: string[]
-): Promise<string[]> {
+): Promise<{ kept: string[]; rejected: Array<{ topic: string; reason: string }> }> {
   const correctAnswerText = Array.isArray(correctAnswer)
     ? correctAnswer.map(i => options[i]).join(', ')
     : options[correctAnswer];
@@ -337,26 +339,35 @@ No explanation outside the JSON, just the JSON object.`;
       console.log(`  ${i + 1}. "${topic}"`);
     });
 
-    return result.keep;
+    return { kept: result.keep, rejected: result.reject };
 
   } catch (error) {
     console.error('[PASS 2 VALIDATION] Error validating topic tags with AI:', error);
     // Fallback: return original topics if validation fails
     console.warn('[PASS 2 VALIDATION] ⚠️ Validation failed, keeping all initial topics');
-    return initialTopics;
+    return { kept: initialTopics, rejected: [] };
   }
 }
 
 /**
  * PASS 1: Use AI to identify which topics a generated question actually tests
  * This is more accurate than keyword matching as it understands context and semantics
+ *
+ * Returns final topics and validation logs for debugging
  */
 async function identifyTopicsWithAI(
   questionText: string,
   options: string[],
   correctAnswer: number | number[],
   explanation: string
-): Promise<string[]> {
+): Promise<{
+  topics: string[];
+  validationLogs: {
+    pass1Topics: string[];
+    pass2Rejected: Array<{ topic: string; reason: string }>;
+    pass2Kept: string[];
+  };
+}> {
   const correctAnswerText = Array.isArray(correctAnswer)
     ? correctAnswer.map(i => options[i]).join(', ')
     : options[correctAnswer];
@@ -535,7 +546,7 @@ No explanation, just the JSON array.`;
     console.log(`[PASS 2 VALIDATION] Input topics from Pass 1: ${validation.matched.join(', ')}`);
     console.log(`[PASS 2 VALIDATION] Applying editorial tests (Removal/Knowledge/Causal)...`);
 
-    const finalTopics = await validateTopicTagsWithAI(
+    const pass2Result = await validateTopicTagsWithAI(
       questionText,
       options,
       correctAnswer,
@@ -543,17 +554,31 @@ No explanation, just the JSON array.`;
       validation.matched
     );
 
-    console.log(`[PASS 2 VALIDATION] Final topics after filtering: ${finalTopics.join(', ')}`);
-    console.log(`[PASS 2 VALIDATION] Removed ${validation.matched.length - finalTopics.length} contextual tags`);
+    console.log(`[PASS 2 VALIDATION] Final topics after filtering: ${pass2Result.kept.join(', ')}`);
+    console.log(`[PASS 2 VALIDATION] Removed ${validation.matched.length - pass2Result.kept.length} contextual tags`);
     console.log(`========== PASS 2 VALIDATION END ==========\n`);
 
-    // Return final validated topics after both passes
-    return finalTopics;
+    // Return final validated topics and logs
+    return {
+      topics: pass2Result.kept,
+      validationLogs: {
+        pass1Topics: validation.matched,
+        pass2Rejected: pass2Result.rejected,
+        pass2Kept: pass2Result.kept
+      }
+    };
 
   } catch (error) {
     console.error('Error identifying topics with AI:', error);
     // Fallback: return empty array (will trigger fallback to requested topics)
-    return [];
+    return {
+      topics: [],
+      validationLogs: {
+        pass1Topics: [],
+        pass2Rejected: [],
+        pass2Kept: []
+      }
+    };
   }
 }
 
@@ -1182,7 +1207,7 @@ ${prompt}`;
     // AI-BASED TOPIC IDENTIFICATION
     // Use AI to identify which topics the question actually tests
     // This is more accurate than keyword matching as AI understands context and semantics
-    const extractedTopics = await identifyTopicsWithAI(
+    const { topics: extractedTopics, validationLogs } = await identifyTopicsWithAI(
       shuffledData.question,
       shuffledData.options,
       shuffledData.correctAnswer,
@@ -1286,6 +1311,7 @@ ${prompt}`;
       irtDiscrimination: irtParams.irtDiscrimination,
       maxPoints: irtParams.maxPoints,
       metadata: shuffledData.metadata || {},
+      validationLogs: validationLogs, // Include two-pass validation logs for debugging
       createdAt: Date.now(),
     };
   } catch (error) {

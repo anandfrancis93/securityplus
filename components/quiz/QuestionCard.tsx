@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { Question } from '@/lib/types';
 
 interface QuestionCardProps {
@@ -22,6 +23,44 @@ export default function QuestionCard({
   const correctAnswers = Array.isArray(question.correctAnswer)
     ? question.correctAnswer
     : [question.correctAnswer];
+
+  // Log validation info when new question loads (development only)
+  useEffect(() => {
+    if (question.validationLogs) {
+      console.log(`\n${'='.repeat(60)}`);
+      console.log(`📊 TWO-PASS TOPIC VALIDATION - Question ${questionNumber || '?'}`);
+      console.log(`${'='.repeat(60)}`);
+      console.log(`\n📝 Question: ${question.question.substring(0, 100)}...`);
+
+      console.log(`\n✅ PASS 1 - String Matching Results:`);
+      console.log(`   Topics found: ${question.validationLogs.pass1Topics.length}`);
+      question.validationLogs.pass1Topics.forEach((topic, i) => {
+        console.log(`   ${i + 1}. "${topic}"`);
+      });
+
+      if (question.validationLogs.pass2Rejected.length > 0) {
+        console.log(`\n❌ PASS 2 - Rejected Contextual Tags:`);
+        question.validationLogs.pass2Rejected.forEach((rejected, i) => {
+          console.log(`   ${i + 1}. "${rejected.topic}"`);
+          console.log(`      Reason: ${rejected.reason}`);
+        });
+      } else {
+        console.log(`\n✅ PASS 2 - No tags rejected (all passed editorial tests)`);
+      }
+
+      console.log(`\n🎯 FINAL TAGS (Core Intent):`);
+      console.log(`   Total: ${question.validationLogs.pass2Kept.length}`);
+      question.validationLogs.pass2Kept.forEach((topic, i) => {
+        console.log(`   ${i + 1}. "${topic}"`);
+      });
+
+      console.log(`\n📈 Summary:`);
+      console.log(`   Pass 1: ${question.validationLogs.pass1Topics.length} topics`);
+      console.log(`   Pass 2 Rejected: ${question.validationLogs.pass2Rejected.length} topics`);
+      console.log(`   Final: ${question.validationLogs.pass2Kept.length} topics`);
+      console.log(`${'='.repeat(60)}\n`);
+    }
+  }, [question.id]); // Only re-run when question changes
 
   const isAnswerSelected = (index: number) => {
     if (question.questionType === 'multiple') {
