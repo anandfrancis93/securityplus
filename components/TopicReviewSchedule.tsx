@@ -5,7 +5,7 @@ import { UserProgress, TopicPerformance } from '@/lib/types';
 import { ALL_SECURITY_PLUS_TOPICS } from '@/lib/topicData';
 
 interface TopicReviewScheduleProps {
-  userProgress: UserProgress;
+  userProgress: UserProgress | null;
   liquidGlass?: boolean;
 }
 
