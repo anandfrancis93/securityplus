@@ -1249,14 +1249,6 @@ export default function Quiz() {
         {/* Explanation */}
         {showExplanation && (
           <div className="explanation-container">
-            {/* Question Number Header */}
-            <div className="explanation-header">
-              <div className="explanation-badge">
-                <span>{currentQuestionIndex + 1}</span>
-              </div>
-              <h3 className="explanation-title">Question {currentQuestionIndex + 1}</h3>
-            </div>
-
             <ExplanationSection
               question={currentQuestion}
               isCorrect={isCorrect}
