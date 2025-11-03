@@ -206,7 +206,16 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           className="calibration-toggle-details"
           onClick={() => setIsDetailsExpanded(!isDetailsExpanded)}
         >
-          <span className="calibration-toggle-icon">{isDetailsExpanded ? '▼' : '▶'}</span>
+          <svg
+            className="calibration-toggle-icon"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            style={{ transform: isDetailsExpanded ? 'rotate(0deg)' : 'rotate(-90deg)' }}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
           <span className="calibration-toggle-text">
             Your Confidence vs Actual Performance
           </span>
@@ -305,7 +314,7 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
         .calibration-strategy-title {
           font-size: 18px;
           font-weight: 600;
-          color: #8b5cf6;
+          color: #e5e5e5;
           margin-bottom: 20px;
         }
 
@@ -383,13 +392,15 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
         }
 
         .calibration-toggle-icon {
-          font-size: 14px;
-          color: #8b5cf6;
+          width: 20px;
+          height: 20px;
+          color: #e5e5e5;
+          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .calibration-toggle-text {
           font-size: 18px;
-          color: #8b5cf6;
+          color: #e5e5e5;
           font-weight: 600;
         }
 
