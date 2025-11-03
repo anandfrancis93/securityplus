@@ -609,11 +609,6 @@ export default function ExplanationSection({
               const studyGuide = generateCoreIntentStudyGuide();
               const sections = [
                 { title: 'Core intent', content: studyGuide.coreIntent },
-                { title: 'Recall in 10 seconds', content: studyGuide.recall },
-                { title: 'Fast elimination playbook', content: studyGuide.playbook },
-                { title: 'Common traps', content: studyGuide.traps },
-                { title: 'Exam tip (one-liner)', content: studyGuide.examTip },
-                { title: 'Nice-to-know (edge)', content: studyGuide.niceToKnow },
               ];
 
               return (
