@@ -847,29 +847,16 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         backgroundColor: '#0f0f0f',
         borderRadius: '24px',
         boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
-        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+        overflow: 'hidden'
       }}>
-        <button
-          onClick={() => setIsTopicCoverageOpen(!isTopicCoverageOpen)}
-          style={{
-            width: '100%',
-            padding: '48px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            textAlign: 'left',
-            background: '#0f0f0f',
-            border: 'none',
-            borderRadius: '24px',
-            boxShadow: isTopicCoverageOpen
-              ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
-              : '6px 6px 12px #050505, -6px -6px 12px #191919',
-            cursor: 'pointer',
-            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-          }}
-        >
+        <div style={{
+          padding: '40px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
           <h3 style={{
-            fontSize: '32px',
+            fontSize: '36px',
             fontWeight: 'bold',
             color: '#e5e5e5',
             margin: 0,
@@ -877,21 +864,41 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           }}>
             Topic Coverage by Domain
           </h3>
-          <svg
+          <button
+            onClick={() => setIsTopicCoverageOpen(!isTopicCoverageOpen)}
             style={{
-              width: '32px',
-              height: '32px',
-              color: '#a8a8a8',
-              transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              transform: isTopicCoverageOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+              padding: '16px',
+              background: '#0f0f0f',
+              borderRadius: '16px',
+              boxShadow: isTopicCoverageOpen
+                ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+                : '8px 8px 16px #050505, -8px -8px 16px #191919',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+            aria-label="Toggle Topic Coverage by Domain"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
+            <svg
+              style={{
+                width: '32px',
+                height: '32px',
+                color: '#a8a8a8',
+                transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                transform: isTopicCoverageOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+              }}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
         {isTopicCoverageOpen && (
           <div style={{ padding: '0 48px 48px 48px' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
