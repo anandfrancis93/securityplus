@@ -93,10 +93,13 @@ function aggregateCalibrationData(attempts: QuestionAttempt[]): CalibrationDataP
         totalPointsEarned,
         totalPointsPossible,
         actualAccuracy: actualAccuracy.toFixed(1) + '%',
-        sampleAttempt: levelAttempts[0] ? {
-          pointsEarned: levelAttempts[0].pointsEarned,
-          maxPoints: levelAttempts[0].maxPoints
-        } : null
+        allAttempts: levelAttempts.map(a => ({
+          questionId: a.questionId.substring(0, 8),
+          difficulty: a.question.difficulty,
+          pointsEarned: a.pointsEarned,
+          maxPoints: a.maxPoints,
+          isCorrect: a.isCorrect
+        }))
       });
     }
 
