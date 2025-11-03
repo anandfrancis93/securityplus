@@ -316,7 +316,7 @@ The CIA Triad serves as a foundation for developing security policies, evaluatin
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'grok-4-fast-non-reasoning',
+        model: 'grok-4-fast-reasoning',
         messages: [
           {
             role: 'system',
