@@ -403,6 +403,208 @@ export default function ExplanationSection({
         </div>
       </div>
 
+      {/* Topic Validation Section - Show Core Intent vs Context */}
+      {question.validationLogs && (
+        <div
+          className="validation-card"
+          style={{
+            position: 'relative',
+            background: '#0f0f0f',
+            border: '2px solid rgba(139, 92, 246, 0.3)',
+            borderRadius: 'clamp(16px, 2vw, 24px)',
+            boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
+        >
+          <h3
+            className="validation-title"
+            style={{
+              fontWeight: 700,
+              color: '#a78bfa',
+              margin: 0,
+              marginBottom: 'clamp(16px, 2.5vw, 24px)',
+            }}
+          >
+            Topic Analysis
+          </h3>
+
+          {/* Core Intent Tags */}
+          <div style={{ marginBottom: question.validationLogs.pass2Rejected.length > 0 ? 'clamp(20px, 3vw, 32px)' : '0' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                marginBottom: '12px',
+              }}
+            >
+              <span style={{ fontSize: '20px' }}>🎯</span>
+              <span
+                className="validation-label"
+                style={{
+                  fontWeight: 600,
+                  color: '#10b981',
+                }}
+              >
+                Core Intent
+              </span>
+              <span
+                style={{
+                  fontSize: 'clamp(12px, 2vw, 14px)',
+                  color: '#666',
+                  fontWeight: 500,
+                }}
+              >
+                (what this question tests)
+              </span>
+            </div>
+
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'clamp(12px, 2vw, 16px)',
+              }}
+            >
+              {question.validationLogs.pass2Kept.map((topic, index) => (
+                <div
+                  key={`core-${index}`}
+                  className="core-intent-item"
+                  style={{
+                    padding: 'clamp(12px, 2vw, 16px)',
+                    background: '#0f0f0f',
+                    border: '2px solid #10b981',
+                    borderRadius: 'clamp(8px, 1.5vw, 12px)',
+                    boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  }}
+                >
+                  <div
+                    style={{
+                      color: '#10b981',
+                      fontSize: 'clamp(14px, 2.2vw, 16px)',
+                      fontWeight: 600,
+                      marginBottom: '8px',
+                    }}
+                  >
+                    {topic}
+                  </div>
+                  <div
+                    style={{
+                      color: '#7dd3a8',
+                      fontSize: 'clamp(13px, 2vw, 14px)',
+                      lineHeight: '1.5',
+                      fontStyle: 'italic',
+                    }}
+                  >
+                    ✓ This topic is required to select the correct answer. The question tests your understanding of this concept directly.
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Context Tags (Rejected) */}
+          {question.validationLogs.pass2Rejected.length > 0 && (
+            <div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '12px',
+                }}
+              >
+                <span style={{ fontSize: '20px' }}>📋</span>
+                <span
+                  className="validation-label"
+                  style={{
+                    fontWeight: 600,
+                    color: '#f59e0b',
+                  }}
+                >
+                  Context
+                </span>
+                <span
+                  style={{
+                    fontSize: 'clamp(12px, 2vw, 14px)',
+                    color: '#666',
+                    fontWeight: 500,
+                  }}
+                >
+                  (mentioned but not tested)
+                </span>
+              </div>
+
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 'clamp(12px, 2vw, 16px)',
+                }}
+              >
+                {question.validationLogs.pass2Rejected.map((rejected, index) => (
+                  <div
+                    key={`context-${index}`}
+                    className="context-item"
+                    style={{
+                      padding: 'clamp(12px, 2vw, 16px)',
+                      background: '#0f0f0f',
+                      border: '2px solid #f59e0b',
+                      borderRadius: 'clamp(8px, 1.5vw, 12px)',
+                      boxShadow: 'inset 2px 2px 4px #050505, inset -2px -2px 4px #191919',
+                    }}
+                  >
+                    <div
+                      style={{
+                        color: '#f59e0b',
+                        fontSize: 'clamp(14px, 2.2vw, 16px)',
+                        fontWeight: 600,
+                        marginBottom: '8px',
+                      }}
+                    >
+                      {rejected.topic}
+                    </div>
+                    <div
+                      style={{
+                        color: '#888',
+                        fontSize: 'clamp(13px, 2vw, 14px)',
+                        lineHeight: '1.5',
+                        marginBottom: '8px',
+                      }}
+                    >
+                      <strong style={{ color: '#a8a8a8' }}>Why this was rejected:</strong>
+                    </div>
+                    <div
+                      style={{
+                        color: '#999',
+                        fontSize: 'clamp(13px, 2vw, 14px)',
+                        lineHeight: '1.5',
+                        fontStyle: 'italic',
+                      }}
+                    >
+                      ✗ {rejected.reason}
+                    </div>
+                    <div
+                      style={{
+                        marginTop: '8px',
+                        paddingTop: '8px',
+                        borderTop: '1px solid #222',
+                        color: '#777',
+                        fontSize: 'clamp(12px, 1.8vw, 13px)',
+                        lineHeight: '1.4',
+                      }}
+                    >
+                      This topic appears in the question but you don't need to understand it to select the correct answer. It's background context or scenario-setting.
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       <style jsx>{`
         /* ============================================
            MOBILE-FIRST RESPONSIVE DESIGN
@@ -413,6 +615,18 @@ export default function ExplanationSection({
         /* Base styles: Mobile (320px+) */
         .explanation-card {
           padding: clamp(20px, 4vw, 32px);
+        }
+
+        .validation-card {
+          padding: clamp(20px, 4vw, 32px);
+        }
+
+        .validation-title {
+          font-size: clamp(20px, 3.5vw, 28px);
+        }
+
+        .validation-label {
+          font-size: clamp(14px, 2.5vw, 16px);
         }
 
         .explanation-header {
@@ -448,6 +662,18 @@ export default function ExplanationSection({
             padding: clamp(32px, 4vw, 48px);
           }
 
+          .validation-card {
+            padding: clamp(32px, 4vw, 48px);
+          }
+
+          .validation-title {
+            font-size: clamp(22px, 3vw, 28px);
+          }
+
+          .validation-label {
+            font-size: clamp(15px, 2vw, 17px);
+          }
+
           .explanation-header {
             margin-bottom: clamp(24px, 3vw, 36px);
           }
@@ -479,6 +705,18 @@ export default function ExplanationSection({
             padding: clamp(40px, 3.5vw, 56px);
           }
 
+          .validation-card {
+            padding: clamp(40px, 3.5vw, 56px);
+          }
+
+          .validation-title {
+            font-size: clamp(24px, 2.5vw, 28px);
+          }
+
+          .validation-label {
+            font-size: clamp(16px, 1.8vw, 18px);
+          }
+
           .explanation-title {
             font-size: clamp(26px, 2.5vw, 32px);
           }
@@ -497,11 +735,19 @@ export default function ExplanationSection({
           .explanation-card {
             padding: clamp(48px, 3vw, 64px);
           }
+
+          .validation-card {
+            padding: clamp(48px, 3vw, 64px);
+          }
         }
 
         /* XL Desktop (1440px+) */
         @media (min-width: 1440px) {
           .explanation-card {
+            padding: 64px;
+          }
+
+          .validation-card {
             padding: 64px;
           }
 
@@ -511,6 +757,14 @@ export default function ExplanationSection({
 
           .explanation-title {
             font-size: 32px;
+          }
+
+          .validation-title {
+            font-size: 28px;
+          }
+
+          .validation-label {
+            font-size: 18px;
           }
 
           .difficulty-badge {
