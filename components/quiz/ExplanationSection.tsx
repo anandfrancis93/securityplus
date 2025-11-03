@@ -177,115 +177,173 @@ export default function ExplanationSection({
       .trim();
   };
 
-  // Helper to find how a topic is mentioned in the correct answer and explain its role
-  const findTopicMentionInAnswer = (topic: string): string => {
-    const correctAnswerIndices = Array.isArray(question.correctAnswer)
+  // Generate comprehensive exam-focused study guide for Core Intent
+  const generateCoreIntentStudyGuide = (): {
+    coreIntent: string;
+    recall: string;
+    playbook: string;
+    traps: string;
+    examTip: string;
+    niceToKnow: string;
+  } => {
+    if (!question.validationLogs) {
+      return {
+        coreIntent: '',
+        recall: '',
+        playbook: '',
+        traps: '',
+        examTip: '',
+        niceToKnow: '',
+      };
+    }
+
+    const coreTopics = question.validationLogs.pass2Kept;
+    const contextTopics = question.validationLogs.pass2Rejected.map(r => r.topic);
+
+    // Helper to strip letter prefix from options
+    const stripPrefix = (opt: string) => opt.replace(/^[A-D]\.\s*/, '');
+
+    // 1. CORE INTENT: What conceptual distinction is being tested?
+    let coreIntent = '';
+    if (coreTopics.length === 1) {
+      const mainTopic = coreTopics[0].split('(')[0].trim();
+      if (contextTopics.length > 0) {
+        const alternatives = contextTopics.map(t => t.split('(')[0].trim()).join('; ');
+        coreIntent = `Distinguish what ${mainTopic} does from what related controls do (${alternatives}).`;
+      } else {
+        coreIntent = `Understand the specific capabilities and limitations of ${mainTopic}.`;
+      }
+    } else if (coreTopics.length > 1) {
+      const topics = coreTopics.map(t => t.split('(')[0].trim()).join(', ');
+      coreIntent = `Understand how ${topics} work together to address the security requirement.`;
+    }
+
+    // 2. RECALL IN 10 SECONDS: Technical summary from explanation
+    let recall = '';
+    const mainTopic = coreTopics.length > 0 ? coreTopics[0].split('(')[0].trim() : '';
+    if (question.explanation && mainTopic) {
+      // Extract key technical facts from explanation
+      const expSentences = question.explanation.split(/[.!?]+/).map(s => s.trim()).filter(s => s.length > 20);
+      const relevantSentences = expSentences.filter(s =>
+        s.toLowerCase().includes(mainTopic.toLowerCase()) ||
+        s.toLowerCase().includes('because') ||
+        s.toLowerCase().includes('provides') ||
+        s.toLowerCase().includes('ensures')
+      ).slice(0, 3);
+
+      if (relevantSentences.length > 0) {
+        recall = relevantSentences.join('. ').substring(0, 300);
+        if (question.explanation.length > 300) recall += '...';
+      }
+    }
+
+    // 3. FAST ELIMINATION PLAYBOOK: Option-by-option strategy
+    let playbook = '';
+    const correctIndices = Array.isArray(question.correctAnswer)
       ? question.correctAnswer
       : [question.correctAnswer];
 
-    // Get correct answer text(s)
-    const correctAnswers = correctAnswerIndices.map(idx =>
-      stripLetterPrefix(question.options[idx] || '')
-    );
+    question.options.forEach((option, idx) => {
+      const stripped = stripPrefix(option);
+      const isCorrect = correctIndices.includes(idx);
+      const marker = isCorrect ? '✅' : '❌';
 
-    // Extract key terms from topic (remove parenthetical context)
-    const topicKeyTerms = topic.split('(')[0].trim();
-    const topicContext = topic.includes('(') ? topic.match(/\((.*?)\)/)?.[1] || '' : '';
-    const keywords = topicKeyTerms.toLowerCase().split(/\s+/).filter(w => w.length > 3);
+      // Get shortened option text (first 60 chars)
+      const shortOption = stripped.length > 60 ? stripped.substring(0, 60) + '...' : stripped;
 
-    // Get question text for context
-    const questionText = question.question;
+      playbook += `"${shortOption}" → ${marker}\n\n`;
+    });
 
-    // Try to find WHERE in the question this requirement appears
-    const questionLower = questionText.toLowerCase();
-    let questionContext = '';
+    // 4. COMMON TRAPS: Extract from incorrect explanations
+    let traps = '';
+    const incorrectIndices = question.options
+      .map((_, idx) => idx)
+      .filter(idx => !correctIndices.includes(idx));
 
-    // Look for requirement phrases in the question
-    const requirementPatterns = [
-      /ensure(?:s?)?\s+that\s+([^.]+)/gi,
-      /require(?:s?)?\s+([^.]+)/gi,
-      /must\s+([^.]+)/gi,
-      /need(?:s?)?\s+to\s+([^.]+)/gi,
-      /objective(?:s?)?\s+(?:is|are|include)?\s*:?\s*([^.]+)/gi,
-    ];
+    const trapsList: string[] = [];
 
-    for (const pattern of requirementPatterns) {
-      const matches = [...questionText.matchAll(pattern)];
-      for (const match of matches) {
-        if (match[1] && keywords.some(k => match[1].toLowerCase().includes(k))) {
-          questionContext = match[1].trim();
+    incorrectIndices.forEach(idx => {
+      const explanation = orderedExplanations[idx];
+      if (!explanation) return;
+
+      // Extract the core misconception
+      const cleaned = cleanExplanation(explanation);
+
+      // Look for patterns indicating common mistakes
+      if (cleaned.toLowerCase().includes('confus')) {
+        trapsList.push(cleaned.split('.')[0] + '.');
+      } else if (cleaned.toLowerCase().includes('this describes')) {
+        trapsList.push(cleaned.split('.')[0] + '.');
+      } else if (cleaned.toLowerCase().includes('does not')) {
+        trapsList.push(cleaned.split('.')[0] + '.');
+      } else if (cleaned.split('.')[0].length < 120) {
+        trapsList.push(cleaned.split('.')[0] + '.');
+      }
+    });
+
+    traps = trapsList.slice(0, 3).join('\n\n');
+
+    // 5. EXAM TIP: Memory aid from topics
+    let examTip = '';
+    if (coreTopics.length === 1 && contextTopics.length > 0) {
+      const mainTopic = coreTopics[0].split('(')[0].trim();
+      const alternatives = contextTopics.map(t => t.split('(')[0].trim());
+
+      // Create simple comparison
+      if (alternatives.length === 1) {
+        examTip = `"${mainTopic} vs ${alternatives[0]} - know the difference."`;
+      } else if (alternatives.length <= 3) {
+        examTip = `"${mainTopic}: [one key differentiator]; ${alternatives.join('/')}: [their differentiators]."`;
+      }
+    } else if (coreTopics.length > 1) {
+      const topics = coreTopics.map(t => t.split('(')[0].trim());
+      examTip = `"${topics.join(' + ')} work together for this scenario."`;
+    }
+
+    // 6. NICE-TO-KNOW: Edge cases from explanation
+    let niceToKnow = '';
+    if (question.explanation) {
+      // Look for technical details, edge cases, or caveats
+      const technicalPatterns = [
+        /however,([^.]+)/gi,
+        /note that([^.]+)/gi,
+        /caveat([^.]+)/gi,
+        /limitation([^.]+)/gi,
+        /edge case([^.]+)/gi,
+        /advanced([^.]+)/gi,
+      ];
+
+      for (const pattern of technicalPatterns) {
+        const matches = [...question.explanation.matchAll(pattern)];
+        if (matches.length > 0 && matches[0][1]) {
+          niceToKnow = matches[0][1].trim();
           break;
         }
       }
-      if (questionContext) break;
-    }
 
-    // Check if topic keywords appear in correct answer
-    for (const answer of correctAnswers) {
-      const answerLower = answer.toLowerCase();
-      const matches = keywords.filter(keyword => answerLower.includes(keyword));
-
-      if (matches.length > 0) {
-        // Find the specific part of the answer mentioning this topic
-        const sentences = answer.split(/[,;]|(?:\sand\s)/);
-        let relevantPart = '';
-
-        for (const part of sentences) {
-          const partLower = part.toLowerCase();
-          if (keywords.some(k => partLower.includes(k))) {
-            relevantPart = part.trim();
-            break;
-          }
-        }
-
-        if (!relevantPart) {
-          relevantPart = answer.length > 80 ? answer.substring(0, 80) + '...' : answer;
-        }
-
-        // Build specific explanation
-        let explanation = `The correct answer requires: "${relevantPart}"\n\n`;
-
-        if (questionContext) {
-          explanation += `This directly addresses the question's requirement: "${questionContext}". `;
-        }
-
-        explanation += `Without understanding ${topicKeyTerms}${topicContext ? ` (${topicContext})` : ''}, you cannot identify that this is the correct solution to the security problem. `;
-
-        // Add specific reason why this topic matters
-        if (topicContext.includes('access control')) {
-          explanation += `You need to know how ${topicKeyTerms} works to understand why this approach properly restricts permissions.`;
-        } else if (topicContext.includes('protocol') || topicContext.includes('communication')) {
-          explanation += `You need to understand ${topicKeyTerms} to know why this provides the necessary security for data in transit.`;
-        } else if (topicContext.includes('mitigation') || topicContext.includes('control')) {
-          explanation += `You need to know ${topicKeyTerms} to recognize this as the appropriate security measure.`;
-        } else if (topicContext.includes('analysis') || topicContext.includes('assessment')) {
-          explanation += `You need to understand ${topicKeyTerms} to evaluate and prioritize security decisions correctly.`;
-        } else {
-          explanation += `This is the specific concept tested - the correct answer depends on knowing ${topicKeyTerms}.`;
-        }
-
-        return explanation;
-      }
-    }
-
-    // Check explanation if not found in answer
-    const explanationLower = question.explanation.toLowerCase();
-    if (keywords.some(k => explanationLower.includes(k))) {
-      const expSentences = question.explanation.split(/[.!?]+/);
-      for (const sentence of expSentences) {
-        const sentLower = sentence.toLowerCase();
-        if (keywords.some(k => sentLower.includes(k))) {
-          const trimmed = sentence.trim();
-          if (trimmed.length > 20) {
-            const quote = trimmed.length > 80 ? trimmed.substring(0, 80) + '...' : trimmed;
-            return `The explanation confirms: "${quote}"\n\nThis shows ${topicKeyTerms} is the key concept - the correct answer is correct because of this principle. You must understand this concept to distinguish correct from incorrect options.`;
-          }
+      // If no edge cases found, look for the most technical sentence
+      if (!niceToKnow) {
+        const sentences = question.explanation.split(/[.!?]+/).map(s => s.trim());
+        const technicalSentence = sentences.find(s =>
+          s.toLowerCase().includes('specific') ||
+          s.toLowerCase().includes('protocol') ||
+          s.toLowerCase().includes('algorithm') ||
+          s.toLowerCase().includes('mechanism')
+        );
+        if (technicalSentence) {
+          niceToKnow = technicalSentence.substring(0, 200);
         }
       }
     }
 
-    // Generic fallback with more specificity
-    return `The correct answer tests your knowledge of ${topicKeyTerms}${topicContext ? ` (${topicContext})` : ''}. This is a core concept you must understand - not just recognize the term, but know how and when to apply it to solve security problems.`;
+    return {
+      coreIntent,
+      recall,
+      playbook,
+      traps,
+      examTip,
+      niceToKnow,
+    };
   };
 
   // Helper function to check if explanation is valid (not a placeholder or too short)
@@ -539,88 +597,75 @@ export default function ExplanationSection({
             Topic Analysis
           </h3>
 
-          {/* Core Intent Tags */}
+          {/* Core Intent - Comprehensive Study Guide */}
           <div style={{ marginBottom: question.validationLogs.pass2Rejected.length > 0 ? 'clamp(20px, 3vw, 32px)' : '0' }}>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                marginBottom: '12px',
-              }}
-            >
-              <span style={{ fontSize: '20px' }}>🎯</span>
-              <span
-                className="validation-label"
-                style={{
-                  fontWeight: 600,
-                  color: '#10b981',
-                }}
-              >
-                Core Intent
-              </span>
-              <span
-                style={{
-                  fontSize: 'clamp(12px, 2vw, 14px)',
-                  color: '#666',
-                  fontWeight: 500,
-                }}
-              >
-                (what this question tests)
-              </span>
-            </div>
+            {(() => {
+              const studyGuide = generateCoreIntentStudyGuide();
+              const sections = [
+                { title: 'Core intent', content: studyGuide.coreIntent, emoji: '🎯' },
+                { title: 'Recall in 10 seconds', content: studyGuide.recall, emoji: '⚡' },
+                { title: 'Fast elimination playbook', content: studyGuide.playbook, emoji: '✂️' },
+                { title: 'Common traps', content: studyGuide.traps, emoji: '⚠️' },
+                { title: 'Exam tip (one-liner)', content: studyGuide.examTip, emoji: '💡' },
+                { title: 'Nice-to-know (edge)', content: studyGuide.niceToKnow, emoji: '🔬' },
+              ];
 
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 'clamp(12px, 2vw, 16px)',
-              }}
-            >
-              {question.validationLogs.pass2Kept.map((topic, index) => {
-                const explanation = findTopicMentionInAnswer(topic);
-                const parts = explanation.split('\n\n');
+              return (
+                <div
+                  style={{
+                    padding: 'clamp(16px, 2.5vw, 24px)',
+                    background: '#0f0f0f',
+                    border: '2px solid #10b981',
+                    borderRadius: 'clamp(12px, 2vw, 16px)',
+                    boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
+                  }}
+                >
+                  {sections.map((section, idx) => {
+                    if (!section.content) return null;
 
-                return (
-                  <div
-                    key={`core-${index}`}
-                    className="core-intent-item"
-                    style={{
-                      padding: 'clamp(12px, 2vw, 16px)',
-                      background: '#0f0f0f',
-                      border: '2px solid #10b981',
-                      borderRadius: 'clamp(8px, 1.5vw, 12px)',
-                      boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
-                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    }}
-                  >
-                    <div
-                      style={{
-                        color: '#10b981',
-                        fontSize: 'clamp(14px, 2.2vw, 16px)',
-                        fontWeight: 600,
-                        marginBottom: '8px',
-                      }}
-                    >
-                      {topic}
-                    </div>
-                    <div
-                      style={{
-                        color: '#7dd3a8',
-                        fontSize: 'clamp(13px, 2vw, 14px)',
-                        lineHeight: '1.6',
-                      }}
-                    >
-                      {parts.map((part, i) => (
-                        <div key={i} style={{ marginBottom: i < parts.length - 1 ? '8px' : '0' }}>
-                          {i === 0 ? '✓ ' : ''}{part}
+                    return (
+                      <div
+                        key={idx}
+                        style={{
+                          marginBottom: idx < sections.length - 1 ? 'clamp(16px, 2.5vw, 20px)' : '0',
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            marginBottom: '8px',
+                          }}
+                        >
+                          <span style={{ fontSize: 'clamp(16px, 2vw, 18px)' }}>{section.emoji}</span>
+                          <strong
+                            style={{
+                              color: '#10b981',
+                              fontSize: 'clamp(14px, 2vw, 15px)',
+                              fontWeight: 600,
+                            }}
+                          >
+                            {section.title}
+                          </strong>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+                        <div
+                          style={{
+                            color: '#7dd3a8',
+                            fontSize: 'clamp(13px, 1.9vw, 14px)',
+                            lineHeight: '1.6',
+                            whiteSpace: 'pre-line',
+                            paddingLeft: 'clamp(24px, 3vw, 32px)',
+                          }}
+                        >
+                          {section.content}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
           </div>
 
           {/* Context Tags (Rejected) */}
