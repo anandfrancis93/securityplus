@@ -1,6 +1,6 @@
 import { Question } from './types';
 import { calculateIRTParameters, categoryToDifficulty } from './irt';
-import { ALL_SECURITY_PLUS_TOPICS } from './topicData';
+import { ALL_SECURITY_PLUS_TOPICS, TOPIC_INDEX, validateAITopics, findBestTopicMatch } from './topicData';
 import { getDomainsFromTopics } from './domainDetection';
 import { UnifiedAIProvider, createAIProvider } from './ai-providers';
 import { getRelevantExamples } from './questionExamples';
@@ -179,9 +179,20 @@ CRITICAL DISTINCTION:
   ❌ NOT: ["Layer 4/Layer 7", "Packet filtering", "Stateful inspection", "Rule sets"]
   (Those are MENTIONED but not the PRIMARY focus)
 
-- "Which firewall type prevents SQL injection?" → CORE: ["WAF (firewall type)", "SQLi (web vulnerability)"]
+- "Which firewall type prevents SQL injection?" → CORE: ["Web application firewall (WAF) (firewall type)", "Structured Query Language injection (SQLi) (web-based vulnerability)"]
   ✅ Testing: Understanding of WAF purpose and SQL injection
   ❌ NOT: Generic "firewall" or "database security" unless central to the answer
+
+EXACT STRING MATCHING (CRITICAL):
+⚠️ Your response will be validated against the exact topic list above. You MUST:
+1. Copy topic strings EXACTLY character-for-character (including parentheses, capitalization, punctuation)
+2. Do NOT use shortcuts like "WAF" - use full string: "Web application firewall (WAF) (firewall type)"
+3. Do NOT use "SQL Injection" - use: "Structured Query Language injection (SQLi) (web-based vulnerability)"
+4. Do NOT use "IPSec" variations - use: "Internet protocol security (IPSec) (secure communication)"
+5. If ambiguous (e.g., "Encryption" appears 3 times), choose the context-specific one:
+   - "Encryption (mitigation)" for security controls
+   - "Encryption (data protection method)" for data protection
+   - "Encryption (backups)" for backup contexts
 
 Rules:
 1. Focus on CORE INTENT: What knowledge is absolutely required to answer correctly?
@@ -189,13 +200,19 @@ Rules:
    - PRIMARY topics (what's being tested)
    - CONTEXTUAL topics (mentioned in question/options but not the focus)
    - DISTRACTOR topics (appear in wrong answers only)
-3. Return EXACT topic strings from the list above (copy character-for-character)
+3. ⚠️ Return EXACT topic strings from the list above - COPY them exactly, don't paraphrase
 4. PREFER FEWER, MORE SPECIFIC topics over many related ones
 5. Typically:
    - Easy questions: 1 topic (basic understanding)
    - Medium questions: 2-3 topics (application/synthesis)
    - Hard questions: 3-4 topics across domains (complex scenarios)
 6. Maximum 5 topics (if you find more, you're over-extracting)
+
+VALIDATION WARNING:
+If you return a topic that doesn't match exactly, our system will try fuzzy matching.
+However, this may result in the wrong topic being selected. To avoid errors:
+- Find the topic in the list above
+- Copy it EXACTLY as shown (including all parentheses and context markers)
 
 Return ONLY a valid JSON array of exact topic strings:
 ["exact topic string 1", "exact topic string 2", ...]
@@ -225,9 +242,35 @@ No explanation, just the JSON array.`;
       console.warn(`   Consider: AI may be including contextual topics instead of core intent`);
     }
 
-    console.log(`AI identified ${extractedTopics.length} topics: ${extractedTopics.join(', ')}`);
+    console.log(`[AI TOPIC ID] Raw AI output: ${extractedTopics.join(', ')}`);
 
-    return extractedTopics;
+    // 🔧 NEW: Validate and correct AI-returned topics using fuzzy matching
+    const validation = validateAITopics(extractedTopics);
+
+    // Log corrections and unmatched topics
+    if (validation.corrections.length > 0) {
+      console.log(`[TOPIC VALIDATION] Applied ${validation.corrections.length} corrections:`);
+      validation.corrections.forEach(c => {
+        console.log(`  📝 "${c.original}" → "${c.corrected}" (${c.confidence} confidence)`);
+      });
+    }
+
+    if (validation.unmatched.length > 0) {
+      console.error(`[TOPIC VALIDATION] ❌ ${validation.unmatched.length} unmatched topics:`);
+      validation.unmatched.forEach(topic => {
+        console.error(`  ❌ "${topic}"`);
+        // Try to suggest best match
+        const suggestion = findBestTopicMatch(topic);
+        if (suggestion.match && suggestion.score > 0.5) {
+          console.error(`     💡 Did AI mean: "${suggestion.match}"? (${(suggestion.score * 100).toFixed(1)}% match)`);
+        }
+      });
+    }
+
+    console.log(`[TOPIC VALIDATION] ✅ Validated topics (${validation.matched.length}): ${validation.matched.join(', ')}`);
+
+    // Return validated (corrected) topics
+    return validation.matched;
 
   } catch (error) {
     console.error('Error identifying topics with AI:', error);
