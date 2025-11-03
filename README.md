@@ -4,6 +4,7 @@ An adaptive learning Progressive Web App (PWA) featuring AI-generated questions,
 
 **Currently Available:** CompTIA Security+ SY0-701 certification preparation (expandable to other subjects)
 
+
 ## Features
 
 ### AI Chat Assistant
