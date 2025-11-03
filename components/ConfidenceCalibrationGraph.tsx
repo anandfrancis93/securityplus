@@ -93,6 +93,7 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
   const calibrationData = aggregateCalibrationData(attempts);
   const [isCardExpanded, setIsCardExpanded] = React.useState(false);
   const [isDetailsExpanded, setIsDetailsExpanded] = React.useState(false);
+  const [hoveredButton, setHoveredButton] = React.useState(false);
 
   if (calibrationData.length === 0) {
     return null; // Don't show anything if there's no data
@@ -118,17 +119,29 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
   return (
     <div className="calibration-container">
       {/* Collapsible Header */}
-      <button
-        className="calibration-header-button"
-        onClick={() => setIsCardExpanded(!isCardExpanded)}
-      >
+      <div className="calibration-header">
         <div className="calibration-header-content">
           <h2 className="calibration-title">Dunning–Kruger Effect Tracking</h2>
-          <div className="calibration-expand-icon">
-            {isCardExpanded ? '▼' : '▶'}
-          </div>
+          <button
+            className="calibration-expand-button"
+            onClick={() => setIsCardExpanded(!isCardExpanded)}
+            onMouseEnter={() => setHoveredButton(true)}
+            onMouseLeave={() => setHoveredButton(false)}
+            aria-label="Toggle Dunning-Kruger Effect Tracking"
+          >
+            <svg
+              className="calibration-expand-icon"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              style={{ transform: isCardExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
         </div>
-      </button>
+      </div>
 
       {isCardExpanded && (
         <div className="calibration-expanded-content">
@@ -232,18 +245,9 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           overflow: hidden;
         }
 
-        .calibration-header-button {
-          width: 100%;
+        .calibration-header {
+          position: relative;
           padding: 40px;
-          background: transparent;
-          border: none;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          text-align: left;
-        }
-
-        .calibration-header-button:hover {
-          background: rgba(139, 92, 246, 0.05);
         }
 
         .calibration-header-content {
@@ -260,10 +264,28 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           letter-spacing: -0.025em;
         }
 
+        .calibration-expand-button {
+          padding: 16px;
+          background: #0f0f0f;
+          border-radius: 16px;
+          box-shadow: 8px 8px 16px #050505, -8px -8px 16px #191919;
+          border: none;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .calibration-expand-button:hover {
+          box-shadow: inset 4px 4px 8px #050505, inset -4px -4px 8px #191919;
+        }
+
         .calibration-expand-icon {
-          font-size: 24px;
-          color: #8b5cf6;
-          transition: transform 0.3s ease;
+          width: 32px;
+          height: 32px;
+          color: #a8a8a8;
+          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .calibration-expanded-content {
