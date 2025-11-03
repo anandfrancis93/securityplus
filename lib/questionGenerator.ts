@@ -183,6 +183,60 @@ CRITICAL DISTINCTION:
   ✅ Testing: Understanding of WAF purpose and SQL injection
   ❌ NOT: Generic "firewall" or "database security" unless central to the answer
 
+TAGGING DECISION CRITERIA (CRITICAL - READ CAREFULLY):
+
+Use these tests to decide if a topic should be tagged:
+
+✅ TAG IT if:
+1. **Removal Test**: If you removed this concept from the question, would the answer change or become unclear?
+2. **Knowledge Test**: Must the test-taker understand this concept to select the correct answer?
+3. **Causal Test**: Is this concept WHY a particular answer is correct?
+
+❌ DON'T TAG if:
+1. **Scenario Flavor**: It's just background context to make the question realistic
+2. **Substitution Test**: You could replace it with something else and the question still works the same way
+3. **Industry Context**: It's mentioned to set the scene but not tested (e.g., "healthcare company", "manufacturing plant")
+
+EXAMPLES WITH DETAILED ANALYSIS:
+
+Example 1: "A legacy ICS has known vulnerabilities that can't be patched due to cost. What remediation strategy?"
+✅ TAG: "Legacy applications (technical implication)"
+   - Removal test: Remove "legacy" → vulnerabilities and patching difficulty no longer make sense
+   - Knowledge test: Must understand legacy systems have patching challenges
+   - Causal test: Legacy nature is WHY risk transfer/insurance is the answer
+✅ TAG: "Insurance (remediation)", "Transfer (risk strategy)", "One-time (risk assessment)"
+   - These are directly being tested by the question
+❌ DON'T TAG: "Industrial control systems (ICS) (architecture model)"
+   - Substitution test: Replace with "database server" or "network appliance" - question still works
+   - It's scenario flavor, not testing ICS-specific knowledge
+   - Question isn't asking "What is ICS?" or "How to secure ICS?"
+
+Example 2: "A company uses AES-256 encryption. An attacker intercepts encrypted data. What attack could compromise it?"
+✅ TAG: "Downgrade (cryptographic attack)" [if this is the answer]
+   - Testing understanding of cryptographic attacks
+❌ DON'T TAG: "AES-256" or generic "Encryption"
+   - Just an example cipher, could be any encryption
+   - Not testing AES-specific knowledge
+
+Example 3: "After a phishing campaign, employees clicked malicious links. What security awareness training is needed?"
+✅ TAG: "Phishing campaigns (security awareness)", "Recognizing a phishing attempt (phishing)"
+   - Removal test: Remove phishing → question doesn't work
+   - Core intent is phishing awareness
+❌ DON'T TAG: "Email (message-based)"
+   - Just the delivery mechanism, not being tested
+   - Could be SMS phishing (smishing) and question works the same
+
+Example 4: "A hospital must comply with regulations requiring patient data encryption. What is being enforced?"
+✅ TAG: "Encryption (data protection method)", "Regulated (data type)", "Legal implications (privacy)"
+   - Testing understanding of compliance and data protection
+❌ DON'T TAG: "Hospital" or healthcare-specific topics
+   - Industry context only, could be any regulated industry
+
+EDGE CASE GUIDANCE:
+- If unsure, ask: "Is the question testing knowledge of this topic, or just using it as scenery?"
+- When multiple similar topics exist (e.g., 3 types of "Encryption"), choose the one matching the context
+- Background technologies (cloud, on-prem, etc.) are usually NOT tagged unless security implications of that specific tech are being tested
+
 EXACT STRING MATCHING (CRITICAL):
 ⚠️ Your response will be validated against the exact topic list above. You MUST:
 1. Copy topic strings EXACTLY character-for-character (including parentheses, capitalization, punctuation)
