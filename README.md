@@ -9,9 +9,9 @@ An adaptive learning Progressive Web App (PWA) featuring AI-generated questions,
 
 ### AI Chat Assistant
 
-- **Grok 4 Fast Integration**: Powered by xAI's Grok-4-Fast-Non-Reasoning model for fast, accurate responses
+- **Grok 4 Fast Reasoning**: Powered by xAI's Grok-4-Fast-Reasoning model for high-quality, well-reasoned responses
 - **Subject-Specific Knowledge**: Pre-configured with official syllabi and learning objectives
-- **Structured Responses**: Formatted answers with numbered points, bullet lists, and markdown support
+- **Structured Responses**: Headers (H1, H2, H3) and bullet points extensively for easy scanning
 - **Chat History Management**:
   - Auto-save conversations to Firestore
   - Load previous chats to continue conversations
@@ -26,7 +26,7 @@ An adaptive learning Progressive Web App (PWA) featuring AI-generated questions,
 
 ### Adaptive Quiz Mode with FSRS Scheduling
 
-- **AI-Generated Synthesis Questions**: Creates complex questions combining multiple concepts using xAI Grok (grok-4-fast-reasoning for generation, grok-4-fast-non-reasoning for topic identification)
+- **AI-Generated Synthesis Questions**: Creates complex questions combining multiple concepts using xAI Grok 4 Fast Reasoning for both generation and topic identification
 - **FSRS-Powered Topic Selection**: Uses Free Spaced Repetition Scheduler algorithm to determine which topics appear in your quiz based on:
   - Topic stability and difficulty
   - Time since last review
@@ -53,16 +53,28 @@ An adaptive learning Progressive Web App (PWA) featuring AI-generated questions,
 - **Cross-Device Resume**: Quiz state saved to cloud, resume on any device
 - **Local Storage Backup**: Quiz auto-saved to localStorage for reliability
 - **Pause/Resume Question Generation**: Control over background question generation to manage API costs and battery usage
+- **Multi-Step Quiz Workflow**:
+  - Step 1: Confidence rating (20%, 40%, 60%, 80%, 95%) before seeing options
+  - Step 2: Type answer (for high confidence on Apply/Analyze/Evaluate/Create levels)
+  - Step 3: Select from multiple choice options
+  - Step 4: Reflection on learning strategy (pure recall, recognition, elimination, educated guess, random guess)
+- **Metacognition Tracking**: Analyze how you learn with insights on confidence calibration and learning strategies
+- **Smart Decimal Formatting**: Shows "100%" for whole numbers, "81.25%" for partial credit (hides unnecessary ".00")
 
 ### Performance Analytics & Progress Tracking
 
-- **6 Interactive Performance Graphs**:
+- **8 Interactive Performance Sections**:
   1. **Ability Level Over Time**: Track your IRT ability (θ) progression with confidence intervals
   2. **Predicted Score Over Time**: Monitor your exam readiness with passing threshold and confidence bands
-  3. **Accuracy by Difficulty**: See performance breakdown across easy/medium/hard questions
-  4. **Performance by Domain**: Track coverage and accuracy across all subject domains
-  5. **Individual Domain Performance**: Collapsible detailed view for each domain
-  6. **Topic Coverage by Domain**: Shows all topics organized by their domains
+  3. **Metacognition Analysis**:
+     - Confidence vs Actual Performance calibration graph
+     - Learning strategies breakdown (pure recall, recognition, elimination, guessing)
+     - Quality warnings (overconfidence, underconfidence, excessive guessing)
+  4. **Accuracy by Difficulty**: See performance breakdown across easy/medium/hard questions
+  5. **Performance by Domain**: Track coverage and accuracy across all subject domains
+  6. **Individual Domain Performance**: Collapsible detailed view for each domain with neumorphic design
+  7. **Topic Coverage by Domain**: Shows all topics organized by their domains with neumorphic scrollbars
+  8. **Quiz History**: Review all past quizzes with fractional scores (e.g., "8.5/10") based on partial credit
 - **IRT Performance Insights**: Dynamic, specific insights generated from your IRT performance data considering:
   - Overall ability level and confidence
   - Performance by question category (single/multi-domain, single/multi-topic)
@@ -122,9 +134,9 @@ An adaptive learning Progressive Web App (PWA) featuring AI-generated questions,
 - **Styling**: CSS-in-JS with styled-jsx (neomorphic dark theme)
 - **Charting**: Recharts 3.3.0 for data visualization
 - **AI**:
-  - **Quiz Generation**: xAI Grok (grok-4-fast-reasoning) - Question generation
-  - **Topic Identification**: xAI Grok (grok-4-fast-non-reasoning) - Topic identification
-  - **AI Chat**: xAI Grok (grok-4-fast-non-reasoning) - Conversational assistant
+  - **Quiz Generation**: xAI Grok 4 Fast Reasoning (grok-4-fast-reasoning) - Question generation
+  - **Topic Identification**: xAI Grok 4 Fast Reasoning (grok-4-fast-reasoning) - Accurate topic extraction
+  - **AI Chat**: xAI Grok 4 Fast Reasoning (grok-4-fast-reasoning) - High-quality conversational assistant
   - **Embeddings**: OpenAI text-embedding-3-small - Question similarity detection (deduplication)
 - **Backend**: Firebase (Firestore Database + Firebase Storage + Google Authentication)
 - **Image Hosting**: Firebase Storage with CORS configuration
@@ -139,20 +151,21 @@ An adaptive learning Progressive Web App (PWA) featuring AI-generated questions,
 
 1. **Access**: Click "AI Chat" from hamburger menu
 2. **Ask Questions**: Type any subject-related or general question
-3. **Structured Responses**: AI provides formatted answers with:
-   - Clear introductory statement
-   - Numbered main points (1, 2, 3...)
-   - Bullet points (•) for sub-points
-   - Practical examples
-   - Concluding statement
-   - Proper markdown formatting (headings, code blocks, lists)
+3. **High-Quality Responses**: AI provides well-reasoned answers with:
+   - H1 headers for main topics
+   - H2/H3 headers for sections and subsections
+   - Extensive bullet points (preferred over paragraphs)
+   - Nested bullets for hierarchical information
+   - Bold text for key concepts
+   - Code formatting for technical terms
+   - Minimal paragraph text for easy scanning
 4. **Official Syllabus Context**: AI references specific learning objectives from the subject syllabus
 5. **Chat History**: All conversations auto-saved to Firestore
    - Click chat history icon to view all past chats
    - Click any chat to continue the conversation
    - Delete chats you no longer need
    - Start new chats anytime
-6. **Grok Integration**: Powered by xAI's Grok-4-Fast model (temperature: 0.7, max tokens: 2048)
+6. **Grok 4 Fast Reasoning**: Powered by xAI's grok-4-fast-reasoning model for superior reasoning capabilities (temperature: 0.7, max tokens: 2048)
 
 ### Quiz Mode with FSRS Topic Scheduling
 
@@ -182,26 +195,36 @@ An adaptive learning Progressive Web App (PWA) featuring AI-generated questions,
      - 1 topic, 1 domain → **EASY** (100 points)
      - Multiple topics, 1 domain → **MEDIUM** (175 points)
      - Multiple topics, Multiple domains → **HARD** (325 points)
-7. **Partial Credit**: Multiple-response questions award proportional credit
-8. **IRT Analysis**: System estimates your ability level (theta) using Maximum Likelihood Estimation
-9. **Confidence Intervals**: Statistical confidence bands shown for predictions
-10. **Score Prediction**: Maps your ability estimate to standardized scoring scales
-11. **FSRS Update**: After each quiz, FSRS algorithm updates topic schedules based on performance
-12. **Cloud Sync**: All progress stored in Firestore and synced across devices
-13. **Local Backup**: Quiz state saved to localStorage for reliability
+7. **Multi-Step Question Workflow**:
+   - **Step 1 - Confidence**: Rate confidence (20%, 40%, 60%, 80%, 95%) before seeing options
+   - **Step 2 - Typing** (conditional): If confidence ≥80% on Apply/Analyze/Evaluate/Create questions, type your answer
+   - **Step 3 - Selection**: Choose answer from multiple choice options
+   - **Step 4 - Reflection**: Indicate learning strategy used (pure recall, recognition, elimination, educated guess, random guess)
+8. **Partial Credit**: Multiple-response questions award proportional credit
+9. **IRT Analysis**: System estimates your ability level (theta) using Maximum Likelihood Estimation
+10. **Confidence Intervals**: Statistical confidence bands shown for predictions
+11. **Score Prediction**: Maps your ability estimate to standardized scoring scales
+12. **Metacognition Analysis**: Track confidence calibration and learning strategy patterns
+13. **FSRS Update**: After each quiz, FSRS algorithm updates topic schedules based on performance
+14. **Cloud Sync**: All progress stored in Firestore and synced across devices
+15. **Local Backup**: Quiz state saved to localStorage for reliability
 
 ### Performance Analytics System
 
 1. **Ability Level Over Time**: Line chart showing θ progression with confidence intervals
 2. **Predicted Score Over Time**: Line chart tracking score estimates with confidence bands and passing threshold
-3. **Accuracy by Difficulty**: Bar chart showing percentage correct for easy/medium/hard questions
-4. **Domain Performance**: Horizontal bar chart showing accuracy across all subject domains
-5. **Individual Domain Tables**: Collapsible tables showing detailed stats for each domain
-6. **Topic Coverage**: Tables showing all topics with coverage count and accuracy
-7. **IRT Performance Insights**: AI-generated insights analyzing your performance patterns
-8. **Topic Review Schedule**: FSRS-based display of due topics and upcoming reviews
-9. **Quiz History**: Clickable cards showing all past quizzes with stats
-10. **Export/Import**: Backup and restore progress with automatic recalculation
+3. **Metacognition Section**:
+   - **Confidence Calibration Graph**: Shows confidence vs actual performance across 5 confidence levels
+   - **Learning Strategies Breakdown**: Bar chart showing how you approached questions (recall, recognition, elimination, guessing)
+   - **Quality Warnings**: Alerts for overconfidence (>25%), underconfidence, excessive guessing, or poor strategy patterns
+4. **Accuracy by Difficulty**: Bar chart showing percentage correct for easy/medium/hard questions (no confidence intervals)
+5. **Domain Performance**: Horizontal bar chart showing accuracy across all subject domains
+6. **Individual Domain Tables**: Collapsible tables with neumorphic chevron buttons showing detailed stats for each domain
+7. **Topic Coverage**: Tables with neumorphic scrollbars showing all topics with coverage count and accuracy
+8. **IRT Performance Insights**: AI-generated insights analyzing your performance patterns
+9. **Topic Review Schedule**: FSRS-based display of due topics and upcoming reviews
+10. **Quiz History**: Clickable cards showing fractional scores (e.g., "8.5/10") with smart decimal formatting
+11. **Export/Import**: Backup and restore progress with automatic recalculation
 
 ### Flashcard System
 
@@ -338,12 +361,13 @@ The platform is designed to support multiple subjects. Each subject includes:
 - Deduplication via embeddings
 
 **AI Chat System:**
-- xAI Grok-4-Fast-Non-Reasoning model
+- xAI Grok 4 Fast Reasoning (grok-4-fast-reasoning) model
 - Temperature: 0.7 for balanced creativity/accuracy
 - Max tokens: 2048
 - Full conversation history for context
 - Firestore storage for chat persistence
 - Auto-generated titles from first user message
+- Enhanced formatting: Headers (H1, H2, H3) and extensive bullet points for better readability
 
 **Data Visualization:**
 - Recharts library for responsive charts
@@ -386,6 +410,12 @@ The platform is designed to support multiple subjects. Each subject includes:
 - **Raised Elements**: `12px 12px 24px #050505, -12px -12px 24px #191919`
 - **Pressed/Inset**: `inset 4px 4px 8px #050505, inset -4px -4px 8px #191919`
 - **Small Raised**: `6px 6px 12px #050505, -6px -6px 12px #191919`
+
+**Neumorphic Scrollbars:**
+- **Track**: Inset shadows (#0a0a0a background with inset 2px shadows)
+- **Thumb**: Raised shadows (#1a1a1a background with 2px outset shadows)
+- **Hover**: Lighter thumb (#252525) for better visibility
+- **Applied to**: Topic Coverage tables, flashcard lists, modal dialogs
 
 **Typography:**
 - Fluid scaling with `clamp()` for all text sizes
@@ -519,8 +549,8 @@ npm run lint
 ## API Costs & Usage
 
 **xAI Grok Pricing:**
-- grok-4-fast-reasoning: $5/1M input, $15/1M output
-- grok-4-fast-non-reasoning: $0.20/1M input, $0.50/1M output
+- grok-4-fast-reasoning: $5.00 per 1M input tokens, $15.00 per 1M output tokens
+  - Used for: Question generation, topic identification, AI chat assistant
 
 **Cost Management:**
 - Pause/Resume button for question generation
