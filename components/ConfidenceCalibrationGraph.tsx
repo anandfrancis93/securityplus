@@ -45,88 +45,6 @@ function getConfidenceLabel(confidence: number): string {
 }
 
 /**
- * Generate insights for a confidence level
- */
-function generateInsights(data: CalibrationDataPoint): Array<{ text: string; correct: boolean }> {
-  const insights: Array<{ text: string; correct: boolean }> = [];
-
-  // Analyze each reflection type
-  if (data.reflection.knew > 0) {
-    const knewCorrect = Math.round((data.reflection.knew / data.count) * data.actualAccuracy / 100 * data.count);
-    const knewIncorrect = data.reflection.knew - knewCorrect;
-
-    if (knewCorrect > 0) {
-      insights.push({
-        text: `Recalled from memory and got ${knewCorrect} correct`,
-        correct: true
-      });
-    }
-    if (knewIncorrect > 0) {
-      insights.push({
-        text: `Thought you recalled ${knewIncorrect} but they were wrong - possible false memory`,
-        correct: false
-      });
-    }
-  }
-
-  if (data.reflection.recognized > 0) {
-    const recognizedCorrect = Math.round((data.reflection.recognized / data.count) * data.actualAccuracy / 100 * data.count);
-    const recognizedIncorrect = data.reflection.recognized - recognizedCorrect;
-
-    if (recognizedCorrect > 0) {
-      insights.push({
-        text: `Recognized the answer after seeing options - ${recognizedCorrect} correct`,
-        correct: true
-      });
-    }
-    if (recognizedIncorrect > 0) {
-      insights.push({
-        text: `Recognized ${recognizedIncorrect} answers but they were wrong - misleading familiarity`,
-        correct: false
-      });
-    }
-  }
-
-  if (data.reflection.narrowed > 0) {
-    const narrowedCorrect = Math.round((data.reflection.narrowed / data.count) * data.actualAccuracy / 100 * data.count);
-    const narrowedIncorrect = data.reflection.narrowed - narrowedCorrect;
-
-    if (narrowedCorrect > 0) {
-      insights.push({
-        text: `Used logic to narrow down and got ${narrowedCorrect} correct - good reasoning`,
-        correct: true
-      });
-    }
-    if (narrowedIncorrect > 0) {
-      insights.push({
-        text: `Narrowed down ${narrowedIncorrect} but chose wrong - review elimination strategies`,
-        correct: false
-      });
-    }
-  }
-
-  if (data.reflection.guessed > 0) {
-    const guessedCorrect = Math.round((data.reflection.guessed / data.count) * data.actualAccuracy / 100 * data.count);
-    const guessedIncorrect = data.reflection.guessed - guessedCorrect;
-
-    if (guessedCorrect > 0) {
-      insights.push({
-        text: `Random guessed ${guessedCorrect} and got lucky`,
-        correct: true
-      });
-    }
-    if (guessedIncorrect > 0) {
-      insights.push({
-        text: `Random guessed ${guessedIncorrect} incorrectly - need to study this area`,
-        correct: false
-      });
-    }
-  }
-
-  return insights;
-}
-
-/**
  * Aggregates question attempts by confidence level
  * Calculates actual accuracy for each confidence level
  * Includes breakdown by reflection type
@@ -173,8 +91,6 @@ function aggregateCalibrationData(attempts: QuestionAttempt[]): CalibrationDataP
 
 export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalibrationGraphProps) {
   const calibrationData = aggregateCalibrationData(attempts);
-
-  const [isExpanded, setIsExpanded] = React.useState(false);
 
   if (calibrationData.length === 0) {
     return null; // Don't show anything if there's no data
@@ -386,44 +302,6 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           </div>
         ))}
       </div>
-
-      {/* Detailed Breakdown - Collapsible */}
-      <button
-        className="calibration-toggle-details"
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        <span className="calibration-toggle-icon">{isExpanded ? '▼' : '▶'}</span>
-        <span className="calibration-toggle-text">
-          {isExpanded ? 'Hide' : 'Show'} detailed breakdown
-        </span>
-      </button>
-
-      {isExpanded && (
-        <div className="calibration-content">
-
-      <div className="calibration-insights">
-        {calibrationData.map(d => {
-          const insights = generateInsights(d);
-
-          return (
-            <div key={d.confidence} className="calibration-insight-card">
-              <div className="calibration-insight-header">
-                {getConfidenceLabel(d.confidence)}
-              </div>
-              <div className="calibration-insight-content">
-                {insights.map((insight, idx) => (
-                  <div key={idx} className={`calibration-insight-item ${insight.correct ? 'correct' : 'incorrect'}`}>
-                    <span className="calibration-insight-icon">{insight.correct ? '✓' : '✗'}</span>
-                    <span className="calibration-insight-text">{insight.text}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-        </div>
-      )}
 
       <style jsx>{`
         .calibration-container {
@@ -647,107 +525,6 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
           background: #10b981;
         }
 
-        /* Toggle Details Button */
-        .calibration-toggle-details {
-          width: 100%;
-          padding: 20px 40px;
-          background: transparent;
-          border: none;
-          border-top: 1px solid #1a1a1a;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 12px;
-        }
-
-        .calibration-toggle-details:hover {
-          background: rgba(139, 92, 246, 0.05);
-        }
-
-        .calibration-toggle-icon {
-          font-size: 14px;
-          color: #8b5cf6;
-        }
-
-        .calibration-toggle-text {
-          font-size: 16px;
-          color: #8b5cf6;
-          font-weight: 600;
-        }
-
-        .calibration-content {
-          padding: 0 40px 40px;
-          border-top: 1px solid #1a1a1a;
-          padding-top: 32px;
-        }
-
-        .calibration-insights {
-          display: flex;
-          flex-direction: column;
-          gap: 24px;
-        }
-
-        .calibration-insight-card {
-          padding: 24px;
-          background: #0f0f0f;
-          border-radius: 16px;
-          box-shadow: 6px 6px 12px #050505, -6px -6px 12px #191919;
-        }
-
-        .calibration-insight-header {
-          font-size: 18px;
-          font-weight: 700;
-          color: #8b5cf6;
-          margin-bottom: 16px;
-          padding-bottom: 12px;
-          border-bottom: 2px solid #1a1a1a;
-        }
-
-        .calibration-insight-content {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-
-        .calibration-insight-item {
-          display: flex;
-          align-items: flex-start;
-          gap: 12px;
-          padding: 12px 16px;
-          border-radius: 12px;
-          background: #0a0a0a;
-          line-height: 1.6;
-        }
-
-        .calibration-insight-item.correct {
-          border-left: 3px solid #10b981;
-        }
-
-        .calibration-insight-item.incorrect {
-          border-left: 3px solid #ef4444;
-        }
-
-        .calibration-insight-icon {
-          font-size: 18px;
-          font-weight: 700;
-          flex-shrink: 0;
-          margin-top: 2px;
-        }
-
-        .calibration-insight-item.correct .calibration-insight-icon {
-          color: #10b981;
-        }
-
-        .calibration-insight-item.incorrect .calibration-insight-icon {
-          color: #ef4444;
-        }
-
-        .calibration-insight-text {
-          font-size: 15px;
-          color: #e5e5e5;
-        }
       `}</style>
     </div>
   );
