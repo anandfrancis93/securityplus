@@ -235,9 +235,6 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
                 <div className="calibration-bar-label">{getConfidenceLabel(d.confidence, d.count)}</div>
                 <div className="calibration-bar-container">
                   <div className="calibration-bar-group">
-                    <div className="calibration-bar confidence" style={{ width: `${d.confidence}%` }}>
-                      {d.confidence}%
-                    </div>
                     <div
                       className={`calibration-bar actual ${d.actualAccuracy < d.confidence - 5 ? 'lower' : d.actualAccuracy > d.confidence + 5 ? 'higher' : 'matched'}`}
                       style={{ width: `${d.actualAccuracy}%` }}
