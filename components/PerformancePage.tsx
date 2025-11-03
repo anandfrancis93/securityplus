@@ -1577,7 +1577,7 @@ export default function QuizPerformance() {
         </div>
 
         {/* Confidence Calibration Graph */}
-        <div>
+        <div style={{ marginTop: '4rem' }}>
           <ConfidenceCalibrationGraph
             attempts={userProgress?.quizHistory?.flatMap(quiz => quiz.questions) || []}
           />

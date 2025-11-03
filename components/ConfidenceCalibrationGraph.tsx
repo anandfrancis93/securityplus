@@ -245,7 +245,7 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
 
         .calibration-toggle {
           width: 100%;
-          padding: 32px 48px;
+          padding: 40px;
           background: transparent;
           border: none;
           cursor: pointer;
@@ -255,12 +255,6 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
 
         .calibration-toggle:hover {
           background: rgba(139, 92, 246, 0.05);
-        }
-
-        @media (min-width: 768px) {
-          .calibration-toggle {
-            padding: 40px 64px;
-          }
         }
 
         .calibration-toggle-content {
@@ -280,26 +274,15 @@ export default function ConfidenceCalibrationGraph({ attempts }: ConfidenceCalib
         }
 
         .calibration-title {
-          font-size: 20px;
-          font-weight: 600;
+          font-size: 36px;
+          font-weight: 700;
           color: #e5e5e5;
           margin: 0;
-        }
-
-        @media (min-width: 768px) {
-          .calibration-title {
-            font-size: 24px;
-          }
+          letter-spacing: -0.025em;
         }
 
         .calibration-content {
-          padding: 0 32px 32px;
-        }
-
-        @media (min-width: 768px) {
-          .calibration-content {
-            padding: 0 64px 64px;
-          }
+          padding: 0 40px 40px;
         }
 
         .calibration-insights {
