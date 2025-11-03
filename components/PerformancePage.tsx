@@ -1560,34 +1560,28 @@ export default function QuizPerformance() {
         )}
 
         {/* Topic Review Schedule - Verification Tool */}
-        {userProgress && (
-          <div style={{ marginTop: '4rem' }}>
-            <TopicReviewSchedule userProgress={userProgress} />
-          </div>
-        )}
+        <div style={{ marginTop: '4rem' }}>
+          <TopicReviewSchedule userProgress={userProgress} />
+        </div>
 
         {/* Performance Graphs Section */}
-        {userProgress && (
-          <div style={{ marginTop: '4rem' }}>
-            <h2 style={{
-              fontSize: 'clamp(2.25rem, 6vw, 3rem)',
-              fontWeight: 'bold',
-              color: '#e5e5e5',
-              marginBottom: '3rem',
-              letterSpacing: '-0.025em'
-            }}>Progress Charts</h2>
-            <PerformanceGraphs userProgress={userProgress} />
-          </div>
-        )}
+        <div style={{ marginTop: '4rem' }}>
+          <h2 style={{
+            fontSize: 'clamp(2.25rem, 6vw, 3rem)',
+            fontWeight: 'bold',
+            color: '#e5e5e5',
+            marginBottom: '3rem',
+            letterSpacing: '-0.025em'
+          }}>Progress Charts</h2>
+          <PerformanceGraphs userProgress={userProgress} />
+        </div>
 
         {/* Confidence Calibration Graph */}
-        {userProgress && userProgress.quizHistory && userProgress.quizHistory.length > 0 && (
-          <div>
-            <ConfidenceCalibrationGraph
-              attempts={userProgress.quizHistory.flatMap(quiz => quiz.questions)}
-            />
-          </div>
-        )}
+        <div>
+          <ConfidenceCalibrationGraph
+            attempts={userProgress?.quizHistory?.flatMap(quiz => quiz.questions) || []}
+          />
+        </div>
 
         {/* Reset Progress - Destructive Action (Always clickable) */}
         <div style={{ marginTop: '3rem', textAlign: 'center', paddingBottom: '2rem' }}>

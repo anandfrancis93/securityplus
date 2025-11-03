@@ -29,6 +29,28 @@ export default function TopicReviewSchedule({ userProgress, liquidGlass = true }
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
   const [activeButton, setActiveButton] = useState<string | null>(null);
 
+  // Handle null userProgress
+  if (!userProgress || !userProgress.quizHistory || userProgress.quizHistory.length === 0) {
+    return (
+      <div style={{
+        position: 'relative',
+        backgroundColor: '#0f0f0f',
+        borderRadius: '24px',
+        padding: '64px',
+        boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
+        textAlign: 'center'
+      }}>
+        <p style={{
+          color: '#a8a8a8',
+          fontSize: '24px',
+          margin: 0
+        }}>
+          No quiz data yet. Complete quizzes to see topic review schedule.
+        </p>
+      </div>
+    );
+  }
+
   // Use FSRS-enabled topic performance from quizMetadata (has proper scheduling)
   // Falls back to legacy topicPerformance if quizMetadata doesn't exist yet
   const topicPerformance = userProgress.quizMetadata?.topicPerformance || userProgress.topicPerformance || {};
