@@ -1176,43 +1176,27 @@ export default function Quiz() {
 
                 <div className="confidence-options">
                   <button
-                    onClick={() => handleConfidenceSelect(20)}
+                    onClick={() => handleConfidenceSelect(33)}
                     className="confidence-option"
                   >
-                    <div className="confidence-option-label">Not confident (guessing)</div>
-                    <div className="confidence-option-percentage">~20% chance I&apos;m right</div>
+                    <div className="confidence-option-label">Low confidence</div>
+                    <div className="confidence-option-percentage">20-40% chance I&apos;m right</div>
                   </button>
 
                   <button
-                    onClick={() => handleConfidenceSelect(40)}
+                    onClick={() => handleConfidenceSelect(67)}
                     className="confidence-option"
                   >
-                    <div className="confidence-option-label">Slightly confident</div>
-                    <div className="confidence-option-percentage">~40% chance I&apos;m right</div>
+                    <div className="confidence-option-label">Medium confidence</div>
+                    <div className="confidence-option-percentage">50-70% chance I&apos;m right</div>
                   </button>
 
                   <button
-                    onClick={() => handleConfidenceSelect(60)}
+                    onClick={() => handleConfidenceSelect(90)}
                     className="confidence-option"
                   >
-                    <div className="confidence-option-label">Moderately confident</div>
-                    <div className="confidence-option-percentage">~60% chance I&apos;m right</div>
-                  </button>
-
-                  <button
-                    onClick={() => handleConfidenceSelect(80)}
-                    className="confidence-option"
-                  >
-                    <div className="confidence-option-label">Confident</div>
-                    <div className="confidence-option-percentage">~80% chance I&apos;m right</div>
-                  </button>
-
-                  <button
-                    onClick={() => handleConfidenceSelect(95)}
-                    className="confidence-option"
-                  >
-                    <div className="confidence-option-label">Very confident (almost certain)</div>
-                    <div className="confidence-option-percentage">~95% chance I&apos;m right</div>
+                    <div className="confidence-option-label">High confidence</div>
+                    <div className="confidence-option-percentage">80-95% chance I&apos;m right</div>
                   </button>
                 </div>
               </div>
