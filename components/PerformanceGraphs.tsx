@@ -915,27 +915,12 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                   boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
                   overflow: 'hidden'
                 }}>
-                  <button
-                    onClick={() => toggleDomainTable(domain)}
-                    style={{
-                      width: '100%',
-                      padding: '24px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      textAlign: 'left',
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = 'rgba(25, 25, 25, 0.3)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'transparent';
-                    }}
-                  >
+                  <div style={{
+                    padding: '24px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}>
                     <h4 style={{
                       fontSize: '24px',
                       fontWeight: 'bold',
@@ -945,21 +930,41 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                     }}>
                       <span style={{ marginRight: '8px' }}>{domainNum}</span>{domainName}
                     </h4>
-                    <svg
+                    <button
+                      onClick={() => toggleDomainTable(domain)}
                       style={{
-                        width: '32px',
-                        height: '32px',
-                        color: '#a8a8a8',
-                        transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                        transform: openDomainTables[domain] ? 'rotate(180deg)' : 'rotate(0deg)'
+                        padding: '16px',
+                        background: '#0f0f0f',
+                        borderRadius: '16px',
+                        boxShadow: openDomainTables[domain]
+                          ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+                          : '8px 8px 16px #050505, -8px -8px 16px #191919',
+                        border: 'none',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
                       }}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                      aria-label={`Toggle ${domainName}`}
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
+                      <svg
+                        style={{
+                          width: '32px',
+                          height: '32px',
+                          color: '#a8a8a8',
+                          transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                          transform: openDomainTables[domain] ? 'rotate(180deg)' : 'rotate(0deg)'
+                        }}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                  </div>
 
                   {openDomainTables[domain] && (
                     <div style={{
