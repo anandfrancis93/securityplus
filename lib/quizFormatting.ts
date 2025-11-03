@@ -96,12 +96,27 @@ export function formatQuizDateShort(quiz: QuizSession): string {
 }
 
 /**
- * Format quiz score fraction (e.g., "650/800")
- * Uses totalPoints/maxPoints to account for partial credit
+ * Format quiz score as fractional questions correct (e.g., "7.5/10")
+ * Calculates fractional correct questions based on points earned per question
  *
  * @param quiz - Quiz session
- * @returns Formatted score fraction
+ * @returns Formatted score fraction showing fractional questions correct
  */
 export function formatQuizScore(quiz: QuizSession): string {
-  return `${quiz.totalPoints}/${quiz.maxPoints}`;
+  // Calculate fractional correct questions
+  const fractionalCorrect = quiz.questions.reduce((sum, attempt) => {
+    const questionScore = attempt.maxPoints > 0
+      ? attempt.pointsEarned / attempt.maxPoints
+      : 0;
+    return sum + questionScore;
+  }, 0);
+
+  const totalQuestions = quiz.questions.length;
+
+  // Format with smart decimal: hide .0 for whole numbers
+  const formattedCorrect = fractionalCorrect % 1 === 0
+    ? fractionalCorrect.toFixed(0)
+    : fractionalCorrect.toFixed(1);
+
+  return `${formattedCorrect}/${totalQuestions}`;
 }
