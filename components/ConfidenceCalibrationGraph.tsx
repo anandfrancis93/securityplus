@@ -35,9 +35,9 @@ interface CalibrationDataPoint {
  */
 function getConfidenceLabel(confidence: number): string {
   switch (confidence) {
-    case 33: return 'Low confidence';
-    case 67: return 'Medium confidence';
-    case 90: return 'High confidence';
+    case 30: return 'Low confidence (0-40%)';
+    case 60: return 'Medium confidence (41-70%)';
+    case 85: return 'High confidence (71-100%)';
     default: return `${confidence}% confident`;
   }
 }
@@ -56,7 +56,7 @@ function aggregateCalibrationData(attempts: QuestionAttempt[]): CalibrationDataP
   }
 
   // Group by confidence level
-  const confidenceLevels = [33, 67, 90];
+  const confidenceLevels = [30, 60, 85];
   const grouped: Record<number, QuestionAttempt[]> = {};
 
   confidenceLevels.forEach(level => {

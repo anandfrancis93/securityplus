@@ -1176,27 +1176,27 @@ export default function Quiz() {
 
                 <div className="confidence-options">
                   <button
-                    onClick={() => handleConfidenceSelect(33)}
+                    onClick={() => handleConfidenceSelect(30)}
                     className="confidence-option"
                   >
                     <div className="confidence-option-label">Low confidence</div>
-                    <div className="confidence-option-percentage">20-40% chance I&apos;m right</div>
+                    <div className="confidence-option-percentage">0-40% chance I&apos;m right</div>
                   </button>
 
                   <button
-                    onClick={() => handleConfidenceSelect(67)}
+                    onClick={() => handleConfidenceSelect(60)}
                     className="confidence-option"
                   >
                     <div className="confidence-option-label">Medium confidence</div>
-                    <div className="confidence-option-percentage">50-70% chance I&apos;m right</div>
+                    <div className="confidence-option-percentage">41-70% chance I&apos;m right</div>
                   </button>
 
                   <button
-                    onClick={() => handleConfidenceSelect(90)}
+                    onClick={() => handleConfidenceSelect(85)}
                     className="confidence-option"
                   >
                     <div className="confidence-option-label">High confidence</div>
-                    <div className="confidence-option-percentage">80-95% chance I&apos;m right</div>
+                    <div className="confidence-option-percentage">71-100% chance I&apos;m right</div>
                   </button>
                 </div>
               </div>
