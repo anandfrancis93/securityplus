@@ -246,12 +246,11 @@ export default function ExplanationSection({
     question.options.forEach((option, idx) => {
       const stripped = stripPrefix(option);
       const isCorrect = correctIndices.includes(idx);
-      const marker = isCorrect ? '✅' : '❌';
 
       // Get shortened option text (first 60 chars)
       const shortOption = stripped.length > 60 ? stripped.substring(0, 60) + '...' : stripped;
 
-      playbook += `"${shortOption}" → ${marker}\n\n`;
+      playbook += `"${shortOption}" → ${isCorrect ? '✅' : '❌'}\n\n`;
     });
 
     // 4. COMMON TRAPS: Extract from incorrect explanations
@@ -266,18 +265,25 @@ export default function ExplanationSection({
       const explanation = orderedExplanations[idx];
       if (!explanation) return;
 
+      // Get the option name (stripped of letter prefix)
+      const optionName = stripPrefix(question.options[idx]);
+
       // Extract the core misconception
       const cleaned = cleanExplanation(explanation);
 
-      // Look for patterns indicating common mistakes
-      if (cleaned.toLowerCase().includes('confus')) {
-        trapsList.push(cleaned.split('.')[0] + '.');
-      } else if (cleaned.toLowerCase().includes('this describes')) {
-        trapsList.push(cleaned.split('.')[0] + '.');
-      } else if (cleaned.toLowerCase().includes('does not')) {
-        trapsList.push(cleaned.split('.')[0] + '.');
-      } else if (cleaned.split('.')[0].length < 120) {
-        trapsList.push(cleaned.split('.')[0] + '.');
+      // Remove "This is incorrect because" or similar prefixes
+      let misconception = cleaned
+        .replace(/^This is incorrect because\s*/i, '')
+        .replace(/^This is wrong because\s*/i, '')
+        .replace(/^Incorrect because\s*/i, '')
+        .replace(/^This\s+/i, '');
+
+      // Take first sentence
+      const firstSentence = misconception.split(/[.!?]/)[0].trim();
+
+      if (firstSentence.length > 10) {
+        // Prefix with option name
+        trapsList.push(`${optionName} is incorrect because ${firstSentence}.`);
       }
     });
 
@@ -602,12 +608,12 @@ export default function ExplanationSection({
             {(() => {
               const studyGuide = generateCoreIntentStudyGuide();
               const sections = [
-                { title: 'Core intent', content: studyGuide.coreIntent, emoji: '🎯' },
-                { title: 'Recall in 10 seconds', content: studyGuide.recall, emoji: '⚡' },
-                { title: 'Fast elimination playbook', content: studyGuide.playbook, emoji: '✂️' },
-                { title: 'Common traps', content: studyGuide.traps, emoji: '⚠️' },
-                { title: 'Exam tip (one-liner)', content: studyGuide.examTip, emoji: '💡' },
-                { title: 'Nice-to-know (edge)', content: studyGuide.niceToKnow, emoji: '🔬' },
+                { title: 'Core intent', content: studyGuide.coreIntent },
+                { title: 'Recall in 10 seconds', content: studyGuide.recall },
+                { title: 'Fast elimination playbook', content: studyGuide.playbook },
+                { title: 'Common traps', content: studyGuide.traps },
+                { title: 'Exam tip (one-liner)', content: studyGuide.examTip },
+                { title: 'Nice-to-know (edge)', content: studyGuide.niceToKnow },
               ];
 
               return (
@@ -630,32 +636,24 @@ export default function ExplanationSection({
                           marginBottom: idx < sections.length - 1 ? 'clamp(16px, 2.5vw, 20px)' : '0',
                         }}
                       >
-                        <div
+                        <strong
                           style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px',
+                            display: 'block',
+                            color: '#10b981',
+                            fontSize: 'clamp(14px, 2vw, 15px)',
+                            fontWeight: 600,
                             marginBottom: '8px',
                           }}
                         >
-                          <span style={{ fontSize: 'clamp(16px, 2vw, 18px)' }}>{section.emoji}</span>
-                          <strong
-                            style={{
-                              color: '#10b981',
-                              fontSize: 'clamp(14px, 2vw, 15px)',
-                              fontWeight: 600,
-                            }}
-                          >
-                            {section.title}
-                          </strong>
-                        </div>
+                          {section.title}
+                        </strong>
                         <div
                           style={{
                             color: '#7dd3a8',
                             fontSize: 'clamp(13px, 1.9vw, 14px)',
                             lineHeight: '1.6',
                             whiteSpace: 'pre-line',
-                            paddingLeft: 'clamp(24px, 3vw, 32px)',
+                            paddingLeft: 'clamp(16px, 2vw, 20px)',
                           }}
                         >
                           {section.content}
