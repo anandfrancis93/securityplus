@@ -609,15 +609,18 @@ export default function ExplanationSection({
           {/* Show explanation for ALL options (correct first, then A-D order for incorrect) */}
           {orderedExplanations && orderedExplanations.length === 4 ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              {/* Show correct answer explanations first */}
+              {/* Show correct answers that were SELECTED first */}
               {correctAnswers.map((index) => {
                 const explanation = orderedExplanations[index];
                 if (!isValidExplanation(explanation)) return null;
 
                 const wasSelectedByUser = userSelectedAnswers.includes(index);
 
+                // Only show correct answers that were selected
+                if (!wasSelectedByUser) return null;
+
                 return (
-                  <div key={`correct-${index}`} className="explanation-item">
+                  <div key={`correct-selected-${index}`} className="explanation-item">
                     <div
                       className="explanation-option-title"
                       style={{
@@ -628,7 +631,39 @@ export default function ExplanationSection({
                     >
                       {stripLetterPrefix(normalizedOptions[index])}
                       <span style={{ color: '#10b981', fontWeight: 600, marginLeft: '8px' }}>
-                        ({wasSelectedByUser ? 'Selected' : 'Not Selected'})
+                        (Selected)
+                      </span>
+                    </div>
+                    <div className="explanation-text">
+                      {formatFirstPrinciplesExplanation(explanation)}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Then show correct answers that were NOT selected */}
+              {correctAnswers.map((index) => {
+                const explanation = orderedExplanations[index];
+                if (!isValidExplanation(explanation)) return null;
+
+                const wasSelectedByUser = userSelectedAnswers.includes(index);
+
+                // Only show correct answers that were not selected
+                if (wasSelectedByUser) return null;
+
+                return (
+                  <div key={`correct-not-selected-${index}`} className="explanation-item">
+                    <div
+                      className="explanation-option-title"
+                      style={{
+                        fontWeight: 700,
+                        color: '#10b981',
+                        marginBottom: '8px',
+                      }}
+                    >
+                      {stripLetterPrefix(normalizedOptions[index])}
+                      <span style={{ color: '#10b981', fontWeight: 600, marginLeft: '8px' }}>
+                        (Not Selected)
                       </span>
                     </div>
                     <div className="explanation-text">
