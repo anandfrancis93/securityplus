@@ -543,24 +543,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 >
                   Ability Level
                 </text>
-
-                {/* Legend */}
-                <g transform={`translate(${Math.max(550, abilityOverTime.length * 200 - 200)}, 20)`}>
-                  <defs>
-                    <filter id="legend-neumorphic">
-                      <feDropShadow dx="4" dy="4" stdDeviation="2" floodOpacity="0.3" floodColor="#050505"/>
-                      <feDropShadow dx="-4" dy="-4" stdDeviation="2" floodOpacity="0.3" floodColor="#191919"/>
-                    </filter>
-                  </defs>
-                  <rect x={0} y={0} width={180} height={80} rx={12} fill="#0f0f0f" filter="url(#legend-neumorphic)" />
-                  <text x={10} y={20} fill="#a8a8a8" fontSize="12" fontWeight="bold">Legend:</text>
-                  <circle cx={20} cy={35} r={4} fill="#10b981" />
-                  <text x={30} y={40} fill="#a8a8a8" fontSize="11">Passing (≥1.54)</text>
-                  <circle cx={20} cy={50} r={4} fill="#f59e0b" />
-                  <text x={30} y={55} fill="#a8a8a8" fontSize="11">Marginal (0-1.54)</text>
-                  <circle cx={20} cy={65} r={4} fill="#f43f5e" />
-                  <text x={30} y={70} fill="#a8a8a8" fontSize="11">Below (&lt; 0)</text>
-                </g>
               </svg>
             </div>
           </div>
@@ -800,24 +782,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 >
                   Exam Score
                 </text>
-
-                {/* Legend */}
-                <g transform={`translate(${Math.max(550, scoreOverTime.length * 200 - 200)}, 20)`}>
-                  <defs>
-                    <filter id="score-legend-neumorphic">
-                      <feDropShadow dx="4" dy="4" stdDeviation="2" floodOpacity="0.3" floodColor="#050505"/>
-                      <feDropShadow dx="-4" dy="-4" stdDeviation="2" floodOpacity="0.3" floodColor="#191919"/>
-                    </filter>
-                  </defs>
-                  <rect x={0} y={0} width={180} height={80} rx={12} fill="#0f0f0f" filter="url(#score-legend-neumorphic)" />
-                  <text x={10} y={20} fill="#a8a8a8" fontSize="12" fontWeight="bold">Legend:</text>
-                  <circle cx={20} cy={35} r={4} fill="#10b981" />
-                  <text x={30} y={40} fill="#a8a8a8" fontSize="11">Excellent (≥800)</text>
-                  <circle cx={20} cy={50} r={4} fill="#f59e0b" />
-                  <text x={30} y={55} fill="#a8a8a8" fontSize="11">Passing (750-799)</text>
-                  <circle cx={20} cy={65} r={4} fill="#f43f5e" />
-                  <text x={30} y={70} fill="#a8a8a8" fontSize="11">Below (&lt; 750)</text>
-                </g>
               </svg>
             </div>
           </div>
