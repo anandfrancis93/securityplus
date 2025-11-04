@@ -140,10 +140,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     const { theta, standardError } = estimateAbilityWithError(attemptsUpToNow);
     const abilityCI = calculateIRTConfidenceInterval(theta, standardError);
 
-    // Use quiz ID for stable identification (extract quiz number if present in ID)
-    const quizLabel = quiz.id.includes('quiz_')
-      ? `Quiz ${quiz.id.split('_')[1] || index + 1}`
-      : `Quiz ${index + 1}`;
+    // Simple quiz numbering based on chronological order
+    const quizLabel = `Quiz ${index + 1}`;
 
     return {
       quiz: quizLabel,
@@ -170,10 +168,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     const scoreLower = Math.max(100, Math.min(900, Math.round(baseScore + (ciLower * scaleFactor))));
     const scoreUpper = Math.max(100, Math.min(900, Math.round(baseScore + (ciUpper * scaleFactor))));
 
-    // Use same quiz label logic as abilityOverTime
-    const quizLabel = quiz.id.includes('quiz_')
-      ? `Quiz ${quiz.id.split('_')[1] || index + 1}`
-      : `Quiz ${index + 1}`;
+    // Use same simple numbering as abilityOverTime
+    const quizLabel = `Quiz ${index + 1}`;
 
     // Calculate error bar as array [lower, upper] for ErrorBar component
     const scoreError = [score - scoreLower, scoreUpper - score];
