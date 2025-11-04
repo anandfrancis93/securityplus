@@ -378,14 +378,16 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               position: 'relative',
               width: '100%',
               overflowX: 'auto',
+              overflowY: 'visible',
               backgroundColor: '#0f0f0f',
               borderRadius: '16px',
-              padding: '20px'
+              padding: '20px',
+              paddingTop: '40px' // Extra space for tooltips
             }}>
               <svg
                 width={Math.max(600, abilityOverTime.length * 200)}
-                height={400}
-                style={{ display: 'block' }}
+                height={450} // Increased height for tooltip space
+                style={{ display: 'block', overflow: 'visible' }}
               >
                 {/* Grid lines */}
                 <g>
@@ -483,28 +485,36 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                                 </filter>
                               </defs>
 
-                              <rect
-                                x={x - 100}
-                                y={y - 85}
-                                width={200}
-                                height={70}
-                                rx={16}
-                                fill="#0f0f0f"
-                                filter={`url(#neumorphic-tooltip-${i})`}
-                              />
+                              {/* Position tooltip below dot if too high, otherwise above */}
+                              {(() => {
+                                const tooltipY = y < 100 ? y + 20 : y - 85;
+                                return (
+                                  <>
+                                    <rect
+                                      x={x - 100}
+                                      y={tooltipY}
+                                      width={200}
+                                      height={70}
+                                      rx={16}
+                                      fill="#0f0f0f"
+                                      filter={`url(#neumorphic-tooltip-${i})`}
+                                    />
 
-                              <text x={x} y={y - 65} fill="#e5e5e5" fontSize="14" fontWeight="bold" textAnchor="middle">
-                                {point.quiz}
-                              </text>
-                              <text x={x} y={y - 47} fill="#a8a8a8" fontSize="12" textAnchor="middle">
-                                Ability: {point.ability.toFixed(2)}
-                              </text>
-                              <text x={x} y={y - 32} fill="#a8a8a8" fontSize="12" textAnchor="middle">
-                                CI: [{point.ciLower.toFixed(2)}, {point.ciUpper.toFixed(2)}]
-                              </text>
-                              <text x={x} y={y - 17} fill="#a8a8a8" fontSize="11" textAnchor="middle">
-                                {point.date}
-                              </text>
+                                    <text x={x} y={tooltipY + 20} fill="#e5e5e5" fontSize="14" fontWeight="bold" textAnchor="middle">
+                                      {point.quiz}
+                                    </text>
+                                    <text x={x} y={tooltipY + 38} fill="#a8a8a8" fontSize="12" textAnchor="middle">
+                                      Ability: {point.ability.toFixed(2)}
+                                    </text>
+                                    <text x={x} y={tooltipY + 53} fill="#a8a8a8" fontSize="12" textAnchor="middle">
+                                      CI: [{point.ciLower.toFixed(2)}, {point.ciUpper.toFixed(2)}]
+                                    </text>
+                                    <text x={x} y={tooltipY + 68} fill="#a8a8a8" fontSize="11" textAnchor="middle">
+                                      {point.date}
+                                    </text>
+                                  </>
+                                )
+                              })()}
                             </g>
                           )}
 
@@ -626,14 +636,16 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               position: 'relative',
               width: '100%',
               overflowX: 'auto',
+              overflowY: 'visible',
               backgroundColor: '#0f0f0f',
               borderRadius: '16px',
-              padding: '20px'
+              padding: '20px',
+              paddingTop: '40px' // Extra space for tooltips
             }}>
               <svg
                 width={Math.max(600, scoreOverTime.length * 200)}
-                height={400}
-                style={{ display: 'block' }}
+                height={450} // Increased height for tooltip space
+                style={{ display: 'block', overflow: 'visible' }}
               >
                 {/* Grid lines */}
                 <g>
@@ -733,28 +745,36 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                                 </filter>
                               </defs>
 
-                              <rect
-                                x={x - 100}
-                                y={y - 85}
-                                width={200}
-                                height={70}
-                                rx={16}
-                                fill="#0f0f0f"
-                                filter={`url(#neumorphic-score-tooltip-${i})`}
-                              />
+                              {/* Position tooltip below dot if too high, otherwise above */}
+                              {(() => {
+                                const tooltipY = y < 100 ? y + 20 : y - 85;
+                                return (
+                                  <>
+                                    <rect
+                                      x={x - 100}
+                                      y={tooltipY}
+                                      width={200}
+                                      height={70}
+                                      rx={16}
+                                      fill="#0f0f0f"
+                                      filter={`url(#neumorphic-score-tooltip-${i})`}
+                                    />
 
-                              <text x={x} y={y - 65} fill="#e5e5e5" fontSize="14" fontWeight="bold" textAnchor="middle">
-                                {point.quiz}
-                              </text>
-                              <text x={x} y={y - 47} fill="#a8a8a8" fontSize="12" textAnchor="middle">
-                                Score: {point.score}
-                              </text>
-                              <text x={x} y={y - 32} fill="#a8a8a8" fontSize="12" textAnchor="middle">
-                                CI: [{point.scoreLower}, {point.scoreUpper}]
-                              </text>
-                              <text x={x} y={y - 17} fill="#a8a8a8" fontSize="11" textAnchor="middle">
-                                {point.date}
-                              </text>
+                                    <text x={x} y={tooltipY + 20} fill="#e5e5e5" fontSize="14" fontWeight="bold" textAnchor="middle">
+                                      {point.quiz}
+                                    </text>
+                                    <text x={x} y={tooltipY + 38} fill="#a8a8a8" fontSize="12" textAnchor="middle">
+                                      Score: {point.score}
+                                    </text>
+                                    <text x={x} y={tooltipY + 53} fill="#a8a8a8" fontSize="12" textAnchor="middle">
+                                      CI: [{point.scoreLower}, {point.scoreUpper}]
+                                    </text>
+                                    <text x={x} y={tooltipY + 68} fill="#a8a8a8" fontSize="11" textAnchor="middle">
+                                      {point.date}
+                                    </text>
+                                  </>
+                                )
+                              })()}
                             </g>
                           )}
 
