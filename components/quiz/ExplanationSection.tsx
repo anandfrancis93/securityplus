@@ -219,10 +219,10 @@ export default function ExplanationSection({
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(12px, 2vw, 16px)' }}>
         {sections.map((section, idx) => {
           // Check if this is a labeled section
-          const firstPrincipleMatch = section.match(/^First principle:\s*(.+)/is);
-          const reasoningMatch = section.match(/^Reasoning:\s*(.+)/is);
-          const mechanismMatch = section.match(/^Mechanism:\s*(.+)/is);
-          const outcomeMatch = section.match(/^Outcome:\s*(.+)/is);
+          const firstPrincipleMatch = section.match(/^First principle:\s*(.+)/i);
+          const reasoningMatch = section.match(/^Reasoning:\s*(.+)/i);
+          const mechanismMatch = section.match(/^Mechanism:\s*(.+)/i);
+          const outcomeMatch = section.match(/^Outcome:\s*(.+)/i);
 
           if (firstPrincipleMatch) {
             return (
