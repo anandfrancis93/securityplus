@@ -121,18 +121,18 @@ export function DomainDropdown({
                 textAlign: 'left',
                 padding: '16px 20px',
                 fontSize: '16px',
-                color: value === domain ? '#8b5cf6' : '#e5e5e5',
-                backgroundColor: value === domain ? 'rgba(139, 92, 246, 0.1)' : 'transparent',
+                color: '#e5e5e5',
+                backgroundColor: value === domain ? 'rgba(25, 25, 25, 0.5)' : 'transparent',
                 border: 'none',
                 cursor: 'pointer',
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 fontWeight: value === domain ? 600 : 400
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = value === domain ? 'rgba(139, 92, 246, 0.2)' : 'rgba(25, 25, 25, 0.5)';
+                e.currentTarget.style.backgroundColor = 'rgba(25, 25, 25, 0.5)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = value === domain ? 'rgba(139, 92, 246, 0.1)' : 'transparent';
+                e.currentTarget.style.backgroundColor = value === domain ? 'rgba(25, 25, 25, 0.5)' : 'transparent';
               }}
             >
               {domain}
