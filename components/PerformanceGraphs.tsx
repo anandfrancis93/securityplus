@@ -385,11 +385,10 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               paddingTop: '40px' // Extra space for tooltips
             }}>
               <svg
-                width={Math.max(600, abilityOverTime.length * 200)}
-                height={450}
+                viewBox="0 0 1000 450"
+                preserveAspectRatio="none"
                 style={{
                   width: '100%',
-                  minWidth: abilityOverTime.length > 3 ? `${Math.max(600, abilityOverTime.length * 200)}px` : 'unset',
                   height: '450px',
                   display: 'block',
                   overflow: 'visible'
@@ -404,7 +403,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                         <line
                           x1={50}
                           y1={yPos}
-                          x2={Math.max(550, abilityOverTime.length * 200 - 50)}
+                          x2={950}
                           y2={yPos}
                           stroke="#191919"
                           strokeDasharray="3 3"
@@ -421,14 +420,14 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 <line
                   x1={50}
                   y1={350 - ((1.54 + 3) / 6) * 300}
-                  x2={Math.max(550, abilityOverTime.length * 200 - 50)}
+                  x2={950}
                   y2={350 - ((1.54 + 3) / 6) * 300}
                   stroke="#10b981"
                   strokeDasharray="5 5"
                   strokeWidth={2}
                 />
                 <text
-                  x={Math.max(560, abilityOverTime.length * 200 - 40)}
+                  x={960}
                   y={350 - ((1.54 + 3) / 6) * 300 + 4}
                   fill="#10b981"
                   fontSize="11"
@@ -442,7 +441,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                     {/* Line connecting points */}
                     <polyline
                       points={abilityOverTime.map((point, i) => {
-                        const x = 100 + i * 200;
+                        const x = abilityOverTime.length === 1
+                          ? 500
+                          : 100 + (i / (abilityOverTime.length - 1)) * 800;
                         const midpoint = (point.ciLower + point.ciUpper) / 2;
                         const y = 350 - ((midpoint + 3) / 6) * 300;
                         return `${x},${y}`;
@@ -454,7 +455,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
                     {/* Error bars and dots */}
                     {abilityOverTime.map((point, i) => {
-                      const x = 100 + i * 200;
+                      const x = abilityOverTime.length === 1
+                        ? 500
+                        : 100 + (i / (abilityOverTime.length - 1)) * 800;
                       // Use midpoint of CI for dot position instead of raw ability
                       const midpoint = (point.ciLower + point.ciUpper) / 2;
                       const y = 350 - ((midpoint + 3) / 6) * 300;
@@ -526,11 +529,11 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 )}
 
                 {/* Axes */}
-                <line x1={50} y1={350} x2={Math.max(550, abilityOverTime.length * 200 - 50)} y2={350} stroke="#a8a8a8" strokeWidth={2} />
+                <line x1={50} y1={350} x2={950} y2={350} stroke="#a8a8a8" strokeWidth={2} />
                 <line x1={50} y1={50} x2={50} y2={350} stroke="#a8a8a8" strokeWidth={2} />
 
                 {/* Axis labels */}
-                <text x={Math.max(300, abilityOverTime.length * 100)} y={405} fill="#a8a8a8" fontSize="13" textAnchor="middle">
+                <text x={500} y={405} fill="#a8a8a8" fontSize="13" textAnchor="middle">
                   Quiz
                 </text>
                 <text
@@ -622,11 +625,10 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               paddingTop: '40px' // Extra space for tooltips
             }}>
               <svg
-                width={Math.max(600, scoreOverTime.length * 200)}
-                height={450}
+                viewBox="0 0 1000 450"
+                preserveAspectRatio="none"
                 style={{
                   width: '100%',
-                  minWidth: scoreOverTime.length > 3 ? `${Math.max(600, scoreOverTime.length * 200)}px` : 'unset',
                   height: '450px',
                   display: 'block',
                   overflow: 'visible'
@@ -641,7 +643,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                         <line
                           x1={50}
                           y1={yPos}
-                          x2={Math.max(550, scoreOverTime.length * 200 - 50)}
+                          x2={950}
                           y2={yPos}
                           stroke="#191919"
                           strokeDasharray="3 3"
@@ -658,14 +660,14 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 <line
                   x1={50}
                   y1={350 - ((750 - 100) / 800) * 300}
-                  x2={Math.max(550, scoreOverTime.length * 200 - 50)}
+                  x2={950}
                   y2={350 - ((750 - 100) / 800) * 300}
                   stroke="#10b981"
                   strokeDasharray="5 5"
                   strokeWidth={2}
                 />
                 <text
-                  x={Math.max(560, scoreOverTime.length * 200 - 40)}
+                  x={960}
                   y={350 - ((750 - 100) / 800) * 300 + 4}
                   fill="#10b981"
                   fontSize="11"
@@ -679,7 +681,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                     {/* Line connecting points */}
                     <polyline
                       points={scoreOverTime.map((point, i) => {
-                        const x = 100 + i * 200;
+                        const x = scoreOverTime.length === 1
+                          ? 500
+                          : 100 + (i / (scoreOverTime.length - 1)) * 800;
                         const midpoint = (point.scoreLower + point.scoreUpper) / 2;
                         const y = 350 - ((midpoint - 100) / 800) * 300;
                         return `${x},${y}`;
@@ -691,7 +695,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
                     {/* Error bars and dots */}
                     {scoreOverTime.map((point, i) => {
-                      const x = 100 + i * 200;
+                      const x = scoreOverTime.length === 1
+                        ? 500
+                        : 100 + (i / (scoreOverTime.length - 1)) * 800;
                       // Use midpoint of CI for dot position instead of raw score
                       const midpoint = (point.scoreLower + point.scoreUpper) / 2;
                       const y = 350 - ((midpoint - 100) / 800) * 300;
@@ -765,11 +771,11 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 )}
 
                 {/* Axes */}
-                <line x1={50} y1={350} x2={Math.max(550, scoreOverTime.length * 200 - 50)} y2={350} stroke="#a8a8a8" strokeWidth={2} />
+                <line x1={50} y1={350} x2={950} y2={350} stroke="#a8a8a8" strokeWidth={2} />
                 <line x1={50} y1={50} x2={50} y2={350} stroke="#a8a8a8" strokeWidth={2} />
 
                 {/* Axis labels */}
-                <text x={Math.max(300, scoreOverTime.length * 100)} y={405} fill="#a8a8a8" fontSize="13" textAnchor="middle">
+                <text x={500} y={405} fill="#a8a8a8" fontSize="13" textAnchor="middle">
                   Quiz
                 </text>
                 <text
