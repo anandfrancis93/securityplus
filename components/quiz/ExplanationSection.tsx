@@ -603,8 +603,9 @@ export default function ExplanationSection({
         </div>
       </div>
 
-      {/* Core Intent Section */}
+      {/* Core Intent Section - Always shown */}
       <div
+        className="core-intent-section"
         style={{
           marginTop: 'clamp(24px, 4vw, 40px)',
           padding: 'clamp(20px, 3vw, 32px)',
