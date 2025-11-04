@@ -118,13 +118,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     );
   }
 
-  // Debug: Show raw quiz history info
-  console.log('UserProgress quizHistory:', userProgress.quizHistory.map(q => ({
-    id: q.id,
-    startedAt: q.startedAt,
-    endedAt: q.endedAt,
-    questionCount: q.questions.length
-  })));
 
   // Graph 1: Ability Level Over Time with Confidence Intervals
   // Sort quizzes by startedAt timestamp to ensure correct chronological order
@@ -463,7 +456,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                     <polyline
                       points={abilityOverTime.map((point, i) => {
                         const x = 100 + i * 200;
-                        const y = 350 - ((point.ability + 3) / 6) * 300;
+                        const midpoint = (point.ciLower + point.ciUpper) / 2;
+                        const y = 350 - ((midpoint + 3) / 6) * 300;
                         return `${x},${y}`;
                       }).join(' ')}
                       stroke="#e5e5e5"
@@ -474,13 +468,12 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                     {/* Error bars and dots */}
                     {abilityOverTime.map((point, i) => {
                       const x = 100 + i * 200;
-                      const y = 350 - ((point.ability + 3) / 6) * 300;
+                      // Use midpoint of CI for dot position instead of raw ability
+                      const midpoint = (point.ciLower + point.ciUpper) / 2;
+                      const y = 350 - ((midpoint + 3) / 6) * 300;
                       const yLower = 350 - ((point.ciLower + 3) / 6) * 300;
                       const yUpper = 350 - ((point.ciUpper + 3) / 6) * 300;
                       const color = getAbilityColor(point.ability);
-
-                      // Debug: Log to check if ability is centered between CI bounds
-                      console.log(`Quiz ${i + 1}: ability=${point.ability}, ciLower=${point.ciLower}, ciUpper=${point.ciUpper}, midpoint=${(point.ciLower + point.ciUpper) / 2}`);
 
                       return (
                         <g key={i}>
@@ -489,11 +482,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                           <line x1={x - 5} y1={yLower} x2={x + 5} y2={yLower} stroke="#666666" strokeWidth={2} />
                           <line x1={x - 5} y1={yUpper} x2={x + 5} y2={yUpper} stroke="#666666" strokeWidth={2} />
 
-                          {/* Data point - using the midpoint of CI instead of ability */}
+                          {/* Data point - positioned at CI midpoint for visual balance */}
                           <circle cx={x} cy={y} r={6} fill={color} />
-
-                          {/* Visual debug: show where midpoint should be */}
-                          <circle cx={x} cy={350 - (((point.ciLower + point.ciUpper) / 2 + 3) / 6) * 300} r={3} fill="red" opacity="0.5" />
 
                           {/* Label */}
                           <text x={x} y={380} fill="#a8a8a8" fontSize="14" textAnchor="middle">
@@ -652,7 +642,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                     <polyline
                       points={scoreOverTime.map((point, i) => {
                         const x = 100 + i * 200;
-                        const y = 350 - ((point.score - 100) / 800) * 300;
+                        const midpoint = (point.scoreLower + point.scoreUpper) / 2;
+                        const y = 350 - ((midpoint - 100) / 800) * 300;
                         return `${x},${y}`;
                       }).join(' ')}
                       stroke="#e5e5e5"
@@ -663,15 +654,14 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                     {/* Error bars and dots */}
                     {scoreOverTime.map((point, i) => {
                       const x = 100 + i * 200;
-                      const y = 350 - ((point.score - 100) / 800) * 300;
+                      // Use midpoint of CI for dot position instead of raw score
+                      const midpoint = (point.scoreLower + point.scoreUpper) / 2;
+                      const y = 350 - ((midpoint - 100) / 800) * 300;
                       const yLower = 350 - ((point.scoreLower - 100) / 800) * 300;
                       const yUpper = 350 - ((point.scoreUpper - 100) / 800) * 300;
                       let color = '#f43f5e'; // Rose for below passing
                       if (point.score >= 800) color = '#10b981'; // Emerald for excellent
                       else if (point.score >= 750) color = '#f59e0b'; // Amber for passing
-
-                      // Debug: Log to check if score is centered between CI bounds
-                      console.log(`Quiz ${i + 1} Score: score=${point.score}, scoreLower=${point.scoreLower}, scoreUpper=${point.scoreUpper}, midpoint=${(point.scoreLower + point.scoreUpper) / 2}`);
 
                       return (
                         <g key={i}>
@@ -680,11 +670,8 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                           <line x1={x - 5} y1={yLower} x2={x + 5} y2={yLower} stroke="#666666" strokeWidth={2} />
                           <line x1={x - 5} y1={yUpper} x2={x + 5} y2={yUpper} stroke="#666666" strokeWidth={2} />
 
-                          {/* Data point */}
+                          {/* Data point - positioned at CI midpoint for visual balance */}
                           <circle cx={x} cy={y} r={6} fill={color} />
-
-                          {/* Visual debug: show where midpoint should be */}
-                          <circle cx={x} cy={350 - (((point.scoreLower + point.scoreUpper) / 2 - 100) / 800) * 300} r={3} fill="red" opacity="0.5" />
 
                           {/* Label */}
                           <text x={x} y={380} fill="#a8a8a8" fontSize="14" textAnchor="middle">
