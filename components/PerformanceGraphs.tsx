@@ -2,8 +2,6 @@
 
 import React, { useState } from 'react';
 import {
-  LineChart,
-  Line,
   BarChart,
   Bar,
   XAxis,
@@ -11,14 +9,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  ReferenceLine,
-  ReferenceArea,
-  Legend,
-  TooltipProps,
   Cell,
-  ErrorBar,
-  Area,
-  ComposedChart,
 } from 'recharts';
 import { UserProgress } from '@/lib/types';
 import { ALL_SECURITY_PLUS_TOPICS } from '@/lib/topicData';
@@ -34,46 +25,6 @@ const getAbilityColor = (ability: number) => {
   if (ability >= 1.54) return '#10b981'; // Emerald for passing
   if (ability >= 0) return '#f59e0b'; // Amber for marginal
   return '#f43f5e'; // Rose for failing
-};
-
-// Custom tooltip for Ability Level Over Time
-const AbilityTooltip = ({ active, payload }: any) => {
-  if (active && payload && payload.length) {
-    const data = payload[0].payload;
-    return (
-      <div style={{
-        backgroundColor: '#0f0f0f',
-        borderRadius: '16px',
-        padding: '16px',
-        boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919'
-      }}>
-        <p style={{ color: '#e5e5e5', fontSize: '14px', margin: 0 }}>
-          {data.ciLower.toFixed(2)} to {data.ciUpper.toFixed(2)}
-        </p>
-      </div>
-    );
-  }
-  return null;
-};
-
-// Custom tooltip for Predicted Score Over Time
-const ScoreTooltip = ({ active, payload }: any) => {
-  if (active && payload && payload.length) {
-    const data = payload[0].payload;
-    return (
-      <div style={{
-        backgroundColor: '#0f0f0f',
-        borderRadius: '16px',
-        padding: '16px',
-        boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919'
-      }}>
-        <p style={{ color: '#e5e5e5', fontSize: '14px', margin: 0 }}>
-          {data.scoreLower} to {data.scoreUpper}
-        </p>
-      </div>
-    );
-  }
-  return null;
 };
 
 // Custom tooltip component for bar charts
@@ -423,69 +374,133 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           </button>
         </div>
         {isAbilityGraphOpen && (
-          <div style={{ padding: '0 clamp(8px, 2vw, 48px) clamp(32px, 6vw, 48px) clamp(8px, 2vw, 48px)', overflowX: 'auto', overflowY: 'hidden' }}>
-            <LineChart
-              width={Math.max(600, abilityOverTime.length * 200)}
-              height={400}
-              data={abilityOverTime}
-              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-            >
-              <defs>
-                {/* Define individual gradients for each data point based on ability level */}
-                {abilityOverTime.map((point, index) => {
-                  const color = getAbilityColor(point.ability);
-                  return (
-                    <linearGradient key={`gradient-${index}`} id={`abilityGradient-${index}`} x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={color} stopOpacity={0.3} />
-                      <stop offset="100%" stopColor={color} stopOpacity={0.1} />
-                    </linearGradient>
-                  );
-                })}
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#191919" />
-              <XAxis dataKey="quiz" stroke="#a8a8a8" tick={{ fill: '#a8a8a8' }} label={{ value: 'Quiz', position: 'insideBottom', offset: -10, fill: '#a8a8a8' }} />
-              <YAxis domain={[-3, 3]} stroke="#a8a8a8" label={{ value: 'Ability Level', angle: -90, position: 'insideLeft', fill: '#a8a8a8', style: { textAnchor: 'middle' } }} />
-              <Tooltip content={<AbilityTooltip />} />
-              <ReferenceLine y={1.54} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Passing (750)', fill: '#10b981', position: 'right' }} />
+          <div style={{ padding: '0 clamp(8px, 2vw, 48px) clamp(32px, 6vw, 48px) clamp(8px, 2vw, 48px)' }}>
+            {/* Debug info */}
+            <div style={{ marginBottom: '20px', padding: '16px', backgroundColor: '#1a1a1a', borderRadius: '8px', color: '#e5e5e5' }}>
+              <p style={{ margin: '0 0 8px 0' }}>Debug: Found {abilityOverTime.length} quiz data points</p>
+              <p style={{ margin: '0', fontSize: '12px' }}>
+                {abilityOverTime.map((point, i) => `[${i}] ${point.quiz}: ${point.ability}`).join(' | ')}
+              </p>
+            </div>
 
-              {/* Render colored confidence bands as reference areas between consecutive points */}
-              {abilityOverTime.map((point, index) => {
-                if (index === abilityOverTime.length - 1) return null;
-
-                const nextPoint = abilityOverTime[index + 1];
-                const avgAbility = (point.ability + nextPoint.ability) / 2;
-                const color = getAbilityColor(avgAbility);
-
-                return (
-                  <ReferenceArea
-                    key={`ci-band-${index}`}
-                    x1={point.quiz}
-                    x2={nextPoint.quiz}
-                    y1={Math.min(point.ciLower, nextPoint.ciLower)}
-                    y2={Math.max(point.ciUpper, nextPoint.ciUpper)}
-                    fill={color}
-                    fillOpacity={0.2}
-                    strokeOpacity={0}
-                  />
-                );
-              })}
-
-              {/* Main ability line */}
-              <Line
-                type="monotone"
-                dataKey="ability"
-                stroke="#e5e5e5"
-                strokeWidth={3}
-                dot={(props: any) => {
-                  const { cx, cy, payload } = props;
-                  const ability = payload.ability;
-                  const fill = getAbilityColor(ability);
-                  return <circle cx={cx} cy={cy} r={5} fill={fill} />;
-                }}
+            {/* Simple custom chart without Recharts */}
+            <div style={{
+              position: 'relative',
+              width: '100%',
+              overflowX: 'auto',
+              backgroundColor: '#0f0f0f',
+              borderRadius: '16px',
+              padding: '20px'
+            }}>
+              <svg
+                width={Math.max(600, abilityOverTime.length * 200)}
+                height={400}
+                style={{ display: 'block' }}
               >
-                <ErrorBar dataKey="abilityError" width={4} stroke="#666666" strokeWidth={2} direction="y" />
-              </Line>
-            </LineChart>
+                {/* Grid lines */}
+                <g>
+                  {[-3, -2, -1, 0, 1, 2, 3].map(y => {
+                    const yPos = 350 - ((y + 3) / 6) * 300;
+                    return (
+                      <g key={y}>
+                        <line
+                          x1={50}
+                          y1={yPos}
+                          x2={Math.max(550, abilityOverTime.length * 200 - 50)}
+                          y2={yPos}
+                          stroke="#191919"
+                          strokeDasharray="3 3"
+                        />
+                        <text x={30} y={yPos + 5} fill="#a8a8a8" fontSize="12" textAnchor="end">
+                          {y}
+                        </text>
+                      </g>
+                    );
+                  })}
+                </g>
+
+                {/* Passing line at 1.54 */}
+                <line
+                  x1={50}
+                  y1={350 - ((1.54 + 3) / 6) * 300}
+                  x2={Math.max(550, abilityOverTime.length * 200 - 50)}
+                  y2={350 - ((1.54 + 3) / 6) * 300}
+                  stroke="#10b981"
+                  strokeDasharray="5 5"
+                  strokeWidth={2}
+                />
+                <text
+                  x={Math.max(560, abilityOverTime.length * 200 - 40)}
+                  y={350 - ((1.54 + 3) / 6) * 300 + 5}
+                  fill="#10b981"
+                  fontSize="12"
+                >
+                  Pass
+                </text>
+
+                {/* Data points and line */}
+                {abilityOverTime.length > 0 && (
+                  <>
+                    {/* Line connecting points */}
+                    <polyline
+                      points={abilityOverTime.map((point, i) => {
+                        const x = 100 + i * 200;
+                        const y = 350 - ((point.ability + 3) / 6) * 300;
+                        return `${x},${y}`;
+                      }).join(' ')}
+                      stroke="#e5e5e5"
+                      strokeWidth={3}
+                      fill="none"
+                    />
+
+                    {/* Error bars and dots */}
+                    {abilityOverTime.map((point, i) => {
+                      const x = 100 + i * 200;
+                      const y = 350 - ((point.ability + 3) / 6) * 300;
+                      const yLower = 350 - ((point.ciLower + 3) / 6) * 300;
+                      const yUpper = 350 - ((point.ciUpper + 3) / 6) * 300;
+                      const color = getAbilityColor(point.ability);
+
+                      return (
+                        <g key={i}>
+                          {/* Error bar */}
+                          <line x1={x} y1={yLower} x2={x} y2={yUpper} stroke="#666666" strokeWidth={2} />
+                          <line x1={x - 5} y1={yLower} x2={x + 5} y2={yLower} stroke="#666666" strokeWidth={2} />
+                          <line x1={x - 5} y1={yUpper} x2={x + 5} y2={yUpper} stroke="#666666" strokeWidth={2} />
+
+                          {/* Data point */}
+                          <circle cx={x} cy={y} r={6} fill={color} />
+
+                          {/* Label */}
+                          <text x={x} y={380} fill="#a8a8a8" fontSize="14" textAnchor="middle">
+                            {point.quiz}
+                          </text>
+                        </g>
+                      );
+                    })}
+                  </>
+                )}
+
+                {/* Axes */}
+                <line x1={50} y1={350} x2={Math.max(550, abilityOverTime.length * 200 - 50)} y2={350} stroke="#a8a8a8" strokeWidth={2} />
+                <line x1={50} y1={50} x2={50} y2={350} stroke="#a8a8a8" strokeWidth={2} />
+
+                {/* Axis labels */}
+                <text x={Math.max(300, abilityOverTime.length * 100)} y={395} fill="#a8a8a8" fontSize="14" textAnchor="middle">
+                  Quiz
+                </text>
+                <text
+                  x={20}
+                  y={200}
+                  fill="#a8a8a8"
+                  fontSize="14"
+                  textAnchor="middle"
+                  transform="rotate(-90 20 200)"
+                >
+                  Ability Level
+                </text>
+              </svg>
+            </div>
           </div>
         )}
       </div>
@@ -550,71 +565,135 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           </button>
         </div>
         {isPredictedScoreGraphOpen && (
-          <div style={{ padding: '0 clamp(8px, 2vw, 48px) clamp(32px, 6vw, 48px) clamp(8px, 2vw, 48px)', overflowX: 'auto', overflowY: 'hidden' }}>
-            <LineChart
-              width={Math.max(600, scoreOverTime.length * 200)}
-              height={400}
-              data={scoreOverTime}
-              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-            >
-              <defs>
-                {/* Define individual gradients for confidence bands based on score */}
-                {scoreOverTime.map((point, index) => {
-                  const score = point.score;
-                  const color = score >= 800 ? '#10b981' : score >= 750 ? '#f59e0b' : '#f43f5e';
-                  return (
-                    <linearGradient key={`score-gradient-${index}`} id={`scoreGradient-${index}`} x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={color} stopOpacity={0.3} />
-                      <stop offset="100%" stopColor={color} stopOpacity={0.1} />
-                    </linearGradient>
-                  );
-                })}
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#191919" />
-              <XAxis dataKey="quiz" stroke="#a8a8a8" tick={{ fill: '#a8a8a8' }} label={{ value: 'Quiz', position: 'insideBottom', offset: -10, fill: '#a8a8a8' }} />
-              <YAxis domain={[100, 900]} stroke="#a8a8a8" label={{ value: 'Exam Score', angle: -90, position: 'insideLeft', fill: '#a8a8a8', style: { textAnchor: 'middle' } }} />
-              <Tooltip content={<ScoreTooltip />} />
-              <ReferenceLine y={750} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Passing (750)', fill: '#10b981', position: 'right' }} />
+          <div style={{ padding: '0 clamp(8px, 2vw, 48px) clamp(32px, 6vw, 48px) clamp(8px, 2vw, 48px)' }}>
+            {/* Debug info */}
+            <div style={{ marginBottom: '20px', padding: '16px', backgroundColor: '#1a1a1a', borderRadius: '8px', color: '#e5e5e5' }}>
+              <p style={{ margin: '0 0 8px 0' }}>Debug: Found {scoreOverTime.length} quiz data points</p>
+              <p style={{ margin: '0', fontSize: '12px' }}>
+                {scoreOverTime.map((point, i) => `[${i}] ${point.quiz}: ${point.score}`).join(' | ')}
+              </p>
+            </div>
 
-              {/* Colored confidence bands between consecutive points */}
-              {scoreOverTime.map((point, index) => {
-                if (index === scoreOverTime.length - 1) return null;
-
-                const nextPoint = scoreOverTime[index + 1];
-                const avgScore = (point.score + nextPoint.score) / 2;
-                const color = avgScore >= 800 ? '#10b981' : avgScore >= 750 ? '#f59e0b' : '#f43f5e';
-
-                return (
-                  <ReferenceArea
-                    key={`score-ci-band-${index}`}
-                    x1={point.quiz}
-                    x2={nextPoint.quiz}
-                    y1={Math.min(point.scoreLower, nextPoint.scoreLower)}
-                    y2={Math.max(point.scoreUpper, nextPoint.scoreUpper)}
-                    fill={color}
-                    fillOpacity={0.2}
-                    strokeOpacity={0}
-                  />
-                );
-              })}
-
-              <Line
-                type="monotone"
-                dataKey="score"
-                stroke="#e5e5e5"
-                strokeWidth={3}
-                dot={(props: any) => {
-                  const { cx, cy, payload } = props;
-                  const score = payload.score;
-                  let fill = '#f43f5e'; // Rose for below passing
-                  if (score >= 800) fill = '#10b981'; // Emerald for excellent
-                  else if (score >= 750) fill = '#f59e0b'; // Amber for passing
-                  return <circle cx={cx} cy={cy} r={5} fill={fill} />;
-                }}
+            {/* Simple custom chart without Recharts */}
+            <div style={{
+              position: 'relative',
+              width: '100%',
+              overflowX: 'auto',
+              backgroundColor: '#0f0f0f',
+              borderRadius: '16px',
+              padding: '20px'
+            }}>
+              <svg
+                width={Math.max(600, scoreOverTime.length * 200)}
+                height={400}
+                style={{ display: 'block' }}
               >
-                <ErrorBar dataKey="scoreError" width={4} stroke="#666666" strokeWidth={2} direction="y" />
-              </Line>
-            </LineChart>
+                {/* Grid lines */}
+                <g>
+                  {[100, 200, 300, 400, 500, 600, 700, 800, 900].map(score => {
+                    const yPos = 350 - ((score - 100) / 800) * 300;
+                    return (
+                      <g key={score}>
+                        <line
+                          x1={50}
+                          y1={yPos}
+                          x2={Math.max(550, scoreOverTime.length * 200 - 50)}
+                          y2={yPos}
+                          stroke="#191919"
+                          strokeDasharray="3 3"
+                        />
+                        <text x={40} y={yPos + 5} fill="#a8a8a8" fontSize="12" textAnchor="end">
+                          {score}
+                        </text>
+                      </g>
+                    );
+                  })}
+                </g>
+
+                {/* Passing line at 750 */}
+                <line
+                  x1={50}
+                  y1={350 - ((750 - 100) / 800) * 300}
+                  x2={Math.max(550, scoreOverTime.length * 200 - 50)}
+                  y2={350 - ((750 - 100) / 800) * 300}
+                  stroke="#10b981"
+                  strokeDasharray="5 5"
+                  strokeWidth={2}
+                />
+                <text
+                  x={Math.max(560, scoreOverTime.length * 200 - 40)}
+                  y={350 - ((750 - 100) / 800) * 300 + 5}
+                  fill="#10b981"
+                  fontSize="12"
+                >
+                  Pass
+                </text>
+
+                {/* Data points and line */}
+                {scoreOverTime.length > 0 && (
+                  <>
+                    {/* Line connecting points */}
+                    <polyline
+                      points={scoreOverTime.map((point, i) => {
+                        const x = 100 + i * 200;
+                        const y = 350 - ((point.score - 100) / 800) * 300;
+                        return `${x},${y}`;
+                      }).join(' ')}
+                      stroke="#e5e5e5"
+                      strokeWidth={3}
+                      fill="none"
+                    />
+
+                    {/* Error bars and dots */}
+                    {scoreOverTime.map((point, i) => {
+                      const x = 100 + i * 200;
+                      const y = 350 - ((point.score - 100) / 800) * 300;
+                      const yLower = 350 - ((point.scoreLower - 100) / 800) * 300;
+                      const yUpper = 350 - ((point.scoreUpper - 100) / 800) * 300;
+                      let color = '#f43f5e'; // Rose for below passing
+                      if (point.score >= 800) color = '#10b981'; // Emerald for excellent
+                      else if (point.score >= 750) color = '#f59e0b'; // Amber for passing
+
+                      return (
+                        <g key={i}>
+                          {/* Error bar */}
+                          <line x1={x} y1={yLower} x2={x} y2={yUpper} stroke="#666666" strokeWidth={2} />
+                          <line x1={x - 5} y1={yLower} x2={x + 5} y2={yLower} stroke="#666666" strokeWidth={2} />
+                          <line x1={x - 5} y1={yUpper} x2={x + 5} y2={yUpper} stroke="#666666" strokeWidth={2} />
+
+                          {/* Data point */}
+                          <circle cx={x} cy={y} r={6} fill={color} />
+
+                          {/* Label */}
+                          <text x={x} y={380} fill="#a8a8a8" fontSize="14" textAnchor="middle">
+                            {point.quiz}
+                          </text>
+                        </g>
+                      );
+                    })}
+                  </>
+                )}
+
+                {/* Axes */}
+                <line x1={50} y1={350} x2={Math.max(550, scoreOverTime.length * 200 - 50)} y2={350} stroke="#a8a8a8" strokeWidth={2} />
+                <line x1={50} y1={50} x2={50} y2={350} stroke="#a8a8a8" strokeWidth={2} />
+
+                {/* Axis labels */}
+                <text x={Math.max(300, scoreOverTime.length * 100)} y={395} fill="#a8a8a8" fontSize="14" textAnchor="middle">
+                  Quiz
+                </text>
+                <text
+                  x={20}
+                  y={200}
+                  fill="#a8a8a8"
+                  fontSize="14"
+                  textAnchor="middle"
+                  transform="rotate(-90 20 200)"
+                >
+                  Exam Score
+                </text>
+              </svg>
+            </div>
           </div>
         )}
       </div>
