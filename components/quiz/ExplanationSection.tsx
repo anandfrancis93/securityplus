@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, ReactElement } from 'react';
 import { Question } from '@/lib/types';
 
 interface ExplanationSectionProps {
@@ -206,7 +206,7 @@ export default function ExplanationSection({
   };
 
   // Format first principles explanation with proper styling
-  const formatFirstPrinciplesExplanation = (text: string): JSX.Element => {
+  const formatFirstPrinciplesExplanation = (text: string): ReactElement => {
     if (!text) return <span>{text}</span>;
 
     // Clean the text first
