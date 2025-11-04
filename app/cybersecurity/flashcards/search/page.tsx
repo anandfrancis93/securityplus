@@ -410,8 +410,8 @@ export default function SearchFlashcards() {
                   style={{
                     flex: 1,
                     padding: 'clamp(14px, 2vw, 18px) clamp(24px, 4vw, 36px)',
-                    backgroundColor: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? '#0f0f0f' : '#10b981',
-                    color: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? '#666666' : '#000',
+                    backgroundColor: '#0f0f0f',
+                    color: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? '#666666' : '#e5e5e5',
                     border: 'none',
                     borderRadius: '16px',
                     fontSize: 'clamp(14px, 2.5vw, 17px)',
@@ -419,12 +419,21 @@ export default function SearchFlashcards() {
                     cursor: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? 'not-allowed' : 'pointer',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     letterSpacing: '0.02em',
-                    boxShadow: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? '6px 6px 12px #050505, -6px -6px 12px #191919' : '6px 6px 12px #050505, -6px -6px 12px #191919'
+                    boxShadow: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10)
+                      ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
+                      : '6px 6px 12px #050505, -6px -6px 12px #191919',
+                    opacity: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? 0.6 : 1
                   }}
-                  onMouseEnter={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = '#059669')}
-                  onMouseLeave={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.backgroundColor = '#10b981')}
-                  onMouseDown={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919')}
-                  onMouseUp={(e) => !(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) && (e.currentTarget.style.boxShadow = '6px 6px 12px #050505, -6px -6px 12px #191919')}
+                  onMouseEnter={(e) => {
+                    if (!(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10)) {
+                      e.currentTarget.style.boxShadow = 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!(generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10)) {
+                      e.currentTarget.style.boxShadow = '6px 6px 12px #050505, -6px -6px 12px #191919';
+                    }
+                  }}
                 >
                   {generating ? 'Saving...' : 'Save Changes'}
                 </button>
