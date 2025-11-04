@@ -20,6 +20,10 @@ export interface Question {
   explanation?: string; // Legacy: overall explanation (now redundant)
   incorrectExplanations?: string[]; // Legacy: parallel explanations array
 
+  // Educational content
+  coreIntent?: string; // What this question tests (Core Intent section)
+  context?: string; // Additional context and "Why It Matters" (Context section)
+
   topics: string[]; // Exact topic strings from cleaned topic list
   difficulty: 'easy' | 'medium' | 'hard';
   createdAt: number;
