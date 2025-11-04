@@ -439,7 +439,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               })}
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#191919" />
-            <XAxis dataKey="quiz" stroke="#a8a8a8" tick={false} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#a8a8a8' }} />
+            <XAxis dataKey="quiz" stroke="#a8a8a8" tick={false} interval={0} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#a8a8a8' }} />
             <YAxis domain={[-3, 3]} stroke="#a8a8a8" label={{ value: 'Ability Level', angle: -90, position: 'insideLeft', fill: '#a8a8a8', style: { textAnchor: 'middle' } }} />
             <Tooltip content={<AbilityTooltip />} />
             <ReferenceLine y={1.54} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Passing (750)', fill: '#10b981', position: 'right' }} />
@@ -564,7 +564,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                   })}
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#191919" />
-                <XAxis dataKey="quiz" stroke="#a8a8a8" tick={false} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#a8a8a8' }} />
+                <XAxis dataKey="quiz" stroke="#a8a8a8" tick={false} interval={0} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#a8a8a8' }} />
                 <YAxis domain={[100, 900]} stroke="#a8a8a8" label={{ value: 'Exam Score', angle: -90, position: 'insideLeft', fill: '#a8a8a8', style: { textAnchor: 'middle' } }} />
                 <Tooltip content={<ScoreTooltip />} />
                 <ReferenceLine y={750} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Passing (750)', fill: '#10b981', position: 'right' }} />
