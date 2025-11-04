@@ -1058,7 +1058,7 @@ CRITICAL REQUIREMENTS:
 2. Present a realistic Security+ exam scenario
 3. Include 4 answer options (A, B, C, D)
 4. Explain why the correct answer(s) are right
-5. Explain why each option is correct or wrong (provide 4 explanations)
+5. Provide DETAILED explanations for each option (2-3 sentences each, 4 total explanations)
 
 CRITICAL - EXPLANATION CONSISTENCY (VERY IMPORTANT):
 - Each explanation in "incorrectExplanations" array corresponds to an option at the SAME INDEX
@@ -1139,6 +1139,24 @@ CRITICAL - FOLLOW THESE EXACT PATTERNS FROM SECURITY+ EXAM QUESTIONS:
 Security+ Topics Reference (for context only):
 ${SECURITY_PLUS_TOPICS}
 
+CRITICAL - EXPLANATION QUALITY (VERY IMPORTANT):
+Each explanation must be 2-3 sentences and include:
+1. WHY the option is correct or incorrect (first sentence)
+2. SPECIFIC DETAILS about the concept, protocol, or technology mentioned (second sentence)
+3. HOW it relates to the scenario or what the consequences would be (third sentence if needed)
+
+EXCELLENT EXPLANATION EXAMPLES:
+✓ "A is correct because SAML (Security Assertion Markup Language) is specifically designed for web-based single sign-on using XML tokens. It allows users to authenticate once with an identity provider and then access multiple service providers without re-entering credentials. In this enterprise scenario, SAML is the standard protocol for federating authentication across web applications."
+
+✓ "B is incorrect because LDAP (Lightweight Directory Access Protocol) is used for querying and modifying directory services, not for web-based SSO authentication. While LDAP can be used by authentication systems to look up user credentials, it doesn't provide the token-based federation mechanism needed for SSO across multiple web applications. The question specifically asks for XML-based web SSO, which requires SAML."
+
+✓ "C is correct because implementing network segmentation with VLANs separates sensitive systems from general network traffic, reducing the attack surface. This approach limits lateral movement if an attacker compromises one segment, containing the breach to a smaller portion of the network. By isolating critical systems, you minimize the risk of unauthorized access spreading across the entire infrastructure."
+
+BAD EXPLANATION EXAMPLES (too brief):
+✗ "A is correct because it uses SAML."
+✗ "B is incorrect because it's not the right protocol."
+✗ "C is wrong."
+
 CRITICAL - INCLUDE LETTER PREFIXES IN OPTIONS AND EXPLANATIONS:
 - You MUST put "A. ", "B. ", "C. ", "D. " at the start of each option text
 - These letters stay permanently bound to the content through shuffling
@@ -1154,8 +1172,13 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
   "question": "the question text",
   "options": ["A. first option text", "B. second option text", "C. third option text", "D. fourth option text"],
   "correctAnswer": ${questionType === 'single' ? '0' : '[0, 2]'},
-  "explanation": "why the correct answer(s) are right (reference letter: 'A is correct because...')",
-  "incorrectExplanations": ["explanation referencing A (e.g., 'A is correct because...' or 'A is incorrect because...')", "explanation referencing B", "explanation referencing C", "explanation referencing D"],
+  "explanation": "2-3 sentence detailed explanation of why the correct answer(s) are right (reference letter: 'A is correct because...')",
+  "incorrectExplanations": [
+    "A is correct/incorrect because [reason]. [Specific technical details about the concept]. [How it relates to the scenario or consequences].",
+    "B is correct/incorrect because [reason]. [Specific technical details about the concept]. [How it relates to the scenario or consequences].",
+    "C is correct/incorrect because [reason]. [Specific technical details about the concept]. [How it relates to the scenario or consequences].",
+    "D is correct/incorrect because [reason]. [Specific technical details about the concept]. [How it relates to the scenario or consequences]."
+  ],
   "topics": ${JSON.stringify(topicStrings)},
   "difficulty": "${difficulty}",
   "metadata": {
@@ -1179,15 +1202,16 @@ CRITICAL QUALITY RULES:
 8. Make incorrect answers subtly wrong, not obviously unrelated
 9. All options should have similar technical depth and specificity
 10. Use realistic business/technical scenarios like the examples show
+11. WRITE DETAILED EXPLANATIONS (2-3 sentences each) - explain WHY, provide DETAILS, show CONSEQUENCES
 
 CRITICAL - LETTER BINDING (PREVENTS CONTRADICTIONS):
-11. Each option MUST start with its letter (A. B. C. or D. with period and space)
-12. Each explanation MUST reference that same letter (e.g., "A is correct because...")
-13. This binding prevents explanation contradictions - the letter travels with the content
-14. After shuffling, "A. CISO" might appear in position 3, but it's still labeled "A. CISO"
-15. NEVER write "A is incorrect" if A is the correct answer
-16. NEVER write "B is correct" if B is an incorrect answer
-17. The letter creates an explicit binding that makes contradictions impossible
+12. Each option MUST start with its letter (A. B. C. or D. with period and space)
+13. Each explanation MUST reference that same letter (e.g., "A is correct because...")
+14. This binding prevents explanation contradictions - the letter travels with the content
+15. After shuffling, "A. CISO" might appear in position 3, but it's still labeled "A. CISO"
+16. NEVER write "A is incorrect" if A is the correct answer
+17. NEVER write "B is correct" if B is an incorrect answer
+18. The letter creates an explicit binding that makes contradictions impossible
 
 Return only valid JSON, no markdown formatting.`;
 
