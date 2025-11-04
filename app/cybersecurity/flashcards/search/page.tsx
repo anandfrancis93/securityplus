@@ -243,7 +243,7 @@ export default function SearchFlashcards() {
             transform: 'translate(-50%, -50%)',
             backgroundColor: '#0f0f0f',
             color: '#e5e5e5',
-            padding: '48px',
+            padding: 'clamp(24px, 4vw, 48px)',
             borderRadius: '24px',
             width: '90%',
             maxWidth: '700px',
@@ -254,8 +254,8 @@ export default function SearchFlashcards() {
             transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
           }}>
             {/* Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '36px' }}>
-              <h2 style={{ fontSize: '36px', fontWeight: '700', margin: 0, letterSpacing: '-0.03em', color: '#e5e5e5' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'clamp(24px, 4vw, 36px)' }}>
+              <h2 style={{ fontSize: 'clamp(24px, 5vw, 36px)', fontWeight: '700', margin: 0, letterSpacing: '-0.03em', color: '#e5e5e5' }}>
                 Edit Flashcard
               </h2>
               <button
@@ -286,9 +286,9 @@ export default function SearchFlashcards() {
             </div>
 
             {/* Form */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(20px, 3vw, 28px)' }}>
               <div>
-                <label style={{ display: 'block', marginBottom: '14px', fontSize: '16px', fontWeight: '700', color: '#e5e5e5', letterSpacing: '0.01em' }}>
+                <label style={{ display: 'block', marginBottom: '14px', fontSize: 'clamp(14px, 2.5vw, 16px)', fontWeight: '700', color: '#e5e5e5', letterSpacing: '0.01em' }}>
                   Term / Question *
                 </label>
                 <input
@@ -299,8 +299,8 @@ export default function SearchFlashcards() {
                   disabled={generating}
                   style={{
                     width: '100%',
-                    padding: '18px 24px',
-                    fontSize: '18px',
+                    padding: 'clamp(14px, 2vw, 18px) clamp(16px, 2.5vw, 24px)',
+                    fontSize: 'clamp(14px, 3vw, 18px)',
                     borderRadius: '16px',
                     border: 'none',
                     backgroundColor: '#0f0f0f',
@@ -325,7 +325,7 @@ export default function SearchFlashcards() {
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: '14px', fontSize: '16px', fontWeight: '700', color: '#e5e5e5', letterSpacing: '0.01em' }}>
+                <label style={{ display: 'block', marginBottom: '14px', fontSize: 'clamp(14px, 2.5vw, 16px)', fontWeight: '700', color: '#e5e5e5', letterSpacing: '0.01em' }}>
                   Definition / Answer *
                 </label>
                 <textarea
@@ -336,8 +336,8 @@ export default function SearchFlashcards() {
                   disabled={generating}
                   style={{
                     width: '100%',
-                    padding: '18px 24px',
-                    fontSize: '18px',
+                    padding: 'clamp(14px, 2vw, 18px) clamp(16px, 2.5vw, 24px)',
+                    fontSize: 'clamp(14px, 3vw, 18px)',
                     borderRadius: '16px',
                     border: 'none',
                     backgroundColor: '#0f0f0f',
@@ -364,7 +364,7 @@ export default function SearchFlashcards() {
               </div>
 
               <div>
-                <label style={{ display: 'block', marginBottom: '14px', fontSize: '16px', fontWeight: '700', color: '#e5e5e5', letterSpacing: '0.01em' }}>
+                <label style={{ display: 'block', marginBottom: '14px', fontSize: 'clamp(14px, 2.5vw, 16px)', fontWeight: '700', color: '#e5e5e5', letterSpacing: '0.01em' }}>
                   Security+ Domain
                 </label>
                 <DomainDropdown
@@ -378,18 +378,18 @@ export default function SearchFlashcards() {
               </div>
 
               {/* Buttons */}
-              <div style={{ display: 'flex', gap: '20px', marginTop: '32px' }}>
+              <div style={{ display: 'flex', gap: '20px', marginTop: 'clamp(20px, 3vw, 32px)' }}>
                 <button
                   onClick={handleCancelEdit}
                   disabled={generating}
                   style={{
                     flex: 1,
-                    padding: '18px 36px',
+                    padding: 'clamp(14px, 2vw, 18px) clamp(24px, 4vw, 36px)',
                     backgroundColor: '#0f0f0f',
                     color: '#a8a8a8',
                     border: 'none',
                     borderRadius: '16px',
-                    fontSize: '17px',
+                    fontSize: 'clamp(14px, 2.5vw, 17px)',
                     fontWeight: '700',
                     cursor: generating ? 'not-allowed' : 'pointer',
                     opacity: generating ? 0.6 : 1,
@@ -409,12 +409,12 @@ export default function SearchFlashcards() {
                   disabled={generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10}
                   style={{
                     flex: 1,
-                    padding: '18px 36px',
+                    padding: 'clamp(14px, 2vw, 18px) clamp(24px, 4vw, 36px)',
                     backgroundColor: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? '#0f0f0f' : '#10b981',
                     color: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? '#666666' : '#000',
                     border: 'none',
                     borderRadius: '16px',
-                    fontSize: '17px',
+                    fontSize: 'clamp(14px, 2.5vw, 17px)',
                     fontWeight: '700',
                     cursor: (generating || editTerm.trim().length < 2 || editDefinition.trim().length < 10) ? 'not-allowed' : 'pointer',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -463,7 +463,7 @@ export default function SearchFlashcards() {
           position: 'relative',
           maxWidth: '1280px',
           margin: '0 auto',
-          padding: '0 48px 32px',
+          padding: '0 clamp(20px, 4vw, 48px) clamp(20px, 3vw, 32px)',
           width: '100%',
           flex: 1,
           display: 'flex',
@@ -472,14 +472,14 @@ export default function SearchFlashcards() {
           overscrollBehavior: 'none'
         }}>
           {/* Hero Section */}
-          <div style={{ marginBottom: '24px', flexShrink: 0 }}>
-            <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <div style={{ marginBottom: 'clamp(16px, 2.5vw, 24px)', flexShrink: 0 }}>
+            <div style={{ textAlign: 'center', marginBottom: 'clamp(20px, 3vw, 32px)' }}>
               <h1 style={{
-                fontSize: '96px',
+                fontSize: 'clamp(48px, 12vw, 96px)',
                 fontWeight: '700',
                 letterSpacing: '-0.025em',
                 lineHeight: '1.1',
-                marginBottom: '24px',
+                marginBottom: 'clamp(16px, 2.5vw, 24px)',
                 margin: 0
               }}>
                 <span style={{
@@ -502,7 +502,7 @@ export default function SearchFlashcards() {
                 </span>
               </h1>
               <p style={{
-                fontSize: '24px',
+                fontSize: 'clamp(18px, 4vw, 24px)',
                 fontWeight: '300',
                 color: '#a8a8a8',
                 lineHeight: '1.6',
@@ -519,7 +519,7 @@ export default function SearchFlashcards() {
             <div style={{
               backgroundColor: '#0f0f0f',
               borderRadius: '24px',
-              padding: '32px',
+              padding: 'clamp(20px, 3vw, 32px)',
               boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
               flex: 1,
               display: 'flex',
@@ -527,9 +527,9 @@ export default function SearchFlashcards() {
               overflow: 'hidden',
               marginBottom: '16px'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', flexShrink: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'clamp(16px, 2.5vw, 24px)', flexShrink: 0 }}>
                 <h3 style={{
-                  fontSize: '30px',
+                  fontSize: 'clamp(20px, 5vw, 30px)',
                   fontWeight: '700',
                   letterSpacing: '-0.025em',
                   margin: 0,
@@ -540,7 +540,7 @@ export default function SearchFlashcards() {
               </div>
 
               {/* Search Input */}
-              <div style={{ marginBottom: '24px', flexShrink: 0 }}>
+              <div style={{ marginBottom: 'clamp(16px, 2.5vw, 24px)', flexShrink: 0 }}>
                 <div style={{ position: 'relative' }}>
                   <input
                     id="search-input"
@@ -552,12 +552,12 @@ export default function SearchFlashcards() {
                       width: '100%',
                       backgroundColor: '#0f0f0f',
                       color: '#e5e5e5',
-                      fontSize: '18px',
+                      fontSize: 'clamp(14px, 3vw, 18px)',
                       borderRadius: '16px',
-                      paddingLeft: '56px',
-                      paddingRight: '56px',
-                      paddingTop: '20px',
-                      paddingBottom: '20px',
+                      paddingLeft: 'clamp(44px, 8vw, 56px)',
+                      paddingRight: 'clamp(44px, 8vw, 56px)',
+                      paddingTop: 'clamp(12px, 2vw, 20px)',
+                      paddingBottom: 'clamp(12px, 2vw, 20px)',
                       border: 'none',
                       outline: 'none',
                       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -663,12 +663,12 @@ export default function SearchFlashcards() {
           )}
 
           {flashcards.length === 0 && (
-            <div style={{ textAlign: 'center', paddingTop: '48px', paddingBottom: '48px' }}>
-              <div style={{ fontSize: '96px', marginBottom: '16px' }}>📚</div>
-              <p style={{ color: '#e5e5e5', fontSize: '18px', fontWeight: '500', margin: 0 }}>
+            <div style={{ textAlign: 'center', paddingTop: 'clamp(32px, 6vw, 48px)', paddingBottom: 'clamp(32px, 6vw, 48px)' }}>
+              <div style={{ fontSize: 'clamp(64px, 15vw, 96px)', marginBottom: '16px' }}>📚</div>
+              <p style={{ color: '#e5e5e5', fontSize: 'clamp(14px, 3vw, 18px)', fontWeight: '500', margin: 0 }}>
                 No flashcards yet
               </p>
-              <p style={{ color: '#666666', fontSize: '14px', marginTop: '8px' }}>
+              <p style={{ color: '#666666', fontSize: 'clamp(12px, 2.5vw, 14px)', marginTop: '8px' }}>
                 Create flashcards to start searching
               </p>
             </div>
@@ -711,7 +711,7 @@ export default function SearchFlashcards() {
         style={{
           backgroundColor: '#0f0f0f',
           borderRadius: '24px',
-          padding: '24px',
+          padding: 'clamp(16px, 2.5vw, 24px)',
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
           boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
           border: 'none'
@@ -719,11 +719,11 @@ export default function SearchFlashcards() {
       >
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px' }}>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontWeight: '700', fontSize: '18px', color: '#e5e5e5', marginBottom: '8px' }}>
+            <div style={{ fontWeight: '700', fontSize: 'clamp(14px, 3vw, 18px)', color: '#e5e5e5', marginBottom: '8px' }}>
               {card.term}
             </div>
             <div style={{
-              fontSize: '16px',
+              fontSize: 'clamp(12px, 2.5vw, 16px)',
               color: '#a8a8a8',
               marginTop: '8px',
               lineHeight: '1.6',
@@ -736,7 +736,7 @@ export default function SearchFlashcards() {
             </div>
             {card.domain && (
               <div style={{
-                fontSize: '14px',
+                fontSize: 'clamp(12px, 2.5vw, 14px)',
                 marginTop: '12px',
                 display: 'flex',
                 alignItems: 'center',
@@ -746,9 +746,9 @@ export default function SearchFlashcards() {
                 <span style={{
                   color: getDomainColor(card.domain),
                   backgroundColor: '#0f0f0f',
-                  padding: '6px 16px',
+                  padding: 'clamp(4px, 1vw, 6px) clamp(12px, 2vw, 16px)',
                   borderRadius: '12px',
-                  fontSize: '13px',
+                  fontSize: 'clamp(11px, 2vw, 13px)',
                   fontWeight: '600',
                   boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919'
                 }}>

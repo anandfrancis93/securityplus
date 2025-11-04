@@ -146,17 +146,17 @@ export default function CreateFlashcards() {
         position: 'relative',
         maxWidth: '1024px',
         margin: '0 auto',
-        padding: '0 48px 32px'
+        padding: '0 clamp(20px, 4vw, 48px) clamp(20px, 3vw, 32px)'
       }}>
         {/* Hero Section */}
-        <div style={{ marginBottom: '64px' }}>
-          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+        <div style={{ marginBottom: 'clamp(32px, 6vw, 64px)' }}>
+          <div style={{ textAlign: 'center', marginBottom: 'clamp(32px, 6vw, 48px)' }}>
             <h1 style={{
-              fontSize: '80px',
+              fontSize: 'clamp(48px, 12vw, 80px)',
               fontWeight: 'bold',
               letterSpacing: '-0.025em',
               lineHeight: '1.1',
-              marginBottom: '24px',
+              marginBottom: 'clamp(16px, 2.5vw, 24px)',
               color: '#e5e5e5'
             }}>
               <span style={{ display: 'block' }}>Create</span>
@@ -169,7 +169,7 @@ export default function CreateFlashcards() {
               }}>Flashcards</span>
             </h1>
             <p style={{
-              fontSize: '24px',
+              fontSize: 'clamp(18px, 4vw, 24px)',
               fontWeight: '300',
               color: '#a8a8a8',
               maxWidth: '672px',
@@ -182,19 +182,19 @@ export default function CreateFlashcards() {
         </div>
 
         {/* Flashcard Creation Form */}
-        <div style={{ marginBottom: '32px' }}>
+        <div style={{ marginBottom: 'clamp(20px, 3vw, 32px)' }}>
           <div style={{
             backgroundColor: '#0f0f0f',
             borderRadius: '24px',
-            padding: '48px',
+            padding: 'clamp(24px, 4vw, 48px)',
             boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919'
           }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(20px, 3vw, 32px)' }}>
               {/* Term Input */}
               <div>
                 <label style={{
                   display: 'block',
-                  fontSize: '18px',
+                  fontSize: 'clamp(14px, 3vw, 18px)',
                   fontWeight: '500',
                   marginBottom: '12px',
                   letterSpacing: '-0.025em',
@@ -216,9 +216,9 @@ export default function CreateFlashcards() {
                     width: '100%',
                     backgroundColor: '#0f0f0f',
                     color: '#e5e5e5',
-                    fontSize: '18px',
+                    fontSize: 'clamp(14px, 3vw, 18px)',
                     borderRadius: '16px',
-                    padding: '20px',
+                    padding: 'clamp(12px, 2vw, 20px)',
                     border: 'none',
                     outline: 'none',
                     boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
@@ -249,7 +249,7 @@ export default function CreateFlashcards() {
               <div>
                 <label style={{
                   display: 'block',
-                  fontSize: '18px',
+                  fontSize: 'clamp(14px, 3vw, 18px)',
                   fontWeight: '500',
                   marginBottom: '12px',
                   letterSpacing: '-0.025em',
@@ -271,9 +271,9 @@ export default function CreateFlashcards() {
                     height: '160px',
                     backgroundColor: '#0f0f0f',
                     color: '#e5e5e5',
-                    fontSize: '18px',
+                    fontSize: 'clamp(14px, 3vw, 18px)',
                     borderRadius: '16px',
-                    padding: '20px',
+                    padding: 'clamp(12px, 2vw, 20px)',
                     border: 'none',
                     outline: 'none',
                     boxShadow: 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919',
@@ -305,7 +305,7 @@ export default function CreateFlashcards() {
               <div>
                 <label style={{
                   display: 'block',
-                  fontSize: '18px',
+                  fontSize: 'clamp(14px, 3vw, 18px)',
                   fontWeight: '500',
                   marginBottom: '12px',
                   letterSpacing: '-0.025em',
@@ -321,9 +321,9 @@ export default function CreateFlashcards() {
                       width: '100%',
                       backgroundColor: '#0f0f0f',
                       color: '#e5e5e5',
-                      fontSize: '18px',
+                      fontSize: 'clamp(14px, 3vw, 18px)',
                       borderRadius: '16px',
-                      padding: '20px',
+                      padding: 'clamp(12px, 2vw, 20px)',
                       border: 'none',
                       outline: 'none',
                       boxShadow: domainDropdownOpen
@@ -415,7 +415,7 @@ export default function CreateFlashcards() {
               <div>
                 <label style={{
                   display: 'block',
-                  fontSize: '18px',
+                  fontSize: 'clamp(14px, 3vw, 18px)',
                   fontWeight: '500',
                   marginBottom: '12px',
                   letterSpacing: '-0.025em',
@@ -509,7 +509,7 @@ export default function CreateFlashcards() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'flex-end',
-                paddingTop: '24px'
+                paddingTop: 'clamp(16px, 2.5vw, 24px)'
               }}>
                 <button
                   id="create-flashcard"
@@ -519,8 +519,8 @@ export default function CreateFlashcards() {
                     position: 'relative',
                     backgroundColor: '#0f0f0f',
                     color: '#ffffff',
-                    padding: '20px 40px',
-                    fontSize: '20px',
+                    padding: 'clamp(12px, 2vw, 20px) clamp(24px, 4vw, 40px)',
+                    fontSize: 'clamp(16px, 3.5vw, 20px)',
                     fontWeight: 'bold',
                     borderRadius: '16px',
                     border: 'none',

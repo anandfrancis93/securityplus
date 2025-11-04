@@ -167,25 +167,25 @@ export default function StudyFlashcards() {
             textAlign: 'center',
           }}>
             <div style={{
-              fontSize: '112px',
-              marginBottom: '32px',
+              fontSize: 'clamp(64px, 15vw, 112px)',
+              marginBottom: 'clamp(20px, 3vw, 32px)',
             }}>✅</div>
             <h1 style={{
-              fontSize: '96px',
+              fontSize: 'clamp(48px, 12vw, 96px)',
               fontWeight: 'bold',
               letterSpacing: '-0.05em',
               lineHeight: '0.95',
-              marginBottom: '32px',
+              marginBottom: 'clamp(20px, 3vw, 32px)',
               color: '#e5e5e5',
             }}>
               All Done!
             </h1>
             <p style={{
-              fontSize: '32px',
+              fontSize: 'clamp(24px, 5vw, 32px)',
               fontWeight: '300',
               lineHeight: '1.5',
               color: '#a8a8a8',
-              marginBottom: '48px',
+              marginBottom: 'clamp(32px, 6vw, 48px)',
             }}>
               No flashcards due right now.
             </p>
@@ -194,8 +194,8 @@ export default function StudyFlashcards() {
               style={{
                 backgroundColor: '#0f0f0f',
                 color: '#e5e5e5',
-                padding: '24px 48px',
-                fontSize: '20px',
+                padding: 'clamp(16px, 2.5vw, 24px) clamp(24px, 4vw, 48px)',
+                fontSize: 'clamp(16px, 3.5vw, 20px)',
                 fontWeight: '500',
                 letterSpacing: '-0.025em',
                 border: 'none',
@@ -240,23 +240,23 @@ export default function StudyFlashcards() {
         position: 'relative',
         maxWidth: '1280px',
         margin: '0 auto',
-        padding: '0 48px',
+        padding: '0 clamp(20px, 4vw, 48px)',
       }}>
         {/* Hero Section */}
         <section style={{
           textAlign: 'center',
-          marginBottom: '48px',
+          marginBottom: 'clamp(32px, 6vw, 48px)',
         }}>
           <div style={{
             maxWidth: '896px',
             margin: '0 auto',
           }}>
             <h1 style={{
-              fontSize: '96px',
+              fontSize: 'clamp(48px, 12vw, 96px)',
               fontWeight: 'bold',
               letterSpacing: '-0.05em',
               lineHeight: '0.95',
-              marginBottom: '24px',
+              marginBottom: 'clamp(16px, 2.5vw, 24px)',
               color: '#e5e5e5',
             }}>
               Study
@@ -268,7 +268,7 @@ export default function StudyFlashcards() {
               gap: '16px',
             }}>
               <p style={{
-                fontSize: '32px',
+                fontSize: 'clamp(24px, 5vw, 32px)',
                 fontWeight: '300',
                 letterSpacing: '-0.025em',
                 color: '#a8a8a8',
@@ -281,7 +281,7 @@ export default function StudyFlashcards() {
 
         {/* Progress Bar */}
         <div style={{
-          marginBottom: '64px',
+          marginBottom: 'clamp(32px, 6vw, 64px)',
         }}>
           <div style={{
             position: 'relative',
@@ -314,13 +314,13 @@ export default function StudyFlashcards() {
 
         {/* Flashcard */}
         <div style={{
-          marginBottom: '48px',
+          marginBottom: 'clamp(32px, 6vw, 48px)',
           perspective: '1000px',
         }}>
           <div
             style={{
               position: 'relative',
-              minHeight: '480px',
+              minHeight: 'clamp(320px, 60vw, 480px)',
               transformStyle: 'preserve-3d',
               transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
               transition: 'transform 0.7s',
@@ -347,7 +347,7 @@ export default function StudyFlashcards() {
                 height: '100%',
                 overflowY: 'auto',
                 overflowX: 'hidden',
-                padding: '64px',
+                padding: 'clamp(32px, 6vw, 64px)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -357,15 +357,15 @@ export default function StudyFlashcards() {
                   width: '100%',
                 }}>
                   <h2 style={{
-                    fontSize: '48px',
+                    fontSize: 'clamp(32px, 8vw, 48px)',
                     fontWeight: 'bold',
                     letterSpacing: '-0.025em',
                     lineHeight: '1.2',
-                    marginBottom: '32px',
+                    marginBottom: 'clamp(20px, 3vw, 32px)',
                     color: '#e5e5e5',
                   }}>{currentCard.term}</h2>
                   <p style={{
-                    fontSize: '20px',
+                    fontSize: 'clamp(16px, 3.5vw, 20px)',
                     fontWeight: '300',
                     letterSpacing: '-0.025em',
                     color: '#a8a8a8',
@@ -375,7 +375,7 @@ export default function StudyFlashcards() {
 
               <div style={{
                 position: 'absolute',
-                bottom: '24px',
+                bottom: 'clamp(16px, 2.5vw, 24px)',
                 left: '50%',
                 transform: 'translateX(-50%)',
               }}>
@@ -402,7 +402,7 @@ export default function StudyFlashcards() {
                     />
                   </svg>
                   <span style={{
-                    fontSize: '18px',
+                    fontSize: 'clamp(14px, 3vw, 18px)',
                     letterSpacing: '-0.025em',
                     fontWeight: '500',
                   }}>Flip</span>
@@ -430,7 +430,7 @@ export default function StudyFlashcards() {
                 height: '100%',
                 overflowY: 'auto',
                 overflowX: 'hidden',
-                padding: '64px',
+                padding: 'clamp(32px, 6vw, 64px)',
                 display: 'flex',
                 alignItems: 'start',
               }}>
@@ -440,7 +440,7 @@ export default function StudyFlashcards() {
                   margin: 'auto 0',
                 }}>
                   <p style={{
-                    fontSize: '24px',
+                    fontSize: 'clamp(18px, 4vw, 24px)',
                     lineHeight: '1.5',
                     whiteSpace: 'pre-wrap',
                     color: '#e5e5e5',
@@ -479,12 +479,12 @@ export default function StudyFlashcards() {
                   )}
                   {currentCard.context && (
                     <div style={{
-                      marginTop: '32px',
-                      paddingTop: '32px',
+                      marginTop: 'clamp(20px, 3vw, 32px)',
+                      paddingTop: 'clamp(20px, 3vw, 32px)',
                       borderTop: '1px solid #191919',
                     }}>
                       <p style={{
-                        fontSize: '18px',
+                        fontSize: 'clamp(14px, 3vw, 18px)',
                         color: '#a8a8a8',
                         fontStyle: 'italic',
                         whiteSpace: 'pre-wrap',
@@ -504,8 +504,8 @@ export default function StudyFlashcards() {
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: '24px',
-            marginBottom: '48px',
+            gap: 'clamp(16px, 2.5vw, 24px)',
+            marginBottom: 'clamp(32px, 6vw, 48px)',
           }}>
             {/* Again Button */}
             <div style={{ position: 'relative' }}>
@@ -518,14 +518,14 @@ export default function StudyFlashcards() {
                   backgroundColor: '#0f0f0f',
                   borderRadius: '16px',
                   color: '#e5e5e5',
-                  padding: '28px 24px',
+                  padding: 'clamp(20px, 3vw, 28px) clamp(16px, 2.5vw, 24px)',
                   fontWeight: 'bold',
-                  minHeight: '72px',
+                  minHeight: 'clamp(60px, 10vw, 72px)',
                   border: 'none',
                   cursor: answering ? 'not-allowed' : 'pointer',
                   boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  fontSize: '24px',
+                  fontSize: 'clamp(18px, 4vw, 24px)',
                   letterSpacing: '-0.025em',
                   opacity: answering ? 0.5 : 1,
                 }}
@@ -555,14 +555,14 @@ export default function StudyFlashcards() {
                   backgroundColor: '#0f0f0f',
                   borderRadius: '16px',
                   color: '#e5e5e5',
-                  padding: '28px 24px',
+                  padding: 'clamp(20px, 3vw, 28px) clamp(16px, 2.5vw, 24px)',
                   fontWeight: 'bold',
-                  minHeight: '72px',
+                  minHeight: 'clamp(60px, 10vw, 72px)',
                   border: 'none',
                   cursor: answering ? 'not-allowed' : 'pointer',
                   boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  fontSize: '24px',
+                  fontSize: 'clamp(18px, 4vw, 24px)',
                   letterSpacing: '-0.025em',
                   opacity: answering ? 0.5 : 1,
                 }}
@@ -592,14 +592,14 @@ export default function StudyFlashcards() {
                   backgroundColor: '#0f0f0f',
                   borderRadius: '16px',
                   color: '#e5e5e5',
-                  padding: '28px 24px',
+                  padding: 'clamp(20px, 3vw, 28px) clamp(16px, 2.5vw, 24px)',
                   fontWeight: 'bold',
-                  minHeight: '72px',
+                  minHeight: 'clamp(60px, 10vw, 72px)',
                   border: 'none',
                   cursor: answering ? 'not-allowed' : 'pointer',
                   boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  fontSize: '24px',
+                  fontSize: 'clamp(18px, 4vw, 24px)',
                   letterSpacing: '-0.025em',
                   opacity: answering ? 0.5 : 1,
                 }}
@@ -629,14 +629,14 @@ export default function StudyFlashcards() {
                   backgroundColor: '#0f0f0f',
                   borderRadius: '16px',
                   color: '#e5e5e5',
-                  padding: '28px 24px',
+                  padding: 'clamp(20px, 3vw, 28px) clamp(16px, 2.5vw, 24px)',
                   fontWeight: 'bold',
-                  minHeight: '72px',
+                  minHeight: 'clamp(60px, 10vw, 72px)',
                   border: 'none',
                   cursor: answering ? 'not-allowed' : 'pointer',
                   boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  fontSize: '24px',
+                  fontSize: 'clamp(18px, 4vw, 24px)',
                   letterSpacing: '-0.025em',
                   opacity: answering ? 0.5 : 1,
                 }}

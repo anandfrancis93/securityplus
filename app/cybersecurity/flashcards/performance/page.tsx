@@ -117,19 +117,19 @@ export default function FlashcardPerformance() {
       <div style={{
         maxWidth: '1024px',
         margin: '0 auto',
-        padding: '0 48px 32px'
+        padding: '0 clamp(20px, 4vw, 48px) clamp(20px, 3vw, 32px)'
       }}>
         {/* Hero Section */}
         <div style={{
-          marginBottom: '32px',
+          marginBottom: 'clamp(20px, 3vw, 32px)',
           textAlign: 'center'
         }}>
           <h1 style={{
-            fontSize: '72px',
+            fontSize: 'clamp(48px, 10vw, 72px)',
             fontWeight: 'bold',
             letterSpacing: '-0.025em',
             lineHeight: '1.2',
-            marginBottom: '24px'
+            marginBottom: 'clamp(16px, 2.5vw, 24px)'
           }}>
             <span style={{
               display: 'block',
@@ -142,7 +142,7 @@ export default function FlashcardPerformance() {
             }}>Performance</span>
           </h1>
           <p style={{
-            fontSize: '20px',
+            fontSize: 'clamp(16px, 3.5vw, 20px)',
             fontWeight: '300',
             color: '#a8a8a8',
             lineHeight: '1.6',
@@ -158,8 +158,8 @@ export default function FlashcardPerformance() {
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '24px',
-            marginBottom: '32px'
+            gap: 'clamp(16px, 2.5vw, 24px)',
+            marginBottom: 'clamp(20px, 3vw, 32px)'
           }}>
             {/* Total Stats Card */}
             <div
@@ -168,7 +168,7 @@ export default function FlashcardPerformance() {
                 position: 'relative',
                 backgroundColor: '#0f0f0f',
                 borderRadius: '24px',
-                padding: '24px',
+                padding: 'clamp(16px, 2.5vw, 24px)',
                 boxShadow: hoveredStat === 0
                   ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
                   : '12px 12px 24px #050505, -12px -12px 24px #191919',
@@ -179,7 +179,7 @@ export default function FlashcardPerformance() {
             >
               <div style={{
                 marginBottom: '12px',
-                fontSize: '14px',
+                fontSize: 'clamp(12px, 2.5vw, 14px)',
                 fontWeight: '600',
                 color: '#a8a8a8',
                 letterSpacing: '0.05em'
@@ -187,7 +187,7 @@ export default function FlashcardPerformance() {
                 Total
               </div>
               <div style={{
-                fontSize: '36px',
+                fontSize: 'clamp(28px, 6vw, 36px)',
                 fontWeight: 'bold',
                 color: '#f59e0b'
               }}>
@@ -231,7 +231,7 @@ export default function FlashcardPerformance() {
                 position: 'relative',
                 backgroundColor: '#0f0f0f',
                 borderRadius: '24px',
-                padding: '24px',
+                padding: 'clamp(16px, 2.5vw, 24px)',
                 boxShadow: hoveredStat === 1
                   ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
                   : '12px 12px 24px #050505, -12px -12px 24px #191919',
@@ -242,7 +242,7 @@ export default function FlashcardPerformance() {
             >
               <div style={{
                 marginBottom: '12px',
-                fontSize: '14px',
+                fontSize: 'clamp(12px, 2.5vw, 14px)',
                 fontWeight: '600',
                 color: '#a8a8a8',
                 letterSpacing: '0.05em'
@@ -250,7 +250,7 @@ export default function FlashcardPerformance() {
                 Learning
               </div>
               <div style={{
-                fontSize: '36px',
+                fontSize: 'clamp(28px, 6vw, 36px)',
                 fontWeight: 'bold',
                 color: '#f43f5e'
               }}>
@@ -258,7 +258,7 @@ export default function FlashcardPerformance() {
               </div>
               {stats.learning > 0 && (
                 <div style={{
-                  fontSize: '14px',
+                  fontSize: 'clamp(12px, 2.5vw, 14px)',
                   color: '#666666',
                   marginTop: '8px',
                   fontWeight: '500'
@@ -304,7 +304,7 @@ export default function FlashcardPerformance() {
                 position: 'relative',
                 backgroundColor: '#0f0f0f',
                 borderRadius: '24px',
-                padding: '24px',
+                padding: 'clamp(16px, 2.5vw, 24px)',
                 boxShadow: hoveredStat === 2
                   ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
                   : '12px 12px 24px #050505, -12px -12px 24px #191919',
@@ -315,7 +315,7 @@ export default function FlashcardPerformance() {
             >
               <div style={{
                 marginBottom: '12px',
-                fontSize: '14px',
+                fontSize: 'clamp(12px, 2.5vw, 14px)',
                 fontWeight: '600',
                 color: '#a8a8a8',
                 letterSpacing: '0.05em'
@@ -323,7 +323,7 @@ export default function FlashcardPerformance() {
                 Review
               </div>
               <div style={{
-                fontSize: '36px',
+                fontSize: 'clamp(28px, 6vw, 36px)',
                 fontWeight: 'bold',
                 color: '#06b6d4'
               }}>
@@ -331,7 +331,7 @@ export default function FlashcardPerformance() {
               </div>
               {stats.review > 0 && (
                 <div style={{
-                  fontSize: '14px',
+                  fontSize: 'clamp(12px, 2.5vw, 14px)',
                   color: '#666666',
                   marginTop: '8px',
                   fontWeight: '500'
@@ -377,7 +377,7 @@ export default function FlashcardPerformance() {
                 position: 'relative',
                 backgroundColor: '#0f0f0f',
                 borderRadius: '24px',
-                padding: '24px',
+                padding: 'clamp(16px, 2.5vw, 24px)',
                 boxShadow: hoveredStat === 3
                   ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
                   : '12px 12px 24px #050505, -12px -12px 24px #191919',
@@ -388,7 +388,7 @@ export default function FlashcardPerformance() {
             >
               <div style={{
                 marginBottom: '12px',
-                fontSize: '14px',
+                fontSize: 'clamp(12px, 2.5vw, 14px)',
                 fontWeight: '600',
                 color: '#a8a8a8',
                 letterSpacing: '0.05em'
@@ -396,7 +396,7 @@ export default function FlashcardPerformance() {
                 Mastered
               </div>
               <div style={{
-                fontSize: '36px',
+                fontSize: 'clamp(28px, 6vw, 36px)',
                 fontWeight: 'bold',
                 color: '#10b981'
               }}>
@@ -404,7 +404,7 @@ export default function FlashcardPerformance() {
               </div>
               {stats.mastered > 0 && (
                 <div style={{
-                  fontSize: '14px',
+                  fontSize: 'clamp(12px, 2.5vw, 14px)',
                   color: '#666666',
                   marginTop: '8px',
                   fontWeight: '500'
@@ -451,18 +451,18 @@ export default function FlashcardPerformance() {
             position: 'relative',
             backgroundColor: '#0f0f0f',
             borderRadius: '24px',
-            padding: '32px',
+            padding: 'clamp(20px, 3vw, 32px)',
             boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919',
-            marginBottom: '32px'
+            marginBottom: 'clamp(20px, 3vw, 32px)'
           }}>
             <div style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              marginBottom: '24px'
+              marginBottom: 'clamp(16px, 2.5vw, 24px)'
             }}>
               <h3 style={{
-                fontSize: '24px',
+                fontSize: 'clamp(18px, 4vw, 24px)',
                 fontWeight: 'bold',
                 color: '#e5e5e5',
                 margin: 0
@@ -677,7 +677,7 @@ export default function FlashcardPerformance() {
           <div style={{
             position: 'relative',
             textAlign: 'center',
-            marginTop: '48px'
+            marginTop: 'clamp(32px, 6vw, 48px)'
           }}>
             <button
               id="reset-flashcard-progress"
@@ -688,10 +688,10 @@ export default function FlashcardPerformance() {
                 color: '#f59e0b',
                 border: 'none',
                 fontWeight: 'bold',
-                padding: '16px 40px',
-                fontSize: '16px',
+                padding: 'clamp(12px, 2vw, 16px) clamp(24px, 4vw, 40px)',
+                fontSize: 'clamp(14px, 2.5vw, 16px)',
                 borderRadius: '16px',
-                minHeight: '52px',
+                minHeight: 'clamp(44px, 8vw, 52px)',
                 cursor: 'pointer',
                 boxShadow: hoveredButton
                   ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
@@ -708,12 +708,12 @@ export default function FlashcardPerformance() {
         {flashcards.length === 0 && (
           <div style={{
             textAlign: 'center',
-            padding: '64px 0'
+            padding: 'clamp(32px, 6vw, 64px) 0'
           }}>
             <div style={{
-              width: '128px',
-              height: '128px',
-              margin: '0 auto 32px',
+              width: 'clamp(96px, 15vw, 128px)',
+              height: 'clamp(96px, 15vw, 128px)',
+              margin: '0 auto clamp(20px, 3vw, 32px)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -722,15 +722,15 @@ export default function FlashcardPerformance() {
               boxShadow: '12px 12px 24px #050505, -12px -12px 24px #191919'
             }}>
               <svg style={{
-                width: '80px',
-                height: '80px',
+                width: 'clamp(64px, 10vw, 80px)',
+                height: 'clamp(64px, 10vw, 80px)',
                 color: '#8b5cf6'
               }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
               </svg>
             </div>
             <p style={{
-              fontSize: '20px',
+              fontSize: 'clamp(16px, 3.5vw, 20px)',
               fontWeight: '600',
               marginBottom: '12px',
               color: '#e5e5e5'
@@ -738,7 +738,7 @@ export default function FlashcardPerformance() {
               No flashcards yet
             </p>
             <p style={{
-              fontSize: '16px',
+              fontSize: 'clamp(14px, 2.5vw, 16px)',
               color: '#666666'
             }}>
               Create your first flashcard to start tracking performance
