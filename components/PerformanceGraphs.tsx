@@ -424,67 +424,68 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         </div>
         {isAbilityGraphOpen && (
           <div style={{ padding: '0 clamp(8px, 2vw, 48px) clamp(32px, 6vw, 48px) clamp(8px, 2vw, 48px)', overflowX: 'auto', overflowY: 'hidden' }}>
-            <div style={{ minWidth: `${Math.max(400, abilityOverTime.length * 150)}px` }}>
-              <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={abilityOverTime}>
-            <defs>
-              {/* Define individual gradients for each data point based on ability level */}
+            <LineChart
+              width={Math.max(600, abilityOverTime.length * 200)}
+              height={400}
+              data={abilityOverTime}
+              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+            >
+              <defs>
+                {/* Define individual gradients for each data point based on ability level */}
+                {abilityOverTime.map((point, index) => {
+                  const color = getAbilityColor(point.ability);
+                  return (
+                    <linearGradient key={`gradient-${index}`} id={`abilityGradient-${index}`} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={color} stopOpacity={0.3} />
+                      <stop offset="100%" stopColor={color} stopOpacity={0.1} />
+                    </linearGradient>
+                  );
+                })}
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#191919" />
+              <XAxis dataKey="quiz" stroke="#a8a8a8" tick={{ fill: '#a8a8a8' }} label={{ value: 'Quiz', position: 'insideBottom', offset: -10, fill: '#a8a8a8' }} />
+              <YAxis domain={[-3, 3]} stroke="#a8a8a8" label={{ value: 'Ability Level', angle: -90, position: 'insideLeft', fill: '#a8a8a8', style: { textAnchor: 'middle' } }} />
+              <Tooltip content={<AbilityTooltip />} />
+              <ReferenceLine y={1.54} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Passing (750)', fill: '#10b981', position: 'right' }} />
+
+              {/* Render colored confidence bands as reference areas between consecutive points */}
               {abilityOverTime.map((point, index) => {
-                const color = getAbilityColor(point.ability);
+                if (index === abilityOverTime.length - 1) return null;
+
+                const nextPoint = abilityOverTime[index + 1];
+                const avgAbility = (point.ability + nextPoint.ability) / 2;
+                const color = getAbilityColor(avgAbility);
+
                 return (
-                  <linearGradient key={`gradient-${index}`} id={`abilityGradient-${index}`} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={color} stopOpacity={0.3} />
-                    <stop offset="100%" stopColor={color} stopOpacity={0.1} />
-                  </linearGradient>
+                  <ReferenceArea
+                    key={`ci-band-${index}`}
+                    x1={point.quiz}
+                    x2={nextPoint.quiz}
+                    y1={Math.min(point.ciLower, nextPoint.ciLower)}
+                    y2={Math.max(point.ciUpper, nextPoint.ciUpper)}
+                    fill={color}
+                    fillOpacity={0.2}
+                    strokeOpacity={0}
+                  />
                 );
               })}
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#191919" />
-            <XAxis dataKey="quiz" stroke="#a8a8a8" tick={false} interval={0} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#a8a8a8' }} />
-            <YAxis domain={[-3, 3]} stroke="#a8a8a8" label={{ value: 'Ability Level', angle: -90, position: 'insideLeft', fill: '#a8a8a8', style: { textAnchor: 'middle' } }} />
-            <Tooltip content={<AbilityTooltip />} />
-            <ReferenceLine y={1.54} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Passing (750)', fill: '#10b981', position: 'right' }} />
 
-            {/* Render colored confidence bands as reference areas between consecutive points */}
-            {abilityOverTime.map((point, index) => {
-              if (index === abilityOverTime.length - 1) return null;
-
-              const nextPoint = abilityOverTime[index + 1];
-              const avgAbility = (point.ability + nextPoint.ability) / 2;
-              const color = getAbilityColor(avgAbility);
-
-              return (
-                <ReferenceArea
-                  key={`ci-band-${index}`}
-                  x1={point.quiz}
-                  x2={nextPoint.quiz}
-                  y1={Math.min(point.ciLower, nextPoint.ciLower)}
-                  y2={Math.max(point.ciUpper, nextPoint.ciUpper)}
-                  fill={color}
-                  fillOpacity={0.2}
-                  strokeOpacity={0}
-                />
-              );
-            })}
-
-            {/* Main ability line */}
-            <Line
-              type="monotone"
-              dataKey="ability"
-              stroke="#e5e5e5"
-              strokeWidth={3}
-              dot={(props: any) => {
-                const { cx, cy, payload } = props;
-                const ability = payload.ability;
-                const fill = getAbilityColor(ability);
-                return <circle cx={cx} cy={cy} r={5} fill={fill} />;
-              }}
-            >
-              <ErrorBar dataKey="abilityError" width={4} stroke="#666666" strokeWidth={2} direction="y" />
-            </Line>
-          </LineChart>
-        </ResponsiveContainer>
-            </div>
+              {/* Main ability line */}
+              <Line
+                type="monotone"
+                dataKey="ability"
+                stroke="#e5e5e5"
+                strokeWidth={3}
+                dot={(props: any) => {
+                  const { cx, cy, payload } = props;
+                  const ability = payload.ability;
+                  const fill = getAbilityColor(ability);
+                  return <circle cx={cx} cy={cy} r={5} fill={fill} />;
+                }}
+              >
+                <ErrorBar dataKey="abilityError" width={4} stroke="#666666" strokeWidth={2} direction="y" />
+              </Line>
+            </LineChart>
           </div>
         )}
       </div>
@@ -550,69 +551,70 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         </div>
         {isPredictedScoreGraphOpen && (
           <div style={{ padding: '0 clamp(8px, 2vw, 48px) clamp(32px, 6vw, 48px) clamp(8px, 2vw, 48px)', overflowX: 'auto', overflowY: 'hidden' }}>
-            <div style={{ minWidth: `${Math.max(400, scoreOverTime.length * 150)}px` }}>
-              <ResponsiveContainer width="100%" height={400}>
-              <LineChart data={scoreOverTime}>
-                <defs>
-                  {/* Define individual gradients for confidence bands based on score */}
-                  {scoreOverTime.map((point, index) => {
-                    const score = point.score;
-                    const color = score >= 800 ? '#10b981' : score >= 750 ? '#f59e0b' : '#f43f5e';
-                    return (
-                      <linearGradient key={`score-gradient-${index}`} id={`scoreGradient-${index}`} x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor={color} stopOpacity={0.3} />
-                        <stop offset="100%" stopColor={color} stopOpacity={0.1} />
-                      </linearGradient>
-                    );
-                  })}
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#191919" />
-                <XAxis dataKey="quiz" stroke="#a8a8a8" tick={false} interval={0} label={{ value: 'Quiz', position: 'insideBottom', offset: 0, fill: '#a8a8a8' }} />
-                <YAxis domain={[100, 900]} stroke="#a8a8a8" label={{ value: 'Exam Score', angle: -90, position: 'insideLeft', fill: '#a8a8a8', style: { textAnchor: 'middle' } }} />
-                <Tooltip content={<ScoreTooltip />} />
-                <ReferenceLine y={750} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Passing (750)', fill: '#10b981', position: 'right' }} />
-
-                {/* Colored confidence bands between consecutive points */}
+            <LineChart
+              width={Math.max(600, scoreOverTime.length * 200)}
+              height={400}
+              data={scoreOverTime}
+              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+            >
+              <defs>
+                {/* Define individual gradients for confidence bands based on score */}
                 {scoreOverTime.map((point, index) => {
-                  if (index === scoreOverTime.length - 1) return null;
-
-                  const nextPoint = scoreOverTime[index + 1];
-                  const avgScore = (point.score + nextPoint.score) / 2;
-                  const color = avgScore >= 800 ? '#10b981' : avgScore >= 750 ? '#f59e0b' : '#f43f5e';
-
+                  const score = point.score;
+                  const color = score >= 800 ? '#10b981' : score >= 750 ? '#f59e0b' : '#f43f5e';
                   return (
-                    <ReferenceArea
-                      key={`score-ci-band-${index}`}
-                      x1={point.quiz}
-                      x2={nextPoint.quiz}
-                      y1={Math.min(point.scoreLower, nextPoint.scoreLower)}
-                      y2={Math.max(point.scoreUpper, nextPoint.scoreUpper)}
-                      fill={color}
-                      fillOpacity={0.2}
-                      strokeOpacity={0}
-                    />
+                    <linearGradient key={`score-gradient-${index}`} id={`scoreGradient-${index}`} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={color} stopOpacity={0.3} />
+                      <stop offset="100%" stopColor={color} stopOpacity={0.1} />
+                    </linearGradient>
                   );
                 })}
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#191919" />
+              <XAxis dataKey="quiz" stroke="#a8a8a8" tick={{ fill: '#a8a8a8' }} label={{ value: 'Quiz', position: 'insideBottom', offset: -10, fill: '#a8a8a8' }} />
+              <YAxis domain={[100, 900]} stroke="#a8a8a8" label={{ value: 'Exam Score', angle: -90, position: 'insideLeft', fill: '#a8a8a8', style: { textAnchor: 'middle' } }} />
+              <Tooltip content={<ScoreTooltip />} />
+              <ReferenceLine y={750} stroke="#10b981" strokeDasharray="3 3" label={{ value: 'Passing (750)', fill: '#10b981', position: 'right' }} />
 
-                <Line
-                  type="monotone"
-                  dataKey="score"
-                  stroke="#e5e5e5"
-                  strokeWidth={3}
-                  dot={(props: any) => {
-                    const { cx, cy, payload } = props;
-                    const score = payload.score;
-                    let fill = '#f43f5e'; // Rose for below passing
-                    if (score >= 800) fill = '#10b981'; // Emerald for excellent
-                    else if (score >= 750) fill = '#f59e0b'; // Amber for passing
-                    return <circle cx={cx} cy={cy} r={5} fill={fill} />;
-                  }}
-                >
-                  <ErrorBar dataKey="scoreError" width={4} stroke="#666666" strokeWidth={2} direction="y" />
-                </Line>
-              </LineChart>
-            </ResponsiveContainer>
-            </div>
+              {/* Colored confidence bands between consecutive points */}
+              {scoreOverTime.map((point, index) => {
+                if (index === scoreOverTime.length - 1) return null;
+
+                const nextPoint = scoreOverTime[index + 1];
+                const avgScore = (point.score + nextPoint.score) / 2;
+                const color = avgScore >= 800 ? '#10b981' : avgScore >= 750 ? '#f59e0b' : '#f43f5e';
+
+                return (
+                  <ReferenceArea
+                    key={`score-ci-band-${index}`}
+                    x1={point.quiz}
+                    x2={nextPoint.quiz}
+                    y1={Math.min(point.scoreLower, nextPoint.scoreLower)}
+                    y2={Math.max(point.scoreUpper, nextPoint.scoreUpper)}
+                    fill={color}
+                    fillOpacity={0.2}
+                    strokeOpacity={0}
+                  />
+                );
+              })}
+
+              <Line
+                type="monotone"
+                dataKey="score"
+                stroke="#e5e5e5"
+                strokeWidth={3}
+                dot={(props: any) => {
+                  const { cx, cy, payload } = props;
+                  const score = payload.score;
+                  let fill = '#f43f5e'; // Rose for below passing
+                  if (score >= 800) fill = '#10b981'; // Emerald for excellent
+                  else if (score >= 750) fill = '#f59e0b'; // Amber for passing
+                  return <circle cx={cx} cy={cy} r={5} fill={fill} />;
+                }}
+              >
+                <ErrorBar dataKey="scoreError" width={4} stroke="#666666" strokeWidth={2} direction="y" />
+              </Line>
+            </LineChart>
           </div>
         )}
       </div>
