@@ -424,8 +424,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         </div>
         {isAbilityGraphOpen && (
           <div style={{ padding: '0 clamp(8px, 2vw, 48px) clamp(32px, 6vw, 48px) clamp(8px, 2vw, 48px)', overflowX: 'auto' }}>
-            <div style={{ width: `${Math.max(400, abilityOverTime.length * 150)}px`, minWidth: '400px' }}>
-              <ResponsiveContainer width="100%" height={400}>
+              <ResponsiveContainer width={Math.max(400, abilityOverTime.length * 150)} height={400}>
           <LineChart data={abilityOverTime}>
             <defs>
               {/* Define individual gradients for each data point based on ability level */}
@@ -484,7 +483,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             </Line>
           </LineChart>
         </ResponsiveContainer>
-            </div>
           </div>
         )}
       </div>
@@ -550,8 +548,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         </div>
         {isPredictedScoreGraphOpen && (
           <div style={{ padding: '0 clamp(8px, 2vw, 48px) clamp(32px, 6vw, 48px) clamp(8px, 2vw, 48px)', overflowX: 'auto' }}>
-            <div style={{ width: `${Math.max(400, scoreOverTime.length * 150)}px`, minWidth: '400px' }}>
-              <ResponsiveContainer width="100%" height={400}>
+              <ResponsiveContainer width={Math.max(400, scoreOverTime.length * 150)} height={400}>
               <LineChart data={scoreOverTime}>
                 <defs>
                   {/* Define individual gradients for confidence bands based on score */}
@@ -612,7 +609,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 </Line>
               </LineChart>
             </ResponsiveContainer>
-            </div>
           </div>
         )}
       </div>
