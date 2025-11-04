@@ -241,6 +241,7 @@ export default function StudyFlashcards() {
         maxWidth: '1280px',
         margin: '0 auto',
         padding: '0 clamp(20px, 4vw, 48px)',
+        paddingBottom: 'clamp(40px, 6vw, 60px)',
       }}>
         {/* Hero Section */}
         <section style={{
