@@ -423,7 +423,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           </button>
         </div>
         {isAbilityGraphOpen && (
-          <div style={{ padding: '0 clamp(16px, 4vw, 48px) clamp(32px, 6vw, 48px) clamp(16px, 4vw, 48px)' }}>
+          <div style={{ padding: '0 clamp(8px, 2vw, 48px) clamp(32px, 6vw, 48px) clamp(8px, 2vw, 48px)' }}>
             <ResponsiveContainer width="100%" height={400}>
           <LineChart data={abilityOverTime}>
             <defs>
@@ -547,7 +547,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           </button>
         </div>
         {isPredictedScoreGraphOpen && (
-          <div style={{ padding: '0 clamp(16px, 4vw, 48px) clamp(32px, 6vw, 48px) clamp(16px, 4vw, 48px)' }}>
+          <div style={{ padding: '0 clamp(8px, 2vw, 48px) clamp(32px, 6vw, 48px) clamp(8px, 2vw, 48px)' }}>
             <ResponsiveContainer width="100%" height={400}>
               <LineChart data={scoreOverTime}>
                 <defs>
