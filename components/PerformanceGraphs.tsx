@@ -487,26 +487,20 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
                               {/* Position tooltip below dot if too high, otherwise above */}
                               {(() => {
-                                const tooltipY = y < 100 ? y + 20 : y - 85;
+                                const tooltipY = y < 60 ? y + 15 : y - 40;
                                 return (
                                   <>
                                     <rect
-                                      x={x - 100}
+                                      x={x - 80}
                                       y={tooltipY}
-                                      width={200}
-                                      height={55}
-                                      rx={16}
+                                      width={160}
+                                      height={30}
+                                      rx={12}
                                       fill="#0f0f0f"
                                       filter={`url(#neumorphic-tooltip-${i})`}
                                     />
 
-                                    <text x={x} y={tooltipY + 20} fill="#e5e5e5" fontSize="14" fontWeight="bold" textAnchor="middle">
-                                      {point.quiz}
-                                    </text>
-                                    <text x={x} y={tooltipY + 35} fill="#a8a8a8" fontSize="12" textAnchor="middle">
-                                      Ability: {point.ability.toFixed(2)}
-                                    </text>
-                                    <text x={x} y={tooltipY + 48} fill="#a8a8a8" fontSize="12" textAnchor="middle">
+                                    <text x={x} y={tooltipY + 20} fill="#a8a8a8" fontSize="12" textAnchor="middle">
                                       CI: [{point.ciLower.toFixed(2)}, {point.ciUpper.toFixed(2)}]
                                     </text>
                                   </>
@@ -726,26 +720,20 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
                               {/* Position tooltip below dot if too high, otherwise above */}
                               {(() => {
-                                const tooltipY = y < 100 ? y + 20 : y - 85;
+                                const tooltipY = y < 60 ? y + 15 : y - 40;
                                 return (
                                   <>
                                     <rect
-                                      x={x - 100}
+                                      x={x - 80}
                                       y={tooltipY}
-                                      width={200}
-                                      height={55}
-                                      rx={16}
+                                      width={160}
+                                      height={30}
+                                      rx={12}
                                       fill="#0f0f0f"
                                       filter={`url(#neumorphic-score-tooltip-${i})`}
                                     />
 
-                                    <text x={x} y={tooltipY + 20} fill="#e5e5e5" fontSize="14" fontWeight="bold" textAnchor="middle">
-                                      {point.quiz}
-                                    </text>
-                                    <text x={x} y={tooltipY + 35} fill="#a8a8a8" fontSize="12" textAnchor="middle">
-                                      Score: {point.score}
-                                    </text>
-                                    <text x={x} y={tooltipY + 48} fill="#a8a8a8" fontSize="12" textAnchor="middle">
+                                    <text x={x} y={tooltipY + 20} fill="#a8a8a8" fontSize="12" textAnchor="middle">
                                       CI: [{point.scoreLower}, {point.scoreUpper}]
                                     </text>
                                   </>
