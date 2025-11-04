@@ -497,17 +497,24 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                           {/* Tooltip */}
                           {hoveredPoint?.type === 'ability' && hoveredPoint?.index === i && (
                             <g>
+                              {/* Neumorphic shadow layers */}
+                              <defs>
+                                <filter id={`neumorphic-tooltip-${i}`}>
+                                  <feDropShadow dx="6" dy="6" stdDeviation="3" floodOpacity="0.3" floodColor="#050505"/>
+                                  <feDropShadow dx="-6" dy="-6" stdDeviation="3" floodOpacity="0.3" floodColor="#191919"/>
+                                </filter>
+                              </defs>
+
                               <rect
                                 x={x - 100}
                                 y={y - 85}
                                 width={200}
                                 height={70}
-                                rx={8}
-                                fill="#1a1a1a"
-                                stroke="#8b5cf6"
-                                strokeWidth={1}
-                                filter="drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.5))"
+                                rx={16}
+                                fill="#0f0f0f"
+                                filter={`url(#neumorphic-tooltip-${i})`}
                               />
+
                               <text x={x} y={y - 65} fill="#e5e5e5" fontSize="14" fontWeight="bold" textAnchor="middle">
                                 {point.quiz}
                               </text>
@@ -554,7 +561,13 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
                 {/* Legend */}
                 <g transform={`translate(${Math.max(550, abilityOverTime.length * 200 - 200)}, 20)`}>
-                  <rect x={0} y={0} width={180} height={80} fill="#0f0f0f" stroke="#191919" rx={6} />
+                  <defs>
+                    <filter id="legend-neumorphic">
+                      <feDropShadow dx="4" dy="4" stdDeviation="2" floodOpacity="0.3" floodColor="#050505"/>
+                      <feDropShadow dx="-4" dy="-4" stdDeviation="2" floodOpacity="0.3" floodColor="#191919"/>
+                    </filter>
+                  </defs>
+                  <rect x={0} y={0} width={180} height={80} rx={12} fill="#0f0f0f" filter="url(#legend-neumorphic)" />
                   <text x={10} y={20} fill="#a8a8a8" fontSize="12" fontWeight="bold">Legend:</text>
                   <circle cx={20} cy={35} r={4} fill="#10b981" />
                   <text x={30} y={40} fill="#a8a8a8" fontSize="11">Passing (≥1.54)</text>
@@ -734,17 +747,24 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                           {/* Tooltip */}
                           {hoveredPoint?.type === 'score' && hoveredPoint?.index === i && (
                             <g>
+                              {/* Neumorphic shadow layers */}
+                              <defs>
+                                <filter id={`neumorphic-score-tooltip-${i}`}>
+                                  <feDropShadow dx="6" dy="6" stdDeviation="3" floodOpacity="0.3" floodColor="#050505"/>
+                                  <feDropShadow dx="-6" dy="-6" stdDeviation="3" floodOpacity="0.3" floodColor="#191919"/>
+                                </filter>
+                              </defs>
+
                               <rect
                                 x={x - 100}
                                 y={y - 85}
                                 width={200}
                                 height={70}
-                                rx={8}
-                                fill="#1a1a1a"
-                                stroke="#8b5cf6"
-                                strokeWidth={1}
-                                filter="drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.5))"
+                                rx={16}
+                                fill="#0f0f0f"
+                                filter={`url(#neumorphic-score-tooltip-${i})`}
                               />
+
                               <text x={x} y={y - 65} fill="#e5e5e5" fontSize="14" fontWeight="bold" textAnchor="middle">
                                 {point.quiz}
                               </text>
@@ -791,7 +811,13 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
 
                 {/* Legend */}
                 <g transform={`translate(${Math.max(550, scoreOverTime.length * 200 - 200)}, 20)`}>
-                  <rect x={0} y={0} width={180} height={80} fill="#0f0f0f" stroke="#191919" rx={6} />
+                  <defs>
+                    <filter id="score-legend-neumorphic">
+                      <feDropShadow dx="4" dy="4" stdDeviation="2" floodOpacity="0.3" floodColor="#050505"/>
+                      <feDropShadow dx="-4" dy="-4" stdDeviation="2" floodOpacity="0.3" floodColor="#191919"/>
+                    </filter>
+                  </defs>
+                  <rect x={0} y={0} width={180} height={80} rx={12} fill="#0f0f0f" filter="url(#score-legend-neumorphic)" />
                   <text x={10} y={20} fill="#a8a8a8" fontSize="12" fontWeight="bold">Legend:</text>
                   <circle cx={20} cy={35} r={4} fill="#10b981" />
                   <text x={30} y={40} fill="#a8a8a8" fontSize="11">Excellent (≥800)</text>
