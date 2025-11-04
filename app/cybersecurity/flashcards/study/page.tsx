@@ -440,8 +440,8 @@ export default function StudyFlashcards() {
                   margin: 'auto 0',
                 }}>
                   <p style={{
-                    fontSize: 'clamp(14px, 3.5vw, 20px)',
-                    lineHeight: '1.5',
+                    fontSize: 'clamp(16px, 4vw, 22px)',
+                    lineHeight: '1.6',
                     whiteSpace: 'pre-wrap',
                     color: '#e5e5e5',
                     letterSpacing: '-0.025em',
@@ -484,7 +484,7 @@ export default function StudyFlashcards() {
                       borderTop: '1px solid #191919',
                     }}>
                       <p style={{
-                        fontSize: 'clamp(14px, 3vw, 18px)',
+                        fontSize: 'clamp(14px, 3.5vw, 18px)',
                         color: '#a8a8a8',
                         fontStyle: 'italic',
                         whiteSpace: 'pre-wrap',
