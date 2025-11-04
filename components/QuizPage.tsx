@@ -1257,12 +1257,6 @@ export default function Quiz() {
               selectedAnswers={currentQuestion.questionType === 'multiple' ? selectedAnswers : []}
             />
 
-            <QuestionMetadata
-              question={currentQuestion}
-              pointsEarned={currentQuiz?.questions[currentQuestionIndex]?.pointsEarned}
-              maxPoints={currentQuiz?.questions[currentQuestionIndex]?.maxPoints}
-            />
-
             {/* Step 3: Reflection (shown after explanation) */}
             {reflection === null && (
               <div className="reflection-card">
