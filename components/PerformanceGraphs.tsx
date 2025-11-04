@@ -118,6 +118,14 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     );
   }
 
+  // Debug: Show raw quiz history info
+  console.log('UserProgress quizHistory:', userProgress.quizHistory.map(q => ({
+    id: q.id,
+    startedAt: q.startedAt,
+    endedAt: q.endedAt,
+    questionCount: q.questions.length
+  })));
+
   // Graph 1: Ability Level Over Time with Confidence Intervals
   // Sort quizzes by startedAt timestamp to ensure correct chronological order
   const sortedQuizHistory = [...userProgress.quizHistory].sort((a, b) => a.startedAt - b.startedAt);
@@ -377,9 +385,23 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
           <div style={{ padding: '0 clamp(8px, 2vw, 48px) clamp(32px, 6vw, 48px) clamp(8px, 2vw, 48px)' }}>
             {/* Debug info */}
             <div style={{ marginBottom: '20px', padding: '16px', backgroundColor: '#1a1a1a', borderRadius: '8px', color: '#e5e5e5' }}>
-              <p style={{ margin: '0 0 8px 0' }}>Debug: Found {abilityOverTime.length} quiz data points</p>
-              <p style={{ margin: '0', fontSize: '12px' }}>
-                {abilityOverTime.map((point, i) => `[${i}] ${point.quiz}: ${point.ability}`).join(' | ')}
+              <p style={{ margin: '0 0 8px 0', fontWeight: 'bold' }}>Debug Information:</p>
+              <p style={{ margin: '0 0 4px 0' }}>Raw quizHistory length: {userProgress.quizHistory.length} quizzes</p>
+              <p style={{ margin: '0 0 4px 0' }}>Sorted/processed data: {abilityOverTime.length} quiz data points</p>
+              <p style={{ margin: '0 0 8px 0' }}>Total questions answered: {userProgress.totalQuestions}</p>
+              <div style={{ fontSize: '12px', marginTop: '8px' }}>
+                <p style={{ margin: '0 0 4px 0', fontWeight: 'bold' }}>Quiz Details:</p>
+                {sortedQuizHistory.map((quiz, i) => (
+                  <p key={i} style={{ margin: '0 0 2px 0' }}>
+                    Quiz {i + 1}: ID={quiz.id} | Questions={quiz.questions.length} |
+                    Started={new Date(quiz.startedAt).toLocaleString()} |
+                    Ended={quiz.endedAt ? new Date(quiz.endedAt).toLocaleString() : 'Not ended'}
+                  </p>
+                ))}
+              </div>
+              <p style={{ margin: '8px 0 0 0', fontSize: '12px', color: '#f59e0b' }}>
+                Note: If you took 3 quizzes but only see 2, the third quiz may not have been saved properly
+                (e.g., if it wasn't completed or if there was a saving issue)
               </p>
             </div>
 
@@ -566,14 +588,6 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         </div>
         {isPredictedScoreGraphOpen && (
           <div style={{ padding: '0 clamp(8px, 2vw, 48px) clamp(32px, 6vw, 48px) clamp(8px, 2vw, 48px)' }}>
-            {/* Debug info */}
-            <div style={{ marginBottom: '20px', padding: '16px', backgroundColor: '#1a1a1a', borderRadius: '8px', color: '#e5e5e5' }}>
-              <p style={{ margin: '0 0 8px 0' }}>Debug: Found {scoreOverTime.length} quiz data points</p>
-              <p style={{ margin: '0', fontSize: '12px' }}>
-                {scoreOverTime.map((point, i) => `[${i}] ${point.quiz}: ${point.score}`).join(' | ')}
-              </p>
-            </div>
-
             {/* Simple custom chart without Recharts */}
             <div style={{
               position: 'relative',
