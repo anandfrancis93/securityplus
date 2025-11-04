@@ -229,7 +229,7 @@ export default function ExplanationSection({
               <div key={idx} style={{ marginTop: 'clamp(8px, 1.5vw, 12px)' }}>
                 <div style={{
                   fontWeight: 700,
-                  color: '#8b5cf6',
+                  color: '#ffffff',
                   fontSize: 'clamp(14px, 2.5vw, 16px)',
                   marginBottom: '6px'
                 }}>
@@ -245,7 +245,7 @@ export default function ExplanationSection({
               <div key={idx}>
                 <div style={{
                   fontWeight: 700,
-                  color: '#8b5cf6',
+                  color: '#ffffff',
                   fontSize: 'clamp(14px, 2.5vw, 16px)',
                   marginBottom: '6px'
                 }}>
@@ -261,7 +261,7 @@ export default function ExplanationSection({
               <div key={idx}>
                 <div style={{
                   fontWeight: 700,
-                  color: '#8b5cf6',
+                  color: '#ffffff',
                   fontSize: 'clamp(14px, 2.5vw, 16px)',
                   marginBottom: '6px'
                 }}>
@@ -277,7 +277,7 @@ export default function ExplanationSection({
               <div key={idx}>
                 <div style={{
                   fontWeight: 700,
-                  color: '#8b5cf6',
+                  color: '#ffffff',
                   fontSize: 'clamp(14px, 2.5vw, 16px)',
                   marginBottom: '6px'
                 }}>
