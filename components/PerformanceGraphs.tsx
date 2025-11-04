@@ -561,7 +561,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                   <circle cx={20} cy={50} r={4} fill="#f59e0b" />
                   <text x={30} y={55} fill="#a8a8a8" fontSize="11">Marginal (0-1.54)</text>
                   <circle cx={20} cy={65} r={4} fill="#f43f5e" />
-                  <text x={30} y={70} fill="#a8a8a8" fontSize="11">Below (< 0)</text>
+                  <text x={30} y={70} fill="#a8a8a8" fontSize="11">Below (&lt; 0)</text>
                 </g>
               </svg>
             </div>
@@ -798,7 +798,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                   <circle cx={20} cy={50} r={4} fill="#f59e0b" />
                   <text x={30} y={55} fill="#a8a8a8" fontSize="11">Passing (750-799)</text>
                   <circle cx={20} cy={65} r={4} fill="#f43f5e" />
-                  <text x={30} y={70} fill="#a8a8a8" fontSize="11">Below (< 750)</text>
+                  <text x={30} y={70} fill="#a8a8a8" fontSize="11">Below (&lt; 750)</text>
                 </g>
               </svg>
             </div>
