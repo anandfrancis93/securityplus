@@ -397,7 +397,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
               </div>
               <p style={{ margin: '8px 0 0 0', fontSize: '12px', color: '#f59e0b' }}>
                 Note: If you took 3 quizzes but only see 2, the third quiz may not have been saved properly
-                (e.g., if it wasn't completed or if there was a saving issue)
+                (e.g., if it wasn&apos;t completed or if there was a saving issue)
               </p>
             </div>
 
