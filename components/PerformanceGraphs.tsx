@@ -479,7 +479,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 return <circle cx={cx} cy={cy} r={5} fill={fill} />;
               }}
             >
-              <ErrorBar dataKey="abilityError" stroke="#666666" strokeWidth={2} />
+              <ErrorBar dataKey="abilityError" width={4} stroke="#666666" strokeWidth={2} direction="y" />
             </Line>
           </LineChart>
         </ResponsiveContainer>
@@ -605,7 +605,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                     return <circle cx={cx} cy={cy} r={5} fill={fill} />;
                   }}
                 >
-                  <ErrorBar dataKey="scoreError" stroke="#666666" strokeWidth={2} />
+                  <ErrorBar dataKey="scoreError" width={4} stroke="#666666" strokeWidth={2} direction="y" />
                 </Line>
               </LineChart>
             </ResponsiveContainer>
