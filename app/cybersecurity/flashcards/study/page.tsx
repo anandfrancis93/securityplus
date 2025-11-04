@@ -505,7 +505,7 @@ export default function StudyFlashcards() {
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
             gap: 'clamp(16px, 2.5vw, 24px)',
-            marginBottom: 'clamp(32px, 5vw, 48px)',
+            marginBottom: 'clamp(20px, 3vw, 32px)',
           }}>
             {/* Again Button */}
             <div style={{ position: 'relative' }}>
