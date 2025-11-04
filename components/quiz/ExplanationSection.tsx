@@ -205,6 +205,102 @@ export default function ExplanationSection({
       .trim();
   };
 
+  // Format first principles explanation with proper styling
+  const formatFirstPrinciplesExplanation = (text: string): JSX.Element => {
+    if (!text) return <span>{text}</span>;
+
+    // Clean the text first
+    const cleaned = cleanExplanation(text);
+
+    // Split by sections (First principle, Reasoning, Mechanism, Outcome)
+    const sections = cleaned.split(/\n\n/);
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(12px, 2vw, 16px)' }}>
+        {sections.map((section, idx) => {
+          // Check if this is a labeled section
+          const firstPrincipleMatch = section.match(/^First principle:\s*(.+)/is);
+          const reasoningMatch = section.match(/^Reasoning:\s*(.+)/is);
+          const mechanismMatch = section.match(/^Mechanism:\s*(.+)/is);
+          const outcomeMatch = section.match(/^Outcome:\s*(.+)/is);
+
+          if (firstPrincipleMatch) {
+            return (
+              <div key={idx} style={{ marginTop: 'clamp(8px, 1.5vw, 12px)' }}>
+                <div style={{
+                  fontWeight: 700,
+                  color: '#8b5cf6',
+                  fontSize: 'clamp(14px, 2.5vw, 16px)',
+                  marginBottom: '6px'
+                }}>
+                  First Principle:
+                </div>
+                <div style={{ color: '#e5e5e5', lineHeight: '1.6' }}>
+                  {firstPrincipleMatch[1].trim()}
+                </div>
+              </div>
+            );
+          } else if (reasoningMatch) {
+            return (
+              <div key={idx}>
+                <div style={{
+                  fontWeight: 700,
+                  color: '#8b5cf6',
+                  fontSize: 'clamp(14px, 2.5vw, 16px)',
+                  marginBottom: '6px'
+                }}>
+                  Reasoning:
+                </div>
+                <div style={{ color: '#e5e5e5', lineHeight: '1.6' }}>
+                  {reasoningMatch[1].trim()}
+                </div>
+              </div>
+            );
+          } else if (mechanismMatch) {
+            return (
+              <div key={idx}>
+                <div style={{
+                  fontWeight: 700,
+                  color: '#8b5cf6',
+                  fontSize: 'clamp(14px, 2.5vw, 16px)',
+                  marginBottom: '6px'
+                }}>
+                  Mechanism:
+                </div>
+                <div style={{ color: '#e5e5e5', lineHeight: '1.6' }}>
+                  {mechanismMatch[1].trim()}
+                </div>
+              </div>
+            );
+          } else if (outcomeMatch) {
+            return (
+              <div key={idx}>
+                <div style={{
+                  fontWeight: 700,
+                  color: '#8b5cf6',
+                  fontSize: 'clamp(14px, 2.5vw, 16px)',
+                  marginBottom: '6px'
+                }}>
+                  Outcome:
+                </div>
+                <div style={{ color: '#e5e5e5', lineHeight: '1.6' }}>
+                  {outcomeMatch[1].trim()}
+                </div>
+              </div>
+            );
+          } else {
+            // Regular text (the opening "This is correct because..." statement)
+            return (
+              <div key={idx} style={{ color: '#e5e5e5', lineHeight: '1.6' }}>
+                {section.trim()}
+              </div>
+            );
+          }
+        })}
+      </div>
+    );
+  };
+
   // Generate comprehensive exam-focused study guide for Core Intent
   const generateCoreIntentStudyGuide = (): {
     coreIntent: string;
@@ -538,14 +634,8 @@ export default function ExplanationSection({
                         </span>
                       )}
                     </div>
-                    <div
-                      className="explanation-text"
-                      style={{
-                        color: '#a8a8a8',
-                        lineHeight: '1.6',
-                      }}
-                    >
-                      {cleanExplanation(explanation)}
+                    <div className="explanation-text">
+                      {formatFirstPrinciplesExplanation(explanation)}
                     </div>
                   </div>
                 );
@@ -574,14 +664,8 @@ export default function ExplanationSection({
                     >
                       {stripLetterPrefix(normalizedOptions[index])}
                     </div>
-                    <div
-                      className="explanation-text"
-                      style={{
-                        color: '#a8a8a8',
-                        lineHeight: '1.6',
-                      }}
-                    >
-                      {cleanExplanation(explanation)}
+                    <div className="explanation-text">
+                      {formatFirstPrinciplesExplanation(explanation)}
                     </div>
                   </div>
                 );

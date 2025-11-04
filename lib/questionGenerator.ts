@@ -1139,23 +1139,57 @@ CRITICAL - FOLLOW THESE EXACT PATTERNS FROM SECURITY+ EXAM QUESTIONS:
 Security+ Topics Reference (for context only):
 ${SECURITY_PLUS_TOPICS}
 
-CRITICAL - EXPLANATION QUALITY (VERY IMPORTANT):
-Each explanation must be 2-3 sentences and include:
-1. WHY the option is correct or incorrect (first sentence)
-2. SPECIFIC DETAILS about the concept, protocol, or technology mentioned (second sentence)
-3. HOW it relates to the scenario or what the consequences would be (third sentence if needed)
+CRITICAL - FIRST PRINCIPLES EXPLANATION FORMAT (VERY IMPORTANT):
+Each explanation MUST follow this exact first-principles structure:
 
-EXCELLENT EXPLANATION EXAMPLES:
-✓ "A is correct because SAML (Security Assertion Markup Language) is specifically designed for web-based single sign-on using XML tokens. It allows users to authenticate once with an identity provider and then access multiple service providers without re-entering credentials. In this enterprise scenario, SAML is the standard protocol for federating authentication across web applications."
+**REQUIRED FORMAT FOR EVERY OPTION:**
 
-✓ "B is incorrect because LDAP (Lightweight Directory Access Protocol) is used for querying and modifying directory services, not for web-based SSO authentication. While LDAP can be used by authentication systems to look up user credentials, it doesn't provide the token-based federation mechanism needed for SSO across multiple web applications. The question specifically asks for XML-based web SSO, which requires SAML."
+[Letter] is correct/incorrect because [brief statement]
 
-✓ "C is correct because implementing network segmentation with VLANs separates sensitive systems from general network traffic, reducing the attack surface. This approach limits lateral movement if an attacker compromises one segment, containing the breach to a smaller portion of the network. By isolating critical systems, you minimize the risk of unauthorized access spreading across the entire infrastructure."
+First principle: [Fundamental concept or law that underpins this topic]
 
-BAD EXPLANATION EXAMPLES (too brief):
-✗ "A is correct because it uses SAML."
-✗ "B is incorrect because it's not the right protocol."
-✗ "C is wrong."
+Reasoning: [Logical explanation connecting the first principle to the specific option]
+
+Mechanism: [Technical details of how it works or why it doesn't work]
+
+Outcome: [Real-world consequences, benefits, or drawbacks]
+
+**EXCELLENT FIRST PRINCIPLES EXAMPLES:**
+
+✓ "A is correct because SAML enables federated web-based authentication using XML tokens.
+
+First principle: Single sign-on systems require a standardized protocol for securely exchanging authentication and authorization data between an identity provider and service providers.
+
+Reasoning: SAML (Security Assertion Markup Language) was specifically designed to solve the federated authentication problem by allowing one login to grant access to multiple web applications without re-authentication.
+
+Mechanism: When a user authenticates with the identity provider, SAML generates a digitally signed XML assertion containing user attributes and authentication status. This assertion is passed to service providers via HTTP redirects or POST bindings, allowing them to trust the identity provider's authentication decision.
+
+Outcome: In this enterprise scenario, employees can access multiple web applications (email, CRM, HR portal) with a single login, improving user experience while maintaining security through centralized authentication and standardized token validation."
+
+✓ "B is incorrect because LDAP is a directory query protocol, not an authentication federation protocol.
+
+First principle: Directory services store and organize user information hierarchically, while authentication protocols handle credential validation and session management.
+
+Reasoning: LDAP (Lightweight Directory Access Protocol) excels at querying and modifying directory entries (like user accounts, groups, and organizational units), but it doesn't provide the token-based federation mechanism needed for web-based SSO.
+
+Mechanism: LDAP operates by sending queries to a directory server (like Active Directory) to retrieve user attributes or validate credentials through bind operations. However, it lacks the ability to generate signed assertions or handle web-based session tokens required for cross-domain SSO.
+
+Outcome: While LDAP can be used by authentication systems to look up user credentials, it cannot alone implement the XML-based web SSO requested in this scenario. You would need SAML or a similar protocol on top of LDAP to achieve federated authentication."
+
+✓ "C is correct because network segmentation uses VLANs to create isolated broadcast domains.
+
+First principle: Network segmentation reduces risk by applying the principle of least privilege at the network layer—systems can only communicate with other systems they explicitly need to reach.
+
+Reasoning: By dividing a network into separate VLANs (Virtual Local Area Networks), you create logical boundaries that prevent unrestricted lateral movement across the entire network infrastructure.
+
+Mechanism: VLANs operate at Layer 2 (Data Link) by tagging Ethernet frames with VLAN IDs, ensuring that traffic from one VLAN cannot directly reach another without passing through a router or Layer 3 switch with explicit inter-VLAN routing rules.
+
+Outcome: If an attacker compromises a workstation in the general office VLAN, they cannot directly access the database servers in the restricted data VLAN. This containment limits the blast radius of a breach and gives security teams time to detect and respond before critical systems are compromised."
+
+BAD EXAMPLES (missing first principles structure):
+✗ "A is correct because it uses SAML." (No first principle, reasoning, mechanism, or outcome)
+✗ "B is incorrect because it's not the right protocol." (Lacks educational depth)
+✗ "C is wrong." (No explanation at all)
 
 CRITICAL - INCLUDE LETTER PREFIXES IN OPTIONS AND EXPLANATIONS:
 - You MUST put "A. ", "B. ", "C. ", "D. " at the start of each option text
@@ -1172,12 +1206,12 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
   "question": "the question text",
   "options": ["A. first option text", "B. second option text", "C. third option text", "D. fourth option text"],
   "correctAnswer": ${questionType === 'single' ? '0' : '[0, 2]'},
-  "explanation": "2-3 sentence detailed explanation of why the correct answer(s) are right (reference letter: 'A is correct because...')",
+  "explanation": "Overall explanation (optional, can be brief)",
   "incorrectExplanations": [
-    "A is correct/incorrect because [reason]. [Specific technical details about the concept]. [How it relates to the scenario or consequences].",
-    "B is correct/incorrect because [reason]. [Specific technical details about the concept]. [How it relates to the scenario or consequences].",
-    "C is correct/incorrect because [reason]. [Specific technical details about the concept]. [How it relates to the scenario or consequences].",
-    "D is correct/incorrect because [reason]. [Specific technical details about the concept]. [How it relates to the scenario or consequences]."
+    "A is correct because [brief statement]\\n\\nFirst principle: [fundamental concept]\\n\\nReasoning: [logical explanation]\\n\\nMechanism: [technical details]\\n\\nOutcome: [consequences/benefits]",
+    "B is incorrect because [brief statement]\\n\\nFirst principle: [fundamental concept]\\n\\nReasoning: [logical explanation]\\n\\nMechanism: [technical details of why it fails]\\n\\nOutcome: [consequences/limitations]",
+    "C is correct because [brief statement]\\n\\nFirst principle: [fundamental concept]\\n\\nReasoning: [logical explanation]\\n\\nMechanism: [technical details]\\n\\nOutcome: [consequences/benefits]",
+    "D is incorrect because [brief statement]\\n\\nFirst principle: [fundamental concept]\\n\\nReasoning: [logical explanation]\\n\\nMechanism: [technical details of why it fails]\\n\\nOutcome: [consequences/limitations]"
   ],
   "topics": ${JSON.stringify(topicStrings)},
   "difficulty": "${difficulty}",
@@ -1186,7 +1220,9 @@ Return ONLY a valid JSON object in this exact format (no markdown, no extra text
     "scenario": "brief scenario type (e.g., 'certificate_validation', 'network_attack', 'access_control')",
     "keyConcept": "specific concept tested (e.g., 'CRL_vs_OCSP', 'DDoS_mitigation', 'RBAC_implementation')"
   }
-}`;
+}
+
+CRITICAL: Use \\n\\n (double newlines) to separate sections (First principle, Reasoning, Mechanism, Outcome) for proper formatting.`;
 
   try {
     const systemPrompt = `You are a CompTIA Security+ SY0-701 exam expert. Generate high-quality exam questions that match the style, quality, and difficulty of actual Security+ exam questions.
@@ -1202,7 +1238,7 @@ CRITICAL QUALITY RULES:
 8. Make incorrect answers subtly wrong, not obviously unrelated
 9. All options should have similar technical depth and specificity
 10. Use realistic business/technical scenarios like the examples show
-11. WRITE DETAILED EXPLANATIONS (2-3 sentences each) - explain WHY, provide DETAILS, show CONSEQUENCES
+11. WRITE FIRST PRINCIPLES EXPLANATIONS - Each explanation MUST include: First principle, Reasoning, Mechanism, Outcome
 
 CRITICAL - LETTER BINDING (PREVENTS CONTRADICTIONS):
 12. Each option MUST start with its letter (A. B. C. or D. with period and space)
@@ -1212,6 +1248,12 @@ CRITICAL - LETTER BINDING (PREVENTS CONTRADICTIONS):
 16. NEVER write "A is incorrect" if A is the correct answer
 17. NEVER write "B is correct" if B is an incorrect answer
 18. The letter creates an explicit binding that makes contradictions impossible
+
+CRITICAL - FIRST PRINCIPLES EXPLANATIONS (MANDATORY):
+19. Every explanation must start with "[Letter] is correct/incorrect because [brief statement]"
+20. Then include: "First principle:", "Reasoning:", "Mechanism:", "Outcome:" sections
+21. Use \\n\\n to separate sections for proper formatting
+22. Educate the user by building from fundamental concepts to specific application
 
 Return only valid JSON, no markdown formatting.`;
 
