@@ -386,8 +386,14 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             }}>
               <svg
                 width={Math.max(600, abilityOverTime.length * 200)}
-                height={450} // Increased height for tooltip space
-                style={{ display: 'block', overflow: 'visible' }}
+                height={450}
+                style={{
+                  width: '100%',
+                  minWidth: abilityOverTime.length > 3 ? `${Math.max(600, abilityOverTime.length * 200)}px` : 'unset',
+                  height: '450px',
+                  display: 'block',
+                  overflow: 'visible'
+                }}
               >
                 {/* Grid lines */}
                 <g>
@@ -617,8 +623,14 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
             }}>
               <svg
                 width={Math.max(600, scoreOverTime.length * 200)}
-                height={450} // Increased height for tooltip space
-                style={{ display: 'block', overflow: 'visible' }}
+                height={450}
+                style={{
+                  width: '100%',
+                  minWidth: scoreOverTime.length > 3 ? `${Math.max(600, scoreOverTime.length * 200)}px` : 'unset',
+                  height: '450px',
+                  display: 'block',
+                  overflow: 'visible'
+                }}
               >
                 {/* Grid lines */}
                 <g>
