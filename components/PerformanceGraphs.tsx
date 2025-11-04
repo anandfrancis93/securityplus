@@ -135,7 +135,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     const abilityCI = calculateIRTConfidenceInterval(theta, standardError);
 
     // Simple quiz numbering based on chronological order
-    const quizLabel = `Quiz ${index + 1}`;
+    const quizLabel = `Q${index + 1}`;
 
     return {
       quiz: quizLabel,
@@ -163,7 +163,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
     const scoreUpper = Math.max(100, Math.min(900, Math.round(baseScore + (ciUpper * scaleFactor))));
 
     // Use same simple numbering as abilityOverTime
-    const quizLabel = `Quiz ${index + 1}`;
+    const quizLabel = `Q${index + 1}`;
 
     // Calculate error bar as array [lower, upper] for ErrorBar component
     const scoreError = [score - scoreLower, scoreUpper - score];
