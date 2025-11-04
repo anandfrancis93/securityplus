@@ -227,6 +227,10 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
   // Track points for partial credit accuracy
   const domainStats: { [domain: string]: { questionIds: Set<string>; correctQuestionIds: Set<string>; points: number; maxPoints: number } } = {};
 
+  // Debug: Track unmatched topics
+  const unmatchedTopics = new Set<string>();
+  const matchedTopics = new Set<string>();
+
   // Build a map of questionId -> domains for that question
   userProgress.quizHistory.forEach(quiz => {
     quiz.questions.forEach(attempt => {
@@ -240,6 +244,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
         const topicInfo = TOPIC_INDEX.byLabel[topicName];
         if (topicInfo) {
           domainsForQuestion.add(topicInfo.domainLabel);
+          matchedTopics.add(topicName);
+        } else {
+          unmatchedTopics.add(topicName);
         }
       });
 
@@ -264,6 +271,19 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       });
     });
   });
+
+  // Debug logging
+  console.log('[PerformanceGraphs] Topic matching results:', {
+    totalQuizzes: userProgress.quizHistory.length,
+    matchedTopics: Array.from(matchedTopics),
+    unmatchedTopics: Array.from(unmatchedTopics),
+    domainsFound: Object.keys(domainStats),
+    totalDomains: Object.keys(domainStats).length
+  });
+
+  if (unmatchedTopics.size > 0) {
+    console.warn('[PerformanceGraphs] Unmatched topics found in quiz data:', Array.from(unmatchedTopics));
+  }
 
   const domainPerformance = Object.entries(domainStats).map(([domain, stats]) => {
     // Extract domain number (e.g., "1." from "1.0 General Security Concepts")
