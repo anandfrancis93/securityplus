@@ -167,11 +167,11 @@ export default function StudyFlashcards() {
             textAlign: 'center',
           }}>
             <div style={{
-              fontSize: 'clamp(64px, 15vw, 112px)',
+              fontSize: 'clamp(48px, 10vw, 96px)',
               marginBottom: 'clamp(20px, 3vw, 32px)',
             }}>✅</div>
             <h1 style={{
-              fontSize: 'clamp(48px, 12vw, 96px)',
+              fontSize: 'clamp(32px, 8vw, 80px)',
               fontWeight: 'bold',
               letterSpacing: '-0.05em',
               lineHeight: '0.95',
@@ -181,7 +181,7 @@ export default function StudyFlashcards() {
               All Done!
             </h1>
             <p style={{
-              fontSize: 'clamp(24px, 5vw, 32px)',
+              fontSize: 'clamp(16px, 4vw, 24px)',
               fontWeight: '300',
               lineHeight: '1.5',
               color: '#a8a8a8',
@@ -252,7 +252,7 @@ export default function StudyFlashcards() {
             margin: '0 auto',
           }}>
             <h1 style={{
-              fontSize: 'clamp(48px, 12vw, 96px)',
+              fontSize: 'clamp(32px, 8vw, 80px)',
               fontWeight: 'bold',
               letterSpacing: '-0.05em',
               lineHeight: '0.95',
@@ -268,7 +268,7 @@ export default function StudyFlashcards() {
               gap: '16px',
             }}>
               <p style={{
-                fontSize: 'clamp(24px, 5vw, 32px)',
+                fontSize: 'clamp(16px, 4vw, 24px)',
                 fontWeight: '300',
                 letterSpacing: '-0.025em',
                 color: '#a8a8a8',
@@ -357,7 +357,7 @@ export default function StudyFlashcards() {
                   width: '100%',
                 }}>
                   <h2 style={{
-                    fontSize: 'clamp(32px, 8vw, 48px)',
+                    fontSize: 'clamp(24px, 6vw, 40px)',
                     fontWeight: 'bold',
                     letterSpacing: '-0.025em',
                     lineHeight: '1.2',
@@ -440,7 +440,7 @@ export default function StudyFlashcards() {
                   margin: 'auto 0',
                 }}>
                   <p style={{
-                    fontSize: 'clamp(18px, 4vw, 24px)',
+                    fontSize: 'clamp(14px, 3.5vw, 20px)',
                     lineHeight: '1.5',
                     whiteSpace: 'pre-wrap',
                     color: '#e5e5e5',
@@ -525,7 +525,7 @@ export default function StudyFlashcards() {
                   cursor: answering ? 'not-allowed' : 'pointer',
                   boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  fontSize: 'clamp(18px, 4vw, 24px)',
+                  fontSize: 'clamp(16px, 3.5vw, 20px)',
                   letterSpacing: '-0.025em',
                   opacity: answering ? 0.5 : 1,
                 }}
@@ -562,7 +562,7 @@ export default function StudyFlashcards() {
                   cursor: answering ? 'not-allowed' : 'pointer',
                   boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  fontSize: 'clamp(18px, 4vw, 24px)',
+                  fontSize: 'clamp(16px, 3.5vw, 20px)',
                   letterSpacing: '-0.025em',
                   opacity: answering ? 0.5 : 1,
                 }}
@@ -599,7 +599,7 @@ export default function StudyFlashcards() {
                   cursor: answering ? 'not-allowed' : 'pointer',
                   boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  fontSize: 'clamp(18px, 4vw, 24px)',
+                  fontSize: 'clamp(16px, 3.5vw, 20px)',
                   letterSpacing: '-0.025em',
                   opacity: answering ? 0.5 : 1,
                 }}
@@ -636,7 +636,7 @@ export default function StudyFlashcards() {
                   cursor: answering ? 'not-allowed' : 'pointer',
                   boxShadow: '6px 6px 12px #050505, -6px -6px 12px #191919',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  fontSize: 'clamp(18px, 4vw, 24px)',
+                  fontSize: 'clamp(16px, 3.5vw, 20px)',
                   letterSpacing: '-0.025em',
                   opacity: answering ? 0.5 : 1,
                 }}
