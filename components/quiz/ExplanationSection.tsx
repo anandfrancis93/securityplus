@@ -615,7 +615,6 @@ export default function ExplanationSection({
                 if (!isValidExplanation(explanation)) return null;
 
                 const wasSelectedByUser = userSelectedAnswers.includes(index);
-                const isMultipleResponse = question.questionType === 'multiple';
 
                 return (
                   <div key={`correct-${index}`} className="explanation-item">
@@ -628,11 +627,9 @@ export default function ExplanationSection({
                       }}
                     >
                       {stripLetterPrefix(normalizedOptions[index])}
-                      {isMultipleResponse && !wasSelectedByUser && (
-                        <span style={{ color: '#f59e0b', fontWeight: 600, marginLeft: '8px' }}>
-                          (not selected)
-                        </span>
-                      )}
+                      <span style={{ color: '#10b981', fontWeight: 600, marginLeft: '8px' }}>
+                        (Correct){wasSelectedByUser ? ' [Selected]' : ' [Not Selected]'}
+                      </span>
                     </div>
                     <div className="explanation-text">
                       {formatFirstPrinciplesExplanation(explanation)}
@@ -646,7 +643,6 @@ export default function ExplanationSection({
                 // Skip if this is a correct answer or if explanation is invalid
                 const isCorrectAnswer = correctAnswers.includes(index);
                 const wasSelectedByUser = userSelectedAnswers.includes(index);
-                const isWrongSelection = wasSelectedByUser && !isCorrectAnswer;
 
                 if (isCorrectAnswer || !isValidExplanation(explanation)) {
                   return null;
@@ -658,11 +654,14 @@ export default function ExplanationSection({
                       className="explanation-option-title"
                       style={{
                         fontWeight: 700,
-                        color: isWrongSelection ? '#f43f5e' : '#a8a8a8',
+                        color: '#f43f5e',
                         marginBottom: '8px',
                       }}
                     >
                       {stripLetterPrefix(normalizedOptions[index])}
+                      <span style={{ color: '#f43f5e', fontWeight: 600, marginLeft: '8px' }}>
+                        (Incorrect){wasSelectedByUser ? ' [Selected]' : ' [Not Selected]'}
+                      </span>
                     </div>
                     <div className="explanation-text">
                       {formatFirstPrinciplesExplanation(explanation)}
