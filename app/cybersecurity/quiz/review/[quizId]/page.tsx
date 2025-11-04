@@ -250,6 +250,13 @@ export default function QuizReviewPage() {
                     <h3 className="question-header-text">Question {index + 1}</h3>
                   </div>
 
+                  {/* Question Text */}
+                  <div className="question-text-container">
+                    <h2 className="question-text">
+                      {question.question}
+                    </h2>
+                  </div>
+
                   {/* Question Card with Answer Options */}
                   <QuestionCard
                     question={question}
@@ -385,6 +392,21 @@ export default function QuizReviewPage() {
           font-size: clamp(24px, 4.5vw, 40px);
           font-weight: bold;
           color: #e5e5e5;
+        }
+
+        .question-text-container {
+          background: #0f0f0f;
+          border-radius: clamp(16px, 2vw, 24px);
+          padding: clamp(24px, 4vw, 40px);
+          box-shadow: 12px 12px 24px #050505, -12px -12px 24px #191919;
+        }
+
+        .question-text {
+          font-size: clamp(18px, 3.5vw, 24px);
+          font-weight: 600;
+          line-height: 1.6;
+          color: #e5e5e5;
+          margin: 0;
         }
 
         /* Tablet (768px+) */
