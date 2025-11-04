@@ -628,7 +628,7 @@ export default function ExplanationSection({
                     >
                       {stripLetterPrefix(normalizedOptions[index])}
                       <span style={{ color: '#10b981', fontWeight: 600, marginLeft: '8px' }}>
-                        (Correct){wasSelectedByUser ? ' [Selected]' : ' [Not Selected]'}
+                        ({wasSelectedByUser ? 'Selected' : 'Not Selected'})
                       </span>
                     </div>
                     <div className="explanation-text">
@@ -660,7 +660,7 @@ export default function ExplanationSection({
                     >
                       {stripLetterPrefix(normalizedOptions[index])}
                       <span style={{ color: '#f43f5e', fontWeight: 600, marginLeft: '8px' }}>
-                        (Incorrect){wasSelectedByUser ? ' [Selected]' : ' [Not Selected]'}
+                        ({wasSelectedByUser ? 'Selected' : 'Not Selected'})
                       </span>
                     </div>
                     <div className="explanation-text">
