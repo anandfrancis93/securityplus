@@ -638,18 +638,18 @@ export default function ExplanationSection({
                 );
               })}
 
-              {/* Then show incorrect answer explanations in A-D order */}
+              {/* Then show incorrect answers that were SELECTED by user */}
               {orderedExplanations.map((explanation, index) => {
-                // Skip if this is a correct answer or if explanation is invalid
                 const isCorrectAnswer = correctAnswers.includes(index);
                 const wasSelectedByUser = userSelectedAnswers.includes(index);
 
-                if (isCorrectAnswer || !isValidExplanation(explanation)) {
+                // Only show incorrect answers that were selected
+                if (isCorrectAnswer || !wasSelectedByUser || !isValidExplanation(explanation)) {
                   return null;
                 }
 
                 return (
-                  <div key={`incorrect-${index}`} className="explanation-item">
+                  <div key={`incorrect-selected-${index}`} className="explanation-item">
                     <div
                       className="explanation-option-title"
                       style={{
@@ -660,7 +660,39 @@ export default function ExplanationSection({
                     >
                       {stripLetterPrefix(normalizedOptions[index])}
                       <span style={{ color: '#f43f5e', fontWeight: 600, marginLeft: '8px' }}>
-                        ({wasSelectedByUser ? 'Selected' : 'Not Selected'})
+                        (Selected)
+                      </span>
+                    </div>
+                    <div className="explanation-text">
+                      {formatFirstPrinciplesExplanation(explanation)}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Finally show incorrect answers that were NOT selected by user */}
+              {orderedExplanations.map((explanation, index) => {
+                const isCorrectAnswer = correctAnswers.includes(index);
+                const wasSelectedByUser = userSelectedAnswers.includes(index);
+
+                // Only show incorrect answers that were not selected
+                if (isCorrectAnswer || wasSelectedByUser || !isValidExplanation(explanation)) {
+                  return null;
+                }
+
+                return (
+                  <div key={`incorrect-not-selected-${index}`} className="explanation-item">
+                    <div
+                      className="explanation-option-title"
+                      style={{
+                        fontWeight: 700,
+                        color: '#f43f5e',
+                        marginBottom: '8px',
+                      }}
+                    >
+                      {stripLetterPrefix(normalizedOptions[index])}
+                      <span style={{ color: '#f43f5e', fontWeight: 600, marginLeft: '8px' }}>
+                        (Not Selected)
                       </span>
                     </div>
                     <div className="explanation-text">
