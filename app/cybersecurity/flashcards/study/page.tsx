@@ -314,7 +314,7 @@ export default function StudyFlashcards() {
 
         {/* Flashcard */}
         <div style={{
-          marginBottom: 'clamp(32px, 6vw, 48px)',
+          marginBottom: 'clamp(16px, 2vw, 24px)',
           perspective: '1000px',
         }}>
           <div
