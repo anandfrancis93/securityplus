@@ -494,7 +494,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                                       x={x - 100}
                                       y={tooltipY}
                                       width={200}
-                                      height={70}
+                                      height={55}
                                       rx={16}
                                       fill="#0f0f0f"
                                       filter={`url(#neumorphic-tooltip-${i})`}
@@ -503,14 +503,11 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                                     <text x={x} y={tooltipY + 20} fill="#e5e5e5" fontSize="14" fontWeight="bold" textAnchor="middle">
                                       {point.quiz}
                                     </text>
-                                    <text x={x} y={tooltipY + 38} fill="#a8a8a8" fontSize="12" textAnchor="middle">
+                                    <text x={x} y={tooltipY + 35} fill="#a8a8a8" fontSize="12" textAnchor="middle">
                                       Ability: {point.ability.toFixed(2)}
                                     </text>
-                                    <text x={x} y={tooltipY + 53} fill="#a8a8a8" fontSize="12" textAnchor="middle">
+                                    <text x={x} y={tooltipY + 48} fill="#a8a8a8" fontSize="12" textAnchor="middle">
                                       CI: [{point.ciLower.toFixed(2)}, {point.ciUpper.toFixed(2)}]
-                                    </text>
-                                    <text x={x} y={tooltipY + 68} fill="#a8a8a8" fontSize="11" textAnchor="middle">
-                                      {point.date}
                                     </text>
                                   </>
                                 )
@@ -754,7 +751,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                                       x={x - 100}
                                       y={tooltipY}
                                       width={200}
-                                      height={70}
+                                      height={55}
                                       rx={16}
                                       fill="#0f0f0f"
                                       filter={`url(#neumorphic-score-tooltip-${i})`}
@@ -763,14 +760,11 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                                     <text x={x} y={tooltipY + 20} fill="#e5e5e5" fontSize="14" fontWeight="bold" textAnchor="middle">
                                       {point.quiz}
                                     </text>
-                                    <text x={x} y={tooltipY + 38} fill="#a8a8a8" fontSize="12" textAnchor="middle">
+                                    <text x={x} y={tooltipY + 35} fill="#a8a8a8" fontSize="12" textAnchor="middle">
                                       Score: {point.score}
                                     </text>
-                                    <text x={x} y={tooltipY + 53} fill="#a8a8a8" fontSize="12" textAnchor="middle">
+                                    <text x={x} y={tooltipY + 48} fill="#a8a8a8" fontSize="12" textAnchor="middle">
                                       CI: [{point.scoreLower}, {point.scoreUpper}]
-                                    </text>
-                                    <text x={x} y={tooltipY + 68} fill="#a8a8a8" fontSize="11" textAnchor="middle">
-                                      {point.date}
                                     </text>
                                   </>
                                 )
