@@ -311,7 +311,7 @@ export default function FlashcardsPage() {
         </section>
 
         {/* Secondary Actions - Large Cards */}
-        <section style={{ marginBottom: '2rem' }}>
+        <section style={{ paddingBottom: 'clamp(40px, 6vw, 60px)' }}>
           <div style={{
             maxWidth: '72rem',
             margin: '0 auto',
