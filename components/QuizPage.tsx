@@ -279,8 +279,17 @@ export default function Quiz() {
   const initQuiz = async () => {
     console.log('Starting fresh quiz - generating first question...');
 
-    // Reset quiz ending flag
+    // Reset all quiz state
     setQuizEnding(false);
+    setCurrentQuestionIndex(0);
+    setSelectedAnswer(null);
+    setSelectedAnswers([]);
+    setShowExplanation(false);
+    setCurrentAnswerData(null);
+    setShowConfidenceSelection(true);
+    setConfidence(null);
+    setReflection(null);
+    setQuestions([]);
 
     // Clear any old cached quiz
     await clearCachedQuiz();
@@ -460,6 +469,7 @@ export default function Quiz() {
       setSelectedAnswer(null);
       setSelectedAnswers([]);
       setShowExplanation(false);
+      setCurrentAnswerData(null); // CRITICAL: Clear answer data from previous question
       // Reset multi-step workflow for next question
       setShowConfidenceSelection(true);
       setConfidence(null);
