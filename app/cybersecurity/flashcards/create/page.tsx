@@ -518,7 +518,7 @@ export default function CreateFlashcards() {
                   style={{
                     position: 'relative',
                     backgroundColor: '#0f0f0f',
-                    color: '#ffffff',
+                    color: '#e5e5e5',
                     padding: 'clamp(12px, 2vw, 20px) clamp(24px, 4vw, 40px)',
                     fontSize: 'clamp(16px, 3.5vw, 20px)',
                     fontWeight: 'bold',
@@ -527,10 +527,9 @@ export default function CreateFlashcards() {
                     cursor: generating ? 'not-allowed' : 'pointer',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     boxShadow: generating
-                      ? 'none'
+                      ? 'inset 4px 4px 8px #050505, inset -4px -4px 8px #191919'
                       : '6px 6px 12px #050505, -6px -6px 12px #191919',
-                    opacity: generating ? 0.5 : 1,
-                    background: generating ? '#666666' : 'linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%)'
+                    opacity: generating ? 0.5 : 1
                   }}
                   onMouseEnter={(e) => {
                     if (!generating) {
@@ -564,8 +563,8 @@ export default function CreateFlashcards() {
           padding: 12px 24px;
           border-radius: 16px;
           border: none;
-          background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
-          color: #ffffff;
+          background: #0f0f0f;
+          color: #e5e5e5;
           font-size: 16px;
           font-weight: 600;
           cursor: pointer;
