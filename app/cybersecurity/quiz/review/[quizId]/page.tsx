@@ -213,61 +213,82 @@ export default function QuizReviewPage() {
 
         {/* Questions List */}
         <div className="questions-container">
-          {quiz.questions.map((attempt, index) => {
-            const { question } = attempt;
-            const userAnswers = Array.isArray(attempt.userAnswer)
-              ? attempt.userAnswer
-              : (attempt.userAnswer !== null ? [attempt.userAnswer] : []);
+          {quiz.questions && quiz.questions.length > 0 ? (
+            quiz.questions.map((attempt, index) => {
+              const { question } = attempt;
 
-            const correctAnswers = Array.isArray(question.correctAnswer)
-              ? question.correctAnswer
-              : [question.correctAnswer];
+              // Debug: Log question data
+              console.log(`Question ${index + 1}:`, {
+                hasOptions: !!question.options,
+                hasOptionItems: !!question.optionItems,
+                hasCorrectAnswer: question.correctAnswer !== undefined,
+                hasExplanation: !!question.explanation,
+                hasIncorrectExplanations: !!question.incorrectExplanations
+              });
 
-            // Check if partially correct (for multiple-response questions)
-            const isPartiallyCorrect = question.questionType === 'multiple' &&
-              !attempt.isCorrect &&
-              userAnswers.some(ans => correctAnswers.includes(ans)) &&
-              userAnswers.length > 0;
+              const userAnswers = Array.isArray(attempt.userAnswer)
+                ? attempt.userAnswer
+                : (attempt.userAnswer !== null ? [attempt.userAnswer] : []);
 
-            return (
-              <div key={attempt.questionId} className="question-section">
-                {/* Question Number Header */}
-                <div className="question-header">
-                  <div className="question-number-badge">
-                    {index + 1}
+              const correctAnswers = Array.isArray(question.correctAnswer)
+                ? question.correctAnswer
+                : [question.correctAnswer];
+
+              // Check if partially correct (for multiple-response questions)
+              const isPartiallyCorrect = question.questionType === 'multiple' &&
+                !attempt.isCorrect &&
+                userAnswers.some(ans => correctAnswers.includes(ans)) &&
+                userAnswers.length > 0;
+
+              return (
+                <div key={attempt.questionId} className="question-section">
+                  {/* Question Number Header */}
+                  <div className="question-header">
+                    <div className="question-number-badge">
+                      {index + 1}
+                    </div>
+                    <h3 className="question-header-text">Question {index + 1}</h3>
                   </div>
-                  <h3 className="question-header-text">Question {index + 1}</h3>
+
+                  {/* Question Card with Answer Options */}
+                  <QuestionCard
+                    question={question}
+                    questionNumber={index + 1}
+                    showExplanation={true}
+                    selectedAnswer={question.questionType === 'single' ? (userAnswers[0] ?? null) : null}
+                    selectedAnswers={question.questionType === 'multiple' ? userAnswers : []}
+                  />
+
+                  {/* Explanation Section */}
+                  <ExplanationSection
+                    question={question}
+                    isCorrect={attempt.isCorrect}
+                    isPartiallyCorrect={isPartiallyCorrect}
+                    selectedAnswer={question.questionType === 'single' ? (userAnswers[0] ?? null) : null}
+                    selectedAnswers={question.questionType === 'multiple' ? userAnswers : []}
+                  />
+
+                  {/* Question Metadata */}
+                  <QuestionMetadata
+                    question={question}
+                    pointsEarned={attempt.pointsEarned}
+                    maxPoints={attempt.maxPoints}
+                    confidence={attempt.confidence}
+                    reflection={attempt.reflection}
+                  />
                 </div>
-
-                {/* Question Card with Answer Options */}
-                <QuestionCard
-                  question={question}
-                  questionNumber={index + 1}
-                  showExplanation={true}
-                  selectedAnswer={question.questionType === 'single' ? (userAnswers[0] ?? null) : null}
-                  selectedAnswers={question.questionType === 'multiple' ? userAnswers : []}
-                />
-
-                {/* Explanation Section */}
-                <ExplanationSection
-                  question={question}
-                  isCorrect={attempt.isCorrect}
-                  isPartiallyCorrect={isPartiallyCorrect}
-                  selectedAnswer={question.questionType === 'single' ? (userAnswers[0] ?? null) : null}
-                  selectedAnswers={question.questionType === 'multiple' ? userAnswers : []}
-                />
-
-                {/* Question Metadata */}
-                <QuestionMetadata
-                  question={question}
-                  pointsEarned={attempt.pointsEarned}
-                  maxPoints={attempt.maxPoints}
-                  confidence={attempt.confidence}
-                  reflection={attempt.reflection}
-                />
-              </div>
-            );
-          })}
+              );
+            })
+          ) : (
+            <div style={{
+              padding: '40px',
+              textAlign: 'center',
+              color: '#a8a8a8',
+              fontSize: '18px'
+            }}>
+              No questions found in this quiz session.
+            </div>
+          )}
         </div>
       </div>
 
