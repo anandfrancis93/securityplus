@@ -89,6 +89,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
   const [isPerformanceByDomainOpen, setIsPerformanceByDomainOpen] = useState(false);
   const [isTopicCoverageOpen, setIsTopicCoverageOpen] = useState(false);
   const [openDomainTables, setOpenDomainTables] = useState<{ [key: string]: boolean }>({});
+  const [hoveredPoint, setHoveredPoint] = useState<{ type: 'ability' | 'score'; index: number } | null>(null);
 
   const toggleDomainTable = (domain: string) => {
     setOpenDomainTables(prev => ({
@@ -483,7 +484,44 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                           <line x1={x - 5} y1={yUpper} x2={x + 5} y2={yUpper} stroke="#666666" strokeWidth={2} />
 
                           {/* Data point - positioned at CI midpoint for visual balance */}
-                          <circle cx={x} cy={y} r={6} fill={color} />
+                          <g
+                            onMouseEnter={() => setHoveredPoint({ type: 'ability', index: i })}
+                            onMouseLeave={() => setHoveredPoint(null)}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            <circle cx={x} cy={y} r={6} fill={color} />
+                            {/* Invisible larger circle for better hover target */}
+                            <circle cx={x} cy={y} r={12} fill="transparent" />
+                          </g>
+
+                          {/* Tooltip */}
+                          {hoveredPoint?.type === 'ability' && hoveredPoint?.index === i && (
+                            <g>
+                              <rect
+                                x={x - 100}
+                                y={y - 85}
+                                width={200}
+                                height={70}
+                                rx={8}
+                                fill="#1a1a1a"
+                                stroke="#8b5cf6"
+                                strokeWidth={1}
+                                filter="drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.5))"
+                              />
+                              <text x={x} y={y - 65} fill="#e5e5e5" fontSize="14" fontWeight="bold" textAnchor="middle">
+                                {point.quiz}
+                              </text>
+                              <text x={x} y={y - 47} fill="#a8a8a8" fontSize="12" textAnchor="middle">
+                                Ability: {point.ability.toFixed(2)}
+                              </text>
+                              <text x={x} y={y - 32} fill="#a8a8a8" fontSize="12" textAnchor="middle">
+                                CI: [{point.ciLower.toFixed(2)}, {point.ciUpper.toFixed(2)}]
+                              </text>
+                              <text x={x} y={y - 17} fill="#a8a8a8" fontSize="11" textAnchor="middle">
+                                {point.date}
+                              </text>
+                            </g>
+                          )}
 
                           {/* Label */}
                           <text x={x} y={380} fill="#a8a8a8" fontSize="14" textAnchor="middle">
@@ -513,6 +551,18 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 >
                   Ability Level
                 </text>
+
+                {/* Legend */}
+                <g transform={`translate(${Math.max(550, abilityOverTime.length * 200 - 200)}, 20)`}>
+                  <rect x={0} y={0} width={180} height={80} fill="#0f0f0f" stroke="#191919" rx={6} />
+                  <text x={10} y={20} fill="#a8a8a8" fontSize="12" fontWeight="bold">Legend:</text>
+                  <circle cx={20} cy={35} r={4} fill="#10b981" />
+                  <text x={30} y={40} fill="#a8a8a8" fontSize="11">Passing (≥1.54)</text>
+                  <circle cx={20} cy={50} r={4} fill="#f59e0b" />
+                  <text x={30} y={55} fill="#a8a8a8" fontSize="11">Marginal (0-1.54)</text>
+                  <circle cx={20} cy={65} r={4} fill="#f43f5e" />
+                  <text x={30} y={70} fill="#a8a8a8" fontSize="11">Below (< 0)</text>
+                </g>
               </svg>
             </div>
           </div>
@@ -671,7 +721,44 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                           <line x1={x - 5} y1={yUpper} x2={x + 5} y2={yUpper} stroke="#666666" strokeWidth={2} />
 
                           {/* Data point - positioned at CI midpoint for visual balance */}
-                          <circle cx={x} cy={y} r={6} fill={color} />
+                          <g
+                            onMouseEnter={() => setHoveredPoint({ type: 'score', index: i })}
+                            onMouseLeave={() => setHoveredPoint(null)}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            <circle cx={x} cy={y} r={6} fill={color} />
+                            {/* Invisible larger circle for better hover target */}
+                            <circle cx={x} cy={y} r={12} fill="transparent" />
+                          </g>
+
+                          {/* Tooltip */}
+                          {hoveredPoint?.type === 'score' && hoveredPoint?.index === i && (
+                            <g>
+                              <rect
+                                x={x - 100}
+                                y={y - 85}
+                                width={200}
+                                height={70}
+                                rx={8}
+                                fill="#1a1a1a"
+                                stroke="#8b5cf6"
+                                strokeWidth={1}
+                                filter="drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.5))"
+                              />
+                              <text x={x} y={y - 65} fill="#e5e5e5" fontSize="14" fontWeight="bold" textAnchor="middle">
+                                {point.quiz}
+                              </text>
+                              <text x={x} y={y - 47} fill="#a8a8a8" fontSize="12" textAnchor="middle">
+                                Score: {point.score}
+                              </text>
+                              <text x={x} y={y - 32} fill="#a8a8a8" fontSize="12" textAnchor="middle">
+                                CI: [{point.scoreLower}, {point.scoreUpper}]
+                              </text>
+                              <text x={x} y={y - 17} fill="#a8a8a8" fontSize="11" textAnchor="middle">
+                                {point.date}
+                              </text>
+                            </g>
+                          )}
 
                           {/* Label */}
                           <text x={x} y={380} fill="#a8a8a8" fontSize="14" textAnchor="middle">
@@ -701,6 +788,18 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 >
                   Exam Score
                 </text>
+
+                {/* Legend */}
+                <g transform={`translate(${Math.max(550, scoreOverTime.length * 200 - 200)}, 20)`}>
+                  <rect x={0} y={0} width={180} height={80} fill="#0f0f0f" stroke="#191919" rx={6} />
+                  <text x={10} y={20} fill="#a8a8a8" fontSize="12" fontWeight="bold">Legend:</text>
+                  <circle cx={20} cy={35} r={4} fill="#10b981" />
+                  <text x={30} y={40} fill="#a8a8a8" fontSize="11">Excellent (≥800)</text>
+                  <circle cx={20} cy={50} r={4} fill="#f59e0b" />
+                  <text x={30} y={55} fill="#a8a8a8" fontSize="11">Passing (750-799)</text>
+                  <circle cx={20} cy={65} r={4} fill="#f43f5e" />
+                  <text x={30} y={70} fill="#a8a8a8" fontSize="11">Below (< 750)</text>
+                </g>
               </svg>
             </div>
           </div>
