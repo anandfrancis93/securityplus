@@ -403,7 +403,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                           stroke="#191919"
                           strokeDasharray="3 3"
                         />
-                        <text x={30} y={yPos + 5} fill="#a8a8a8" fontSize="12" textAnchor="end">
+                        <text x={40} y={yPos + 4} fill="#a8a8a8" fontSize="11" textAnchor="end">
                           {y}
                         </text>
                       </g>
@@ -423,9 +423,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 />
                 <text
                   x={Math.max(560, abilityOverTime.length * 200 - 40)}
-                  y={350 - ((1.54 + 3) / 6) * 300 + 5}
+                  y={350 - ((1.54 + 3) / 6) * 300 + 4}
                   fill="#10b981"
-                  fontSize="12"
+                  fontSize="11"
                 >
                   Pass
                 </text>
@@ -510,7 +510,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                           )}
 
                           {/* Label */}
-                          <text x={x} y={380} fill="#a8a8a8" fontSize="14" textAnchor="middle">
+                          <text x={x} y={370} fill="#a8a8a8" fontSize="12" textAnchor="middle">
                             {point.quiz}
                           </text>
                         </g>
@@ -524,16 +524,16 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 <line x1={50} y1={50} x2={50} y2={350} stroke="#a8a8a8" strokeWidth={2} />
 
                 {/* Axis labels */}
-                <text x={Math.max(300, abilityOverTime.length * 100)} y={395} fill="#a8a8a8" fontSize="14" textAnchor="middle">
+                <text x={Math.max(300, abilityOverTime.length * 100)} y={405} fill="#a8a8a8" fontSize="13" textAnchor="middle">
                   Quiz
                 </text>
                 <text
-                  x={20}
+                  x={12}
                   y={200}
                   fill="#a8a8a8"
-                  fontSize="14"
+                  fontSize="13"
                   textAnchor="middle"
-                  transform="rotate(-90 20 200)"
+                  transform="rotate(-90 12 200)"
                 >
                   Ability Level
                 </text>
@@ -634,7 +634,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                           stroke="#191919"
                           strokeDasharray="3 3"
                         />
-                        <text x={40} y={yPos + 5} fill="#a8a8a8" fontSize="12" textAnchor="end">
+                        <text x={40} y={yPos + 4} fill="#a8a8a8" fontSize="11" textAnchor="end">
                           {score}
                         </text>
                       </g>
@@ -654,9 +654,9 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 />
                 <text
                   x={Math.max(560, scoreOverTime.length * 200 - 40)}
-                  y={350 - ((750 - 100) / 800) * 300 + 5}
+                  y={350 - ((750 - 100) / 800) * 300 + 4}
                   fill="#10b981"
-                  fontSize="12"
+                  fontSize="11"
                 >
                   Pass
                 </text>
@@ -743,7 +743,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                           )}
 
                           {/* Label */}
-                          <text x={x} y={380} fill="#a8a8a8" fontSize="14" textAnchor="middle">
+                          <text x={x} y={370} fill="#a8a8a8" fontSize="12" textAnchor="middle">
                             {point.quiz}
                           </text>
                         </g>
@@ -757,16 +757,16 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 <line x1={50} y1={50} x2={50} y2={350} stroke="#a8a8a8" strokeWidth={2} />
 
                 {/* Axis labels */}
-                <text x={Math.max(300, scoreOverTime.length * 100)} y={395} fill="#a8a8a8" fontSize="14" textAnchor="middle">
+                <text x={Math.max(300, scoreOverTime.length * 100)} y={405} fill="#a8a8a8" fontSize="13" textAnchor="middle">
                   Quiz
                 </text>
                 <text
-                  x={20}
+                  x={12}
                   y={200}
                   fill="#a8a8a8"
-                  fontSize="14"
+                  fontSize="13"
                   textAnchor="middle"
-                  transform="rotate(-90 20 200)"
+                  transform="rotate(-90 12 200)"
                 >
                   Exam Score
                 </text>
