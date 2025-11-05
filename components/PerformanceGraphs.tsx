@@ -12,7 +12,7 @@ import {
   Cell,
 } from 'recharts';
 import { UserProgress } from '@/lib/types';
-import { ALL_SECURITY_PLUS_TOPICS } from '@/lib/topicData';
+import { ALL_SECURITY_PLUS_TOPICS, TOPIC_INDEX } from '@/lib/topicData';
 import { estimateAbilityWithError } from '@/lib/irt';
 import { calculateIRTConfidenceInterval } from '@/lib/confidenceIntervals';
 
@@ -233,11 +233,12 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
       const topics = attempt.question.topics || [];
       const questionId = attempt.questionId;
 
-      // Get all domains for this question's topics
+      // Get all domains for this question's topics using TOPIC_INDEX
       const domainsForQuestion = new Set<string>();
-      Object.values(userProgress.topicPerformance || {}).forEach(topicPerf => {
-        if (topics.includes(topicPerf.topicName)) {
-          domainsForQuestion.add(topicPerf.domain);
+      topics.forEach(topicLabel => {
+        const topicInfo = TOPIC_INDEX.byLabel[topicLabel];
+        if (topicInfo) {
+          domainsForQuestion.add(topicInfo.domainLabel);
         }
       });
 
