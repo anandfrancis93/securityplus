@@ -284,31 +284,46 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
   const allTopicsByDomain = ALL_SECURITY_PLUS_TOPICS;
 
   // Build coverage data for all topics
-  const topicCoverageData: { [domain: string]: { topicName: string; count: number; accuracy: number }[] } = {};
+  const topicCoverageData: { [domain: string]: { topicName: string; count: number; accuracy: number; points: number; maxPoints: number }[] } = {};
 
   // Initialize all domains with all topics set to 0
   Object.entries(allTopicsByDomain).forEach(([domain, topics]) => {
     topicCoverageData[domain] = topics.map(topicName => ({
       topicName,
       count: 0,
-      accuracy: 0
+      accuracy: 0,
+      points: 0,
+      maxPoints: 0
     }));
   });
 
-  // Fill in actual coverage data from userProgress
-  Object.values(userProgress.topicPerformance || {}).forEach(topicPerf => {
-    const domain = topicPerf.domain;
-    if (topicCoverageData[domain]) {
-      const topicIndex = topicCoverageData[domain].findIndex(t => t.topicName === topicPerf.topicName);
-      if (topicIndex !== -1) {
-        topicCoverageData[domain][topicIndex] = {
-          topicName: topicPerf.topicName,
-          count: topicPerf.questionsAnswered,
-          accuracy: Math.round(topicPerf.accuracy)
-        };
-      }
-      // Ignore topics not in official list (AI-created topics)
-    }
+  // Calculate topic coverage directly from quiz history
+  userProgress.quizHistory.forEach(quiz => {
+    quiz.questions.forEach(attempt => {
+      const topics = attempt.question.topics || [];
+
+      topics.forEach(topicLabel => {
+        const topicInfo = TOPIC_INDEX.byLabel[topicLabel];
+        if (topicInfo) {
+          const domain = topicInfo.domainLabel;
+
+          // Find this topic in the coverage data
+          if (topicCoverageData[domain]) {
+            const topicIndex = topicCoverageData[domain].findIndex(t => t.topicName === topicLabel);
+            if (topicIndex !== -1) {
+              topicCoverageData[domain][topicIndex].count += 1;
+              topicCoverageData[domain][topicIndex].points += attempt.pointsEarned;
+              topicCoverageData[domain][topicIndex].maxPoints += attempt.maxPoints;
+              // Recalculate accuracy based on points
+              topicCoverageData[domain][topicIndex].accuracy =
+                topicCoverageData[domain][topicIndex].maxPoints > 0
+                  ? Math.round((topicCoverageData[domain][topicIndex].points / topicCoverageData[domain][topicIndex].maxPoints) * 100)
+                  : 0;
+            }
+          }
+        }
+      });
+    });
   });
 
   return (
