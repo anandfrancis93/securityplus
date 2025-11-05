@@ -408,7 +408,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                           stroke="#191919"
                           strokeDasharray="3 3"
                         />
-                        <text x={40} y={yPos + 4} fill="#a8a8a8" fontSize="11" textAnchor="end">
+                        <text x={40} y={yPos + 4} fill="#a8a8a8" fontSize="14" textAnchor="end">
                           {y}
                         </text>
                       </g>
@@ -430,7 +430,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                   x={960}
                   y={350 - ((1.54 + 3) / 6) * 300 + 4}
                   fill="#10b981"
-                  fontSize="11"
+                  fontSize="14"
                 >
                   Pass
                 </text>
@@ -509,7 +509,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                                       filter={`url(#neumorphic-tooltip-${i})`}
                                     />
 
-                                    <text x={x} y={tooltipY + 20} fill="#a8a8a8" fontSize="12" textAnchor="middle">
+                                    <text x={x} y={tooltipY + 20} fill="#a8a8a8" fontSize="14" textAnchor="middle">
                                       CI: [{point.ciLower.toFixed(2)}, {point.ciUpper.toFixed(2)}]
                                     </text>
                                   </>
@@ -519,7 +519,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                           )}
 
                           {/* Label */}
-                          <text x={x} y={370} fill="#a8a8a8" fontSize="12" textAnchor="middle">
+                          <text x={x} y={370} fill="#a8a8a8" fontSize="14" textAnchor="middle">
                             {point.quiz}
                           </text>
                         </g>
@@ -533,14 +533,14 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 <line x1={50} y1={50} x2={50} y2={350} stroke="#a8a8a8" strokeWidth={2} />
 
                 {/* Axis labels */}
-                <text x={500} y={405} fill="#a8a8a8" fontSize="13" textAnchor="middle">
+                <text x={500} y={405} fill="#a8a8a8" fontSize="14" textAnchor="middle">
                   Quiz
                 </text>
                 <text
                   x={12}
                   y={200}
                   fill="#a8a8a8"
-                  fontSize="13"
+                  fontSize="14"
                   textAnchor="middle"
                   transform="rotate(-90 12 200)"
                 >
@@ -648,7 +648,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                           stroke="#191919"
                           strokeDasharray="3 3"
                         />
-                        <text x={40} y={yPos + 4} fill="#a8a8a8" fontSize="11" textAnchor="end">
+                        <text x={40} y={yPos + 4} fill="#a8a8a8" fontSize="14" textAnchor="end">
                           {score}
                         </text>
                       </g>
@@ -670,7 +670,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                   x={960}
                   y={350 - ((750 - 100) / 800) * 300 + 4}
                   fill="#10b981"
-                  fontSize="11"
+                  fontSize="14"
                 >
                   Pass
                 </text>
@@ -751,7 +751,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                                       filter={`url(#neumorphic-score-tooltip-${i})`}
                                     />
 
-                                    <text x={x} y={tooltipY + 20} fill="#a8a8a8" fontSize="12" textAnchor="middle">
+                                    <text x={x} y={tooltipY + 20} fill="#a8a8a8" fontSize="14" textAnchor="middle">
                                       CI: [{point.scoreLower}, {point.scoreUpper}]
                                     </text>
                                   </>
@@ -761,7 +761,7 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                           )}
 
                           {/* Label */}
-                          <text x={x} y={370} fill="#a8a8a8" fontSize="12" textAnchor="middle">
+                          <text x={x} y={370} fill="#a8a8a8" fontSize="14" textAnchor="middle">
                             {point.quiz}
                           </text>
                         </g>
@@ -775,14 +775,14 @@ export default function PerformanceGraphs({ userProgress }: PerformanceGraphsPro
                 <line x1={50} y1={50} x2={50} y2={350} stroke="#a8a8a8" strokeWidth={2} />
 
                 {/* Axis labels */}
-                <text x={500} y={405} fill="#a8a8a8" fontSize="13" textAnchor="middle">
+                <text x={500} y={405} fill="#a8a8a8" fontSize="14" textAnchor="middle">
                   Quiz
                 </text>
                 <text
                   x={12}
                   y={200}
                   fill="#a8a8a8"
-                  fontSize="13"
+                  fontSize="14"
                   textAnchor="middle"
                   transform="rotate(-90 12 200)"
                 >
