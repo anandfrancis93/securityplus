@@ -58,6 +58,10 @@ export function ensureMetadataInitialized(
     questionHistory: {},
     topicCoverage: {},
     topicPerformance: {},
+    // Progressive difficulty flags
+    allTopicsCoveredEasy: false,
+    allTopicsCoveredMedium: false,
+    allTopicsCoveredHard: false,
     currentPhase: 1,
     fsrsParameters: undefined,
     lastParameterUpdate: Date.now(),
@@ -86,7 +90,24 @@ export function ensureMetadataInitialized(
           firstCoveredQuiz: null,
           timesCovered: 0,
           lastCoveredQuiz: null,
+          // Progressive difficulty tracking
+          easyTimesCovered: 0,
+          mediumTimesCovered: 0,
+          hardTimesCovered: 0,
+          easyFirstCovered: null,
+          mediumFirstCovered: null,
+          hardFirstCovered: null,
         };
+      }
+
+      // Ensure progressive difficulty fields exist (for existing users)
+      if (metadata.topicCoverage[topicName].easyTimesCovered === undefined) {
+        metadata.topicCoverage[topicName].easyTimesCovered = 0;
+        metadata.topicCoverage[topicName].mediumTimesCovered = 0;
+        metadata.topicCoverage[topicName].hardTimesCovered = 0;
+        metadata.topicCoverage[topicName].easyFirstCovered = null;
+        metadata.topicCoverage[topicName].mediumFirstCovered = null;
+        metadata.topicCoverage[topicName].hardFirstCovered = null;
       }
 
       // Add missing topic performance
@@ -160,6 +181,30 @@ export function updateMetadataAfterQuiz(
         coverage.timesCovered += 1;
         coverage.lastCoveredQuiz = currentQuizNumber;
 
+        // Update difficulty-specific coverage based on question category
+        if (question.questionCategory) {
+          const category = question.questionCategory;
+          if (category === 'single-domain-single-topic') {
+            coverage.easyTimesCovered += 1;
+            if (coverage.easyFirstCovered === null) {
+              coverage.easyFirstCovered = currentQuizNumber;
+              console.log(`[FSRS Update] First EASY coverage of topic: ${topicName}`);
+            }
+          } else if (category === 'single-domain-multiple-topics') {
+            coverage.mediumTimesCovered += 1;
+            if (coverage.mediumFirstCovered === null) {
+              coverage.mediumFirstCovered = currentQuizNumber;
+              console.log(`[FSRS Update] First MEDIUM coverage of topic: ${topicName}`);
+            }
+          } else if (category === 'multiple-domains-multiple-topics') {
+            coverage.hardTimesCovered += 1;
+            if (coverage.hardFirstCovered === null) {
+              coverage.hardFirstCovered = currentQuizNumber;
+              console.log(`[FSRS Update] First HARD coverage of topic: ${topicName}`);
+            }
+          }
+        }
+
         // Update topic performance
         if (!updatedMetadata.topicPerformance![topicName]) {
           // Initialize if doesn't exist
@@ -226,15 +271,56 @@ export function updateMetadataAfterQuiz(
   // Increment quiz counter
   updatedMetadata.totalQuizzesCompleted = currentQuizNumber;
 
-  // Check if all topics covered (Phase 1 completion)
-  const allTopicsCovered = Object.values(updatedMetadata.topicCoverage).every(
-    (topic) => topic.timesCovered > 0
+  // Check progressive difficulty completion
+  const allTopicsCoveredEasy = Object.values(updatedMetadata.topicCoverage).every(
+    (topic) => topic.easyTimesCovered > 0
   );
+  const allTopicsCoveredMedium = Object.values(updatedMetadata.topicCoverage).every(
+    (topic) => topic.mediumTimesCovered > 0
+  );
+  const allTopicsCoveredHard = Object.values(updatedMetadata.topicCoverage).every(
+    (topic) => topic.hardTimesCovered > 0
+  );
+
+  // Initialize flags if they don't exist
+  if (updatedMetadata.allTopicsCoveredEasy === undefined) {
+    updatedMetadata.allTopicsCoveredEasy = false;
+  }
+  if (updatedMetadata.allTopicsCoveredMedium === undefined) {
+    updatedMetadata.allTopicsCoveredMedium = false;
+  }
+  if (updatedMetadata.allTopicsCoveredHard === undefined) {
+    updatedMetadata.allTopicsCoveredHard = false;
+  }
+
+  // Check and update easy completion
+  if (allTopicsCoveredEasy && !updatedMetadata.allTopicsCoveredEasy) {
+    updatedMetadata.allTopicsCoveredEasy = true;
+    updatedMetadata.easyCompletedAt = currentQuizNumber;
+    console.log(`🎉 [FSRS Update] EASY level complete at Quiz ${currentQuizNumber}! All topics covered at easy.`);
+  }
+
+  // Check and update medium completion
+  if (allTopicsCoveredMedium && !updatedMetadata.allTopicsCoveredMedium) {
+    updatedMetadata.allTopicsCoveredMedium = true;
+    updatedMetadata.mediumCompletedAt = currentQuizNumber;
+    console.log(`🎉 [FSRS Update] MEDIUM level complete at Quiz ${currentQuizNumber}! All topics covered at medium.`);
+  }
+
+  // Check and update hard completion
+  if (allTopicsCoveredHard && !updatedMetadata.allTopicsCoveredHard) {
+    updatedMetadata.allTopicsCoveredHard = true;
+    updatedMetadata.hardCompletedAt = currentQuizNumber;
+    console.log(`🎉 [FSRS Update] HARD level complete at Quiz ${currentQuizNumber}! All topics covered at hard.`);
+  }
+
+  // Check if all topics covered at all difficulties (Phase 1 completion)
+  const allTopicsCovered = allTopicsCoveredEasy && allTopicsCoveredMedium && allTopicsCoveredHard;
 
   if (allTopicsCovered && !updatedMetadata.allTopicsCoveredOnce) {
     updatedMetadata.allTopicsCoveredOnce = true;
     updatedMetadata.phase1CompletedAt = currentQuizNumber;
-    console.log(`🎉 [FSRS Update] Phase 1 Complete at Quiz ${currentQuizNumber}! All topics covered.`);
+    console.log(`🎉 [FSRS Update] Phase 1 Complete at Quiz ${currentQuizNumber}! All topics covered at ALL difficulty levels.`);
   }
 
   // Check for phase transitions

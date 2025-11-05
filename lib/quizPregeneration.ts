@@ -435,6 +435,13 @@ export function initializeQuizMetadata(): QuizGenerationMetadata {
         firstCoveredQuiz: null,
         timesCovered: 0,
         lastCoveredQuiz: null,
+        // Progressive difficulty tracking
+        easyTimesCovered: 0,
+        mediumTimesCovered: 0,
+        hardTimesCovered: 0,
+        easyFirstCovered: null,
+        mediumFirstCovered: null,
+        hardFirstCovered: null,
       };
     });
   });
@@ -444,27 +451,74 @@ export function initializeQuizMetadata(): QuizGenerationMetadata {
     allTopicsCoveredOnce: false,
     questionHistory: {},
     topicCoverage,
+    // Progressive difficulty flags
+    allTopicsCoveredEasy: false,
+    allTopicsCoveredMedium: false,
+    allTopicsCoveredHard: false,
   };
 }
 
 /**
- * Check if Phase 1 (covering all topics once) is complete
+ * Check if all topics are covered at a specific difficulty level
  */
-export function isPhase1Complete(metadata: QuizGenerationMetadata): boolean {
-  if (metadata.allTopicsCoveredOnce) {
-    return true;
-  }
+export function isAllTopicsCoveredAtDifficulty(
+  metadata: QuizGenerationMetadata,
+  difficulty: 'easy' | 'medium' | 'hard'
+): boolean {
+  const fieldName = difficulty === 'easy' ? 'easyTimesCovered' :
+                    difficulty === 'medium' ? 'mediumTimesCovered' :
+                    'hardTimesCovered';
 
-  // Check if all topics have been covered at least once
-  const allCovered = Object.values(metadata.topicCoverage).every(
-    topic => topic.timesCovered > 0
+  return Object.values(metadata.topicCoverage).every(
+    topic => topic[fieldName] > 0
   );
-
-  return allCovered;
 }
 
 /**
- * Get list of topics that have never been covered
+ * Get uncovered topics at a specific difficulty level
+ */
+export function getUncoveredTopicsAtDifficulty(
+  metadata: QuizGenerationMetadata,
+  difficulty: 'easy' | 'medium' | 'hard'
+): string[] {
+  const fieldName = difficulty === 'easy' ? 'easyTimesCovered' :
+                    difficulty === 'medium' ? 'mediumTimesCovered' :
+                    'hardTimesCovered';
+
+  return Object.values(metadata.topicCoverage)
+    .filter(topic => topic[fieldName] === 0)
+    .map(topic => topic.topicName);
+}
+
+/**
+ * Determine current difficulty level to focus on (progressive difficulty)
+ */
+export function getCurrentDifficultyLevel(metadata: QuizGenerationMetadata): 'easy' | 'medium' | 'hard' | 'complete' {
+  // Check flags first
+  if (metadata.allTopicsCoveredEasy === false || !isAllTopicsCoveredAtDifficulty(metadata, 'easy')) {
+    return 'easy';
+  }
+
+  if (metadata.allTopicsCoveredMedium === false || !isAllTopicsCoveredAtDifficulty(metadata, 'medium')) {
+    return 'medium';
+  }
+
+  if (metadata.allTopicsCoveredHard === false || !isAllTopicsCoveredAtDifficulty(metadata, 'hard')) {
+    return 'hard';
+  }
+
+  return 'complete'; // All difficulty levels completed
+}
+
+/**
+ * Check if Phase 1 (covering all topics once at ALL difficulties) is complete
+ */
+export function isPhase1Complete(metadata: QuizGenerationMetadata): boolean {
+  return getCurrentDifficultyLevel(metadata) === 'complete';
+}
+
+/**
+ * Get list of topics that have never been covered (legacy - for backward compatibility)
  */
 export function getUncoveredTopics(metadata: QuizGenerationMetadata): string[] {
   return Object.values(metadata.topicCoverage)
@@ -736,45 +790,35 @@ export async function pregenerateQuiz(
   const currentQuizNumber = metadata.totalQuizzesCompleted + 1;
   const ability = userProgress.estimatedAbility || 0;
 
-  const phase1Complete = isPhase1Complete(metadata);
-  console.log(`Pregenerating quiz ${currentQuizNumber}, Phase 1 complete: ${phase1Complete}`);
-
   const questions: Question[] = [];
   const QUIZ_LENGTH = 10;
 
-  // Deterministic difficulty distribution: exactly 3 easy, 4 medium, 3 hard
-  // Create array and shuffle to randomize order
-  const difficultyDistribution: Array<'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics'> = [
-    'single-domain-single-topic', 'single-domain-single-topic', 'single-domain-single-topic',           // 3 easy
-    'single-domain-multiple-topics', 'single-domain-multiple-topics', 'single-domain-multiple-topics', 'single-domain-multiple-topics', // 4 medium
-    'multiple-domains-multiple-topics', 'multiple-domains-multiple-topics', 'multiple-domains-multiple-topics'  // 3 hard
-  ];
+  // Determine current difficulty level (progressive difficulty)
+  const currentDifficultyLevel = getCurrentDifficultyLevel(metadata);
+  const phase1Complete = currentDifficultyLevel === 'complete';
 
-  console.log(`[DIFFICULTY DEBUG] BEFORE shuffle: ${difficultyDistribution.join(', ')}`);
-
-  // Shuffle using Fisher-Yates algorithm
-  for (let i = difficultyDistribution.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [difficultyDistribution[i], difficultyDistribution[j]] = [difficultyDistribution[j], difficultyDistribution[i]];
-  }
-
-  console.log(`[DIFFICULTY DEBUG] AFTER shuffle: ${difficultyDistribution.join(', ')}`);
-
-  // Count distribution for verification
-  const counts = {
-    easy: difficultyDistribution.filter(d => d === 'single-domain-single-topic').length,
-    medium: difficultyDistribution.filter(d => d === 'single-domain-multiple-topics').length,
-    hard: difficultyDistribution.filter(d => d === 'multiple-domains-multiple-topics').length
-  };
-  console.log(`[DIFFICULTY DEBUG] Distribution count: ${counts.easy} easy, ${counts.medium} medium, ${counts.hard} hard`);
+  console.log(`Pregenerating quiz ${currentQuizNumber}, Current difficulty level: ${currentDifficultyLevel}`);
 
   if (!phase1Complete) {
-    // PHASE 1: Prioritize uncovered topics, 100% new questions
-    console.log('Phase 1: Generating questions to cover all topics');
+    // PHASE 1: Progressive difficulty - focus on current level
+    let questionCategory: 'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics';
+    let difficultyName: 'easy' | 'medium' | 'hard';
 
-    const uncoveredTopics = getUncoveredTopics(metadata);
-    console.log(`Uncovered topics remaining: ${uncoveredTopics.length}/${getTotalTopicCount()}`);
+    if (currentDifficultyLevel === 'easy') {
+      questionCategory = 'single-domain-single-topic';
+      difficultyName = 'easy';
+    } else if (currentDifficultyLevel === 'medium') {
+      questionCategory = 'single-domain-multiple-topics';
+      difficultyName = 'medium';
+    } else { // hard
+      questionCategory = 'multiple-domains-multiple-topics';
+      difficultyName = 'hard';
+    }
 
+    const uncoveredTopicsAtLevel = getUncoveredTopicsAtDifficulty(metadata, difficultyName);
+    console.log(`Phase 1 (${difficultyName} level): ${uncoveredTopicsAtLevel.length}/${getTotalTopicCount()} topics remaining`);
+
+    // Generate ALL 10 questions at current difficulty level
     for (let i = 0; i < QUIZ_LENGTH; i++) {
       let question: Question | null = null;
       let attempts = 0;
@@ -783,14 +827,10 @@ export async function pregenerateQuiz(
       while (!question && attempts < MAX_ATTEMPTS) {
         attempts++;
 
-        // Use deterministic difficulty distribution (guaranteed 3 easy, 4 medium, 3 hard)
-        const questionCategory = difficultyDistribution[i];
-        console.log(`[DIFFICULTY DEBUG] Q${i + 1}: Using category ${questionCategory}`);
-
-        // Select topics based on category, prioritizing uncovered topics
+        // Select topics based on category, prioritizing uncovered topics at this level
         const selectedTopics = selectTopicsForQuestion(
           questionCategory,
-          uncoveredTopics,
+          uncoveredTopicsAtLevel,
           metadata
         );
 
@@ -808,7 +848,7 @@ export async function pregenerateQuiz(
           if (generatedQuestion.metadata &&
               !isDuplicateQuestion(generatedQuestion.metadata, metadata.questionHistory)) {
             question = generatedQuestion;
-            console.log(`Generated Q${i + 1}: ${questionCategory} (${generatedQuestion.difficulty}) ${questionType}, Topics: ${selectedTopics.join(', ')}`);
+            console.log(`Generated Q${i + 1}: ${difficultyName} (${questionCategory}) ${questionType}, Topics: ${selectedTopics.join(', ')}`);
           } else {
             console.log(`Duplicate detected, regenerating (attempt ${attempts}/${MAX_ATTEMPTS})`);
           }
@@ -824,6 +864,23 @@ export async function pregenerateQuiz(
       }
     }
   } else {
+    // PHASE 2: Mixed difficulty with spaced repetition (existing logic)
+    // Deterministic difficulty distribution: exactly 3 easy, 4 medium, 3 hard
+    const difficultyDistribution: Array<'single-domain-single-topic' | 'single-domain-multiple-topics' | 'multiple-domains-multiple-topics'> = [
+      'single-domain-single-topic', 'single-domain-single-topic', 'single-domain-single-topic',           // 3 easy
+      'single-domain-multiple-topics', 'single-domain-multiple-topics', 'single-domain-multiple-topics', 'single-domain-multiple-topics', // 4 medium
+      'multiple-domains-multiple-topics', 'multiple-domains-multiple-topics', 'multiple-domains-multiple-topics'  // 3 hard
+    ];
+
+    // Shuffle using Fisher-Yates algorithm
+    for (let i = difficultyDistribution.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [difficultyDistribution[i], difficultyDistribution[j]] = [difficultyDistribution[j], difficultyDistribution[i]];
+    }
+
+    console.log(`Phase 2: Mixed difficulty distribution - 3 easy, 4 medium, 3 hard`);
+
+    const uncoveredTopics = getUncoveredTopics(metadata);
     // PHASE 2: 70% new / 30% repeated (spaced repetition)
     // IMPORTANT: Must maintain 3 easy, 4 medium, 3 hard regardless of new vs repeated
     console.log('Phase 2: Generating questions with spaced repetition (maintaining 3/4/3 distribution)');

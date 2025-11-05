@@ -206,6 +206,14 @@ export interface TopicCoverageStatus {
   firstCoveredQuiz: number | null; // Quiz number when first covered, null if never
   timesCovered: number;
   lastCoveredQuiz: number | null;
+
+  // Progressive difficulty tracking
+  easyTimesCovered: number; // Times covered in easy questions
+  mediumTimesCovered: number; // Times covered in medium questions
+  hardTimesCovered: number; // Times covered in hard questions
+  easyFirstCovered: number | null; // Quiz number when first covered at easy
+  mediumFirstCovered: number | null; // Quiz number when first covered at medium
+  hardFirstCovered: number | null; // Quiz number when first covered at hard
 }
 
 export interface CachedQuiz {
@@ -218,10 +226,18 @@ export interface CachedQuiz {
 
 export interface QuizGenerationMetadata {
   totalQuizzesCompleted: number;
-  allTopicsCoveredOnce: boolean; // Phase 1 complete flag
+  allTopicsCoveredOnce: boolean; // Legacy: Phase 1 complete flag (all difficulties)
   questionHistory: { [questionId: string]: QuestionHistory };
   topicCoverage: { [topicName: string]: TopicCoverageStatus };
   topicPerformance?: { [topicName: string]: TopicPerformance }; // Performance tracking per topic
+
+  // Progressive difficulty completion tracking
+  allTopicsCoveredEasy: boolean; // All topics covered at easy level
+  allTopicsCoveredMedium: boolean; // All topics covered at medium level
+  allTopicsCoveredHard: boolean; // All topics covered at hard level
+  easyCompletedAt?: number; // Quiz number when easy level completed
+  mediumCompletedAt?: number; // Quiz number when medium level completed
+  hardCompletedAt?: number; // Quiz number when hard level completed
 
   // FSRS and Phase tracking
   currentPhase?: 1 | 2 | 3; // Learning phase
