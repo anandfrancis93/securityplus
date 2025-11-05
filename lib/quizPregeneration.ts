@@ -505,11 +505,82 @@ export function selectRandomTopicsFromDomain(domain: string, count: number): str
 /**
  * Select random topics from multiple domains for cross-domain questions
  */
-export function selectCrossDomainTopics(count: number): string[] {
-  const domains = Object.keys(ALL_SECURITY_PLUS_TOPICS);
+export function selectCrossDomainTopics(
+  count: number,
+  priorityTopics: string[] = [],
+  metadata?: QuizGenerationMetadata
+): string[] {
   const selectedTopics: string[] = [];
 
-  // Select from at least 2 different domains
+  // If we have priority topics, use them across multiple domains
+  if (priorityTopics.length > 0 && metadata) {
+    // Group priority topics by domain
+    const topicsByDomain = new Map<string, string[]>();
+    priorityTopics.forEach(topic => {
+      const coverage = metadata.topicCoverage[topic];
+      if (coverage) {
+        if (!topicsByDomain.has(coverage.domain)) {
+          topicsByDomain.set(coverage.domain, []);
+        }
+        topicsByDomain.get(coverage.domain)!.push(topic);
+      }
+    });
+
+    // Try to select from at least 2 different domains
+    const domainsWithPriority = Array.from(topicsByDomain.keys());
+
+    if (domainsWithPriority.length >= 2) {
+      // We have priority topics from multiple domains - use them
+      const shuffledDomains = [...domainsWithPriority].sort(() => Math.random() - 0.5);
+
+      // Round-robin selection from different domains
+      let domainIndex = 0;
+      while (selectedTopics.length < count && domainIndex < shuffledDomains.length * count) {
+        const domain = shuffledDomains[domainIndex % shuffledDomains.length];
+        const domainTopics = topicsByDomain.get(domain) || [];
+        const available = domainTopics.filter(t => !selectedTopics.includes(t));
+
+        if (available.length > 0) {
+          selectedTopics.push(available[Math.floor(Math.random() * available.length)]);
+        }
+
+        domainIndex++;
+      }
+
+      // If we got enough topics, return them
+      if (selectedTopics.length >= count) {
+        return selectedTopics.slice(0, count);
+      }
+    } else if (domainsWithPriority.length === 1) {
+      // Only 1 domain with priority topics - use what we have and supplement from other domains
+      const priorityDomain = domainsWithPriority[0];
+      const priorityDomainTopics = topicsByDomain.get(priorityDomain) || [];
+
+      // Add 1 priority topic from this domain
+      if (priorityDomainTopics.length > 0) {
+        selectedTopics.push(priorityDomainTopics[Math.floor(Math.random() * priorityDomainTopics.length)]);
+      }
+
+      // Fill rest from other domains
+      const otherDomains = Object.keys(ALL_SECURITY_PLUS_TOPICS).filter(d => d !== priorityDomain);
+      const shuffledOtherDomains = [...otherDomains].sort(() => Math.random() - 0.5);
+
+      let domainIndex = 0;
+      while (selectedTopics.length < count && domainIndex < shuffledOtherDomains.length * count) {
+        const domain = shuffledOtherDomains[domainIndex % shuffledOtherDomains.length];
+        const topics = selectRandomTopicsFromDomain(domain, 1);
+        if (topics.length > 0 && !selectedTopics.includes(topics[0])) {
+          selectedTopics.push(topics[0]);
+        }
+        domainIndex++;
+      }
+
+      return selectedTopics.slice(0, count);
+    }
+  }
+
+  // No priority topics or not enough - select randomly from multiple domains
+  const domains = Object.keys(ALL_SECURITY_PLUS_TOPICS);
   const numDomains = Math.min(count, domains.length, Math.max(2, Math.ceil(count / 2)));
   const shuffledDomains = [...domains].sort(() => Math.random() - 0.5).slice(0, numDomains);
 
@@ -560,7 +631,7 @@ export function selectTopicsForQuestion(
     // Single domain, multiple topics: Select 2-4 topics from the same domain
     const topicCount = 2 + Math.floor(Math.random() * 3); // 2, 3, or 4 topics
 
-    if (priorityTopics.length >= topicCount && metadata) {
+    if (priorityTopics.length > 0 && metadata) {
       // Try to find topics from the same domain in priority list
       const topicsByDomain = new Map<string, string[]>();
       priorityTopics.forEach(topic => {
@@ -574,14 +645,39 @@ export function selectTopicsForQuestion(
       });
 
       // Find a domain with enough topics
-      for (const [, topics] of topicsByDomain) {
+      for (const [domain, topics] of topicsByDomain) {
         if (topics.length >= topicCount) {
           return topics.slice(0, topicCount);
         }
       }
 
-      // If no single domain has enough priority topics, fall through to random domain selection
-      // DO NOT mix domains for single-domain-multiple-topics category
+      // If no single domain has enough priority topics, pick the domain with most priority topics
+      // and fill remaining slots with other topics from that same domain
+      let bestDomain = '';
+      let maxPriorityTopics: string[] = [];
+      for (const [domain, topics] of topicsByDomain) {
+        if (topics.length > maxPriorityTopics.length) {
+          bestDomain = domain;
+          maxPriorityTopics = topics;
+        }
+      }
+
+      if (bestDomain && maxPriorityTopics.length > 0) {
+        // Start with all available priority topics from this domain
+        const selected = [...maxPriorityTopics];
+
+        // Fill remaining slots with other topics from the same domain
+        const allDomainTopics = ALL_SECURITY_PLUS_TOPICS[bestDomain] || [];
+        const remainingTopics = allDomainTopics.filter(t => !selected.includes(t));
+
+        while (selected.length < topicCount && remainingTopics.length > 0) {
+          const randomIndex = Math.floor(Math.random() * remainingTopics.length);
+          selected.push(remainingTopics[randomIndex]);
+          remainingTopics.splice(randomIndex, 1);
+        }
+
+        return selected.slice(0, topicCount);
+      }
     }
 
     // Select random domain and get topics from it
@@ -592,7 +688,7 @@ export function selectTopicsForQuestion(
 
   // Multiple domains, multiple topics: Select 2-3 topics from different domains
   const topicCount = 2 + Math.floor(Math.random() * 2); // 2 or 3 topics
-  return selectCrossDomainTopics(topicCount);
+  return selectCrossDomainTopics(topicCount, priorityTopics, metadata);
 }
 
 /**
